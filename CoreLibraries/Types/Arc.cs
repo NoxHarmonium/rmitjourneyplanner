@@ -14,13 +14,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// An object representing the time and distance between 2 points
     /// </summary>
-    public class Distance
+    public class Arc
     {
         private TimeSpan time;      
         private double distance;
         private TransportMode transportMode;
        
-        public Distance(TimeSpan time, double distance, TransportMode transportMode)
+        public Arc(TimeSpan time, double distance, TransportMode transportMode)
         {
             this.time = time;
             this.distance = distance;
@@ -37,7 +37,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Gets the distance between 2 points in meters.
         /// </summary>
-        public double Length
+        public double Distance
         {
             get { return distance; }           
         }
@@ -60,7 +60,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             if (obj.GetType() == this.GetType())
             {
 
-                Distance otherDistance = (Distance)obj;
+                Arc otherDistance = (Arc)obj;
                 if (otherDistance.Time.Minutes == this.Time.Minutes &&
                     otherDistance.Time.Hours == this.Time.Hours &&
                     (otherDistance.Length - this.Length) < 500)

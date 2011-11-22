@@ -29,7 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <param name="pointA">The first point</param>
         /// <param name="pointB">The second point</param>
         /// <returns>The distance between pointA and pointB</returns>
-        public Distance GetDistance(Location pointA, Location pointB)
+        public Arc GetDistance(Location pointA, Location pointB)
         {
             return GetDistance(pointA, pointB, TransportMode.Driving);
         }
@@ -40,7 +40,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <param name="pointA">The first point</param>
         /// <param name="pointB">The second point</param>
         /// <returns>The distance between pointA and pointB</returns>
-        public Distance GetDistance(Location pointA, Location pointB, TransportMode transportMode)
+        public Arc GetDistance(Location pointA, Location pointB, TransportMode transportMode)
         {
             //Set parameters
             this.Parameters["mode"] = transportMode.ToString().ToLower();
@@ -65,7 +65,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             double distance = Convert.ToDouble(element["distance"]["value"].InnerText);
 
             //Return new object
-            return new Distance(duration,distance,transportMode);
+            return new Arc(duration,distance,transportMode);
 
         }
         
