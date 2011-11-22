@@ -76,6 +76,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             }
         }
 
+        /// <summary>
+        /// Serves as a hash funtion for an Arc.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         
 
     }
