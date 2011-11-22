@@ -48,7 +48,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         {
             get
             {
-                return this.Parameters["region"];
+                return this.Parameters["region"] as string;
             }
             set
             {

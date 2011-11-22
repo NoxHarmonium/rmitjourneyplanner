@@ -8,6 +8,7 @@ using System.IO;
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
+    
     /// <summary>
     /// Abstract class that is inherited by classes who
     /// wish to request XML from a URL.
@@ -17,8 +18,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         private string baseUrl = null;
         private bool escapeSpaces = true;
         private bool cachingEnabled = false;
-        private Dictionary<String, String> parameters = new Dictionary<string,string>();
-
+        private Dictionary<String, object> parameters = new Dictionary<string,object>();
+        private Dictionary<String, object> headerParameters = new Dictionary<string, object>();
+        private RequestType requestType = RequestType.GET;
+        private string xmlNamespace = "";
+        private string soapAction = "";
         
 
         /// <summary>
@@ -66,10 +70,64 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <summary>
         /// Gets or sets the key value pairs that will be sent in the XML request.
         /// </summary>
-        public Dictionary<String, String> Parameters
+        protected Dictionary<String, object> Parameters
         {
             get { return parameters; }
             set { parameters = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the key value pairs of the SOAP header that will be sent in the request.
+        /// </summary>
+        protected Dictionary<String, object> HeaderParameters
+        {
+            get { return parameters; }
+            set { parameters = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the request type of the XMLRequester object.
+        /// </summary>
+        protected RequestType RequestType
+        {
+            get
+            {
+                return requestType;
+            }
+            set
+            {
+                requestType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the XML namespace used in SOAP requests.
+        /// </summary>
+        protected string SoapXmlNamespace
+        {
+            get
+            {
+                return xmlNamespace;
+            }
+            set
+            {
+                xmlNamespace = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the SoapAction parameter send in SOAP requests.
+        /// </summary>
+        protected string SoapAction
+        {
+            get
+            {
+                return soapAction;
+            }
+            set
+            {
+                soapAction = value;
+            }
         }
 
         /// <summary>
@@ -78,27 +136,72 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <returns></returns>
         protected virtual XmlDocument Request()
         {
-            // Create request URL from parameters
-            string requestURL = baseUrl + "?";
-            foreach (KeyValuePair<String, String> kvp in parameters)
+            if (requestType == RequestType.GET)
             {
-                string value = escapeSpaces ? kvp.Value : kvp.Value.Replace(" ","+");
-                requestURL += kvp.Key + "=" + value + "&";
-            }
+                // Create request URL from parameters
+                string requestURL = baseUrl + "?";
+                foreach (KeyValuePair<String, object> kvp in parameters)
+                {
+                    string value = escapeSpaces ? kvp.Value as string : ((string)kvp.Value).Replace(" ", "+");
+                    requestURL += kvp.Key + "=" + value + "&";
+                }
 
-            
-            HttpWebRequest request = HttpWebRequest.Create(requestURL) as HttpWebRequest;
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            
-            //Read response stream into xml object
-            XmlDocument doc = new XmlDocument();
-            using (StreamReader r = new StreamReader(response.GetResponseStream()))
-            {                
-                doc.LoadXml(r.ReadToEnd());
-            }
 
-            return doc; 
+                HttpWebRequest request = HttpWebRequest.Create(requestURL) as HttpWebRequest;
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+                //Read response stream into xml object
+                XmlDocument doc = new XmlDocument();
+                Stream responseStream = response.GetResponseStream();
+                doc.Load(responseStream);
+                responseStream.Close();                         
+                return doc;
+            }
+            else
+            {
+                XmlDocument doc = SOAP.GetSoapTemplate();
+
+                XmlNode headerNode = doc["soap:Envelope"]["soap:Header"];
+                foreach (KeyValuePair<String, object> kvp in headerParameters)
+                {
+                    XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
+                    headerElement.AppendChild(kvp.Value as XmlNode);
+                    headerNode.AppendChild(headerElement);
+                }
+                XmlNode bodyNode = doc["soap:Envelope"]["soap:Body"];
+                foreach (KeyValuePair<String, object> kvp in parameters)
+                {
+                    XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
+                    bodyElement.AppendChild(kvp.Value as XmlNode);
+                    bodyNode.AppendChild(bodyElement);
+                }
+
+                HttpWebRequest request = HttpWebRequest.Create(baseUrl) as HttpWebRequest;
+                request.ContentType = "text/xml; charset=utf-8";
+                request.Method = "POST";
+                request.Accept = "text/xml";
+                request.Headers.Add("SOAPAction", soapAction);
+                Stream requestStream = request.GetRequestStream();
+                
+                
+                doc.Save(requestStream);
+                requestStream.Flush();
+                requestStream.Close(); 
+
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+                //Read response stream into xml object
+                doc = new XmlDocument();
+                Stream responseStream = response.GetResponseStream();
+                doc.Load(responseStream);
+                responseStream.Close();
+                return doc;
+                
+
+            }
         }
+
+        
 
 
     }

@@ -42,6 +42,9 @@
   <ItemGroup>
     <Compile Include="DataAccess\DistanceAPI.cs" />
     <Compile Include="DataAccess\GeocodingAPI.cs" />
+    <Compile Include="DataAccess\RequestType.cs" />
+    <Compile Include="DataAccess\SOAP.cs" />
+    <Compile Include="DataAccess\TramTrackerAPI.cs" />
     <Compile Include="DataAccess\Urls.cs" />
     <Compile Include="DataAccess\XMLRequester.cs" />
     <Compile Include="Positioning\Location.cs" />
