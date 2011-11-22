@@ -157,7 +157,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 responseStream.Close();                         
                 return doc;
             }
-            else
+            else if (requestType == RequestType.SOAP)
             {
                 XmlDocument doc = SOAP.GetSoapTemplate();
 
@@ -165,14 +165,20 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 foreach (KeyValuePair<String, object> kvp in headerParameters)
                 {
                     XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
-                    headerElement.AppendChild(kvp.Value as XmlNode);
+                    if (kvp.Value != null)
+                    {
+                        headerElement.AppendChild(kvp.Value as XmlNode);
+                    }
                     headerNode.AppendChild(headerElement);
                 }
                 XmlNode bodyNode = doc["soap:Envelope"]["soap:Body"];
                 foreach (KeyValuePair<String, object> kvp in parameters)
                 {
                     XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
-                    bodyElement.AppendChild(kvp.Value as XmlNode);
+                    if (kvp.Value != null)
+                    {
+                        bodyElement.AppendChild(kvp.Value as XmlNode);
+                    }
                     bodyNode.AppendChild(bodyElement);
                 }
 
