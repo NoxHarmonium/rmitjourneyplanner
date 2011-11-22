@@ -76,7 +76,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// Sends the XML request with the specified parameters and returns the result.
         /// </summary>
         /// <returns></returns>
-        public virtual XmlDocument Request()
+        protected virtual XmlDocument Request()
         {
             // Create request URL from parameters
             string requestURL = baseUrl + "?";
