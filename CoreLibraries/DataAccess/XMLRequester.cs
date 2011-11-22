@@ -161,25 +161,31 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             {
                 XmlDocument doc = SOAP.GetSoapTemplate();
 
-                XmlNode headerNode = doc["soap:Envelope"]["soap:Header"];
-                foreach (KeyValuePair<String, object> kvp in headerParameters)
+                if (headerParameters.Count > 0)
                 {
-                    XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
-                    if (kvp.Value != null)
+                    XmlNode headerNode = doc["soap:Envelope"]["soap:Header"];
+                    foreach (KeyValuePair<String, object> kvp in headerParameters)
                     {
-                        headerElement.AppendChild(kvp.Value as XmlNode);
+                        XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
+                        if (kvp.Value != null)
+                        {
+                            headerElement.AppendChild(kvp.Value as XmlNode);
+                        }
+                        headerNode.AppendChild(headerElement);
                     }
-                    headerNode.AppendChild(headerElement);
                 }
-                XmlNode bodyNode = doc["soap:Envelope"]["soap:Body"];
-                foreach (KeyValuePair<String, object> kvp in parameters)
+                if (parameters.Count > 0)
                 {
-                    XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
-                    if (kvp.Value != null)
+                    XmlNode bodyNode = doc["soap:Envelope"]["soap:Body"];
+                    foreach (KeyValuePair<String, object> kvp in parameters)
                     {
-                        bodyElement.AppendChild(kvp.Value as XmlNode);
+                        XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
+                        if (kvp.Value != null)
+                        {
+                            bodyElement.AppendChild(kvp.Value as XmlNode);
+                        }
+                        bodyNode.AppendChild(bodyElement);
                     }
-                    bodyNode.AppendChild(bodyElement);
                 }
 
                 HttpWebRequest request = HttpWebRequest.Create(baseUrl) as HttpWebRequest;
@@ -188,11 +194,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 request.Accept = "text/xml";
                 request.Headers.Add("SOAPAction", soapAction);
                 Stream requestStream = request.GetRequestStream();
-                
-                
+
+
                 doc.Save(requestStream);
                 requestStream.Flush();
-                requestStream.Close(); 
+                requestStream.Close();
 
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
@@ -202,8 +208,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 doc.Load(responseStream);
                 responseStream.Close();
                 return doc;
-                
 
+            }
+            else
+            {
+                throw new ArgumentException("Incorrect request type: " + requestType.ToString());
             }
         }
 
