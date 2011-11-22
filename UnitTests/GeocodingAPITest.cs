@@ -14,9 +14,6 @@ namespace UnitTests
     [TestClass()]
     public class GeocodingAPITest
     {
-
-        //Allowed error on floats
-        private double delta = 0.01;
         
         private TestContext testContextInstance;
 
