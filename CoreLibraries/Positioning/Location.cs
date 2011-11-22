@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RmitJourneyPlanner.CoreLibraries.Types;
+using RmitJourneyPlanner.CoreLibraries.DataAccess;
+using RmitJourneyPlanner.CoreLibraries.Positioning;
 
 namespace RmitJourneyPlanner.CoreLibraries.Positioning
 {
@@ -58,6 +61,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
                 return latitude;
             }
 
+        }
+
+        /// <summary>
+        /// Returns the distance between this location and another generic location via walking.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public virtual Arc DistanceTo(Location location)
+        {
+            DistanceAPI distanceAPI = new DistanceAPI();
+            return distanceAPI.GetDistance(this, location);             
         }
 
         /// <summary>

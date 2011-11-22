@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RmitJourneyPlanner.CoreLibraries.Types;
+using RmitJourneyPlanner.CoreLibraries.DataAccess;
+using RmitJourneyPlanner.CoreLibraries.Positioning;
+
 
 namespace RmitJourneyPlanner.CoreLibraries.Positioning
 {
@@ -31,6 +35,25 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
             get 
             { 
                 return stopID; 
+            }
+        }
+
+        /// <summary>
+        /// Returns distance to another Location via a tram route or walking.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public override Arc DistanceTo(Location location)
+        {
+            // If the other location is a tram stop then calculate via tram routes
+            if (location is TramStop)
+            {
+                throw new NotImplementedException("TODO: Create distance finding via tram network");
+            }
+            else
+            {
+                //Otherwise calculate via walking
+                return base.DistanceTo(location);
             }
         }
 
