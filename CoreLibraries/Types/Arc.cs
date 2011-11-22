@@ -63,7 +63,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 Arc otherDistance = (Arc)obj;
                 if (otherDistance.Time.Minutes == this.Time.Minutes &&
                     otherDistance.Time.Hours == this.Time.Hours &&
-                    (otherDistance.Length - this.Length) < 500)
+                    (otherDistance.Distance - this.Distance) < 500)
                 {
                     return true;
                 }
