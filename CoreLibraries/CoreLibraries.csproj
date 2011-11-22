@@ -45,7 +45,7 @@
     <Compile Include="DataAccess\Urls.cs" />
     <Compile Include="DataAccess\XMLRequester.cs" />
     <Compile Include="Positioning\Location.cs" />
-    <Compile Include="Positioning\Stop.cs" />
+    <Compile Include="Positioning\TramStop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Types\TransportMode.cs" />
