@@ -73,7 +73,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             else
             {
                 return false;
-            }s
+            }
         }
 
         
