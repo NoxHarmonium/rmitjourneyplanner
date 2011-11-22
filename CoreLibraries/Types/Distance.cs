@@ -37,7 +37,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Gets the distance between 2 points in meters.
         /// </summary>
-        public double Distance1
+        public double Length
         {
             get { return distance; }           
         }
@@ -63,7 +63,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 Distance otherDistance = (Distance)obj;
                 if (otherDistance.Time.Minutes == this.Time.Minutes &&
                     otherDistance.Time.Hours == this.Time.Hours &&
-                    (otherDistance.Distance1 - this.Distance1) < 500)
+                    (otherDistance.Length - this.Length) < 500)
                 {
                     return true;
                 }
