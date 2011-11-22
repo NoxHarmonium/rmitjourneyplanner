@@ -9,5 +9,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     {
         public const string GeocodingApiUrl = @"http://maps.googleapis.com/maps/api/geocode/xml";
         public const string DistanceApiUrl = @"http://maps.googleapis.com/maps/api/distancematrix/xml";
+        public const string TramTrackerUrl = @"http://ws.tramtracker.com.au/pidsservice/pids.asmx";
     }
 }
