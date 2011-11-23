@@ -165,6 +165,37 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             return results;
         }
 
+
+        /// <summary>
+        /// Gets a dataset containing a list of all main routes in the tram network.
+        /// </summary>
+        /// <returns></returns>
+        public DataSet GetMainRoutes()
+        {
+
+            this.Parameters.Clear();
+            //Set parameters           
+            base.SoapAction = Urls.GetMainRoutes;
+            this.Parameters["GetMainRoutes"] = null;
+            XmlDocument responseDoc = base.Request();
+
+            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetMainRoutesResponse"];
+            string validationResult = response["validationResult"].InnerText;
+            if (validationResult.Contains("Request Denied:"))
+            {
+                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+            }
+
+
+            DataSet results = new DataSet();
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+            return results;
+
+
+        }
+        
+
         /// <summary>
         /// Requests the Tramtracker webservice for a new client UUID.
         /// </summary>

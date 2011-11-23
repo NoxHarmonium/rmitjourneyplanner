@@ -85,7 +85,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetDestinationsForAllRoutesTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); // TODO: Initialize to an appropriate value
+            TramTrackerAPI target = new TramTrackerAPI(); 
             DataSet result = target.GetDestinationsForAllRoutes();
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
@@ -99,8 +99,8 @@ namespace UnitTests
         [TestMethod()]
         public void GetDestinationsForRouteTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); // TODO: Initialize to an appropriate value
-            string routeId = "1"; // TODO: Initialize to an appropriate value
+            TramTrackerAPI target = new TramTrackerAPI(); 
+            string routeId = "1"; 
             DataSet result = target.GetDestinationsForRoute(routeId);
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
@@ -117,12 +117,24 @@ namespace UnitTests
         public void GetListOfStopsByRouteNoAndDirectionTest()
         {
             TramTrackerAPI target = new TramTrackerAPI(); // TODO: Initialize to an appropriate value
-            string routeId = "1"; // TODO: Initialize to an appropriate value
-            bool isUpDirection = false; // TODO: Initialize to an appropriate value
+            string routeId = "1"; 
+            bool isUpDirection = false; 
             DataSet result = target.GetListOfStopsByRouteNoAndDirection(routeId, isUpDirection);
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count == 54);
             
+        }
+
+        /// <summary>
+        ///A test for GetMainRoutes
+        ///</summary>
+        [TestMethod()]
+        public void GetMainRoutesTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI();            
+            DataSet result = target.GetMainRoutes();
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count == 30);
         }
     }
 }
