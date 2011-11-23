@@ -26,11 +26,28 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                                             "   </soap:Body>" +
                                             "</soap:Envelope>";
 
+        private static XmlDocument doc;
+
+        public SOAP()
+        {
+            doc = new XmlDocument();
+        }
+        
         public static XmlDocument GetSoapTemplate()
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(soapTemplate);
             return doc;
+        }
+
+        public static XmlNode NewNode(string name)
+        {
+            return doc.CreateNode(XmlNodeType.Element, name,"");
+        }
+
+        public static XmlNode NewNode(string name, string xmlNamespace)
+        {
+            return doc.CreateNode(XmlNodeType.Element, name, xmlNamespace);
         }
 
     }
