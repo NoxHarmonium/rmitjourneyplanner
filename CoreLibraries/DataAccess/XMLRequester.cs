@@ -82,8 +82,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         protected Dictionary<String, object> HeaderParameters
         {
-            get { return parameters; }
-            set { parameters = value; }
+            get { return headerParameters; }
+            set { headerParameters = value; }
         }
 
         /// <summary>
@@ -164,10 +164,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             {
                 XmlDocument doc = SOAP.GetSoapTemplate();
 
-                if (headerParameters.Count > 0)
+                if (HeaderParameters.Count > 0)
                 {
                     XmlNode headerNode = doc["soap:Envelope"]["soap:Header"];
-                    foreach (KeyValuePair<String, object> kvp in headerParameters)
+                    foreach (KeyValuePair<String, object> kvp in HeaderParameters)
                     {
                         XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
                         if (kvp.Value != null)
@@ -179,10 +179,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                         headerNode.AppendChild(headerElement);
                     }
                 }
-                if (parameters.Count > 0)
+                if (Parameters.Count > 0)
                 {
                     XmlNode bodyNode = doc["soap:Envelope"]["soap:Body"];
-                    foreach (KeyValuePair<String, object> kvp in parameters)
+                    foreach (KeyValuePair<String, object> kvp in Parameters)
                     {
                         XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
                         if (kvp.Value != null)
@@ -190,6 +190,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                             XmlNode value = kvp.Value as XmlNode;
                             doc.ImportNode(value, false);
                             bodyElement.AppendChild(value);
+
                         }                        
                         bodyNode.AppendChild(bodyElement);
                         
