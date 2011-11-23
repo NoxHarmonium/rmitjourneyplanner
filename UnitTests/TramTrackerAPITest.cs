@@ -136,5 +136,31 @@ namespace UnitTests
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count == 30);
         }
+
+        /// <summary>
+        ///A test for GetMainRoutesForStop
+        ///</summary>
+        [TestMethod()]
+        public void GetMainRoutesForStopTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI(); 
+            string stopNo = "1551";             
+            DataSet result = target.GetMainRoutesForStop(stopNo);
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows[0][0].ToString() == "8");
+        }
+
+        /// <summary>
+        ///A test for GetNextPredictedArivalTime
+        ///</summary>
+        [TestMethod()]
+        public void GetNextPredictedArivalTimeTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI(); 
+            string tramNo = "56";             
+            DataSet result = target.GetNextPredictedArivalTime(tramNo);            
+            Assert.Inconclusive("Don't know how to find tram number.");
+        }
     }
 }
