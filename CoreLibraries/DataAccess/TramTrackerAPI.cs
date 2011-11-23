@@ -214,6 +214,135 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             return SOAP.BuildDataSetFromSoapResponse(responseDoc);    
 
         }
+
+        /// <summary>
+        /// Gets a dataset containing a collection of the next predicted trams for the supplied stop and route.
+        /// </summary>
+        /// <param name="tramNo"></param>
+        /// <returns></returns>
+        public DataSet GetNextPredictedRoutesCollection(string stopNo,string routeNo, bool lowFloor)
+        {
+            this.Parameters.Clear();
+            //Set parameters            
+            base.SoapAction = Urls.GetNextPredictedRoutesCollection;
+
+            //Request data
+            //Create data node
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["stopNo"] = stopNo;
+            dict["routeNo"] = routeNo;
+            dict["lowFloor"] = lowFloor.ToString().ToLower();
+
+            this.Parameters["GetNextPredictedRoutesCollection"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            XmlDocument responseDoc = base.Request();
+
+
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);
+
+        }
+
+
+        /// <summary>
+        /// Gets a dataset containing a collection of schedules for the supplied stop and route.
+        /// </summary>
+        /// <param name="tramNo"></param>
+        /// <returns></returns>
+        public DataSet GetSchedulesCollection(string stopNo, string routeNo, bool lowFloor)
+        {
+            this.Parameters.Clear();
+            //Set parameters            
+            base.SoapAction = Urls.GetSchedulesCollection;
+
+            //Request data
+            //Create data node
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["stopNo"] = stopNo;
+            dict["routeNo"] = routeNo;
+            dict["lowFloor"] = lowFloor.ToString().ToLower();
+
+            this.Parameters["GetSchedulesCollection"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            XmlDocument responseDoc = base.Request();
+
+
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);
+
+        }
+
+        /// <summary>
+        /// Gets a dataset containing the schedules for the specified trip ID.
+        /// </summary>
+        /// <param name="tripID"></param>
+        /// <param name="scheduledDateTime"></param>
+        /// <returns></returns>
+        public DataSet GetSchedulesForTrip(string tripID, DateTime scheduledDateTime)
+        {
+            this.Parameters.Clear();
+            //Set parameters            
+            base.SoapAction = Urls.GetSchedulesForTrip;
+
+            //Request data
+            //Create data node
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["tripID"] = tripID;
+            dict["scheduledDateTime"] = scheduledDateTime.ToString();
+
+
+            this.Parameters["GetSchedulesForTrip"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            XmlDocument responseDoc = base.Request();
+
+
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);
+
+        }
+
+        /// <summary>
+        /// Returns a dataset containing information about the specified stop such as location.
+        /// </summary>
+        /// <param name="stopNo"></param>
+        /// <returns></returns>
+        public DataSet GetStopInformation(string stopNo)
+        {
+            this.Parameters.Clear();
+            //Set parameters            
+            base.SoapAction = Urls.GetStopInformation;
+
+            //Request data
+            //Create data node
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["stopNo"] = stopNo;
+
+            this.Parameters["GetStopInformation"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            XmlDocument responseDoc = base.Request();
+
+
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);
+
+        }
+
+        /// <summary>
+        /// Returns a dataset containing all the routes and stops that have changed
+        /// since the specified date. This function is very useful for caching.
+        /// </summary>
+        /// <param name="dateSince"></param>
+        /// <returns></returns>
+        public DataSet GetStopsAndRouteUpdatesSince(DateTime dateSince)
+        {
+            this.Parameters.Clear();
+            //Set parameters            
+            base.SoapAction = Urls.GetStopsAndRouteUpdatesSince;
+
+            //Request data
+            //Create data node
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["dateSince"] = dateSince.ToString();
+
+            this.Parameters["GetStopsAndRouteUpdatesSince"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            XmlDocument responseDoc = base.Request();
+
+
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);
+
+        }
         
         /// <summary>
         /// Gets the client GUID generated by the TramTracker webservice.
