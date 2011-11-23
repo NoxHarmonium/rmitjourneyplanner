@@ -193,8 +193,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                         if (kvp.Value != null)
                         {
                             XmlNode value = kvp.Value as XmlNode;
-                            value = doc.ImportNode(value, false);
-                            bodyElement.AppendChild(value);
+                            foreach (XmlNode node in value.ChildNodes)
+                            {
+                                XmlNode newNode = doc.ImportNode(node, true);
+                                bodyElement.AppendChild(newNode);
+                            }
 
                         }                        
                         bodyNode.AppendChild(bodyElement);
