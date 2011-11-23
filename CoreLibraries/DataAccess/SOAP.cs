@@ -12,6 +12,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     using System.Linq;
     using System.Text;
     using System.Xml;
+    using System.Data;
+    using System.IO;
 
     /// <summary>
     /// Contains tools to interface with SOAP webservices.
@@ -48,10 +50,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <param name="dict"></param>
         /// <param name="xmlNamespace"></param>
         /// <returns></returns>
-        public static XmlDocument BuildXmlFromDictionary(Dictionary<String, object> dict, string xmlNamespace)
+        public static XmlNode BuildXmlFromDictionary(Dictionary<String, object> dict, string xmlNamespace)
         {
             XmlDocument doc = new XmlDocument();
             XmlNode bodyNode = doc.CreateElement("XMLData",xmlNamespace);
+            doc.AppendChild(bodyNode);
             foreach (KeyValuePair<String, object> kvp in dict)
             {
                 XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
@@ -66,7 +69,24 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             }
 
     
-            return doc;
+            return doc.FirstChild;
+        }
+
+        public static DataSet BuildDataSetFromSoapResponse(XmlDocument responseDoc)
+        {
+            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"].FirstChild;
+            string validationResult = response["validationResult"].InnerText;
+            if (validationResult.Contains("Request Denied:"))
+            {
+                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+            }
+
+
+            DataSet results = new DataSet();
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+
+            return results;
         }
 
        
