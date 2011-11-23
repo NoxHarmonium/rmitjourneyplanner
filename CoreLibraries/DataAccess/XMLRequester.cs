@@ -173,7 +173,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                         if (kvp.Value != null)
                         {
                             XmlNode value = kvp.Value as XmlNode;
-                            doc.ImportNode(value, false);
+                            value = doc.ImportNode(value, false);
                             headerElement.AppendChild(value);
                         }
                         headerNode.AppendChild(headerElement);
@@ -188,7 +188,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                         if (kvp.Value != null)
                         {
                             XmlNode value = kvp.Value as XmlNode;
-                            doc.ImportNode(value, false);
+                            value = doc.ImportNode(value, false);
                             bodyElement.AppendChild(value);
 
                         }                        
