@@ -12,7 +12,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
-
+    using System.Data;
+    using System.IO;
     /// <summary>
     /// Interfaces with the Yarra Trams Tramtracker SOAP webservice to get various data.
     /// </summary>
@@ -24,7 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         private const string uuidFormat = "[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}";
         
         private string guid;
-        private string clientType = "RMIT Travel Planner";
+        private string clientType = "TRAMHUNTER";
         private string clientVersion = "0.0.0.1";
         private string clientWebServiceVersion = "6.4.0.0";
         private string osVersion = Environment.OSVersion.VersionString;
@@ -34,8 +35,83 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         public TramTrackerAPI() : base (Urls.TramTrackerUrl)
         {
+            base.RequestType = RequestType.SOAP;
+            base.SoapXmlNamespace = Urls.TramTrackerNameSpace;
             this.guid = getNewGuid();
             this.HeaderParameters["PidsClientHeader"] = generateHeader();
+            
+        }
+
+        /// <summary>
+        /// Returns true if the supplied string is in the correct format for a client UUID.
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public bool IsValidUuid(string uuid)
+        {
+            return new Regex(uuidFormat).IsMatch(uuid);
+        }
+
+        public DataSet GetDestinationsForRoute(string routeId)
+        {
+            this.Parameters.Clear();
+            //Set parameters           
+            base.SoapAction = Urls.GetDestinationsForRoute;
+
+            //Create data node
+            XmlDocument doc = new XmlDocument();
+            XmlNode nGetDestinationsForRoute = doc.CreateElement("GetDestinationsForRoute", base.SoapXmlNamespace);
+            XmlNode nRouteNo = doc.CreateElement("routeNo");
+            nRouteNo.InnerText = routeId;
+
+            doc.AppendChild(nGetDestinationsForRoute);
+            nGetDestinationsForRoute.AppendChild(nRouteNo);
+            
+
+            this.Parameters["GetDestinationsForRoute"] = nGetDestinationsForRoute;
+            XmlDocument responseDoc = base.Request();
+
+            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetDestinationsForRouteResponse"];
+            string validationResult = response["validationResult"].InnerText;
+            if (validationResult.Contains("Request Denied:"))
+            {
+                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+            }
+
+
+            DataSet results = new DataSet();
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+            return results;
+
+
+            return null;
+        }
+
+
+        public DataSet GetDestinationsForAllRoutes()
+        {
+                      
+            this.Parameters.Clear();
+            //Set parameters           
+            base.SoapAction = Urls.GetDestinationsForAllRoutes;
+            this.Parameters["GetDestinationsForAllRoutes"] = null;
+            XmlDocument responseDoc = base.Request();
+            
+            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetDestinationsForAllRoutesResponse"];
+            string validationResult = response["validationResult"].InnerText;
+            if (validationResult.Contains("Request Denied:"))
+            {
+                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+            }
+            
+                  
+            DataSet results = new DataSet();
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml),XmlReadMode.ReadSchema);
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+            return results;
+
+
         }
 
         /// <summary>
@@ -44,9 +120,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <returns></returns>
         private string getNewGuid()
         {
-            //Set parameters
-            base.RequestType = RequestType.SOAP;
-            base.SoapXmlNamespace = Urls.TramTrackerUrl;
+            this.Parameters.Clear();
+            //Set parameters            
             base.SoapAction = Urls.GetNewClientGuid;
             base.Parameters["GetNewClientGuid"] = null;
             //Request data
@@ -80,6 +155,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             set
             {
                 clientType = value;
+                this.HeaderParameters["PidsClientHeader"] = generateHeader();
             }
         }
 
@@ -95,6 +171,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             set
             {
                 clientVersion = value;
+                this.HeaderParameters["PidsClientHeader"] = generateHeader();
             }
         }
 
@@ -111,6 +188,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             set
             {
                 clientWebServiceVersion = value;
+                this.HeaderParameters["PidsClientHeader"] = generateHeader();
             }
         }
 
@@ -127,6 +205,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             set
             {
                 osVersion = value;
+                this.HeaderParameters["PidsClientHeader"] = generateHeader();
             }
 
         }
@@ -152,11 +231,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
             XmlNode nClientHeader = doc.CreateElement("PidsClientHeader", base.SoapXmlNamespace);
             
-            XmlNode nClientGuid = doc.CreateElement("ClientGuid");
-            XmlNode nClientType = doc.CreateElement("ClientType");
-            XmlNode nClientVersion = doc.CreateElement("ClientVersion");
-            XmlNode nClientWebServiceVersion =doc.CreateElement("ClientWebServiceVersion");
-            XmlNode nOsVersion = doc.CreateElement("OSVersion");
+            XmlNode nClientGuid = doc.CreateElement("ClientGuid",base.SoapXmlNamespace);
+            XmlNode nClientType = doc.CreateElement("ClientType", base.SoapXmlNamespace);
+            XmlNode nClientVersion = doc.CreateElement("ClientVersion", base.SoapXmlNamespace);
+            XmlNode nClientWebServiceVersion = doc.CreateElement("ClientWebServiceVersion", base.SoapXmlNamespace);
+            XmlNode nOsVersion = doc.CreateElement("OSVersion", base.SoapXmlNamespace);
             
             nClientGuid.InnerText= guid;
             nClientType.InnerText = clientType;
@@ -174,15 +253,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             return nClientHeader;
         }
 
-        /// <summary>
-        /// Returns true if the supplied string is in the correct format for a client UUID.
-        /// </summary>
-        /// <param name="uuid"></param>
-        /// <returns></returns>
-        public bool IsValidUuid(string uuid)
-        {            
-            return new Regex(uuidFormat).IsMatch(uuid);
-        }
+        
 
     }
 }
