@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Text.RegularExpressions;
+using System.Data;
 
 namespace UnitTests
 {
@@ -76,6 +77,37 @@ namespace UnitTests
             actual = target.Guid;
             
             Assert.IsTrue(target.IsValidUuid(actual));
+        }
+
+        /// <summary>
+        ///A test for GetDestinationsForAllRoutes
+        ///</summary>
+        [TestMethod()]
+        public void GetDestinationsForAllRoutesTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI(); // TODO: Initialize to an appropriate value
+            DataSet result = target.GetDestinationsForAllRoutes();
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            Assert.IsTrue(result.Tables[0].Select("RouteNo=1 AND UpStop=false AND Destination='East Coburg'").Length > 0);
+
+        }
+
+        /// <summary>
+        ///A test for GetDestinationsForRoute
+        ///</summary>
+        [TestMethod()]
+        public void GetDestinationsForRouteTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI(); // TODO: Initialize to an appropriate value
+            string routeId = "1"; // TODO: Initialize to an appropriate value
+            DataSet result = target.GetDestinationsForRoute(routeId);
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            Assert.IsTrue(((string)result.Tables[0].Rows[0][0]) == "Sth Melb Beach");
+            Assert.IsTrue(((string)result.Tables[0].Rows[0][1]) == "East Coburg");
+            
+
         }
     }
 }
