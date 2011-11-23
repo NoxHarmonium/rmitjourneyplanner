@@ -173,12 +173,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                         if (kvp.Value != null)
                         {
                             XmlNode value = kvp.Value as XmlNode;
-                            value = doc.ImportNode(value, false);
-                            headerElement.AppendChild(value);
+                            foreach (XmlNode node in value.ChildNodes)
+                            {
+                                XmlNode newNode = doc.ImportNode(node, true);
+                                headerElement.AppendChild(newNode);
+                            }
+                           
                         }
                         headerNode.AppendChild(headerElement);
-                    }
+                    }                   
                 }
+                
                 if (Parameters.Count > 0)
                 {
                     XmlNode bodyNode = doc["soap:Envelope"]["soap:Body"];
