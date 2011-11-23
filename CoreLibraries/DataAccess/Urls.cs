@@ -24,7 +24,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         public const string GetDestinationsForRoute     = @"http://www.yarratrams.com.au/pidsservice/GetDestinationsForRoute";
         public const string GetListOfStopsByRouteNoAndDirection = @"http://www.yarratrams.com.au/pidsservice/GetListOfStopsByRouteNoAndDirection";
         public const string GetMainRoutes = @"http://www.yarratrams.com.au/pidsservice/GetMainRoutes";
-        public const string GetMainRoutesForStop = @"http://www.yarratrams.com.au/pidsservice/GetMainRouteForStop";
+        public const string GetMainRoutesForStop = @"http://www.yarratrams.com.au/pidsservice/GetMainRoutesForStop";
         public const string GetNextPredictedArivalTimeAtStopsForTramNo = @"http://www.yarratrams.com.au/pidsservice/GetNextPredictedArivalTimeAtStopsForTramNo";
         public const string GetNextPredictedRoutesCollection = @"http://www.yarratrams.com.au/pidsservice/GetNextPredictedRoutesCollection";
         public const string GetSchedulesCollection = @"http://www.yarratrams.com.au/pidsservice/GetSchedulesCollection";
