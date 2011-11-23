@@ -61,7 +61,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             //Create data node
             XmlDocument doc = new XmlDocument();
             XmlNode nGetDestinationsForRoute = doc.CreateElement("GetDestinationsForRoute", base.SoapXmlNamespace);
-            XmlNode nRouteNo = doc.CreateElement("routeNo");
+            XmlNode nRouteNo = doc.CreateElement("routeNo", base.SoapXmlNamespace);
             nRouteNo.InnerText = routeId;
 
             doc.AppendChild(nGetDestinationsForRoute);
@@ -85,7 +85,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             return results;
 
 
-            return null;
+           
         }
 
 
