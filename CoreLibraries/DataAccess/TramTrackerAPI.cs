@@ -10,6 +10,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Xml;
 
     /// <summary>
@@ -17,13 +18,20 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// </summary>
     public class TramTrackerAPI : XMLRequester
     {
+        /// <summary>
+        /// The regular expression that defines the correct format of a client UUID.
+        /// </summary>
+        private const string uuidFormat = "[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}";
+        
         private string guid;
+        private string clientType;
+        private string clientVersion;
+        private string clientWebServiceVersion;
+        private string osVersion;
 
         public TramTrackerAPI() : base (Urls.TramTrackerUrl)
         {
-            this.guid = getNewGuid();
-
-               
+            this.guid = getNewGuid();              
         }
 
         private string getNewGuid()
@@ -50,6 +58,42 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             {
                 return guid;
             }
+        }
+
+        private XmlNode generateHeader()
+        {
+
+            /*
+              Header Template:
+             * <PidsClientHeader xmlns="http://www.yarratrams.com.au/pidsservice/">
+                <ClientGuid>guid</ClientGuid>
+                <ClientType>string</ClientType>
+                <ClientVersion>string</ClientVersion>
+                <ClientWebServiceVersion>string</ClientWebServiceVersion>
+                <OSVersion>string</OSVersion>
+                </PidsClientHeader>
+             */
+            XmlDocument doc = new XmlDocument();
+
+            XmlNode nClientHeader = doc.CreateElement("PidsClientHeader", base.SoapXmlNamespace));
+            XmlNode nClientGuid = doc.CreateElement("ClientGuid");
+            XmlNode nClientType = doc.CreateElement("ClientType");
+            XmlNode nClientVersion = doc.CreateElement("ClientVersion");
+            XmlNode nClientWebServiceVersion =doc.CreateElement("ClientWebServiceVersion");
+            XmlNode nOsVersion = doc.CreateElement("OSVersion");
+            
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns true if the supplied string is in the correct format for a client UUID.
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public bool IsValidUuid(string uuid)
+        {            
+            return new Regex(uuidFormat).IsMatch(uuid);
         }
 
     }

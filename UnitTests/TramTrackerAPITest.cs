@@ -74,8 +74,8 @@ namespace UnitTests
             TramTrackerAPI target = new TramTrackerAPI(); 
             string actual;
             actual = target.Guid;
-            string expression = "[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}";
-            Assert.IsTrue(new Regex(expression).IsMatch(actual));
+            
+            Assert.IsTrue(target.IsValidUuid(actual));
         }
     }
 }
