@@ -150,6 +150,30 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
 
         }
+
+        /// <summary>
+        /// Returns a dataset containing all the main routes that intersect the supplied stop number.
+        /// </summary>
+        /// <param name="stopNo"></param>
+        /// <returns></returns>
+        public DataSet GetMainRoutesForStop(string stopNo)
+        {
+            this.Parameters.Clear();
+            //Set parameters           
+            base.SoapAction = Urls.GetMainRoutesForStop;
+            
+            //Create data node
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["stopNo"] = stopNo;
+
+            this.Parameters["GetMainRoutesForStop"] = SOAP.BuildXmlFromDictionary(dict,SoapXmlNamespace);
+            XmlDocument responseDoc = base.Request();
+
+
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);          
+        }
+
+
         
 
         /// <summary>
