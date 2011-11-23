@@ -52,43 +52,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             return new Regex(uuidFormat).IsMatch(uuid);
         }
 
-        public DataSet GetDestinationsForRoute(string routeId)
-        {
-            this.Parameters.Clear();
-            //Set parameters           
-            base.SoapAction = Urls.GetDestinationsForRoute;
 
-            //Create data node
-            XmlDocument doc = new XmlDocument();
-            XmlNode nGetDestinationsForRoute = doc.CreateElement("GetDestinationsForRoute", base.SoapXmlNamespace);
-            XmlNode nRouteNo = doc.CreateElement("routeNo", base.SoapXmlNamespace);
-            nRouteNo.InnerText = routeId;
+       
 
-            doc.AppendChild(nGetDestinationsForRoute);
-            nGetDestinationsForRoute.AppendChild(nRouteNo);
-            
-
-            this.Parameters["GetDestinationsForRoute"] = nGetDestinationsForRoute;
-            XmlDocument responseDoc = base.Request();
-
-            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetDestinationsForRouteResponse"];
-            string validationResult = response["validationResult"].InnerText;
-            if (validationResult.Contains("Request Denied:"))
-            {
-                throw new Exception("Tramtracker webservice error:\n" + validationResult);
-            }
-
-
-            DataSet results = new DataSet();
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
-            return results;
-
-
-           
-        }
-
-
+        /// <summary>
+        /// Gets a dataset containing the end-points of each tram route.
+        /// </summary>
+        /// <returns></returns>
         public DataSet GetDestinationsForAllRoutes()
         {
                       
@@ -112,6 +82,87 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             return results;
 
 
+        }
+
+        /// <summary>
+        /// Gets the 2 end-points for a specific tram route.
+        /// </summary>
+        /// <param name="routeId"></param>
+        /// <returns></returns>
+        public DataSet GetDestinationsForRoute(string routeId)
+        {
+            this.Parameters.Clear();
+            //Set parameters           
+            base.SoapAction = Urls.GetDestinationsForRoute;
+
+            //Create data node
+            XmlDocument doc = new XmlDocument();
+            XmlNode nGetDestinationsForRoute = doc.CreateElement("GetDestinationsForRoute", base.SoapXmlNamespace);
+            XmlNode nRouteNo = doc.CreateElement("routeNo", base.SoapXmlNamespace);
+            nRouteNo.InnerText = routeId;
+
+            doc.AppendChild(nGetDestinationsForRoute);
+            nGetDestinationsForRoute.AppendChild(nRouteNo);
+
+
+            this.Parameters["GetDestinationsForRoute"] = nGetDestinationsForRoute;
+            XmlDocument responseDoc = base.Request();
+
+            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetDestinationsForRouteResponse"];
+            string validationResult = response["validationResult"].InnerText;
+            if (validationResult.Contains("Request Denied:"))
+            {
+                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+            }
+
+
+            DataSet results = new DataSet();
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+            return results;
+        }
+
+        /// <summary>
+        /// Gets a dataset containing a list of all the stops pertaining to the supplied parameters.
+        /// </summary>
+        /// <param name="routeId"></param>
+        /// <param name="isUpDirection"></param>
+        /// <returns></returns>
+        public DataSet GetListOfStopsByRouteNoAndDirection(string routeId, Boolean isUpDirection)
+        {
+            this.Parameters.Clear();
+            //Set parameters           
+            base.SoapAction = Urls.GetListOfStopsByRouteNoAndDirection;
+
+            //Create data node
+            XmlDocument doc = new XmlDocument();
+            XmlNode nGetListOfStops = doc.CreateElement("GetListOfStopsByRouteNoAndDirection", base.SoapXmlNamespace);
+            XmlNode nRouteNo = doc.CreateElement("routeNo", base.SoapXmlNamespace);
+            XmlNode nIsUpDirection = doc.CreateElement("isUpDirection", base.SoapXmlNamespace);
+            nRouteNo.InnerText = routeId;
+            nIsUpDirection.InnerText = isUpDirection.ToString().ToLower();
+
+
+            doc.AppendChild(nGetListOfStops);
+            nGetListOfStops.AppendChild(nIsUpDirection);
+            nGetListOfStops.AppendChild(nRouteNo);
+
+
+            this.Parameters["GetListOfStopsByRouteNoAndDirection"] = nGetListOfStops;
+            XmlDocument responseDoc = base.Request();
+
+            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetListOfStopsByRouteNoAndDirectionResponse"];
+            string validationResult = response["validationResult"].InnerText;
+            if (validationResult.Contains("Request Denied:"))
+            {
+                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+            }
+
+
+            DataSet results = new DataSet();
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
+            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+            return results;
         }
 
         /// <summary>

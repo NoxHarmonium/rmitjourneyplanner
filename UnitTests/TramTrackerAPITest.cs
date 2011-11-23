@@ -109,5 +109,20 @@ namespace UnitTests
             
 
         }
+
+        /// <summary>
+        ///A test for GetListOfStopsByRouteNoAndDirection
+        ///</summary>
+        [TestMethod()]
+        public void GetListOfStopsByRouteNoAndDirectionTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI(); // TODO: Initialize to an appropriate value
+            string routeId = "1"; // TODO: Initialize to an appropriate value
+            bool isUpDirection = false; // TODO: Initialize to an appropriate value
+            DataSet result = target.GetListOfStopsByRouteNoAndDirection(routeId, isUpDirection);
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count == 54);
+            
+        }
     }
 }
