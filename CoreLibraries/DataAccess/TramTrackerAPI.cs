@@ -86,7 +86,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
         /// <summary>
         /// Gets the 2 end-points for a specific tram route.
-        /// </summary>
+        /// </summary>        
         /// <param name="routeId"></param>
         /// <returns></returns>
         public DataSet GetDestinationsForRoute(string routeId)
@@ -96,30 +96,15 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             base.SoapAction = Urls.GetDestinationsForRoute;
 
             //Create data node
-            XmlDocument doc = new XmlDocument();
-            XmlNode nGetDestinationsForRoute = doc.CreateElement("GetDestinationsForRoute", base.SoapXmlNamespace);
-            XmlNode nRouteNo = doc.CreateElement("routeNo", base.SoapXmlNamespace);
-            nRouteNo.InnerText = routeId;
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["routeNo"] = routeId;
 
-            doc.AppendChild(nGetDestinationsForRoute);
-            nGetDestinationsForRoute.AppendChild(nRouteNo);
-
-
-            this.Parameters["GetDestinationsForRoute"] = nGetDestinationsForRoute;
+           
+            XmlNode nGetDestinationsForRoute = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            this.Parameters["GetDestinationsForRoute"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
             XmlDocument responseDoc = base.Request();
 
-            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetDestinationsForRouteResponse"];
-            string validationResult = response["validationResult"].InnerText;
-            if (validationResult.Contains("Request Denied:"))
-            {
-                throw new Exception("Tramtracker webservice error:\n" + validationResult);
-            }
-
-
-            DataSet results = new DataSet();
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
-            return results;
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);          
         }
 
         /// <summary>
@@ -135,34 +120,15 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             base.SoapAction = Urls.GetListOfStopsByRouteNoAndDirection;
 
             //Create data node
-            XmlDocument doc = new XmlDocument();
-            XmlNode nGetListOfStops = doc.CreateElement("GetListOfStopsByRouteNoAndDirection", base.SoapXmlNamespace);
-            XmlNode nRouteNo = doc.CreateElement("routeNo", base.SoapXmlNamespace);
-            XmlNode nIsUpDirection = doc.CreateElement("isUpDirection", base.SoapXmlNamespace);
-            nRouteNo.InnerText = routeId;
-            nIsUpDirection.InnerText = isUpDirection.ToString().ToLower();
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict["routeNo"] = routeId;
+            dict["isUpDirection"] = isUpDirection.ToString().ToLower();
 
-
-            doc.AppendChild(nGetListOfStops);
-            nGetListOfStops.AppendChild(nIsUpDirection);
-            nGetListOfStops.AppendChild(nRouteNo);
-
-
-            this.Parameters["GetListOfStopsByRouteNoAndDirection"] = nGetListOfStops;
+            XmlNode ParameterNodes = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            this.Parameters["GetListOfStopsByRouteNoAndDirection"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
             XmlDocument responseDoc = base.Request();
 
-            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetListOfStopsByRouteNoAndDirectionResponse"];
-            string validationResult = response["validationResult"].InnerText;
-            if (validationResult.Contains("Request Denied:"))
-            {
-                throw new Exception("Tramtracker webservice error:\n" + validationResult);
-            }
-
-
-            DataSet results = new DataSet();
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
-            return results;
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);                  
         }
 
 
@@ -179,18 +145,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             this.Parameters["GetMainRoutes"] = null;
             XmlDocument responseDoc = base.Request();
 
-            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetMainRoutesResponse"];
-            string validationResult = response["validationResult"].InnerText;
-            if (validationResult.Contains("Request Denied:"))
-            {
-                throw new Exception("Tramtracker webservice error:\n" + validationResult);
-            }
 
-
-            DataSet results = new DataSet();
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
-            return results;
+            return SOAP.BuildDataSetFromSoapResponse(responseDoc);
 
 
         }
