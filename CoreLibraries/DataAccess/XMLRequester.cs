@@ -23,7 +23,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         private RequestType requestType = RequestType.GET;
         private string xmlNamespace = "";
         private string soapAction = "";
-        
+       
 
         /// <summary>
         /// initializes the XMLRequester with a URL.
@@ -32,6 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         public XMLRequester(string baseUrl)
         {
             this.baseUrl = baseUrl;
+           
         }
 
         /// <summary>
@@ -130,6 +131,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             }
         }
 
+   
+
         /// <summary>
         /// Sends the XML request with the specified parameters and returns the result.
         /// </summary>
@@ -169,7 +172,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                         XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
                         if (kvp.Value != null)
                         {
-                            headerElement.AppendChild(kvp.Value as XmlNode);
+                            XmlNode value = kvp.Value as XmlNode;
+                            doc.ImportNode(value, false);
+                            headerElement.AppendChild(value);
                         }
                         headerNode.AppendChild(headerElement);
                     }
@@ -182,9 +187,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                         XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
                         if (kvp.Value != null)
                         {
-                            bodyElement.AppendChild(kvp.Value as XmlNode);
-                        }
+                            XmlNode value = kvp.Value as XmlNode;
+                            doc.ImportNode(value, false);
+                            bodyElement.AppendChild(value);
+                        }                        
                         bodyNode.AppendChild(bodyElement);
+                        
                     }
                 }
 
