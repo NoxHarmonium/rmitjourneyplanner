@@ -157,10 +157,12 @@ namespace UnitTests
         [TestMethod()]
         public void GetNextPredictedArivalTimeTest()
         {
-            Assert.Inconclusive("Don't know how to find tram number.");
-            TramTrackerAPI target = new TramTrackerAPI(); 
-            string tramNo = "56";             
-            DataSet result = target.GetNextPredictedArivalTime(tramNo);            
+           // Assert.Inconclusive("Don't know how to find tram number.");
+            TramTrackerAPI target = new TramTrackerAPI();
+            string tramNo = "3001"; //C Class - Citadis    
+            DataSet result = target.GetNextPredictedArivalTime(tramNo);
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
             
         }
 
@@ -202,13 +204,18 @@ namespace UnitTests
         [TestMethod()]
         public void GetSchedulesForTripTest()
         {
-            Assert.Inconclusive("Need to use the GetSchedulesCollection to get a trip id.");
-            TramTrackerAPI target = new TramTrackerAPI(); 
-            string tripID = string.Empty; 
-            DateTime scheduledDateTime = new DateTime(); 
+
+
+            TramTrackerAPI target = new TramTrackerAPI();
+             DateTime scheduledDateTime = DateTime.Now;
+             DataSet schedules = target.GetSchedulesCollection("1551", "8", false, scheduledDateTime);
+            string tripID = schedules.Tables[0].Rows[0][1].ToString();
+            //Assert.Inconclusive("Need to use the GetSchedulesCollection to get a trip id.");            
+            
             
             DataSet result = target.GetSchedulesForTrip(tripID, scheduledDateTime);
-
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
             
         }
 
