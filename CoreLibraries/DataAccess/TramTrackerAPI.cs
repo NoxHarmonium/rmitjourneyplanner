@@ -259,7 +259,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             dict["stopNo"] = stopNo;
             dict["routeNo"] = routeNo;
             dict["lowFloor"] = lowFloor.ToString().ToLower();
-            dict["clientRequestDateTime"] = XmlConvert.ToString(clientRequestDateTime);
+            dict["clientRequestDateTime"] = XmlConvert.ToString(clientRequestDateTime, XmlDateTimeSerializationMode.Local);
 
             this.Parameters["GetSchedulesCollection"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
             XmlDocument responseDoc = base.Request();
@@ -285,7 +285,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             //Create data node
             Dictionary<string, object> dict = new Dictionary<string, object>();
             dict["tripID"] = tripID;
-            dict["scheduledDateTime"] = System.Xml.XmlConvert.ToString(scheduledDateTime);
+            dict["scheduledDateTime"] = System.Xml.XmlConvert.ToString(scheduledDateTime, XmlDateTimeSerializationMode.Local);
 
 
             this.Parameters["GetSchedulesForTrip"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
@@ -326,18 +326,18 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         /// <param name="dateSince"></param>
         /// <returns></returns>
-        public DataSet GetStopsAndRouteUpdatesSince(DateTime dateSince)
+        public DataSet GetStopsAndRoutesUpdatesSince(DateTime dateSince)
         {
             this.Parameters.Clear();
             //Set parameters            
-            base.SoapAction = Urls.GetStopsAndRouteUpdatesSince;
+            base.SoapAction = Urls.GetStopsAndRoutesUpdatesSince;
 
             //Request data
             //Create data node
             Dictionary<string, object> dict = new Dictionary<string, object>();
-            dict["dateSince"] = System.Xml.XmlConvert.ToString(dateSince);
+            dict["dateSince"] = XmlConvert.ToString(dateSince,XmlDateTimeSerializationMode.Local);
 
-            this.Parameters["GetStopsAndRouteUpdatesSince"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            this.Parameters["GetStopsAndRoutesUpdatesSince"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
             XmlDocument responseDoc = base.Request();
 
 

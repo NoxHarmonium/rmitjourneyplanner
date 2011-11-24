@@ -30,6 +30,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         public const string GetSchedulesCollection = @"http://www.yarratrams.com.au/pidsservice/GetSchedulesCollection";
         public const string GetSchedulesForTrip = @"http://www.yarratrams.com.au/pidsservice/GetSchedulesForTrip";
         public const string GetStopInformation = @"http://www.yarratrams.com.au/pidsservice/GetStopInformation";
-        public const string GetStopsAndRouteUpdatesSince = @"http://www.yarratrams.com.au/pidsservice/GetStopsAndRouteUpdatesSince";
+        public const string GetStopsAndRoutesUpdatesSince = @"http://www.yarratrams.com.au/pidsservice/GetStopsAndRoutesUpdatesSince";
     }
 }

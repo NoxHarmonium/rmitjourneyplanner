@@ -157,10 +157,89 @@ namespace UnitTests
         [TestMethod()]
         public void GetNextPredictedArivalTimeTest()
         {
+            Assert.Inconclusive("Don't know how to find tram number.");
             TramTrackerAPI target = new TramTrackerAPI(); 
             string tramNo = "56";             
             DataSet result = target.GetNextPredictedArivalTime(tramNo);            
-            Assert.Inconclusive("Don't know how to find tram number.");
+            
+        }
+
+        /// <summary>
+        ///A test for GetNextPredictedRoutesCollection
+        ///</summary>
+        [TestMethod()]
+        public void GetNextPredictedRoutesCollectionTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI();
+            string stopNo = "1551";
+            string routeNo = "8"; 
+            bool lowFloor = false;
+            DataSet result = target.GetNextPredictedRoutesCollection(stopNo, routeNo, lowFloor);
+
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+        }
+
+        /// <summary>
+        ///A test for GetSchedulesCollection
+        ///</summary>
+        [TestMethod()]
+        public void GetSchedulesCollectionTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI(); 
+            string stopNo = "1551"; 
+            string routeNo = "8";
+            bool lowFloor = false;
+            DateTime requestTime = DateTime.Now;
+            DataSet result = target.GetSchedulesCollection(stopNo, routeNo, lowFloor,requestTime);
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+        }
+
+        /// <summary>
+        ///A test for GetSchedulesForTrip
+        ///</summary>
+        [TestMethod()]
+        public void GetSchedulesForTripTest()
+        {
+            Assert.Inconclusive("Need to use the GetSchedulesCollection to get a trip id.");
+            TramTrackerAPI target = new TramTrackerAPI(); 
+            string tripID = string.Empty; 
+            DateTime scheduledDateTime = new DateTime(); 
+            
+            DataSet result = target.GetSchedulesForTrip(tripID, scheduledDateTime);
+
+            
+        }
+
+        /// <summary>
+        ///A test for GetStopInformation
+        ///</summary>
+        [TestMethod()]
+        public void GetStopInformationTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI();
+            string stopNo = "1551";
+            
+            DataSet result = target.GetStopInformation(stopNo);
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            //Test with some random facts about stop
+            Assert.IsTrue(result.Tables[0].Rows[0]["SuburbName"].ToString() == "Coburg");
+            Assert.IsTrue(result.Tables[0].Rows[0]["CityDirection"].ToString() == "towards City");
+        }
+
+        /// <summary>
+        ///A test for GetStopsAndRouteUpdatesSince
+        ///</summary>
+        [TestMethod()]
+        public void GetStopsAndRouteUpdatesSinceTest()
+        {
+            TramTrackerAPI target = new TramTrackerAPI(); 
+            DateTime dateSince = DateTime.Parse("2/5/2010"); 
+            DataSet result = target.GetStopsAndRoutesUpdatesSince(dateSince);           
+            Assert.IsTrue(result.Tables.Count > 0);
+            Assert.IsTrue(result.Tables[0].Rows.Count > 0);
         }
     }
 }
