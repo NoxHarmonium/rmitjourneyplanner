@@ -48,15 +48,16 @@
     <Compile Include="DataAccess\TramTrackerAPI.cs" />
     <Compile Include="DataAccess\Urls.cs" />
     <Compile Include="DataAccess\XMLRequester.cs" />
+    <Compile Include="DataProviders\INetworkDataProvider.cs" />
+    <Compile Include="DataProviders\INetworkNode.cs" />
+    <Compile Include="DataProviders\IPointDataProvider.cs" />
     <Compile Include="Positioning\Location.cs" />
     <Compile Include="Positioning\TramStop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Types\TransportMode.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataAccess\Localisation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
