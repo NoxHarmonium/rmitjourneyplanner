@@ -77,7 +77,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                     return "There was an unknown server error while processing the request.";
                    
                 case "ZERO_RESULTS" :
-                    return "The query executed successfully but no results were found."
+                    return "The query executed successfully but no results were found.";
 
                 default:
                     return "An unknown error code or corrupted data was recieved from the Google API.";
