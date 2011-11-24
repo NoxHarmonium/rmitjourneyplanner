@@ -200,14 +200,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         {
             this.Parameters.Clear();
             //Set parameters            
-            base.SoapAction = Urls.GetNextPredictedArivalTimeAtStopsForTramNo;
+            base.SoapAction = Urls.GetNextPredictedArrivalTimeAtStopsForTramNo;
             
             //Request data
             //Create data node
             Dictionary<string, object> dict = new Dictionary<string, object>();
             dict["tramNo"] = tramNo;
 
-            this.Parameters["GetNextPredictedArivalTimeAtStopsForTramNo"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
+            this.Parameters["GetNextPredictedArrivalTimeAtStopsForTramNo"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
             XmlDocument responseDoc = base.Request();
 
 
