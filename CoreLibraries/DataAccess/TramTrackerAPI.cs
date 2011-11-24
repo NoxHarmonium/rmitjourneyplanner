@@ -247,7 +247,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         /// <param name="tramNo"></param>
         /// <returns></returns>
-        public DataSet GetSchedulesCollection(string stopNo, string routeNo, bool lowFloor)
+        public DataSet GetSchedulesCollection(string stopNo, string routeNo, bool lowFloor, DateTime clientRequestDateTime)
         {
             this.Parameters.Clear();
             //Set parameters            
@@ -259,6 +259,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             dict["stopNo"] = stopNo;
             dict["routeNo"] = routeNo;
             dict["lowFloor"] = lowFloor.ToString().ToLower();
+            dict["clientRequestDateTime"] = XmlConvert.ToString(clientRequestDateTime);
 
             this.Parameters["GetSchedulesCollection"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
             XmlDocument responseDoc = base.Request();
@@ -284,7 +285,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             //Create data node
             Dictionary<string, object> dict = new Dictionary<string, object>();
             dict["tripID"] = tripID;
-            dict["scheduledDateTime"] = scheduledDateTime.ToString();
+            dict["scheduledDateTime"] = System.Xml.XmlConvert.ToString(scheduledDateTime);
 
 
             this.Parameters["GetSchedulesForTrip"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
@@ -334,7 +335,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             //Request data
             //Create data node
             Dictionary<string, object> dict = new Dictionary<string, object>();
-            dict["dateSince"] = dateSince.ToString();
+            dict["dateSince"] = System.Xml.XmlConvert.ToString(dateSince);
 
             this.Parameters["GetStopsAndRouteUpdatesSince"] = SOAP.BuildXmlFromDictionary(dict, SoapXmlNamespace);
             XmlDocument responseDoc = base.Request();
