@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
-    public static class Urls
+    static class Urls
     {
         //Google Maps Strings
         public const string GeocodingApiUrl             = @"http://maps.googleapis.com/maps/api/geocode/xml";

@@ -15,7 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     /// Represents the request type for the XMLRequestor class.
     /// </summary>
-    public enum RequestType
+    enum RequestType
     {
         GET = 0,
         SOAP = 1

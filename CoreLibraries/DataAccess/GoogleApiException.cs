@@ -14,7 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     /// Represents an error returned from the Google Maps API.
     /// </summary>
-    public class GoogleApiException : Exception
+    class GoogleApiException : Exception
     {
         
        

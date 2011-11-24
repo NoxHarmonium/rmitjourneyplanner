@@ -12,7 +12,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// Interfaces with the Google Distance Matrix API to retrieve distances
     /// between points (as navigated by Google Maps).
     /// </summary>
-    public class DistanceAPI : XMLRequester
+    class DistanceAPI : XMLRequester
     {
         /// <summary>
         /// Initializes a new instance of the DistanceAPI class.

@@ -10,7 +10,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// Interfaces with the Google Geocoding API to retrieve the 
     /// coordinates from a location string and vice-versa.
     /// </summary>
-    public class GeocodingAPI : XMLRequester
+    class GeocodingAPI : XMLRequester
     {
 
         /// <summary>

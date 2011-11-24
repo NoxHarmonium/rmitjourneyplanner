@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     /// Interfaces with the Yarra Trams Tramtracker SOAP webservice to get various data.
     /// </summary>
-    public class TramTrackerAPI : XMLRequester
+    class TramTrackerAPI : XMLRequester
     {
         /// <summary>
         /// The regular expression that defines the correct format of a client UUID.

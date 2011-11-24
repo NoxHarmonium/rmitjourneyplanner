@@ -13,7 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// Abstract class that is inherited by classes who
     /// wish to request XML from a URL.
     /// </summary>
-    public abstract class XMLRequester
+    abstract class XMLRequester
     {
         private string baseUrl = null;
         private bool escapeSpaces = true;

@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     /// Contains tools to interface with SOAP webservices.
     /// </summary>
-    public static class SOAP
+    static class SOAP
     {
         /// <summary>
         /// A sample XML soap template that was taken from the Tramtracker webservice.
