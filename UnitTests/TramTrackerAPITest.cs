@@ -3,6 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Text.RegularExpressions;
 using System.Data;
+using System.IO;
+using System.Xml;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace UnitTests
 {
@@ -18,6 +22,14 @@ namespace UnitTests
 
 
         private TestContext testContextInstance;
+        /// <summary>
+        /// Set this to true to dump the dataset results into the folder specified by dumpFolder.
+        /// </summary>
+        private bool dumpResults = false;
+        /// <summary>
+        /// Specifies the folder that the dataset results will be dumped into when dumpResults is true.
+        /// </summary>
+        private const string dumpFolder = @"C:\temp\yarratramsdatasets";
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -66,6 +78,101 @@ namespace UnitTests
         #endregion
 
 
+        private void doDumpResults(DataSet results, object[] parameters)
+        {
+            
+            if (dumpResults)
+            {
+                StackTrace stackTrace = new StackTrace();
+
+                // get calling method name
+                string calling_name = stackTrace.GetFrame(1).GetMethod().Name;
+                //rel="stylesheet" href="../csstg.css" type="text/css">
+
+               
+                       
+
+
+            
+                //StreamWriter w = new StreamWriter(dumpFolder + "\\" + results.Tables[0].TableName + ".html");
+                XmlDocument doc = new XmlDocument();
+
+                XmlNode html = doc.CreateElement("html");
+
+                XmlNode head = doc.CreateElement("head");
+                XmlNode css = doc.CreateElement("link");
+                XmlAttribute rel = doc.CreateAttribute("rel");
+                XmlAttribute href = doc.CreateAttribute("href");
+                XmlAttribute type = doc.CreateAttribute("type");
+                rel.Value = "stylesheet";
+                href.Value = @"dataset.css";
+                type.Value = @"text/css";
+                css.Attributes.Append(rel);
+                css.Attributes.Append(href);
+                css.Attributes.Append(type);
+                
+
+                XmlNode body = doc.CreateElement("body");
+                
+                XmlNode title = doc.CreateElement("h1");
+                title.InnerText = calling_name;
+
+                XmlNode paramList = doc.CreateElement("ul");
+
+                MethodInfo[] methodInfos = typeof(TramTrackerAPI).GetMethods();
+                int count = 0;
+                foreach (MethodInfo info in methodInfos)
+                {
+                    if (calling_name.Contains(info.Name))
+                    {
+                        foreach (ParameterInfo p in info.GetParameters())
+                        {
+                            XmlNode nP = doc.CreateElement("li");
+                            nP.InnerText = p.Name + " = " + parameters[count++].ToString();
+                            paramList.AppendChild(nP);
+                        }
+                    }
+                }
+
+
+
+                
+                XmlNode table = doc.CreateElement("table");
+                
+                XmlNode tableHeader = doc.CreateElement("tr");
+                foreach (DataColumn col in results.Tables[0].Columns)
+                {
+                    XmlNode headerCell = doc.CreateElement("th");
+                    headerCell.InnerText = col.ColumnName;
+                    tableHeader.AppendChild(headerCell);
+                }
+                table.AppendChild(tableHeader);
+                foreach (DataRow row in results.Tables[0].Rows)
+                {
+                    XmlNode tableRow = doc.CreateElement("tr");
+                    foreach (object item in row.ItemArray)
+                    {
+                        XmlNode tableCell = doc.CreateElement("td");
+                        tableCell.InnerText = item.ToString();
+                        tableRow.AppendChild(tableCell);
+                    }
+                    table.AppendChild(tableRow);
+                }
+
+                head.AppendChild(css);
+                html.AppendChild(head);
+                
+                body.AppendChild(title);
+                body.AppendChild(paramList);
+                body.AppendChild(table);
+                html.AppendChild(body);
+                doc.AppendChild(html);
+
+                doc.Save(dumpFolder + "\\" + results.Tables[0].TableName + ".html");
+
+            }
+        }
+
         /// <summary>
         ///A test for Guid
         ///</summary>
@@ -90,6 +197,7 @@ namespace UnitTests
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
             Assert.IsTrue(result.Tables[0].Select("RouteNo=1 AND UpStop=false AND Destination='East Coburg'").Length > 0);
+            doDumpResults(result, new object[] {});
 
         }
 
@@ -106,8 +214,8 @@ namespace UnitTests
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
             Assert.IsTrue(((string)result.Tables[0].Rows[0][0]) == "Sth Melb Beach");
             Assert.IsTrue(((string)result.Tables[0].Rows[0][1]) == "East Coburg");
-            
 
+            doDumpResults(result, new object[] { routeId });
         }
 
         /// <summary>
@@ -122,7 +230,7 @@ namespace UnitTests
             DataSet result = target.GetListOfStopsByRouteNoAndDirection(routeId, isUpDirection);
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count == 54);
-            
+            doDumpResults(result, new object[] {routeId, isUpDirection });
         }
 
         /// <summary>
@@ -135,6 +243,7 @@ namespace UnitTests
             DataSet result = target.GetMainRoutes();
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count == 30);
+            doDumpResults(result, new object[] {});
         }
 
         /// <summary>
@@ -149,6 +258,7 @@ namespace UnitTests
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows[0][0].ToString() == "8");
+            doDumpResults(result, new object[] { stopNo });
         }
 
         /// <summary>
@@ -163,6 +273,7 @@ namespace UnitTests
             DataSet result = target.GetNextPredictedArivalTime(tramNo);
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            doDumpResults(result, new object[] { tramNo });
             
         }
 
@@ -180,6 +291,7 @@ namespace UnitTests
 
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            doDumpResults(result,new object[] {stopNo,routeNo,lowFloor});
         }
 
         /// <summary>
@@ -196,6 +308,7 @@ namespace UnitTests
             DataSet result = target.GetSchedulesCollection(stopNo, routeNo, lowFloor,requestTime);
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            doDumpResults(result, new object[] { stopNo, routeNo, lowFloor,requestTime });
         }
 
         /// <summary>
@@ -216,7 +329,7 @@ namespace UnitTests
             DataSet result = target.GetSchedulesForTrip(tripID, scheduledDateTime);
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
-            
+            doDumpResults(result, new object[] { tripID, scheduledDateTime });
         }
 
         /// <summary>
@@ -234,6 +347,7 @@ namespace UnitTests
             //Test with some random facts about stop
             Assert.IsTrue(result.Tables[0].Rows[0]["SuburbName"].ToString() == "Coburg");
             Assert.IsTrue(result.Tables[0].Rows[0]["CityDirection"].ToString() == "towards City");
+            doDumpResults(result, new object[] { stopNo });
         }
 
         /// <summary>
@@ -247,6 +361,7 @@ namespace UnitTests
             DataSet result = target.GetStopsAndRoutesUpdatesSince(dateSince);           
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
+            doDumpResults(result, new object[] { dateSince });
         }
     }
 }
