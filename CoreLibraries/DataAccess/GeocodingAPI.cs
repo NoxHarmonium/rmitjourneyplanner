@@ -160,7 +160,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             //Check request status
             if (doc["GeocodeResponse"]["status"].InnerText != "OK")
             {
-                throw new Exception("Error processing XML request");
+                throw new GoogleApiException(doc["GeocodeResponse"]["status"].InnerText);
             }
 
             //Get the useful node

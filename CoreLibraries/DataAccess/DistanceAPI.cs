@@ -54,7 +54,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             //Check request status
             if (response["status"].InnerText != "OK")
             {
-                throw new Exception("Error processing XML request");
+                throw new GoogleApiException(doc["GeocodeResponse"]["status"].InnerText);
             }
 
             //Extract element
