@@ -24,7 +24,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <param name="locationA"></param>
         /// <param name="locationB"></param>
         /// <returns></returns>
-        public Arc GetDistance(Location locationA, Location locationB);
+        Arc GetDistance(Location locationA, Location locationB);
 
         /// <summary>
         /// Gets the path traversed between 2 points.
@@ -32,6 +32,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <param name="locationA"></param>
         /// <param name="locationB"></param>
         /// <returns></returns>
-        public List<Location> GetPath(Location locationA, Location locationB);
+        List<Location> GetPath(Location locationA, Location locationB);
     }
 }

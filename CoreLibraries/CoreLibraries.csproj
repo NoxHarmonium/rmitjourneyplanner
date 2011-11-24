@@ -48,13 +48,18 @@
     <Compile Include="DataAccess\TramTrackerAPI.cs" />
     <Compile Include="DataAccess\Urls.cs" />
     <Compile Include="DataAccess\XMLRequester.cs" />
+    <Compile Include="DataProviders\DrivingDataProvider.cs" />
     <Compile Include="DataProviders\INetworkDataProvider.cs" />
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
+    <Compile Include="DataProviders\TramNetworkProvider.cs" />
+    <Compile Include="DataProviders\TramStop.cs" />
+    <Compile Include="DataProviders\WalkingDataProvider.cs" />
     <Compile Include="Positioning\Location.cs" />
     <Compile Include="Positioning\TramStop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\Arc.cs" />
+    <Compile Include="Types\TransportDirection.cs" />
     <Compile Include="Types\TransportMode.cs" />
   </ItemGroup>
   <ItemGroup />

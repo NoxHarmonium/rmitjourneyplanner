@@ -14,8 +14,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
     public class Location
     {
         
-        private double latitude;
-        private double longitude;
+        protected double latitude;
+        protected double longitude;
 
         /// <summary>
         /// Creates a Location object directly from the latitude and longitude.
@@ -63,17 +63,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
 
         }
 
-        /// <summary>
-        /// Returns the distance between this location and another generic location via walking.
-        /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public virtual Arc DistanceTo(Location location)
-        {
-            DistanceAPI distanceAPI = new DistanceAPI();
-            return distanceAPI.GetDistance(this, location);             
-        }
-
+       
         /// <summary>
         /// Returns a comma delimited string of latitude and longitude.
         /// </summary>

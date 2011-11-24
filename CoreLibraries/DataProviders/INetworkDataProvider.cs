@@ -23,15 +23,16 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <param name="location"></param>
         /// <param name="radius"></param>
         /// <returns></returns>
-        public List<INetworkNode> GetNodesAtLocation(Location location, double radius);
+        List<INetworkNode> GetNodesAtLocation(Location location, double radius);
 
         /// <summary>
         /// Gets the network nodes the are adjacent to the specified one.
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public List<INetworkNode> GetAdjacentNodes(INetworkNode node);
+        List<INetworkNode> GetAdjacentNodes(INetworkNode node);
 
+        
 
 
         
