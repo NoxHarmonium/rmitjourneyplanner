@@ -15,7 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     /// <summary>
     /// Provides point to point data for driving.
     /// </summary>
-    public class DrivingDataProvider
+    public class DrivingDataProvider : IPointDataProvider
     {
          private DistanceAPI distanceAPI;
 
