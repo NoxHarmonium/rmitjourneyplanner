@@ -22,6 +22,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         DataAccess.MySqlDatabase database;
         private string networkID;
 
+
+        /// <summary>
+        /// Initilizes a new location cache.
+        /// </summary>
+        /// <param name="networkID">The identifier of the network.</param>
         public LocationCache(string networkID)
         {
             database = new DataAccess.MySqlDatabase();
@@ -34,12 +39,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         public void InitializeCache()
         {
             //Delete any old tables
-            database.RunQuery("DROP TABLE LocationCache;");
+            //database.RunQuery("IF EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='LocationCache') DROP TABLE LocationCache;");
             //Create new table
-            database.RunQuery("CREATE  TABLE `rmitjourneyplanner`.`LocationCache` ( " +
-                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +
-                                "`networkID` VARCHAR(45) NULL, " +
+            database.RunQuery("CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`LocationCache` ( " +
+                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +                                
                                 "`locationID` VARCHAR(45) NULL ," +
+                                "`networkID` VARCHAR(45) NULL, " +
                                 "`Latitude` DOUBLE NULL ," +
                                 "`Longitude` DOUBLE NULL ," +
                                 "PRIMARY KEY (`cacheID`) ," +
@@ -58,8 +63,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             string query = String.Format("INSERT INTO LocationCache" +
                                             " (networkID,locationID,Latitude,Longitude)" + 
                                             " VALUES({0},'{1}',{2},{3});" ,
-                                            id,
                                             networkID,
+                                            id,                                           
                                             location.Latitude,
                                             location.Longitude);
             database.RunQuery(query);
