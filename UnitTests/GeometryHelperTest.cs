@@ -84,11 +84,28 @@ namespace UnitTests
         [TestMethod()]
         public void ToRadsTest()
         {
-            double x = 360F; // TODO: Initialize to an appropriate value
-            double expected = 2.0*Math.PI; // TODO: Initialize to an appropriate value
+            double x = 360F; 
+            double expected = 2.0*Math.PI; 
             double actual;
             actual = GeometryHelper.ToRads(x);
             Assert.AreEqual(expected, actual, 0.00001);
+        }
+
+        /// <summary>
+        ///A test for Travel
+        ///</summary>
+        [TestMethod()]
+        public void TravelTest()
+        {
+            Location initial = new Location(53.320556,1.729722);
+            double bearing = 0F;
+            double distance = 124.8F; 
+            Location expected = new Location(54.442778, 1.729722);
+            Location actual;
+            actual = GeometryHelper.Travel(initial, bearing, distance);
+            Assert.AreEqual(expected.Latitude, actual.Latitude,0.001);
+            Assert.AreEqual(expected.Longitude, actual.Longitude, 0.001);
+            
         }
     }
 }

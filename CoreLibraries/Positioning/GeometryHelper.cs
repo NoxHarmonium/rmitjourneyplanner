@@ -16,12 +16,59 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
     /// </summary>
     public static class GeometryHelper
     {
+        
+        /// <summary>
+        /// Converts a given number in degrees into radians.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         public static double ToRads(double x)
         {
             return x * (Math.PI / 180);
 
         }
-        
+
+        public static double ToDegs(double x)
+        {
+            return x * (180.0 / Math.PI);
+        }
+
+        /// <summary>
+        /// Calculates the new position if you were to move along the bearing for a specified distance.
+        /// </summary>
+        /// <param name="initial">The initial location</param>
+        /// <param name="bearing">The bearing in degrees from north</param>
+        /// <param name="distance">The distance in KM travelled</param>
+        /// <returns></returns>
+        public static Location Travel(Location initial, double bearing, double distance)
+        {
+
+            /*
+             var lat2 = Math.asin( Math.sin(lat1)*Math.cos(d/R) + 
+                      Math.cos(lat1)*Math.sin(d/R)*Math.cos(brng) );
+            var lon2 = lon1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(lat1), 
+                             Math.cos(d/R)-Math.sin(lat1)*Math.sin(lat2));
+             * */
+            double r = 6371; //Mean radius of the earth in KM
+            bearing = ToRads(bearing);
+            double lat1 = ToRads(initial.Latitude);
+            double lon1 = ToRads(initial.Longitude);
+            double lat2 = Math.Asin(Math.Sin(lat1) * Math.Cos(distance / r) +
+                Math.Cos(lat1) * Math.Sin(distance / r) * Math.Cos(bearing));
+            double lon2 = lon1 + Math.Atan2(Math.Sin(bearing) * Math.Sin(distance / r) * Math.Cos(lat1),
+                Math.Cos(distance / r) - Math.Sin(lat1) * Math.Sin(lat2));
+            
+            lon2 = (lon2 + 3.0 * Math.PI) % (2 * Math.PI) - Math.PI;
+            
+            return new Location(ToDegs(lat2),ToDegs(lon2));
+        }
+
+        /// <summary>
+        /// Gets the distance between 2 points calculated with the curvature of the earth.
+        /// </summary>
+        /// <param name="locationA"></param>
+        /// <param name="locationB"></param>
+        /// <returns></returns>
         public static double GetStraightLineDistance(Location locationA, Location locationB)
         {
             /*
