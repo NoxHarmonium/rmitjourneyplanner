@@ -1,0 +1,143 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+using RmitJourneyPlanner.CoreLibraries.DataProviders;
+using RmitJourneyPlanner.CoreLibraries.Caching;
+using RmitJourneyPlanner.CoreLibraries.Positioning;
+using RmitJourneyPlanner.CoreLibraries.Types;
+using RmitJourneyPlanner.CoreLibraries.DataAccess;
+
+namespace DataManager
+{
+    public partial class frmYarraTrams : Form
+    {
+        private BackgroundWorker worker;
+        
+        public frmYarraTrams()
+        {
+            InitializeComponent();
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            btnRun.Enabled = false;
+            cmbActions.Enabled = false;
+            btnStop.Enabled = true;
+
+            worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.RunWorkerAsync(cmbActions.SelectedIndex);
+
+            
+                
+        }
+
+        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            btnRun.Enabled = true;
+            cmbActions.Enabled = true;
+            btnStop.Enabled = false;
+            log("Action finished");
+        }
+
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            log((string)e.UserState);
+        }
+
+        void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if ((int)e.Argument == 0)
+            {
+                //Scrape stop data
+                worker.ReportProgress(0, "Getting client UUID...");
+                TramTrackerAPI api = new TramTrackerAPI();
+                worker.ReportProgress(0, "UUID is now " + api.Guid);
+                worker.ReportProgress(0, "Init cache...");
+                LocationCache cache = new LocationCache("YarraTrams");
+                cache.InitializeCache();
+
+                int count = 0;
+
+                worker.ReportProgress(0, "Getting routes...");
+                DataSet mainRoutes = api.GetMainRoutes();
+
+                foreach (DataRow routeRow in mainRoutes.Tables[0].Rows)
+                {
+                    string route = routeRow[0].ToString();
+                    worker.ReportProgress(0, "Scraping route: " + route + "(up) ...");
+                    DataSet stops = api.GetListOfStopsByRouteNoAndDirection(route, true);
+                    foreach (DataRow stop in stops.Tables[0].Rows)
+                    {
+                        cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
+                        count++;
+                    }
+
+                    worker.ReportProgress(0, "Scraping route: " + route + "(down) ...");
+
+                    stops = api.GetListOfStopsByRouteNoAndDirection(route, false);
+                    foreach (DataRow stop in stops.Tables[0].Rows)
+                    {
+                        cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
+                        count++;
+                    }
+
+                }
+
+                worker.ReportProgress(0, count.ToString() + " stops cached!");
+
+
+
+            }
+            else if ((int)e.Argument == 1)
+            {
+                worker.ReportProgress(0, "Load cache...");
+                LocationCache cache = new LocationCache("YarraTrams");
+
+                worker.ReportProgress(0, "Searching...");
+                List<string> ids = cache.GetIdsInRadius(new Location(-37.755414, 144.963394),1);
+
+
+                worker.ReportProgress(0, "Results:");
+                worker.ReportProgress(0, "Total results: " + ids.Count.ToString());
+                foreach (string id in ids)
+                {
+                    worker.ReportProgress(0, "Stop id: " + id);
+
+                }
+            }
+
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            worker.CancelAsync();
+            log("Attempting to cancel action...");
+           
+        }
+
+        
+
+        private void log(string message)
+        {
+            lstLog.Items.Add(new ListViewItem(new string[] { DateTime.Now.ToLongTimeString(), message }));
+            lstLog.EnsureVisible(lstLog.Items.Count - 1);
+
+        }
+
+        private void frmYarraTrams_Load(object sender, EventArgs e)
+        {
+            cmbActions.SelectedIndex = 0;
+        }
+    }
+}
