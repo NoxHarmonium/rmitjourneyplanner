@@ -57,64 +57,80 @@ namespace DataManager
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            if ((int)e.Argument == 0)
+            try
             {
-                //Scrape stop data
-                worker.ReportProgress(0, "Getting client UUID...");
-                TramTrackerAPI api = new TramTrackerAPI();
-                worker.ReportProgress(0, "UUID is now " + api.Guid);
-                worker.ReportProgress(0, "Init cache...");
-                LocationCache cache = new LocationCache("YarraTrams");
-                cache.InitializeCache();
-
-                int count = 0;
-
-                worker.ReportProgress(0, "Getting routes...");
-                DataSet mainRoutes = api.GetMainRoutes();
-
-                foreach (DataRow routeRow in mainRoutes.Tables[0].Rows)
+                if ((int)e.Argument == 0)
                 {
-                    string route = routeRow[0].ToString();
-                    worker.ReportProgress(0, "Scraping route: " + route + "(up) ...");
-                    DataSet stops = api.GetListOfStopsByRouteNoAndDirection(route, true);
-                    foreach (DataRow stop in stops.Tables[0].Rows)
+                    //Scrape stop data
+                    worker.ReportProgress(0, "Getting client UUID...");
+                    TramTrackerAPI api = new TramTrackerAPI();
+                    worker.ReportProgress(0, "UUID is now " + api.Guid);
+                    worker.ReportProgress(0, "Init cache...");
+                    LocationCache cache = new LocationCache("YarraTrams");
+                    cache.InitializeCache();
+
+                    int count = 0;
+
+                    worker.ReportProgress(0, "Getting routes...");
+                    DataSet mainRoutes = api.GetMainRoutes();
+
+                    foreach (DataRow routeRow in mainRoutes.Tables[0].Rows)
                     {
-                        cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
-                        count++;
+                        string route = routeRow[0].ToString();
+                        worker.ReportProgress(0, "Scraping route: " + route + "(up) ...");
+                        DataSet stops = api.GetListOfStopsByRouteNoAndDirection(route, true);
+                        foreach (DataRow stop in stops.Tables[0].Rows)
+                        {
+                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
+                            count++;
+                        }
+
+                        worker.ReportProgress(0, "Scraping route: " + route + "(down) ...");
+
+                        stops = api.GetListOfStopsByRouteNoAndDirection(route, false);
+                        foreach (DataRow stop in stops.Tables[0].Rows)
+                        {
+                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
+                            count++;
+                        }
+
                     }
 
-                    worker.ReportProgress(0, "Scraping route: " + route + "(down) ...");
+                    worker.ReportProgress(0, count.ToString() + " stops cached!");
 
-                    stops = api.GetListOfStopsByRouteNoAndDirection(route, false);
-                    foreach (DataRow stop in stops.Tables[0].Rows)
+
+
+                }
+                else if ((int)e.Argument == 1)
+                {
+                    worker.ReportProgress(0, "Load dataprovider...");
+                    TramNetworkProvider provider = new TramNetworkProvider();
+
+                    worker.ReportProgress(0, "Searching...");
+                    //TODO: Set radius to 5? certain data causes bug!
+                    //List<INetworkNode> stops = provider.GetNodesAtLocation(new Location("13 Liverpool St, Coburg, Australia"), 1.0);
+                    List<INetworkNode> stops = provider.GetNodesAtLocation(new Location(-37.755397, 144.963888), 1.0);
+                    
+                    
+                    foreach (TramStop stop in stops)
                     {
-                        cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
-                        count++;
+                        worker.ReportProgress(0, "Stop found: " + stop.StopName + " (" + stop.SuburbName + ")");
                     }
 
                 }
+                else if ((int)e.Argument == 2)
+                {
+                    worker.ReportProgress(0, "Initilizing node cache...");
+                    NodeCache nCache = new NodeCache("YarraTrams");
+                    nCache.InitializeCache();
 
-                worker.ReportProgress(0, count.ToString() + " stops cached!");
-
-
-
+                }
             }
-            else if ((int)e.Argument == 1)
+            catch (Exception ex)
             {
-                worker.ReportProgress(0, "Load cache...");
-                LocationCache cache = new LocationCache("YarraTrams");
-
-                worker.ReportProgress(0, "Searching...");
-                List<string> ids = cache.GetIdsInRadius(new Location(-37.755414, 144.963394),1);
-
-
-                worker.ReportProgress(0, "Results:");
-                worker.ReportProgress(0, "Total results: " + ids.Count.ToString());
-                foreach (string id in ids)
-                {
-                    worker.ReportProgress(0, "Stop id: " + id);
-
-                }
+                worker.ReportProgress(0, ex.Message);
+                worker.ReportProgress(0, ex.StackTrace);
+                
             }
 
         }
@@ -130,7 +146,20 @@ namespace DataManager
 
         private void log(string message)
         {
-            lstLog.Items.Add(new ListViewItem(new string[] { DateTime.Now.ToLongTimeString(), message }));
+            bool first = true;
+            string[] lines = message.Split('\n');
+            foreach (string line in lines)
+            {
+                if (first)
+                {
+                    lstLog.Items.Add(new ListViewItem(new string[] { DateTime.Now.ToLongTimeString(), line }));
+                    first = false;
+                }
+                else
+                {
+                    lstLog.Items.Add(new ListViewItem(new string[] {"...", line }));
+                }
+            }
             lstLog.EnsureVisible(lstLog.Items.Count - 1);
 
         }

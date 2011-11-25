@@ -59,7 +59,7 @@
             this.lstLog.Location = new System.Drawing.Point(208, 39);
             this.lstLog.MultiSelect = false;
             this.lstLog.Name = "lstLog";
-            this.lstLog.Size = new System.Drawing.Size(588, 173);
+            this.lstLog.Size = new System.Drawing.Size(588, 327);
             this.lstLog.TabIndex = 1;
             this.lstLog.UseCompatibleStateImageBehavior = false;
             this.lstLog.View = System.Windows.Forms.View.Details;
@@ -90,7 +90,8 @@
             this.cmbActions.FormattingEnabled = true;
             this.cmbActions.Items.AddRange(new object[] {
             "Scrape stop data into location cache",
-            "Test radius"});
+            "Test radius",
+            "Init node cache"});
             this.cmbActions.Location = new System.Drawing.Point(263, 12);
             this.cmbActions.Name = "cmbActions";
             this.cmbActions.Size = new System.Drawing.Size(369, 21);
@@ -120,7 +121,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 229);
+            this.ClientSize = new System.Drawing.Size(808, 378);
             this.Controls.Add(this.lblAction);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.cmbActions);
