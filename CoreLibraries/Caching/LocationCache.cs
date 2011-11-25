@@ -36,7 +36,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             //Delete any old tables
             database.RunQuery("DROP TABLE LocationCache;");
             //Create new table
-            database.RunQuery("CREATE  TABLE `rmitjourneyplanner`.`LocationCache` ( " +                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +                                "`networkID` VARCHAR(45) NULL, " +                                "`locationID` VARCHAR(45) NULL ," +                                "`Latitude` DOUBLE NULL ," +                                "`Longitude` DOUBLE NULL ," +                                "PRIMARY KEY (`cacheID`) ," +                                "INDEX `Latitude` (`Latitude` ASC) ," +                                "INDEX `Longitude` (`Longitude` ASC) )" +                                "PACK_KEYS = 1;");
+            database.RunQuery("CREATE  TABLE `rmitjourneyplanner`.`LocationCache` ( " +
+                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +
+                                "`networkID` VARCHAR(45) NULL, " +
+                                "`locationID` VARCHAR(45) NULL ," +
+                                "`Latitude` DOUBLE NULL ," +
+                                "`Longitude` DOUBLE NULL ," +
+                                "PRIMARY KEY (`cacheID`) ," +
+                                "INDEX `Latitude` (`Latitude` ASC) ," +
+                                "INDEX `Longitude` (`Longitude` ASC) )" +
+                                "PACK_KEYS = 1;");
+
 
 
 
