@@ -37,8 +37,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         /// Calculates the new position if you were to move along the bearing for a specified distance.
         /// </summary>
         /// <param name="initial">The initial location</param>
-        /// <param name="bearing">The bearing in degrees from north</param>
-        /// <param name="distance">The distance in KM travelled</param>
+        /// <param name="bearing">The bearing in degrees from north in degrees.</param>
+        /// <param name="distance">The distance travelled in kilometers</param>
         /// <returns></returns>
         public static Location Travel(Location initial, double bearing, double distance)
         {
