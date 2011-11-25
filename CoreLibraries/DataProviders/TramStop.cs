@@ -18,6 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     /// <summary>
     /// Represents a stop in the Yarra Trams network.
     /// </summary>
+    [Serializable]
     public class TramStop : Location, INetworkNode
     {
 
@@ -204,6 +205,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             
         }
 
+        /// <summary>
+        /// Gets the data provider that created this object.
+        /// </summary>
         public INetworkDataProvider Parent
         {
             get
@@ -212,5 +216,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             }
         }
 
+
+        /// <summary>
+        /// Gets the Tramtracker ID of this tram stop.
+        /// </summary>
+        public string ID
+        {
+            get { return this.ID; }
+        }
     }
 }

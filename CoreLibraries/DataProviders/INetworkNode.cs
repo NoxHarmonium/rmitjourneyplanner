@@ -24,6 +24,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             get;
         }
 
-       
+        /// <summary>
+        /// Return a unique identifier for this node inside of it's network.
+        /// </summary>
+        string ID
+        {
+            get;
+        }
     }
 }
