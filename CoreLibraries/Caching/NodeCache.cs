@@ -11,12 +11,20 @@ using System.Data;
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
-    class NodeCache<T> where T : INetworkNode
+    class NodeCache //<T> where T : INetworkNode
     {
         DataAccess.MySqlDatabase database;
         private string networkID;
 
-
+        /// <summary>
+        /// Initilizes a new node cache.
+        /// </summary>
+        /// <param name="networkID">The identifier of the data source.</param>
+        public NodeCache(string networkID)
+        {
+            database = new DataAccess.MySqlDatabase();
+            this.networkID = networkID;
+        }
 
         /// <summary>
         /// Set up the database for the location cache. Clears all data.
@@ -24,15 +32,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         public void InitializeCache()
         {
             //Delete any old tables
-            database.RunQuery("DROP TABLE NodeCache;");
+            //database.RunQuery("DROP TABLE NodeCache;");
             //Create new table
-            database.RunQuery("CREATE  TABLE `rmitjourneyplanner`.`NodeCache` ( " +
+            database.RunQuery("CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`NodeCache` ( " +
                                 "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +
                                 "`networkID` VARCHAR(45) NULL, " +
                                 "`stopID` VARCHAR(45) NULL ," +
-                                "`stopObject` TEXT NULL ," +
+                                "`stopObject` TEXT ," +
                                 "PRIMARY KEY (`cacheID`) ," +
-                                "INDEX `stopID` (`stopID` ASC) ," +
+                                "INDEX `stopID` (`stopID` ASC)) " +
                                 "PACK_KEYS = 1;");
 
 
@@ -41,25 +49,26 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
-        public void AddCacheEntry(T node)
+        public void AddCacheEntry(string id, DataSet data)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            
             using (StringWriter writer = new StringWriter())
             {
-                serializer.Serialize(writer, node);
-               
+                data.WriteXml(writer,XmlWriteMode.WriteSchema);
+                string xml = writer.ToString();
+                xml = xml.Replace("'", "\\'");
                 string query = String.Format("INSERT INTO NodeCache" +
                                             " (networkID,stopID,stopObject)" +
                                             " VALUES('{0}','{1}','{2}');",
-                                            ((INetworkNode)node).ID,
                                             networkID,
+                                            id,
                                             writer.ToString());
                 database.RunQuery(query);
             }
 
         }
 
-        public T GetNode(string id)
+        public TramStop GetNode(string id, INetworkDataProvider parent)
         {
 
             string query = String.Format("SELECT stopObject FROM NodeCache WHERE " +
@@ -70,7 +79,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             DataTable result = database.GetDataSet(query);
             if (result.Rows.Count < 1)
             {
-                return default(T);
+                return null;
             }
             else if (result.Rows.Count > 1)
             {
@@ -78,7 +87,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             }
             else
             {
-                return (T)result.Rows[0][0];
+                DataSet data = new DataSet();
+                string xml = result.Rows[0][0].ToString().Replace("\\'", "'");
+                data.ReadXml(new StringReader(xml));
+                return new TramStop((TramNetworkProvider)parent, data);
             }
 
               
