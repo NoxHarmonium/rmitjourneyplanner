@@ -66,7 +66,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
         public void EndTransaction()
         {
-            transaction.Commit()
+            transaction.Commit();
             transaction = null;
         }
 
