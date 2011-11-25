@@ -10,6 +10,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Data;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
 
     /// <summary>
@@ -45,12 +46,37 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             database.RunQuery(query);
         }
 
-        public string GetIdsInRadius(Location center, double radius)
+        /// <summary>
+        /// Gets the transport node ids within a certain distance from a central location.
+        /// </summary>
+        /// <param name="center">The center location</param>
+        /// <param name="radius">The distance to search around the center location in kilometers.</param>
+        /// <returns></returns>
+        public List<string> GetIdsInRadius(Location center, double radius)
         {
+            Location topLeft = GeometryHelper.Travel(center, 315.0, radius);
+            Location bottomRight = GeometryHelper.Travel(center, 135.0, radius);
 
+            string query = String.Format("SELECT locationID FROM LocationCache WHERE " +
+                                            "Latitude > {0} AND " +
+                                            "Longitude > {1} AND " +
+                                            "Latitude  < {2} AND " +
+                                            "Longitude < {3};",
+                                            topLeft.Latitude,
+                                            topLeft.Longitude,
+                                            bottomRight.Latitude,
+                                            bottomRight.Longitude);
 
+            DataTable table = database.GetDataSet(query);
 
-            return null;
+            List<string> ids = new List<string>(table.Rows.Count);
+            foreach (DataRow row in table.Rows)
+            {
+                ids.Add(row[0].ToString());
+            }
+            
+
+            return ids;
 
 
         }
