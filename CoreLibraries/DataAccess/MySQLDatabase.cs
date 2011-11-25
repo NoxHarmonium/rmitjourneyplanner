@@ -16,15 +16,15 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     /// Represents a MySQL database.
     /// </summary>
-    public class MySQLDatabase : ISQLDatabase
+    public class MySqlDatabase : ISQLDatabase
     {
 
-        private string connectionString = "server=localhost;User Id=root;Persist Security Info=True;database=RmitJourneyPlanner";
+        private string connectionString = "server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=RmitJourneyPlanner";
         private MySqlConnection connection;
         private MySqlTransaction transaction = null;
 
 
-        public void MySqlDatabase()
+        public MySqlDatabase()
         {
             connection = new MySqlConnection(connectionString);
         }

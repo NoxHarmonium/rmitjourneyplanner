@@ -19,7 +19,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     public class LocationCache
     {
 
-        DataAccess.MySQLDatabase database = new DataAccess.MySQLDatabase();
+        DataAccess.MySqlDatabase database;
+        private string networkID;
+
+        public LocationCache(string networkID)
+        {
+            database = new DataAccess.MySqlDatabase();
+            this.networkID = networkID;
+        }
         
         /// <summary>
         /// Set up the database for the location cache. Clears all data.
@@ -29,7 +36,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             //Delete any old tables
             database.RunQuery("DROP TABLE LocationCache;");
             //Create new table
-            database.RunQuery("CREATE  TABLE `rmitjourneyplanner`.`LocationCache` ( " +                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +                                "`locationID` VARCHAR(45) NULL ," +                                "`Latitude` DOUBLE NULL ," +                                "`Longitude` DOUBLE NULL ," +                                "PRIMARY KEY (`cacheID`) ," +                                "INDEX `Latitude` (`Latitude` ASC) ," +                                "INDEX `Longitude` (`Longitude` ASC) )" +                                "PACK_KEYS = 1;");
+            database.RunQuery("CREATE  TABLE `rmitjourneyplanner`.`LocationCache` ( " +                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +                                "`networkID` VARCHAR(45) NULL, " +                                "`locationID` VARCHAR(45) NULL ," +                                "`Latitude` DOUBLE NULL ," +                                "`Longitude` DOUBLE NULL ," +                                "PRIMARY KEY (`cacheID`) ," +                                "INDEX `Latitude` (`Latitude` ASC) ," +                                "INDEX `Longitude` (`Longitude` ASC) )" +                                "PACK_KEYS = 1;");
 
 
 
@@ -39,8 +46,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         public void AddCacheEntry(string id, Location location)
         {
             string query = String.Format("INSERT INTO LocationCache" +
-                                            " VALUES('',{0},{1},{2});" ,
+                                            " (networkID,locationID,Latitude,Longitude)" + 
+                                            " VALUES({0},'{1}',{2},{3});" ,
                                             id,
+                                            networkID,
                                             location.Latitude,
                                             location.Longitude);
             database.RunQuery(query);
@@ -58,14 +67,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             Location bottomRight = GeometryHelper.Travel(center, 135.0, radius);
 
             string query = String.Format("SELECT locationID FROM LocationCache WHERE " +
-                                            "Latitude > {0} AND " +
+                                            "Latitude < {0} AND " +
                                             "Longitude > {1} AND " +
-                                            "Latitude  < {2} AND " +
-                                            "Longitude < {3};",
+                                            "Latitude  > {2} AND " +
+                                            "Longitude < {3} AND " + 
+                                            "networkID = '{4}';",
                                             topLeft.Latitude,
                                             topLeft.Longitude,
                                             bottomRight.Latitude,
-                                            bottomRight.Longitude);
+                                            bottomRight.Longitude,
+                                            networkID);
 
             DataTable table = database.GetDataSet(query);
 

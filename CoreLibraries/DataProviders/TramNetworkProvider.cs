@@ -10,6 +10,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Caching;
 
     /// <summary>
     /// Provides network data for the Yarra Trams network.
@@ -17,9 +18,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     public class TramNetworkProvider : INetworkDataProvider
     {
 
+        LocationCache lCache = new LocationCache("YarraTrams");
         
+
         public List<INetworkNode> GetNodesAtLocation(Positioning.Location location, double radius)
         {
+            List<string> ids = lCache.GetIdsInRadius(location, radius);
             throw new NotImplementedException();
         }
 
