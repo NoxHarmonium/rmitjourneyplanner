@@ -121,7 +121,7 @@ namespace DataManager
                 else if ((int)e.Argument == 2)
                 {
                     worker.ReportProgress(0, "Initilizing node cache...");
-                    NodeCache nCache = new NodeCache("YarraTrams");
+                    NodeCache<TramStop> nCache = new NodeCache<TramStop>("YarraTrams");
                     nCache.InitializeCache();
 
                 }
