@@ -14,8 +14,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
     public class Location
     {
         
-        protected double latitude;
-        protected double longitude;
+        private double latitude;
+        private double longitude;
 
         /// <summary>
         /// Creates a Location object directly from the latitude and longitude.
@@ -49,6 +49,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
             {
                 return longitude;
             }
+            protected set
+            {
+                longitude = value;
+            }
         }
 
         /// <summary>
@@ -59,6 +63,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
             get
             {
                 return latitude;
+            }
+            protected set
+            {
+                latitude = value;
             }
 
         }

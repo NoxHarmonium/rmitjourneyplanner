@@ -191,8 +191,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             }
 
             
-            latitude = Convert.ToDouble(dataRow["Latitude"]);
-            longitude = Convert.ToDouble(dataRow["longitude"]);
+            Latitude = Convert.ToDouble(dataRow["Latitude"]);
+            Longitude = Convert.ToDouble(dataRow["longitude"]);
             suburbName = dataRow["SuburbName"].ToString();
             isCityStop = Convert.ToBoolean(dataRow["IsCityStop"]);
             hasConnectingBuses = Convert.ToBoolean(dataRow["HasConnectingBuses"]);
