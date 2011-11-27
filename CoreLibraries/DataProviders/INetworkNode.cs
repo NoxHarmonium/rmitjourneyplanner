@@ -22,6 +22,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         INetworkDataProvider Parent
         {
             get;
+            set;
         }
 
         /// <summary>
@@ -30,6 +31,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         string ID
         {
             get;
+            set;
         }
+
+        /// <summary>
+        /// Loads the properties of the node from the parent.
+        /// </summary>
+        void RetrieveData();
     }
 }
