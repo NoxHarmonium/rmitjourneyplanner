@@ -12,6 +12,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     using System.Text;
     using System.Data;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using DataProviders;
 
     /// <summary>
     /// Allows high speed access and searching of multiple locations.
@@ -104,6 +105,32 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
             return ids;
 
+
+        }
+
+        /// <summary>
+        /// Gets the position of the specified location id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Location GetPostition(string id)
+        {
+            string query = String.Format("SELECT Latitude, Longitude FROM LocationCache WHERE " +
+                                            "locationID = '{0}' AND " +                                          
+                                            "networkID = '{1}';",
+                                            id,                                            
+                                            networkID);
+
+            DataTable table = database.GetDataSet(query);
+
+            if (table.Rows.Count > 0)
+            {
+                return new Location(Convert.ToDouble(table.Rows[0][0]), Convert.ToDouble(table.Rows[0][0]));
+            }
+            else
+            {
+                return null;
+            }
 
         }
 
