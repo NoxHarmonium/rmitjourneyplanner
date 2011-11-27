@@ -58,7 +58,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
-            api.getr
+            //api.GetListOfStopsByRouteNoAndDirection
+            throw new NotImplementedException();
         }
 
     }
