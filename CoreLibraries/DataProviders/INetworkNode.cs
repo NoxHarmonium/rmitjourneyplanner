@@ -22,7 +22,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         INetworkDataProvider Parent
         {
             get;
-            set;
         }
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         string ID
         {
             get;
-            set;
         }
 
         /// <summary>
