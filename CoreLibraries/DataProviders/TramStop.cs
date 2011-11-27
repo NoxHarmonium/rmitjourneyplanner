@@ -13,6 +13,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System.Data;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.Types;
+    using System.Security;
+    using System.Security.Cryptography;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
 
     /// <summary>
@@ -249,5 +251,34 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         {
             get { return this.id; }
         }
+
+        /// <summary>
+        /// Returns if this TramStop object is equal to another object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is TramStop)
+            {
+                if (this.id == ((TramStop) obj).ID)
+                {
+                    return true;
+                }
+            }
+            return false;
+            
+        }
+
+        /// <summary>
+        /// Serves as a hash function for a tram stop;
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return id.GetHashCode();
+        }
     }
+
+   
 }
