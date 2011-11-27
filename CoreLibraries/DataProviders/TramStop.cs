@@ -22,6 +22,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     public class TramStop : Location, INetworkNode
     {
 
+        private string id;
         private TramNetworkProvider parent;
         private int flagStopNo;
         private string stopName;
@@ -158,16 +159,15 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
 
-
         /// <summary>
-        /// Initializes a new instance of the TramStop class with a dataset retreived from the 
-        /// TramTracker API.
+        /// Gets the information describing the TramStop from the cache.
         /// </summary>
-        /// <param name="parent">The NetworkProvider that contains this tram stop.</param>
-        public TramStop(TramNetworkProvider parent,DataSet stopData)
-            : base(0, 0)
+        /// <param name="parent"></param>
+        /// <param name="stopData"></param>
+        private void loadData(DataSet stopData)
         {
-            this.parent = parent;
+
+            
             DataTable dataTable = stopData.Tables[0];
             DataRow dataRow = dataTable.Rows[0];
             flagStopNo = Convert.ToInt32(dataRow["FlagStopNo"]);
@@ -190,7 +190,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                     break;
             }
 
-            
+
             Latitude = Convert.ToDouble(dataRow["Latitude"]);
             Longitude = Convert.ToDouble(dataRow["longitude"]);
             suburbName = dataRow["SuburbName"].ToString();
@@ -201,6 +201,31 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             stopLength = Convert.ToDouble(dataRow["StopLength"]);
             isPlatformStop = Convert.ToBoolean(dataRow["IsPlatformStop"]);
             zones = dataRow["Zones"].ToString();
+        }
+               
+
+
+        /// <summary>
+        /// Loads the TramStop data from the parent.
+        /// </summary>
+        public void RetrieveData()
+        {
+            DataSet data  = parent.GetNodeData(id);
+            loadData(data);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the TramStop class with a dataset retreived from the 
+        /// TramTracker API.
+        /// </summary>
+        /// <param name="parent">The NetworkProvider that contains this tram stop.</param>
+        public TramStop(string id, TramNetworkProvider parent)
+            : base(0, 0)
+        {
+            this.parent = parent;
+            this.id = id;
+            
+            //LoadData(parent, stopData);
 
             
         }
@@ -218,11 +243,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
 
         /// <summary>
-        /// Gets the Tramtracker ID of this tram stop.
+        /// Gets or sets the Tramtracker ID of this tram stop.
         /// </summary>
         public string ID
         {
-            get { return this.ID; }
+            get { return this.id; }
         }
     }
 }
