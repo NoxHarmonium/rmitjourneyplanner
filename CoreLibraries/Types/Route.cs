@@ -20,6 +20,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         private List<INetworkNode> downNodes = new List<INetworkNode>();
         private INetworkNode upDestination;
         private INetworkNode downDestination;
+        private string id;
 
 
         /// <summary>
@@ -27,11 +28,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         /// <param name="UpDestination">The end point in the up direction.</param>
         /// <param name="DownDestination">The end point in the down direction.</param>
-        public Route(INetworkNode upDestination, INetworkNode downDestination)
+        public Route(string routeId, INetworkNode upDestination, INetworkNode downDestination)
         {
             this.upDestination = upDestination;
             this.downDestination = downDestination;
+            this.id = routeId;
         }
+
+       
 
 
         /// <summary>
@@ -112,6 +116,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             }
             return nodes;
         }
+
+        public string ID
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+
 
     }
 }

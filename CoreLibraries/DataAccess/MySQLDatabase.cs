@@ -61,6 +61,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
         public void BeginTransaction()
         {
+            connection.Open();
             transaction = connection.BeginTransaction();
         }
 

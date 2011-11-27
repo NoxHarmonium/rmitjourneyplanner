@@ -56,6 +56,7 @@
     <Compile Include="GeometryHelperTest.cs" />
     <Compile Include="LocationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteCacheTest.cs" />
     <Compile Include="TramTrackerAPITest.cs" />
   </ItemGroup>
   <ItemGroup>
