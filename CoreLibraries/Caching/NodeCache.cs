@@ -11,7 +11,7 @@ using System.Data;
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
-    class NodeCache //<T> where T : INetworkNode
+    class NodeCache <T> where T : INetworkNode, new()
     {
         DataAccess.MySqlDatabase database;
         private string networkID;
@@ -68,7 +68,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
-        public TramStop GetNode(string id, INetworkDataProvider parent)
+        public T GetNode(string id, INetworkDataProvider parent)
         {
 
             string query = String.Format("SELECT stopObject FROM NodeCache WHERE " +
@@ -79,7 +79,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             DataTable result = database.GetDataSet(query);
             if (result.Rows.Count < 1)
             {
-                return null;
+                return default(T);
             }
             else if (result.Rows.Count > 1)
             {
@@ -90,7 +90,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                 DataSet data = new DataSet();
                 string xml = result.Rows[0][0].ToString().Replace("\\'", "'");
                 data.ReadXml(new StringReader(xml));
-                return new TramStop((TramNetworkProvider)parent, data);
+                T node = new T();
+                node.ID = id;
+                node.Parent = parent;
+
+                return node;
             }
 
               
