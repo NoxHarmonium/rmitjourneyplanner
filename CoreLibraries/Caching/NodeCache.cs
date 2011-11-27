@@ -11,7 +11,7 @@ using System.Data;
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
-    class NodeCache <T> where T : INetworkNode, new()
+    class NodeCache <T> where T : INetworkNode
     {
         DataAccess.MySqlDatabase database;
         private string networkID;
@@ -90,9 +90,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                 DataSet data = new DataSet();
                 string xml = result.Rows[0][0].ToString().Replace("\\'", "'");
                 data.ReadXml(new StringReader(xml));
-                T node = new T();
-                node.ID = id;
-                node.Parent = parent;
+                T node = (T) Activator.CreateInstance(typeof(T), new object[] { id, parent });           
 
                 return node;
             }
