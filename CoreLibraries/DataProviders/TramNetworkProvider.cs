@@ -13,6 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using Caching;
     using DataAccess;
     using System.Data;
+    using Positioning;
 
     /// <summary>
     /// Provides network data for the Yarra Trams network.
@@ -21,9 +22,20 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     {
 
         LocationCache lCache = new LocationCache("YarraTrams");
-        NodeCache nCache = new NodeCache("YarraTrams");
+        NodeCache<TramStop> nCache = new NodeCache<TramStop>("YarraTrams");
         TramTrackerAPI api = new TramTrackerAPI();
-        
+
+        public DataSet GetNodeData(string id)
+        {
+            DataSet data = api.GetStopInformation(id); 
+            nCache.AddCacheEntry(id, data);      
+            return data;
+        }
+
+        public Location GetNodeLocation(string id)
+        {
+            return lCache.GetPostition(id);
+        }
 
         public List<INetworkNode> GetNodesAtLocation(Positioning.Location location, double radius)
         {
@@ -33,11 +45,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             {
                 TramStop stop = nCache.GetNode(id, this);
                 if (stop == null)
-                {
-                    DataSet data = api.GetStopInformation(id);
-                    stop = new TramStop(this, data);
-                    nCache.AddCacheEntry(id,data);
-
+                {                   
+                    stop = new TramStop(id,this);                   
                 }
                 
                 nodes.Add(stop);             
@@ -49,7 +58,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
-            throw new NotImplementedException();
+            api.getr
         }
 
     }
