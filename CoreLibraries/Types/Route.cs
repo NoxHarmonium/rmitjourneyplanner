@@ -62,14 +62,24 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns></returns>
         public List<INetworkNode> GetNodes(bool isUpDirection)
         {
+            List<INetworkNode> nodes = new List<INetworkNode>();
 
-            if (isUpDirection)
+            //Huh? Fix directions!
+            if (!isUpDirection)
             {
-                return upNodes;
+                //nodes.Add(downDestination);
+                nodes.AddRange(upNodes);
+                //nodes.Add(upDestination);
+                //nodes.Reverse();
+                return nodes;
             }
             else
             {
-                return downNodes;
+                //nodes.Add(upDestination);
+                nodes.AddRange(downNodes);
+                //nodes.Add(downDestination);
+                //nodes.Reverse();
+                return nodes;
             }
         }
 
@@ -80,15 +90,32 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns></returns>
         public List<INetworkNode> GetAdjacent(INetworkNode node)
         {
+            List<INetworkNode> sourceNodes;
             List<INetworkNode> nodes = new List<INetworkNode>();
+
+            if (upNodes.Contains(node))
+            {
+                sourceNodes = upNodes;
+            }
+            else if (downNodes.Contains(node))
+            {
+                sourceNodes = downNodes;
+            }
+            else
+            {
+                throw new Exception("Node doesn't exist in route.");
+            }
+
+
+            /*
             if (node == upDestination)
             {
-                nodes.Add(downNodes[0]);
-                nodes.Add(upNodes[upNodes.Count - 1]);
+                nodes.Add(sourceNodes[0]);
+                nodes.Add(sourceNodes[upNodes.Count - 1]);
             }
             else if (node == downDestination)
             {
-                nodes.Add(upNodes[0]);
+                nodes.Add(sourceNodes[0]);
                 nodes.Add(downNodes[downNodes.Count - 1]);
             }
             else
@@ -104,15 +131,27 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 }
                 
 
-                int downIndex = downNodes.IndexOf(node);
-                if (downIndex > downNodes.Count - 1)
-                {
-                    nodes.Add(downDestination);
-                }
-                else
-                {
-                    nodes.Add(downNodes[downIndex + 1]);
-                }
+               
+            }
+             */
+
+            int index = sourceNodes.IndexOf(node);
+            try
+            {
+                nodes.Add(sourceNodes[index - 1]);
+            }
+            catch (Exception)
+            {
+
+            }
+            try
+            {
+
+                nodes.Add(sourceNodes[index + 1]);
+            }
+            catch (Exception)
+            {
+
             }
             return nodes;
         }

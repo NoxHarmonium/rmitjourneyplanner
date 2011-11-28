@@ -10,9 +10,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Data;
     using Caching;
     using DataAccess;
     using System.Data;
+    using Types;
     using Positioning;
 
     /// <summary>
@@ -23,6 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         LocationCache lCache = new LocationCache("YarraTrams");
         NodeCache<TramStop> nCache = new NodeCache<TramStop>("YarraTrams");
+        RouteCache rCache = new RouteCache("YarraTrams");
         TramTrackerAPI api = new TramTrackerAPI();
 
         public DataSet GetNodeData(string id)
@@ -59,10 +62,51 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
 
+            DataSet routeData = api.GetMainRoutesForStop(node.ID);
+            //TODO: Multiple routes??
+
+            string routeId = routeData.Tables[0].Rows[0]["RouteNo"].ToString();
+
+            List<string> upIds = rCache.GetRoute(routeId, true);
+            List<string> downIds = rCache.GetRoute(routeId, false);
+
+            if (upIds == null)
+            {
+                upIds = new List<string>();
+                
+                DataSet upData = api.GetListOfStopsByRouteNoAndDirection(routeId, true);
+                foreach (DataRow row in upData.Tables[0].Rows)
+                {
+                    upIds.Add(row["TID"].ToString());
+                }
+                rCache.AddCacheEntry(routeId,upIds,true);
+
+            }
+            if (downIds == null)
+            {
+                downIds = new List<string>();
+                
+                DataSet downData = api.GetListOfStopsByRouteNoAndDirection(routeId, false);
+                foreach (DataRow row in downData.Tables[0].Rows)
+                {
+                    downIds.Add(row["TID"].ToString());
+                }
+                rCache.AddCacheEntry(routeId,downIds,false);
+            }
+
+            Route route = new Route(routeId, new TramStop(upIds[0], this), new TramStop(upIds[upIds.Count - 1],this));
+            foreach(string id in upIds)
+            {
+                route.AddNode(new TramStop(id, null),true);
+            }
+            foreach (string id in downIds)
+            {
+                route.AddNode(new TramStop(id, null), false);
+            }
+
             
-            DataSet upData = api.GetListOfStopsByRouteNoAndDirection(node.ID, true);
-            //DataSet
-            throw new NotImplementedException();
+            return route.GetAdjacent(node);
+
         }
 
     }

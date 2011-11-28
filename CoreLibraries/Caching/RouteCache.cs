@@ -44,7 +44,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                                 "`stopDirection` INT UNSIGNED ," +
                                 "PRIMARY KEY (`cacheID`) ," +
                                 "INDEX `routeID` (`routeID` ASC)) " +
-                                "PACK_KEYS = 1;");
+                                "PACK_KEYS = 1;" +
+                                "DELETE FROM RouteCache;"
+                                );
 
 
 
@@ -54,30 +56,30 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// Adds a route to the cache.
         /// </summary>
         /// <param name="route"></param>
-        public void AddCacheEntry(Route route)
+        public void AddCacheEntry(string routeID, List<string> ids, bool isUpDirection)
         {
             //database.BeginTransaction();
+            int index = 0;
 
-            foreach (bool direction in new bool[] { true, false })
+                        
+            foreach (string id in ids)
             {
-                int index = 0;
-                foreach (INetworkNode node in route.GetNodes(direction))
-                {
-                    string query = string.Format("INSERT INTO RouteCache" +
-                                            " (networkID,routeID,stopID,stopIndex,stopDirection)" +
-                                            " VALUES('{0}','{1}','{2}','{3}','{4}');",
-                                            networkID,
-                                            route.ID,
-                                            node.ID,
-                                            index++,
-                                            Convert.ToInt16(direction));
-                    database.RunQuery(query);
-                }
+                string query = string.Format("INSERT INTO RouteCache" +
+                                        " (networkID,routeID,stopID,stopIndex,stopDirection)" +
+                                        " VALUES('{0}','{1}','{2}','{3}','{4}');",
+                                        networkID,
+                                        routeID,
+                                        id,
+                                        index++,
+                                        Convert.ToInt16(isUpDirection));
+                database.RunQuery(query);
             }
 
            // database.EndTransaction();
 
         }
+
+        
 
         /// <summary>
         /// Returns a list of IDs the corrospond to the specifed route a direction.
@@ -93,21 +95,26 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                 string query = string.Format("SELECT routeID,stopID,stopIndex,stopDirection " +
                                             "FROM RouteCache " + 
                                             "WHERE routeID='{0}' " +
-                                            "AND stopDirection='{1}' " +
-                                            "ORDER BY stopIndex",
+                                            "AND stopDirection='{1}' ",// +
+                                            //"ORDER BY stopIndex",
                                             routeId,
                                             Convert.ToInt16(isUpDirection));
 
                 DataTable data = database.GetDataSet(query);
 
-                List<string> ids = new List<string>();
-                
-                foreach (DataRow row in data.Rows)
-                {
-                    ids.Add(row["routeID"].ToString());
-                }
 
-                return ids;
+                if (data.Rows.Count > 0)
+                {
+                    List<string> ids = new List<string>();
+
+                    foreach (DataRow row in data.Rows)
+                    {
+                        ids.Add(row["stopID"].ToString());
+                    }
+
+                    return ids;
+                }
+                return null;
             
             
         } 

@@ -76,26 +76,40 @@ namespace UnitTests
         public void RouteCacheConstructorTest()
         {
             TramTrackerAPI api = new TramTrackerAPI();
-            DataSet upData = api.GetListOfStopsByRouteNoAndDirection("8",true);
-            DataSet downData = api.GetListOfStopsByRouteNoAndDirection("8",false);
+            DataSet upData = api.GetListOfStopsByRouteNoAndDirection("1",true);
+            DataSet downData = api.GetListOfStopsByRouteNoAndDirection("1",false);
             TramStop upDestination = new TramStop(upData.Tables[0].Rows[ upData.Tables[0].Rows.Count-1]["TID"].ToString(),null);
             TramStop downDestination = new TramStop(downData.Tables[0].Rows[downData.Tables[0].Rows.Count-1]["TID"].ToString(),null);
 
-            Route route = new Route("8", upDestination, downDestination);
+            Route route = new Route("1", upDestination, downDestination);
+            List<String> upIds = new List<string>();
+            List<String> downIds = new List<string>();
+        
+            foreach(DataRow row in upData.Tables[0].Rows)
+            {
+                route.AddNode(new TramStop(row["TID"].ToString(), null),true);
+                upIds.Add(row["TID"].ToString());
+            }
+            foreach (DataRow row in downData.Tables[0].Rows)
+            {
+                route.AddNode(new TramStop(row["TID"].ToString(), null), false);
+                downIds.Add(row["TID"].ToString());
+            }
 
 
-
-            RouteCache target = new RouteCache("8");
+            RouteCache target = new RouteCache("Test");
             target.InitializeCache();            
-            target.AddCacheEntry(route);
-            List<string>[] ids = new List<string>[]{target.GetRoute("8", true),target.GetRoute("8",false)};
+            target.AddCacheEntry("1",upIds,true);
+            target.AddCacheEntry("1",downIds,false);
+            List<string>[] ids = new List<string>[]{target.GetRoute("1", true),target.GetRoute("1",false)};
 
-            foreach (bool direction in new bool[] { false, true })
+            foreach (bool direction in new bool[] { true,false })
             {
                 int count = 0;
                 int dir = Convert.ToInt32(direction);
-
-                foreach(TramStop stop in route.GetNodes(direction))
+                List<INetworkNode> nodes = route.GetNodes(direction);
+               
+                foreach(TramStop stop in nodes)
                 {
                     Assert.AreEqual(stop.ID, ids[dir][count++]);
                 }
