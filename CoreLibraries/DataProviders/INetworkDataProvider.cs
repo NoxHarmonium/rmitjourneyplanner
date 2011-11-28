@@ -41,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <param name="destination"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        Arc GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime time);
+        List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime time);
 
         /// <summary>
         /// Get the location of the node with the specified ID.
