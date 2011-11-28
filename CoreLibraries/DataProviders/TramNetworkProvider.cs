@@ -139,6 +139,31 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         public Arc GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination,DateTime time)
         {
+            //First we generate the routes that intersect both nodes. 
+            DataSet sRouteData = api.GetMainRoutesForStop(source.ID);
+            DataSet dRouteData = api.GetMainRoutesForStop(destination.ID);
+            List<string> xRows = new List<string>();
+
+            foreach (DataRow sRow in sRouteData.Tables[0].Rows)
+            {
+                foreach (DataRow dRow in dRouteData.Tables[0].Rows)
+                {
+                    if (sRow[0].ToString() == dRow[0].ToString())
+                    {
+                        if (!xRows.Contains(sRow[0].ToString()))
+                        {
+                            xRows.Add(sRow[0].ToString());
+                        }
+                    }
+                }
+            }
+
+            //TODO: Find schedules of intersecting routes....
+
+           
+
+
+
             throw new NotImplementedException();
         }
     }
