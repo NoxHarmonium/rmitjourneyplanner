@@ -6,7 +6,7 @@ using System.Text;
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     /// <summary>
-    /// Defines the point to point transport mode used.
+    /// Defines the transport mode used.
     /// </summary>
     public enum TransportMode
     {
@@ -21,6 +21,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The transport mode is cycling.
         /// </summary>
-        Bicycling = 2
+        Bicycling = 2,
+        /// <summary>
+        /// The transport mode uses a transport network.
+        /// </summary>
+        PublicTransport = 3
     }
 }
