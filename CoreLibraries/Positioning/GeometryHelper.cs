@@ -69,6 +69,20 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         }
 
         /// <summary>
+        /// Gets the distance between 2 points calculcated with the curvature of the earth.
+        /// </summary>
+        /// <param name="latitude1"></param>
+        /// <param name="longitude1"></param>
+        /// <param name="latitude2"></param>
+        /// <param name="longitude2"></param>
+        /// <returns></returns>
+        public static double GetStraightLineDistance(double latitude1, double longitude1, double latitude2, double longitude2)
+        {
+            return GetStraightLineDistance(new Location(latitude1, longitude1), new Location(latitude2, longitude2));
+        }
+        
+        
+        /// <summary>
         /// Gets the distance between 2 points calculated with the curvature of the earth.
         /// </summary>
         /// <param name="locationA"></param>
