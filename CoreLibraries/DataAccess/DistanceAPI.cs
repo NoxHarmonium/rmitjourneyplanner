@@ -66,7 +66,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             double distance = Convert.ToDouble(element["distance"]["value"].InnerText);
 
             //Return new object
-            return new Arc(duration,distance,transportMode);
+            return new Arc(duration,distance,default(DateTime),transportMode.ToString());
 
         }
         
