@@ -21,10 +21,6 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The transport mode is cycling.
         /// </summary>
-        Bicycling = 2,
-        /// <summary>
-        /// The transport mode uses a transport network.
-        /// </summary>
-        PublicTransport = 3
+        Bicycling = 2
     }
 }
