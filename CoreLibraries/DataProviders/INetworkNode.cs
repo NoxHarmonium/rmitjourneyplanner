@@ -14,7 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     /// <summary>
     /// Represents a node in a transport network such a train station or tram stop.
     /// </summary>
-    public interface INetworkNode
+    public interface INetworkNode 
     {
         /// <summary>
         /// Gets the DataProvider that the node belongs to.
@@ -36,5 +36,22 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Loads the properties of the node from the parent.
         /// </summary>
         void RetrieveData();
+
+        /// <summary>
+        /// Gets the longitude of this location
+        /// </summary>
+        double Longitude
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the latitude of this location
+        /// </summary>
+        double Latitude
+        {
+            get;
+
+        }
     }
 }
