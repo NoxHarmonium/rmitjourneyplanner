@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using RmitJourneyPlanner.CoreLibraries.Types;
 
 namespace UnitTests
 {
@@ -78,6 +79,37 @@ namespace UnitTests
             actual = target.GetAdjacentNodes(node);
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
+        /// <summary>
+        ///A test for GetDistanceBetweenNodes
+        ///</summary>
+        [TestMethod()]
+        public void GetDistanceBetweenNodesTest()
+        {
+            //Test simple route
+            TramNetworkProvider target = new TramNetworkProvider();
+            INetworkNode source = new TramStop("1551",target);
+            INetworkNode destination = new TramStop("1216", target); 
+            DateTime requestTime = DateTime.Parse("11/24/2011 1:23:00 PM"); 
+            List<Arc> actual;
+            actual = target.GetDistanceBetweenNodes(source, destination, requestTime);
+            Assert.AreEqual(new TimeSpan(0,14,0), actual[0].Time);
+
+            //Test 2 routes parralell
+            source = new TramStop("1214", target);
+            destination = new TramStop("1216", target);
+            actual = target.GetDistanceBetweenNodes(source, destination, requestTime);
+            Assert.AreEqual(new TimeSpan(0, 8, 0), actual[0].Time);
+            Assert.AreEqual(new TimeSpan(0, 2, 0), actual[1].Time);
+            
+
+            //Test overnight 
+            requestTime = DateTime.Parse("11/24/2011 1:23:00 AM");
+            actual = target.GetDistanceBetweenNodes(source, destination, requestTime);
+            Assert.AreEqual(new TimeSpan(3 ,29 ,0), actual[0].Time);
+            Assert.AreEqual(new TimeSpan(4, 11, 0), actual[1].Time);
+
         }
     }
 }
