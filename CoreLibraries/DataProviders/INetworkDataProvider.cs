@@ -11,6 +11,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System.Linq;
     using System.Text;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.Types;
+
 
     /// <summary>
     /// A NetworkDataProvider is a plugable class that is used to provide information on networks such a train or bus network.
@@ -32,9 +34,23 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         List<INetworkNode> GetAdjacentNodes(INetworkNode node);
 
+        /// <summary>
+        /// Gets the shortest distance between nodes.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        Arc GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime time);
+
+        /// <summary>
+        /// Get the location of the node with the specified ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Location GetNodeLocation(string id);
+
         
-
-
         
 
     }

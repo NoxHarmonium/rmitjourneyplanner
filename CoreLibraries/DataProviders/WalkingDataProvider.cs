@@ -20,6 +20,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         private DistanceAPI distanceAPI;
 
+
+        /// <summary>
+        /// Initializes a new instance of WalkingDataProvider
+        /// </summary>
         public WalkingDataProvider()
         {
             distanceAPI = new DistanceAPI();

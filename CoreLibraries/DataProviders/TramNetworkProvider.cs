@@ -13,7 +13,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System.Data;
     using Caching;
     using DataAccess;
-    using System.Data;
     using Types;
     using Positioning;
 
@@ -28,18 +27,34 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         RouteCache rCache = new RouteCache("YarraTrams");
         TramTrackerAPI api = new TramTrackerAPI();
 
+        /// <summary>
+        /// Gets a DataSet containing all the data pertaining to a node.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataSet GetNodeData(string id)
         {
             DataSet data = api.GetStopInformation(id); 
             nCache.AddCacheEntry(id, data);      
             return data;
         }
-
+        
+        /// <summary>
+        /// Gets the position of the specified node.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Location GetNodeLocation(string id)
         {
             return lCache.GetPostition(id);
         }
 
+        /// <summary>
+        /// Gets a list of nodes that are within a certain radius of a location.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="radius"></param>
+        /// <returns></returns>
         public List<INetworkNode> GetNodesAtLocation(Positioning.Location location, double radius)
         {
             List<INetworkNode> nodes = new List<INetworkNode>();
@@ -59,6 +74,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             return nodes;
         }
 
+        /// <summary>
+        /// Gets the nodes that are directly connected to the specified node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
 
@@ -109,5 +129,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         }
 
+
+        /// <summary>
+        /// Gets the arc between 2 nodes, taking into account the time of the next departure.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public Arc GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination,DateTime time)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

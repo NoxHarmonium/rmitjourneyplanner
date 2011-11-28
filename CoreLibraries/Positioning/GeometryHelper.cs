@@ -28,6 +28,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
 
         }
 
+        /// <summary>
+        /// Converts the specified number to degrees from radians.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         public static double ToDegs(double x)
         {
             return x * (180.0 / Math.PI);

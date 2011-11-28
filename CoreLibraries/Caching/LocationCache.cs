@@ -59,6 +59,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
         
+        /// <summary>
+        /// Adds a new cache entry into the location cache.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="location"></param>
         public void AddCacheEntry(string id, Location location)
         {
             string query = String.Format("INSERT INTO LocationCache" +

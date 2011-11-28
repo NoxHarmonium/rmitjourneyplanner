@@ -55,7 +55,6 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// <summary>
         /// Adds a route to the cache.
         /// </summary>
-        /// <param name="route"></param>
         public void AddCacheEntry(string routeID, List<string> ids, bool isUpDirection)
         {
             //database.BeginTransaction();

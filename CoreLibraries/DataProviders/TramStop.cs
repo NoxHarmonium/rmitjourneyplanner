@@ -164,7 +164,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         /// Gets the information describing the TramStop from the cache.
         /// </summary>
-        /// <param name="parent"></param>
         /// <param name="stopData"></param>
         private void loadData(DataSet stopData)
         {
@@ -220,6 +219,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Initializes a new instance of the TramStop class with a dataset retreived from the 
         /// TramTracker API.
         /// </summary>
+        /// <param name="id">The tramtracker ID.</param>
         /// <param name="parent">The NetworkProvider that contains this tram stop.</param>
         public TramStop(string id, TramNetworkProvider parent)
             : base(0, 0)

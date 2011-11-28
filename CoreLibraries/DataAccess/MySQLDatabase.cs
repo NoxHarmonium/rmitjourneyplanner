@@ -23,7 +23,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         private MySqlConnection connection;
         private MySqlTransaction transaction = null;
 
-
+        /// <summary>
+        /// Initilizes a new MySqlDatabase
+        /// </summary>
         public MySqlDatabase()
         {
             connection = new MySqlConnection(connectionString);
@@ -49,28 +51,47 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             }
         }
 
+        /// <summary>
+        /// Open the database connection.
+        /// </summary>
         public void Open()
         {
             connection.Open();
         }
 
+        /// <summary>
+        /// Close the database connection.
+        /// </summary>
         public void Close()
         {
             connection.Close();
         }
 
+        /// <summary>
+        /// Opens up a database transaction. All queries done between the execution of this and
+        /// EndTransaction() will be in the one transaction.
+        /// </summary>
         public void BeginTransaction()
         {
             connection.Open();
             transaction = connection.BeginTransaction();
         }
 
+
+        /// <summary>
+        /// Commits the current transaction.
+        /// </summary>
         public void EndTransaction()
         {
             transaction.Commit();
             transaction = null;
         }
 
+        /// <summary>
+        /// Runs a simple query with no return.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public int RunQuery(string query)
         {
             if (transaction == null)
@@ -90,6 +111,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             }
         }
 
+        /// <summary>
+        /// Runs a query and returns the result in a datatable.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public System.Data.DataTable GetDataSet(string query)
         {
             if (transaction == null)

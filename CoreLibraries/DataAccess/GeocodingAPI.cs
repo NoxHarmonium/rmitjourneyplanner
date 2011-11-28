@@ -144,7 +144,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// Gets a new Location from a Google Maps search string.
         /// </summary>OK
         /// <example>Pizza shops near RMIT University</example>
-        /// <param name="location">A Google Maps search string</param>
+        /// <param name="locationString">A Google Maps search string</param>
         /// <returns></returns>
         public Positioning.Location GetLocation(string locationString)
         {

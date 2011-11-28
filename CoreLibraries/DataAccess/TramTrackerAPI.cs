@@ -218,7 +218,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <summary>
         /// Gets a dataset containing a collection of the next predicted trams for the supplied stop and route.
         /// </summary>
-        /// <param name="tramNo"></param>
         /// <returns></returns>
         public DataSet GetNextPredictedRoutesCollection(string stopNo,string routeNo, bool lowFloor)
         {
@@ -245,7 +244,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <summary>
         /// Gets a dataset containing a collection of schedules for the supplied stop and route.
         /// </summary>
-        /// <param name="tramNo"></param>
         /// <returns></returns>
         public DataSet GetSchedulesCollection(string stopNo, string routeNo, bool lowFloor, DateTime clientRequestDateTime)
         {

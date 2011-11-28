@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\RmitJourneyPlanner.CoreLibraries.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -61,6 +62,9 @@
     <Compile Include="DataProviders\TramNetworkProvider.cs" />
     <Compile Include="DataProviders\TramStop.cs" />
     <Compile Include="DataProviders\WalkingDataProvider.cs" />
+    <Compile Include="DFSRoutePlanner.cs" />
+    <Compile Include="EvolutionaryRoutePlanner.cs" />
+    <Compile Include="IRoutePlanner.cs" />
     <Compile Include="Positioning\GeometryHelper.cs" />
     <Compile Include="Positioning\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +72,9 @@
     <Compile Include="Types\Route.cs" />
     <Compile Include="Types\TransportDirection.cs" />
     <Compile Include="Types\TransportMode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

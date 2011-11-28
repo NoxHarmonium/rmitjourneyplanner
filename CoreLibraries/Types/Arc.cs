@@ -20,6 +20,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         private double distance;
         private TransportMode transportMode;
        
+        /// <summary>
+        /// Initializes a new arc defining information between 2 points.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="distance"></param>
+        /// <param name="transportMode"></param>
         public Arc(TimeSpan time, double distance, TransportMode transportMode)
         {
             this.time = time;

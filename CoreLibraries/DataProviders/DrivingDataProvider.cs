@@ -19,6 +19,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     {
          private DistanceAPI distanceAPI;
 
+        /// <summary>
+        /// Initilizes a new instance of DrivingDataProvider.
+        /// </summary>
         public DrivingDataProvider()
         {
             distanceAPI = new DistanceAPI();

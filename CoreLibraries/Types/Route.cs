@@ -26,8 +26,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Initializes a new instance of the the Route class.
         /// </summary>
-        /// <param name="UpDestination">The end point in the up direction.</param>
-        /// <param name="DownDestination">The end point in the down direction.</param>
+        /// <param name="routeId">The ID of the specified route.</param>
+        /// <param name="upDestination">The end point in the up direction.</param>
+        /// <param name="downDestination">The end point in the down direction.</param>
         public Route(string routeId, INetworkNode upDestination, INetworkNode downDestination)
         {
             this.upDestination = upDestination;
@@ -156,6 +157,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return nodes;
         }
 
+        /// <summary>
+        /// Gets the route ID.
+        /// </summary>
         public string ID
         {
             get

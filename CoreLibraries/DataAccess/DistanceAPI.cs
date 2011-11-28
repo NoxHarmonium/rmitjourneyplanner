@@ -39,6 +39,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         /// <param name="pointA">The first point</param>
         /// <param name="pointB">The second point</param>
+        /// <param name="transportMode">Specified the mode of transport used between points.</param>
         /// <returns>The distance between pointA and pointB</returns>
         public Arc GetDistance(Location pointA, Location pointB, TransportMode transportMode)
         {
