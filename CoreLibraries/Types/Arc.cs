@@ -18,7 +18,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     {
         private TimeSpan time;      
         private double distance;
-        private TransportMode transportMode;
+        private string transportMode;
+        private DateTime departureTime;
        
         /// <summary>
         /// Initializes a new arc defining information between 2 points.
@@ -26,11 +27,20 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="time"></param>
         /// <param name="distance"></param>
         /// <param name="transportMode"></param>
-        public Arc(TimeSpan time, double distance, TransportMode transportMode)
+        public Arc(TimeSpan time, double distance, DateTime departureTime, string transportMode)
         {
             this.time = time;
             this.distance = distance;
             this.transportMode = transportMode;
+            this.departureTime = departureTime;
+        }
+
+        public DateTime DepartureTime
+        {
+            get
+            {
+                return departureTime;
+            }
         }
 
         /// <summary>
@@ -51,7 +61,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Gets the transport mode used to get these distance statistics.
         /// </summary>
-        public TransportMode TransportMode
+        public string TransportMode
         {
             get { return transportMode; }            
         }
