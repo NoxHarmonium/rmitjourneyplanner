@@ -170,7 +170,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                     DateTime bestDepartureTime = (DateTime)data.Rows[0]["PredictedArrivalDateTime"];
                     DateTime bestArrivalTime = default(DateTime);
                     string tripID = data.Rows[0]["TripID"].ToString();
-                    DataTable tripData = api.GetSchedulesForTrip(tripID, requestTime).Tables[0];
+                    DataTable tripData = api.GetSchedulesForTrip(tripID, bestDepartureTime).Tables[0];
                     foreach (DataRow row in tripData.Rows)
                     {
                         if (row["StopNo"].ToString() == destination.ID)
