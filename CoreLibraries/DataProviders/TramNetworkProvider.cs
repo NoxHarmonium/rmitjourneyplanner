@@ -135,9 +135,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        /// <param name="time"></param>
+        /// <param name="requestTime"></param>
         /// <returns></returns>
-        public Arc GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination,DateTime time)
+        public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination,DateTime requestTime)
         {
             //First we generate the routes that intersect both nodes. 
             DataSet sRouteData = api.GetMainRoutesForStop(source.ID);
@@ -160,11 +160,53 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
             //TODO: Find schedules of intersecting routes....
 
-           
+
+            List<Arc> arcs = new List<Arc>();
+            foreach (string route in xRows)
+            {
+                DataTable data = api.GetSchedulesCollection(source.ID, route, false, requestTime).Tables[0];
+                if (data.Rows.Count > 0)
+                {
+                    DateTime bestDepartureTime = (DateTime)data.Rows[0]["PredictedArrivalDateTime"];
+                    DateTime bestArrivalTime = default(DateTime);
+                    string tripID = data.Rows[0]["TripID"].ToString();
+                    DataTable tripData = api.GetSchedulesForTrip(tripID, requestTime).Tables[0];
+                    foreach (DataRow row in tripData.Rows)
+                    {
+                        if (row["StopNo"].ToString() == destination.ID)
+                        {
+                            bestArrivalTime = (DateTime) row["ScheduledArrivalDateTime"];
+                            break;
+                        }
+
+                    }
+
+                    if (bestArrivalTime == default(DateTime))
+                    {
+                        break;
+                    }
+
+                    TimeSpan travelTime = bestArrivalTime - bestDepartureTime;
+                    TimeSpan waitingTime = bestDepartureTime - requestTime;
+                    TimeSpan totalTime = travelTime + waitingTime;
+
+                    Arc arc = new Arc(totalTime,
+                                     GeometryHelper.GetStraightLineDistance(source.Latitude, source.Longitude, destination.Latitude, destination.Longitude),
+                                     bestDepartureTime,
+                                     "YarraTrams");
+                    arcs.Add(arc);
+
+                }
+            }
 
 
 
-            throw new NotImplementedException();
+
+
+
+            return arcs;
+
+
         }
     }
 }
