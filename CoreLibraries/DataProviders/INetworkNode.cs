@@ -28,7 +28,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Gets or sets the total time taken to reach this node. Used for traversing 
         /// route trees.
         /// </summary>
-        public TimeSpan TotalTime
+        TimeSpan TotalTime
         {
             get;
             set;
@@ -38,7 +38,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Gets or sets the parent node to this node. Used for traversing 
         /// route trees.
         /// </summary>
-        public INetworkNode Parent
+        INetworkNode Parent
         {
             get;
             set;
