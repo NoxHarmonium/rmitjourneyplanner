@@ -23,6 +23,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         private RequestType requestType = RequestType.GET;
         private string xmlNamespace = "";
         private string soapAction = "";
+        private WebProxy proxy = null;
        
 
         /// <summary>
@@ -33,8 +34,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         {
             this.baseUrl = baseUrl;
             //System.Net.ServicePointManager.Expect100Continue = false;
-           
-           
+            this.proxy = ConnectionInfo.Proxy;
+        }
+        
+        /// <summary>
+        /// Initializes the XMLRequester with a URL and a proxy.
+        /// </summary>
+        /// <param name="baseUrl"></param>
+        /// <param name="proxy"></param>
+        public XMLRequester(string baseUrl, WebProxy proxy)
+        {
+            this.proxy = proxy;
         }
 
         /// <summary>
@@ -153,16 +163,18 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
 
                 HttpWebRequest request = HttpWebRequest.Create(requestURL) as HttpWebRequest;
-                request.Proxy = new WebProxy("http://aproxy.rmit.edu.au:8080", false, new string[] { }, new NetworkCredential("s3229159", "MuchosRowlies1"));
-                
+                request.Proxy = proxy;
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
                 //Read response stream into xml object
                 XmlDocument doc = new XmlDocument();
-                Stream responseStream = response.GetResponseStream();
-                doc.Load(responseStream);
-                responseStream.Close();                         
-                return doc;
+
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    doc.Load(responseStream);
+                    responseStream.Close();
+                    return doc;
+                }
             }
             else if (requestType == RequestType.SOAP)
             {
@@ -214,24 +226,26 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 request.Method = "POST";
                 request.Accept = "text/xml";
                 request.Headers.Add("SOAPAction", soapAction);
-                request.Proxy = new WebProxy("http://aproxy.rmit.edu.au:8080", false, new string[] { }, new NetworkCredential("s3229159", "MuchosRowlies1"));
+                request.Proxy = proxy;
 
-                Stream requestStream = request.GetRequestStream();
-                
+                using (Stream requestStream = request.GetRequestStream())
+                {
+                    doc.Save(requestStream);
+                    requestStream.Flush();
+                    requestStream.Close();
 
-                doc.Save(requestStream);
-                requestStream.Flush();
-                requestStream.Close();
+                    HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                
 
-                //Read response stream into xml object
-                doc = new XmlDocument();
-                Stream responseStream = response.GetResponseStream();
-                doc.Load(responseStream);
-                responseStream.Close();
-                return doc;
+                    //Read response stream into xml object
+                    doc = new XmlDocument();
+                    using (Stream responseStream = response.GetResponseStream())
+                    {
+                        doc.Load(responseStream);
+                        responseStream.Close();
+                        return doc;
+                    }
+                }
 
             }
             else

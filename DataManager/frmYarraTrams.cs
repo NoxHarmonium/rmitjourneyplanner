@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Net;
 
 using RmitJourneyPlanner.CoreLibraries.DataProviders;
 using RmitJourneyPlanner.CoreLibraries.Caching;
@@ -22,6 +23,8 @@ namespace DataManager
         public frmYarraTrams()
         {
             InitializeComponent();
+            RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy = 
+                new System.Net.WebProxy("http://aproxy.rmit.edu.au:8080",false,null,new NetworkCredential("s3229159","MuchosRowlies1");
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -123,6 +126,21 @@ namespace DataManager
                     worker.ReportProgress(0, "Initilizing node cache...");
                     NodeCache<TramStop> nCache = new NodeCache<TramStop>("YarraTrams");
                     nCache.InitializeCache();
+
+                }
+                else if ((int)e.Argument == 3)
+                {
+                    worker.ReportProgress(0, @"Finding distance between 12-14-1216 @ 24/11/2011 1:23 PM");
+                    TramNetworkProvider provider = new TramNetworkProvider();
+                    List<Arc> arcs = provider.GetDistanceBetweenNodes(new TramStop("1214",provider), new TramStop("1216",provider), DateTime.Parse("11/24/2011 1:23 PM"));
+                    foreach (Arc arc in arcs)
+                    {
+                        worker.ReportProgress(0,
+                                            String.Format("Arc: [RouteID: {0}, Departure Time: {1}, Total Time: {2}]",
+                                            arc.RouteId,
+                                            arc.DepartureTime,
+                                            arc.Time));
+                    }
 
                 }
             }

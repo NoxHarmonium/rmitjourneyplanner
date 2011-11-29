@@ -91,7 +91,8 @@
             this.cmbActions.Items.AddRange(new object[] {
             "Scrape stop data into location cache",
             "Test radius",
-            "Init node cache"});
+            "Init node cache",
+            "Test distance finding"});
             this.cmbActions.Location = new System.Drawing.Point(263, 12);
             this.cmbActions.Name = "cmbActions";
             this.cmbActions.Size = new System.Drawing.Size(369, 21);
