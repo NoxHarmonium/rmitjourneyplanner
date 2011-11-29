@@ -78,14 +78,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Gets the nodes that are directly connected to the specified node.
         /// </summary>
         /// <param name="node"></param>
+        /// <param name="routeId"></param>
         /// <returns></returns>
-        public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
+        public List<INetworkNode> GetAdjacentNodes(INetworkNode node, string routeId)
         {
 
-            DataSet routeData = api.GetMainRoutesForStop(node.ID);
-            //TODO: Multiple routes??
-
-            string routeId = routeData.Tables[0].Rows[0]["RouteNo"].ToString();
 
             List<string> upIds = rCache.GetRoute(routeId, true);
             List<string> downIds = rCache.GetRoute(routeId, false);
