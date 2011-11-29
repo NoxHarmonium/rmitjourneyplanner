@@ -92,7 +92,8 @@
             "Scrape stop data into location cache",
             "Test radius",
             "Init node cache",
-            "Test distance finding"});
+            "Test distance finding",
+            "Test route calc"});
             this.cmbActions.Location = new System.Drawing.Point(263, 12);
             this.cmbActions.Name = "cmbActions";
             this.cmbActions.Size = new System.Drawing.Size(369, 21);
@@ -132,6 +133,7 @@
             this.Name = "frmYarraTrams";
             this.Text = "Yarra Trams Data Manager";
             this.Load += new System.EventHandler(this.frmYarraTrams_Load);
+            this.Resize += new System.EventHandler(this.frmYarraTrams_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

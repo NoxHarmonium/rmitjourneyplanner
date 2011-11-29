@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Net;
+using RmitJourneyPlanner.CoreLibraries;
 
 using RmitJourneyPlanner.CoreLibraries.DataProviders;
 using RmitJourneyPlanner.CoreLibraries.Caching;
@@ -143,6 +144,23 @@ namespace DataManager
                     }
 
                 }
+                else if ((int)e.Argument == 4)
+                {
+                    worker.ReportProgress(0, @"Finding route between:\n\t13 Liverpool St and 1 Lygon St");
+
+                    TerminalNode source = new TerminalNode("Start", "13 Liverpool St, Coburg, Victoria, Australia");
+                    TerminalNode destination = new TerminalNode("End", "1 Lygon St, Carlton, Victoria, Australia");
+                    List<INetworkNode> itinerary = new List<INetworkNode>();
+                    itinerary.Add(source);
+                    itinerary.Add(destination);
+
+                    DFSRoutePlanner dfs = new DFSRoutePlanner();
+                    dfs.RegisterNetworkDataProvider(new TramNetworkProvider());
+                    dfs.RegisterPointDataProvider(new WalkingDataProvider());
+                    dfs.NextIterationEvent += new EventHandler<NextIterationEventArgs>(dfs_NextIterationEvent);
+                    List<Arc>[] result = dfs.Solve(itinerary);
+
+                }
             }
             catch (Exception ex)
             {
@@ -152,6 +170,21 @@ namespace DataManager
             }
 
         }
+
+        void dfs_NextIterationEvent(object sender, NextIterationEventArgs e)
+        {
+            if (e.CurrentNode is TramStop)
+            {
+                TramStop stop = (TramStop)e.CurrentNode;
+                worker.ReportProgress(0, String.Format("Current node: [id: {0}, name: {1}, suburb: {2}, location: {3}]",
+                                                        stop.ID,
+                                                        stop.StopName,
+                                                        stop.SuburbName,
+                                                        (Location)stop));
+
+            }
+        }
+
 
         private void btnStop_Click(object sender, EventArgs e)
         {
@@ -185,6 +218,12 @@ namespace DataManager
         private void frmYarraTrams_Load(object sender, EventArgs e)
         {
             cmbActions.SelectedIndex = 0;
+        }
+
+        private void frmYarraTrams_Resize(object sender, EventArgs e)
+        {
+            lstLog.Width = this.Width - 236;
+            lstLog.Columns[1].Width = lstLog.Width;
         }
     }
 }
