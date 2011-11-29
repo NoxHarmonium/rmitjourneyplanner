@@ -19,7 +19,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         /// Gets the DataProvider that the node belongs to.
         /// </summary>
-        INetworkDataProvider Parent
+        INetworkDataProvider Provider
         {
             get;
         }

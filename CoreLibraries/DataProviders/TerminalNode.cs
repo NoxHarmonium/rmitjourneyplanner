@@ -50,7 +50,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Get the parent of the terminal node. 
         /// This is always null.
         /// </summary>
-        public INetworkDataProvider Parent
+        public INetworkDataProvider Provider
         {
             get
             {
