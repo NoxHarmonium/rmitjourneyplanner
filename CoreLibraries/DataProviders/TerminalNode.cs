@@ -104,7 +104,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         {
             get
             {
-                throw new NotImplementedException();
+                return String.Empty;
             }
         }
 
@@ -113,12 +113,24 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         {
             get
             {
-                throw new NotImplementedException();
+                return String.Empty;
             }
             set
             {
-                throw new NotImplementedException();
             }
+        }
+
+
+        public TimeSpan TotalTime
+        {
+            get;
+            set;
+        }
+
+        public INetworkNode Parent
+        {
+            get;
+            set;
         }
     }
 }
