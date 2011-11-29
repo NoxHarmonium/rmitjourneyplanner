@@ -24,7 +24,7 @@ namespace DataManager
         {
             InitializeComponent();
             RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy = 
-                new System.Net.WebProxy("http://aproxy.rmit.edu.au:8080",false,null,new NetworkCredential("s3229159","MuchosRowlies1");
+                new System.Net.WebProxy("http://aproxy.rmit.edu.au:8080",false,null,new NetworkCredential("s3229159","MuchosRowlies1"));
         }
 
         private void btnRun_Click(object sender, EventArgs e)
