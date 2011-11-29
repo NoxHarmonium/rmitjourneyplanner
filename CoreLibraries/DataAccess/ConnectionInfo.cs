@@ -20,6 +20,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     {
         private static WebProxy proxy = null;
 
+        /// <summary>
+        /// Gets or sets the proxy used by internet connections in this assembly.
+        /// </summary>
         public static WebProxy Proxy
         {
             get
