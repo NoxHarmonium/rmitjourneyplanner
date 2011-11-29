@@ -22,20 +22,36 @@ namespace RmitJourneyPlanner.CoreLibraries
         private List<INetworkDataProvider> networkProviders = new List<INetworkDataProvider>();
         private List<IPointDataProvider> pointDataProviders = new List<IPointDataProvider>();
         
+        /// <summary>
+        /// This event fires on every iteration of the algorithm.
+        /// </summary>
         public event EventHandler<NextIterationEventArgs> NextIterationEvent;
 
+        /// <summary>
+        /// Register a new data provider to use in the travel planning.
+        /// </summary>
+        /// <param name="provider"></param>
         public void RegisterNetworkDataProvider(DataProviders.INetworkDataProvider provider)
         {
             networkProviders.Add(provider);
         }
 
+
+        /// <summary>
+        /// Register a new point to point data provider to use in travel planning.
+        /// </summary>
+        /// <param name="provider"></param>
         public void RegisterPointDataProvider(DataProviders.IPointDataProvider provider)
         {
             pointDataProviders.Add(provider);
         }
 
         
-
+        /// <summary>
+        /// Return the best route found between the point
+        /// </summary>
+        /// <param name="itinerary"></param>
+        /// <returns></returns>
         public List<Types.Arc>[] Solve(List<DataProviders.INetworkNode> itinerary)
         {
 
@@ -55,12 +71,15 @@ namespace RmitJourneyPlanner.CoreLibraries
                 {
                     List<INetworkNode> nodes = nProvider.GetNodesAtLocation((Location)current, 1);
 
-                    List<string> routes = nProvider.GetRoutesForNode(current);
-
-                    foreach (string route in routes)
+                    if (nProvider.GetAssociatedType() == current.GetType())
                     {
-                        List<INetworkNode> adjacent = nProvider.GetAdjacentNodes(current, route);
-                        nodes.AddRange(adjacent);
+                        List<string> routes = nProvider.GetRoutesForNode(current);
+
+                        foreach (string route in routes)
+                        {
+                            List<INetworkNode> adjacent = nProvider.GetAdjacentNodes(current, route);
+                            nodes.AddRange(adjacent);
+                        }
                     }
 
                     List<Arc> localArcs = new List<Arc>();
@@ -80,12 +99,22 @@ namespace RmitJourneyPlanner.CoreLibraries
                         }
                     }
 
-                    localArcs.Sort(new ArcComparer());
+                    localArcs.Sort(new Comparers.ArcComparer());
+                    List<INetworkNode> newNodes = new List<INetworkNode>();
                     foreach (Arc arc in localArcs)
                     {
-                        stack.Push((INetworkNode)arc.Destination);
+                        INetworkNode destination = (INetworkNode)arc.Destination;
+                        destination.Parent = current;
+                        destination.TotalTime = current.TotalTime + arc.Time;
+                        newNodes.Add(destination);
                     }
                     localArcs.Clear();
+
+                    newNodes.Sort(new Comparers.NodeTimeComparer());
+                    foreach (INetworkNode node in newNodes)
+                    {
+                        stack.Push(node);
+                    }
                     
                 }
 
