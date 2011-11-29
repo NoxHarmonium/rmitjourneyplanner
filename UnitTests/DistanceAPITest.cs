@@ -77,7 +77,7 @@ namespace UnitTests
             Location pointA = new Location("Lonsdale Street, Melbourne, Victoria, Australia");
             Location pointB = new Location("Royal Park, Parkville, Victoria, Australia");
             TransportMode transportMode = TransportMode.Driving;
-            Arc expected = new Arc(new TimeSpan(0,11,0),4700.0,default(DateTime),TransportMode.Driving.ToString()); 
+            Arc expected = new Arc(pointA,pointB,new TimeSpan(0,11,0),4700.0,default(DateTime),TransportMode.Driving.ToString()); 
             Arc actual;
             actual = target.GetDistance(pointA, pointB, transportMode);
             Assert.AreEqual(expected, actual);
@@ -93,7 +93,7 @@ namespace UnitTests
             DistanceAPI target = new DistanceAPI();
             Location pointA = new Location("Lonsdale Street, Melbourne, Victoria, Australia");
             Location pointB = new Location("Royal Park, Parkville, Victoria, Australia");
-            Arc expected = new Arc(new TimeSpan(0, 11, 0), 4700.0,default(DateTime), TransportMode.Driving.ToString());
+            Arc expected = new Arc(pointA,pointB,new TimeSpan(0, 11, 0), 4700.0,default(DateTime), TransportMode.Driving.ToString());
             Arc actual;
             actual = target.GetDistance(pointA, pointB);
             Assert.AreEqual(expected, actual);
