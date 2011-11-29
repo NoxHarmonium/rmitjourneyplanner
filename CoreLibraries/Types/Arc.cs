@@ -20,7 +20,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         private double distance;
         private string transportMode;
         private DateTime departureTime;
-       
+        private string routeId = null;
+
         /// <summary>
         /// Initializes a new arc defining information between 2 points.
         /// </summary>
@@ -37,6 +38,23 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
+        /// Initializes a new arc defining information between 2 points.
+        /// </summary>
+        /// <param name="time">The total time of the arc.</param>
+        /// <param name="distance">The total distance in Km of the arc.</param>
+        /// <param name="departureTime">The departure time of this arc. Set to default(DateTime) if departure time is not relivant.</param>
+        /// <param name="transportMode">Sets the transport id used in the arc.</param>
+        /// <param name="routeId">Sets the optional route ID.</param>
+        public Arc(TimeSpan time, double distance, DateTime departureTime, string transportMode,string routeId)
+        {
+            this.time = time;
+            this.distance = distance;
+            this.transportMode = transportMode;
+            this.departureTime = departureTime;
+            this.routeId = routeId;
+        }
+
+        /// <summary>
         /// Gets the departure time of this arc. If the departure time is equal to default(DateTime) then
         /// departure time is irrelivant.
         /// </summary>
@@ -45,6 +63,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             get
             {
                 return departureTime;
+            }
+        }
+
+        /// <summary>
+        /// Gets the optional route id for this arc.
+        /// </summary>
+        public string RouteId
+        {
+            get
+            {
+                return routeId;
             }
         }
 
