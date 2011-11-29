@@ -36,6 +36,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         List<INetworkNode> GetAdjacentNodes(INetworkNode node, string routeId);
 
         /// <summary>
+        /// Gets a list of routes that this node passes through.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        List<string> GetRoutesForNode(INetworkNode node);
+        
+        /// <summary>
         /// Gets the shortest distance between nodes.
         /// </summary>
         /// <param name="source"></param>

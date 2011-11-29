@@ -34,8 +34,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         public DataSet GetNodeData(string id)
         {
-            DataSet data = api.GetStopInformation(id); 
-            nCache.AddCacheEntry(id, data);      
+            DataSet data = nCache.GetData(id);
+            if (data == null)
+            {
+                data = api.GetStopInformation(id);
+                nCache.AddCacheEntry(id, data);
+            }
             return data;
         }
         
@@ -136,72 +140,104 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination,DateTime requestTime)
         {
-            //First we generate the routes that intersect both nodes. 
-            DataSet sRouteData = api.GetMainRoutesForStop(source.ID);
-            DataSet dRouteData = api.GetMainRoutesForStop(destination.ID);
-            List<string> xRows = new List<string>();
-
-            foreach (DataRow sRow in sRouteData.Tables[0].Rows)
+            if (source is TramStop && destination is TramStop)
             {
-                foreach (DataRow dRow in dRouteData.Tables[0].Rows)
+                //First we generate the routes that intersect both nodes. 
+                DataSet sRouteData = api.GetMainRoutesForStop(source.ID);
+                DataSet dRouteData = api.GetMainRoutesForStop(destination.ID);
+                List<string> xRows = new List<string>();
+
+                foreach (DataRow sRow in sRouteData.Tables[0].Rows)
                 {
-                    if (sRow[0].ToString() == dRow[0].ToString())
+                    foreach (DataRow dRow in dRouteData.Tables[0].Rows)
                     {
-                        if (!xRows.Contains(sRow[0].ToString()))
+                        if (sRow[0].ToString() == dRow[0].ToString())
                         {
-                            xRows.Add(sRow[0].ToString());
+                            if (!xRows.Contains(sRow[0].ToString()))
+                            {
+                                xRows.Add(sRow[0].ToString());
+                            }
                         }
                     }
                 }
-            }
 
-            //TODO: Find schedules of intersecting routes....
+                //TODO: Find schedules of intersecting routes....
 
 
-            List<Arc> arcs = new List<Arc>();
-            foreach (string route in xRows)
-            {
-                DataTable data = api.GetSchedulesCollection(source.ID, route, false, requestTime).Tables[0];
-                if (data.Rows.Count > 0)
+                List<Arc> arcs = new List<Arc>();
+                foreach (string route in xRows)
                 {
-                    DateTime bestDepartureTime = (DateTime)data.Rows[0]["PredictedArrivalDateTime"];
-                    DateTime bestArrivalTime = default(DateTime);
-                    string tripID = data.Rows[0]["TripID"].ToString();
-                    DataTable tripData = api.GetSchedulesForTrip(tripID, bestDepartureTime).Tables[0];
-                    foreach (DataRow row in tripData.Rows)
+                    DataTable data = api.GetSchedulesCollection(source.ID, route, false, requestTime).Tables[0];
+                    if (data.Rows.Count > 0)
                     {
-                        if (row["StopNo"].ToString() == destination.ID)
+                        DateTime bestDepartureTime = (DateTime)data.Rows[0]["PredictedArrivalDateTime"];
+                        DateTime bestArrivalTime = default(DateTime);
+                        string tripID = data.Rows[0]["TripID"].ToString();
+                        DataTable tripData = api.GetSchedulesForTrip(tripID, bestDepartureTime).Tables[0];
+                        foreach (DataRow row in tripData.Rows)
                         {
-                            bestArrivalTime = (DateTime) row["ScheduledArrivalDateTime"];
+                            if (row["StopNo"].ToString() == destination.ID)
+                            {
+                                bestArrivalTime = (DateTime)row["ScheduledArrivalDateTime"];
+                                break;
+                            }
+
+                        }
+
+                        if (bestArrivalTime == default(DateTime))
+                        {
                             break;
                         }
 
+                        TimeSpan travelTime = bestArrivalTime - bestDepartureTime;
+                        TimeSpan waitingTime = bestDepartureTime - requestTime;
+                        TimeSpan totalTime = travelTime + waitingTime;
+
+                        NetworkArc arc = new NetworkArc(source, destination, totalTime,
+                                         GeometryHelper.GetStraightLineDistance(source.Latitude, source.Longitude, destination.Latitude, destination.Longitude),
+                                         bestDepartureTime,
+                                         "YarraTrams");
+                        arcs.Add(arc);
+
                     }
-
-                    if (bestArrivalTime == default(DateTime))
-                    {
-                        break;
-                    }
-
-                    TimeSpan travelTime = bestArrivalTime - bestDepartureTime;
-                    TimeSpan waitingTime = bestDepartureTime - requestTime;
-                    TimeSpan totalTime = travelTime + waitingTime;
-
-                    NetworkArc arc = new NetworkArc(source,destination,totalTime,
-                                     GeometryHelper.GetStraightLineDistance(source.Latitude, source.Longitude, destination.Latitude, destination.Longitude),
-                                     bestDepartureTime,
-                                     "YarraTrams");
-                    arcs.Add(arc);
-
                 }
+
+
+
+
+
+
+                return arcs;
+            }
+            else
+            {
+                return new List<Arc>();
             }
 
+        }
 
+        /// <summary>
+        /// Gets a list of routes that this node passes through.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public List<string> GetRoutesForNode(INetworkNode node)
+        {
+            if (node is TramStop)
+            {
+                List<string> routes = new List<string>();
+                DataSet routeData = api.GetMainRoutesForStop(node.ID);
+                foreach (DataRow row in routeData.Tables[0].Rows)
+                {
+                    routes.Add(row["RouteNo"].ToString());
+                }
+                return routes;
+            }
+            else
+            {
+                return new List<string>();
+            }
 
-
-
-
-            return arcs;
 
 
         }
