@@ -118,11 +118,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             Route route = new Route(routeId, new TramStop(upIds[0], this), new TramStop(upIds[upIds.Count - 1],this));
             foreach(string id in upIds)
             {
-                route.AddNode(new TramStop(id, null),true);
+                route.AddNode(new TramStop(id, this),true);
             }
             foreach (string id in downIds)
             {
-                route.AddNode(new TramStop(id, null), false);
+                route.AddNode(new TramStop(id, this), false);
             }
 
             
@@ -145,6 +145,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                 //First we generate the routes that intersect both nodes. 
                 DataSet sRouteData = api.GetMainRoutesForStop(source.ID);
                 DataSet dRouteData = api.GetMainRoutesForStop(destination.ID);
+
+                if (dRouteData.Tables.Count < 1 || sRouteData.Tables.Count < 1)
+                {
+                    return new List<Arc>();
+                }
+
                 List<string> xRows = new List<string>();
 
                 foreach (DataRow sRow in sRouteData.Tables[0].Rows)
@@ -227,6 +233,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             {
                 List<string> routes = new List<string>();
                 DataSet routeData = api.GetMainRoutesForStop(node.ID);
+                if (routeData.Tables.Count < 1)
+                {
+                    return new List<string>();
+                }
+
                 foreach (DataRow row in routeData.Tables[0].Rows)
                 {
                     routes.Add(row["RouteNo"].ToString());
