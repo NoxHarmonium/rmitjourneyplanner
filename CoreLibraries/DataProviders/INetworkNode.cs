@@ -25,6 +25,26 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
         /// <summary>
+        /// Gets or sets the total time taken to reach this node. Used for traversing 
+        /// route trees.
+        /// </summary>
+        public TimeSpan TotalTime
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the parent node to this node. Used for traversing 
+        /// route trees.
+        /// </summary>
+        public INetworkNode Parent
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Return a unique identifier for this node inside of it's network.
         /// </summary>
         string ID
