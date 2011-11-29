@@ -27,6 +27,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         Arc GetDistance(Location locationA, Location locationB);
 
         /// <summary>
+        /// Estimates the distance between 2 points. This method must always underestimate the time and distance. 
+        /// </summary>
+        /// <param name="locationA"></param>
+        /// <param name="locationB"></param>
+        /// <returns></returns>
+        Arc EstimateDistance(Location locationA, Location locationB);
+
+        /// <summary>
         /// Gets the path traversed between 2 points.
         /// </summary>
         /// <param name="locationA"></param>
