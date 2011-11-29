@@ -31,8 +31,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Gets the network nodes the are adjacent to the specified one.
         /// </summary>
         /// <param name="node"></param>
+        /// <param name="routeId"></param>
         /// <returns></returns>
-        List<INetworkNode> GetAdjacentNodes(INetworkNode node);
+        List<INetworkNode> GetAdjacentNodes(INetworkNode node, string routeId);
 
         /// <summary>
         /// Gets the shortest distance between nodes.
