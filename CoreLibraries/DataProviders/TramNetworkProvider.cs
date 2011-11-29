@@ -241,5 +241,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
 
         }
+
+        /// <summary>
+        /// Gets the type of node associated with this provider.
+        /// </summary>
+        /// <returns></returns>
+        public Type GetAssociatedType()
+        {
+            return typeof(TramStop);
+        }
     }
 }

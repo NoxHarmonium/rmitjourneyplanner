@@ -58,6 +58,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         Location GetNodeLocation(string id);
 
+        /// <summary>
+        /// Returns the type of node that this provider services.
+        /// </summary>
+        /// <returns></returns>
+        Type GetAssociatedType();
+        
+
         
         
 
