@@ -73,6 +73,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             get;
         }
 
+        /// <summary>
+        /// Gets or sets the current route that the node is traversing.
+        /// </summary>
         string CurrentRoute
         {
             get;

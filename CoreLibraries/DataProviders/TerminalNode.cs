@@ -38,8 +38,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// Initilizes a new TerminalNode object with a location string.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
+        /// <param name="locationString"></param>
         public TerminalNode(string id, string locationString) 
             : base (locationString)
         {
@@ -77,6 +76,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             
         }
 
+        /// <summary>
+        /// Returns if 2 terminal nodes are equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is INetworkNode)
@@ -89,17 +93,30 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             return base.Equals(obj);
         }
 
+        /// <summary>
+        /// Gets the unique identifier for a terminal node.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return id.GetHashCode();
         }
 
+        /// <summary>
+        /// Determines if this node is equal to another.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(INetworkNode other)
         {
             return this.Equals((object)other);
         }
 
 
+        /// <summary>
+        /// Gets the route ID of the terminal node which is always 
+        /// an empty string.
+        /// </summary>
         public string routeId
         {
             get
@@ -109,6 +126,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
 
+        /// <summary>
+        /// Gets the current route of a terminal node which is always an empty string.
+        /// </summary>
         public string CurrentRoute
         {
             get
@@ -120,13 +140,18 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             }
         }
 
-
+        /// <summary>
+        /// Gets or sets the total time taken to get to the terminal node.
+        /// </summary>
         public TimeSpan TotalTime
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the parent of this node, used for tree traversal.
+        /// </summary>
         public INetworkNode Parent
         {
             get;
