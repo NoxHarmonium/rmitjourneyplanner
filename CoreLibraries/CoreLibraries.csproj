@@ -76,7 +76,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="TreeWrapper.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Types\ArcComparer.cs" />
     <Compile Include="Types\NetworkArc.cs" />
