@@ -60,10 +60,12 @@
     <Compile Include="DataProviders\INetworkDataProvider.cs" />
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
+    <Compile Include="DataProviders\TerminalNode.cs" />
     <Compile Include="DataProviders\TramNetworkProvider.cs" />
     <Compile Include="DataProviders\TramStop.cs" />
     <Compile Include="DataProviders\WalkingDataProvider.cs" />
     <Compile Include="DFSRoutePlanner.cs" />
+    <Compile Include="Events.cs" />
     <Compile Include="EvolutionaryRoutePlanner.cs" />
     <Compile Include="IRoutePlanner.cs" />
     <Compile Include="Positioning\GeometryHelper.cs" />
@@ -74,7 +76,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="TreeWrapper.cs" />
     <Compile Include="Types\Arc.cs" />
+    <Compile Include="Types\ArcComparer.cs" />
+    <Compile Include="Types\NetworkArc.cs" />
     <Compile Include="Types\Route.cs" />
     <Compile Include="Types\TransportDirection.cs" />
     <Compile Include="Types\TransportMode.cs" />
