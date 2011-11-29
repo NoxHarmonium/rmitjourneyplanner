@@ -17,11 +17,19 @@ namespace RmitJourneyPlanner.CoreLibraries
     /// </summary>
     public class NextIterationEventArgs : EventArgs
     {
+        
         private INetworkNode node;
+        /// <summary>
+        /// Initilizes a new instance of a NextIterationEventArgs object.
+        /// </summary>
+        /// <param name="currentNode"></param>
         public NextIterationEventArgs(INetworkNode currentNode)
         {
             this.node = currentNode;
         }
+       /// <summary>
+       /// Gets the current node that the algorithm is expanding on this iteration.
+       /// </summary>
         public INetworkNode CurrentNode
         {
             get
