@@ -187,7 +187,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                     TimeSpan waitingTime = bestDepartureTime - requestTime;
                     TimeSpan totalTime = travelTime + waitingTime;
 
-                    Arc arc = new Arc(totalTime,
+                    NetworkArc arc = new NetworkArc(source,destination,totalTime,
                                      GeometryHelper.GetStraightLineDistance(source.Latitude, source.Longitude, destination.Latitude, destination.Longitude),
                                      bestDepartureTime,
                                      "YarraTrams");
