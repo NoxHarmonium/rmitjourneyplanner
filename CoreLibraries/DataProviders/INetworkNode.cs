@@ -14,7 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     /// <summary>
     /// Represents a node in a transport network such a train station or tram stop.
     /// </summary>
-    public interface INetworkNode 
+    public interface INetworkNode : IEquatable<INetworkNode>
     {
         /// <summary>
         /// Gets the DataProvider that the node belongs to.
@@ -51,7 +51,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         double Latitude
         {
             get;
+        }
 
+        string CurrentRoute
+        {
+            get;
+            set;
         }
     }
 }

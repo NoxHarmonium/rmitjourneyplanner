@@ -259,13 +259,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is TramStop)
+            if (obj is INetworkNode)
             {
-                if (this.id == ((TramStop) obj).ID)
+                if (((INetworkNode)obj).ID == id)
                 {
                     return true;
                 }
             }
+
             return false;
             
         }
@@ -276,8 +277,43 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return id.GetHashCode();
+            return (id + CurrentRoute).GetHashCode();
         }
+
+        /// <summary>
+        /// Returns if 2 INetworkNode objects are equal.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        bool IEquatable<INetworkNode>.Equals(INetworkNode other)
+        {
+            if (this.id == other.ID && this.CurrentRoute == other.CurrentRoute)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the string representation of this class.
+        /// </summary>
+        /// <returns></returns>
+        public new string ToString()
+        {
+            return id;
+        }
+
+        /// <summary>
+        /// Gets or sets the current route this node is associated with.
+        /// </summary>
+        public string CurrentRoute
+        {
+            get;
+            set;
+        }
+
+        
+
     }
 
    
