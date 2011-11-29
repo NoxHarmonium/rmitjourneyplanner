@@ -74,10 +74,14 @@ namespace UnitTests
         {
             TramNetworkProvider target = new TramNetworkProvider();
             INetworkNode node = new TramStop("2210", target);
-            List<INetworkNode> expected = null; // TODO: Initialize to an appropriate value
+            List<INetworkNode> expected = new List<INetworkNode>();
+            expected.Add(new TramStop("2211", target));
+            expected.Add(new TramStop("2209", target));
+             
             List<INetworkNode> actual;
-            actual = target.GetAdjacentNodes(node);
-            Assert.AreEqual(expected, actual);
+            actual = target.GetAdjacentNodes(node,"1");
+            Assert.AreEqual(expected[0], actual[0]);
+            Assert.AreEqual(expected[1], actual[1]);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
