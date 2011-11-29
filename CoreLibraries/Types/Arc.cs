@@ -10,7 +10,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
+    using DataProviders;
+    using Positioning;
     /// <summary>
     /// An object representing the time and distance between 2 points
     /// </summary>
@@ -21,16 +22,22 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         private string transportMode;
         private DateTime departureTime;
         private string routeId = null;
+        private Location source;
+        private Location destination;
 
         /// <summary>
         /// Initializes a new arc defining information between 2 points.
         /// </summary>
+        /// <param name="source">The source location of the arc.</param>
+        /// <param name="destination">The destination location of the arc.</param>
         /// <param name="time">The total time of the arc.</param>
         /// <param name="distance">The total distance in Km of the arc.</param>
         /// <param name="departureTime">The departure time of this arc. Set to default(DateTime) if departure time is not relivant.</param>
         /// <param name="transportMode">Sets the transport id used in the arc.</param>
-        public Arc(TimeSpan time, double distance, DateTime departureTime, string transportMode)
+        public Arc(Location source, Location destination, TimeSpan time, double distance, DateTime departureTime, string transportMode)
         {
+            this.source = source;
+            this.destination = destination;
             this.time = time;
             this.distance = distance;
             this.transportMode = transportMode;
@@ -40,13 +47,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Initializes a new arc defining information between 2 points.
         /// </summary>
+        /// <param name="source">The source location of the arc.</param>
+        /// <param name="destination">The destination location of the arc.</param>
         /// <param name="time">The total time of the arc.</param>
         /// <param name="distance">The total distance in Km of the arc.</param>
         /// <param name="departureTime">The departure time of this arc. Set to default(DateTime) if departure time is not relivant.</param>
         /// <param name="transportMode">Sets the transport id used in the arc.</param>
         /// <param name="routeId">Sets the optional route ID.</param>
-        public Arc(TimeSpan time, double distance, DateTime departureTime, string transportMode,string routeId)
+        public Arc(Location source, Location destination, TimeSpan time, double distance, DateTime departureTime, string transportMode,string routeId)
         {
+            this.source = source;
+            this.destination = destination;
             this.time = time;
             this.distance = distance;
             this.transportMode = transportMode;
@@ -133,6 +144,29 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        /// <summary>
+        /// Gets the source of the arc.
+        /// </summary>
+        public Location Source
+        {
+            get
+            {
+                return source;
+            }
+
+        }
+
+        /// <summary>
+        /// Gets the destination of the arc.
+        /// </summary>
+        public Location Destination
+        {
+            get
+            {
+                return destination;
+            }
         }
 
         
