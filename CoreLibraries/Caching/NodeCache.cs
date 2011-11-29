@@ -41,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                                 "`stopObject` TEXT ," +
                                 "PRIMARY KEY (`cacheID`) ," +
                                 "INDEX `stopID` (`stopID` ASC)) " +
-                                "PACK_KEYS = 1;");
+                                "PACK_KEYS = 1; DELETE FROM NodeCache;");
 
 
 
@@ -65,6 +65,37 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                                             writer.ToString());
                 database.RunQuery(query);
             }
+
+        }
+
+        public DataSet GetData(string id)
+        {
+
+            string query = String.Format("SELECT stopObject FROM NodeCache WHERE " +
+                                        "networkID='{0}' AND " +
+                                        "stopID='{1}';",
+                                        networkID,
+                                        id);
+            DataTable result = database.GetDataSet(query);
+            if (result.Rows.Count < 1)
+            {
+                return null;
+            }
+            else if (result.Rows.Count > 1)
+            {
+                throw new InvalidDataException("The there is more than one record for the specified id.");
+            }
+            else
+            {
+                DataSet data = new DataSet();
+                string xml = result.Rows[0][0].ToString().Replace("\\'", "'");
+                data.ReadXml(new StringReader(xml));
+                return data;
+            }
+
+
+
+
 
         }
 
