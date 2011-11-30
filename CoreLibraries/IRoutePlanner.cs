@@ -32,11 +32,35 @@ namespace RmitJourneyPlanner.CoreLibraries
         void RegisterPointDataProvider(IPointDataProvider provider);
 
         /// <summary>
-        /// Take a list of nodes and attempt to find the best path or paths between them.
+        /// Start solving a route
         /// </summary>
         /// <param name="itinerary"></param>
         /// <returns></returns>
-        List<Arc>[] Solve(List<INetworkNode> itinerary);
+        void Start(List<DataProviders.INetworkNode> itinerary);
+
+        /// <summary>
+        /// Solve the next iteration of the algorithm.
+        /// </summary>
+        /// <returns></returns>
+        bool SolveStep();
+
+        /// <summary>
+        /// Gets the current node being traversed.
+        /// </summary>
+        INetworkNode Current
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the best node found so far.
+        /// </summary>
+        INetworkNode BestNode
+        {
+            get;
+        }
+
+
 
     }
 }

@@ -16,19 +16,42 @@ namespace RmitJourneyPlanner.CoreLibraries
     /// </summary>
     public class EvolutionaryRoutePlanner : IRoutePlanner
     {
-        void IRoutePlanner.RegisterNetworkDataProvider(DataProviders.INetworkDataProvider provider)
+        
+        
+        public void RegisterNetworkDataProvider(DataProviders.INetworkDataProvider provider)
         {
             throw new NotImplementedException();
         }
 
-        void IRoutePlanner.RegisterPointDataProvider(DataProviders.IPointDataProvider provider)
+        public void RegisterPointDataProvider(DataProviders.IPointDataProvider provider)
         {
             throw new NotImplementedException();
         }
 
-        List<Types.Arc>[] IRoutePlanner.Solve(List<DataProviders.INetworkNode> itinerary)
+        public void Start(List<DataProviders.INetworkNode> itinerary)
         {
             throw new NotImplementedException();
+        }
+
+        public bool SolveStep()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataProviders.INetworkNode Current
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public DataProviders.INetworkNode BestNode
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
