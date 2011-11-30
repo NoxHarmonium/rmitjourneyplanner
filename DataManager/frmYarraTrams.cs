@@ -86,7 +86,7 @@ namespace DataManager
                         foreach (DataRow stop in stops.Tables[0].Rows)
                         {
                            
-                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])),route);
+                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])),route + "_up");
                             count++;
                         }
 
@@ -96,7 +96,7 @@ namespace DataManager
                         foreach (DataRow stop in stops.Tables[0].Rows)
                         {
                             
-                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])),route);
+                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])),route+"_down");
                             count++;
                         }
 
@@ -160,7 +160,12 @@ namespace DataManager
                     dfs.RegisterNetworkDataProvider(new TramNetworkProvider());
                     dfs.RegisterPointDataProvider(new WalkingDataProvider());
                     dfs.NextIterationEvent += new EventHandler<NextIterationEventArgs>(dfs_NextIterationEvent);
-                    List<Arc>[] result = dfs.Solve(itinerary);
+                    dfs.Start(itinerary);
+
+                    while (dfs.SolveStep())
+                        ;
+                        
+                        
 
                 }
                 else if ((int)e.Argument == 5)
@@ -189,8 +194,19 @@ namespace DataManager
             if (e.CurrentNode is TramStop)
             {
                 TramStop stop = (TramStop)e.CurrentNode;
-                worker.ReportProgress(0, String.Format("Current node: [id: {0}, name: {1}, suburb: {2}, location: {3}]",
+                int depth = 0;
+                INetworkNode current = e.CurrentNode;
+                while (current.Parent != null)
+                {
+                    depth += 1;
+                    current = current.Parent;
+                }
+
+
+                worker.ReportProgress(0, String.Format("Current node: [depth: {0}, id: {1}, route: {2}, name: {3}, suburb: {4}, location: {5}]",
+                                                        depth,
                                                         stop.ID,
+                                                        stop.CurrentRoute,
                                                         stop.StopName,
                                                         stop.SuburbName,
                                                         (Location)stop));
