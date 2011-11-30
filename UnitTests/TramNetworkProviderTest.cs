@@ -91,6 +91,9 @@ namespace UnitTests
         [TestMethod()]
         public void GetDistanceBetweenNodesTest()
         {
+            //UNCOMMENT TO CLEAR CACHE
+            //RmitJourneyPlanner.CoreLibraries.Caching.NodeRouteCache nrCache = new RmitJourneyPlanner.CoreLibraries.Caching.NodeRouteCache("YarraTrams");
+            //nrCache.InitializeCache();
             //Test simple route
             TramNetworkProvider target = new TramNetworkProvider();
             INetworkNode source = new TramStop("1551",target);
