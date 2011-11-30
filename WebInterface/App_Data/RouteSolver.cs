@@ -23,7 +23,7 @@ namespace WebInterface
             get;
             set;
         }
-            
+
         public INetworkNode Best
         {
             get;
@@ -43,14 +43,14 @@ namespace WebInterface
             list.Add(start);
             list.Add(end);
             planner.Start(list);
-        
-        
-        
+
+
+
         }
 
         public bool NextStep()
         {
             return planner.SolveStep();
         }
-
+    }
 }
