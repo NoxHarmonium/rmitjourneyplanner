@@ -139,7 +139,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             int index = sourceNodes.IndexOf(node);
             try
             {
-                nodes.Add(sourceNodes[index - 1]);
+                nodes.AddRange(sourceNodes);
             }
             catch (Exception)
             {
@@ -148,7 +148,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             try
             {
 
-                nodes.Add(sourceNodes[index + 1]);
+                //nodes.Add(sourceNodes[index + 1]);
             }
             catch (Exception)
             {
