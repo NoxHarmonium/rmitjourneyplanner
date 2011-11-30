@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Data;
+using System.Web;
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
@@ -55,14 +56,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             using (StringWriter writer = new StringWriter())
             {
                 data.WriteXml(writer,XmlWriteMode.WriteSchema);
-                string xml = writer.ToString();
-                xml = xml.Replace("'", "\\'");
                 string query = String.Format("INSERT INTO NodeCache" +
                                             " (networkID,stopID,stopObject)" +
                                             " VALUES('{0}','{1}','{2}');",
                                             networkID,
                                             id,
-                                            writer.ToString());
+                System.Security.SecurityElement.Escape(
+                                            writer.ToString()));
                 database.RunQuery(query);
             }
 
@@ -88,7 +88,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             else
             {
                 DataSet data = new DataSet();
-                string xml = result.Rows[0][0].ToString().Replace("\\'", "'");
+                string xml = result.Rows[0][0].ToString();//               Replace("\\'", "'");
+                xml =  CacheTools.Deescape(xml);
                 data.ReadXml(new StringReader(xml));
                 return data;
             }
@@ -119,7 +120,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             else
             {
                 DataSet data = new DataSet();
-                string xml = result.Rows[0][0].ToString().Replace("\\'", "'");
+                string xml = CacheTools.Deescape(result.Rows[0][0].ToString());
                 data.ReadXml(new StringReader(xml));
                 T node = (T) Activator.CreateInstance(typeof(T), new object[] { id, parent });           
 
