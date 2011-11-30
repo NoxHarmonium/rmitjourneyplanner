@@ -25,7 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
         /// <returns></returns>
         public int Compare(Arc x, Arc y)
         {
-            return (x.Time - y.Time).Milliseconds;
+            return (int)((x.Time - y.Time).TotalMilliseconds);
         }
     }
 }
