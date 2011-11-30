@@ -48,10 +48,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                                 "`networkID` VARCHAR(45) NULL, " +
                                 "`Latitude` DOUBLE NULL ," +
                                 "`Longitude` DOUBLE NULL ," +
+                                "`routeId` VARCHAR(45) NULL ," +
                                 "PRIMARY KEY (`cacheID`) ," +
                                 "INDEX `Latitude` (`Latitude` ASC) ," +
                                 "INDEX `Longitude` (`Longitude` ASC) )" +
-                                "PACK_KEYS = 1;");
+                                "PACK_KEYS = 1; DELETE FROM LocationCache;");
 
 
 
@@ -64,30 +65,31 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// </summary>
         /// <param name="id"></param>
         /// <param name="location"></param>
-        public void AddCacheEntry(string id, Location location)
+        public void AddCacheEntry(string id, Location location,string routeId)
         {
             string query = String.Format("INSERT INTO LocationCache" +
-                                            " (networkID,locationID,Latitude,Longitude)" + 
-                                            " VALUES({0},'{1}',{2},{3});" ,
+                                            " (networkID,locationID,Latitude,Longitude,routeId)" + 
+                                            " VALUES('{0}','{1}',{2},{3},'{4}');" ,
                                             networkID,
                                             id,                                           
                                             location.Latitude,
-                                            location.Longitude);
+                                            location.Longitude,
+                                            routeId);
             database.RunQuery(query);
         }
 
         /// <summary>
-        /// Gets the transport node ids within a certain distance from a central location.
+        /// Gets the transport node ids and corosponding route IDs within a certain distance from a central location.
         /// </summary>
         /// <param name="center">The center location</param>
         /// <param name="radius">The distance to search around the center location in kilometers.</param>
         /// <returns></returns>
-        public List<string> GetIdsInRadius(Location center, double radius)
+        public List<string[]> GetIdsInRadius(Location center, double radius)
         {
             Location topLeft = GeometryHelper.Travel(center, 315.0, radius);
             Location bottomRight = GeometryHelper.Travel(center, 135.0, radius);
 
-            string query = String.Format("SELECT locationID FROM LocationCache WHERE " +
+            string query = String.Format("SELECT locationID, routeId FROM LocationCache WHERE " +
                                             "Latitude < {0} AND " +
                                             "Longitude > {1} AND " +
                                             "Latitude  > {2} AND " +
@@ -101,10 +103,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
             DataTable table = database.GetDataSet(query);
 
-            List<string> ids = new List<string>(table.Rows.Count);
+            List<string[]> ids = new List<string[]>(table.Rows.Count);
             foreach (DataRow row in table.Rows)
             {
-                ids.Add(row[0].ToString());
+                ids.Add(new string[]{row[0].ToString(),row[1].ToString()});
             }
             
 
@@ -131,6 +133,33 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             if (table.Rows.Count > 0)
             {
                 return new Location(Convert.ToDouble(table.Rows[0][0]), Convert.ToDouble(table.Rows[0][0]));
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+        /// <summary>
+        /// Returns the ID of the node at the specfied location.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public string GetIdFromLocation(Location location)
+        {
+            string query = String.Format("SELECT locationID FROM LocationCache WHERE " +
+                                            "Latitude = {0} AND " +
+                                            "Longitude = {1} AND " +
+                                            "networkID = '{2}';",
+                                            location.Latitude,
+                                            location.Longitude,
+                                            networkID);
+
+            DataTable table = database.GetDataSet(query);
+            if (table.Rows.Count > 0)
+            {
+                return table.Rows[0]["locationID"].ToString();
             }
             else
             {
