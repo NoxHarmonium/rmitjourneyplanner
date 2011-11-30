@@ -28,6 +28,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         List<INetworkNode> GetNodesAtLocation(Location location, double radius);
 
         /// <summary>
+        /// Gets the network node that is at the specfied location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        INetworkNode GetNodeAtLocation(Location location);
+
+        /// <summary>
         /// Gets the network nodes the are adjacent to the specified one.
         /// </summary>
         /// <param name="node"></param>
