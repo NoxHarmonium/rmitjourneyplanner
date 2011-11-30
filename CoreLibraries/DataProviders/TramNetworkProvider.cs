@@ -55,6 +55,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             return lCache.GetPostition(id);
         }
 
+
         /// <summary>
         /// Gets a list of nodes that are within a certain radius of a location.
         /// </summary>
@@ -90,50 +91,79 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node, string routeId)
         {
 
-
-            List<string> upIds = rCache.GetRoute(routeId, true);
-            List<string> downIds = rCache.GetRoute(routeId, false);
-
-            if (upIds == null)
+            if (routeId.Split('_')[1] == "up")
             {
-                upIds = new List<string>();
-                
-                DataSet upData = api.GetListOfStopsByRouteNoAndDirection(routeId, true);
-                foreach (DataRow row in upData.Tables[0].Rows)
+                List<string> upIds = rCache.GetRoute(routeId, true);
+                if (upIds == null)
                 {
-                    upIds.Add(row["TID"].ToString());
-                }
-                rCache.AddCacheEntry(routeId,upIds,true);
+                    upIds = new List<string>();
 
-            }
-            if (downIds == null)
-            {
-                downIds = new List<string>();
-                
-                DataSet downData = api.GetListOfStopsByRouteNoAndDirection(routeId, false);
-                foreach (DataRow row in downData.Tables[0].Rows)
+                    DataSet upData = api.GetListOfStopsByRouteNoAndDirection(routeId.Split('_')[0], true);
+                    foreach (DataRow row in upData.Tables[0].Rows)
+                    {
+                        upIds.Add(row["TID"].ToString());
+                    }
+                    rCache.AddCacheEntry(routeId, upIds, true);
+
+                }
+                Route route = new Route(routeId, new TramStop(upIds[0], this), null);
+                foreach (string id in upIds)
                 {
-                    downIds.Add(row["TID"].ToString());
-                }
-                rCache.AddCacheEntry(routeId,downIds,false);
-            }
 
-            Route route = new Route(routeId, new TramStop(upIds[0], this), new TramStop(upIds[upIds.Count - 1],this));
-            foreach(string id in upIds)
-            {
-                TramStop stop = new TramStop(id, this);
-                stop.CurrentRoute = routeId;
-                route.AddNode(stop,true);
+                    TramStop stop = nCache.GetNode(id, this);
+
+                    if (stop == null)
+                    {
+                        stop = new TramStop(id, this);
+                    }
+                    stop.CurrentRoute = routeId;
+                    route.AddNode(stop, true);
+                }
+                node.CurrentRoute = routeId;
+                return route.GetAdjacent(node);
+
             }
-            foreach (string id in downIds)
-            {
-                TramStop stop = new TramStop(id, this);
-                stop.CurrentRoute = routeId;
-                route.AddNode(stop, false);
-            }
-            node.CurrentRoute = routeId;
+            else
+                if (routeId.Split('_')[1] == "down")
+                {
+                    List<string> downIds = rCache.GetRoute(routeId, false);
+
+
+                    if (downIds == null)
+                    {
+                        downIds = new List<string>();
+
+                        DataSet downData = api.GetListOfStopsByRouteNoAndDirection(routeId.Split('_')[0], false);
+                        foreach (DataRow row in downData.Tables[0].Rows)
+                        {
+                            downIds.Add(row["TID"].ToString());
+                        }
+                        rCache.AddCacheEntry(routeId, downIds, false);
+                    }
+
+                    Route route = new Route(routeId, new TramStop(downIds[0], this), null);
+                    foreach (string id in downIds)
+                    {
+                        TramStop stop = nCache.GetNode(id, this);
+
+                        if (stop == null)
+                        {
+                            stop = new TramStop(id, this);
+                        }
+                        stop.CurrentRoute = routeId;
+                        route.AddNode(stop, true);
+                    }
+                    node.CurrentRoute = routeId;
+                    return route.GetAdjacent(node);
+                }
+                else
+                {
+                    throw new Exception("Route ID needs to be in format <id>_<direction> where direction is 'up' or 'down'");
+                }
             
-            return route.GetAdjacent(node);
+           
+            
+            
 
         }
 
