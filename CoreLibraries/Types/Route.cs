@@ -108,52 +108,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             }
 
 
-            /*
-            if (node == upDestination)
-            {
-                nodes.Add(sourceNodes[0]);
-                nodes.Add(sourceNodes[upNodes.Count - 1]);
-            }
-            else if (node == downDestination)
-            {
-                nodes.Add(sourceNodes[0]);
-                nodes.Add(downNodes[downNodes.Count - 1]);
-            }
-            else
-            {
-                int upIndex = upNodes.IndexOf(node) + 1;
-                if (upIndex > upNodes.Count - 1)
-                {
-                    nodes.Add(upDestination);
-                }
-                else
-                {
-                    nodes.Add(upNodes[upIndex + 1]);
-                }
-                
-
-               
-            }
-             */
-
             int index = sourceNodes.IndexOf(node);
-            try
-            {
-                nodes.AddRange(sourceNodes);
-            }
-            catch (Exception)
-            {
-
-            }
-            try
-            {
-
-                //nodes.Add(sourceNodes[index + 1]);
-            }
-            catch (Exception)
-            {
-
-            }
+            nodes.AddRange(sourceNodes.GetRange(index+1,sourceNodes.Count-(index+1)));
+            
+           
             return nodes;
         }
 
