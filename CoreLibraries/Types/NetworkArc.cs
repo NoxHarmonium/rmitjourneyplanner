@@ -43,7 +43,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="transportMode">Sets the transport id used in the arc.</param>
         /// <param name="routeId">Sets the optional route ID.</param>
         public NetworkArc(INetworkNode source, INetworkNode destination, TimeSpan time, double distance, DateTime departureTime, string transportMode,string routeId)
-            : base((Location)source, (Location)destination, time, distance, departureTime, transportMode)
+            : base((Location)source, (Location)destination, time, distance, departureTime, transportMode,routeId)
 
         {
         }
