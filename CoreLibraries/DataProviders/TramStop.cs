@@ -215,7 +215,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             
             DataTable dataTable = stopData.Tables[0];
             DataRow dataRow = dataTable.Rows[0];
-            flagStopNo = Convert.ToInt32(dataRow["FlagStopNo"]);
+            string flagStopString = dataRow["FlagStopNo"].ToString();
+            System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(flagStopString, "[a-zA-Z]");
+            while (match.Success)
+            {
+                flagStopString = flagStopString.Remove(match.Index, 1);
+                match = System.Text.RegularExpressions.Regex.Match(flagStopString, "[a-zA-Z]");
+            }
+            flagStopNo = Convert.ToInt32(flagStopString);
             stopName = dataRow["StopName"].ToString();
 
             //Determine citydirection
@@ -290,7 +297,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         {
             if (obj is INetworkNode)
             {
-                if (((INetworkNode)obj).ID == id)
+                if (((INetworkNode)obj).ID == id && ((INetworkNode)obj).CurrentRoute == CurrentRoute)
                 {
                     return true;
                 }
@@ -341,6 +348,15 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             set;
         }
 
+
+        /// <summary>
+        /// Gets or sets the Euclidian distance to the goal. Used for traversing route trees.
+        /// </summary>
+        public double EuclidianDistance
+        {
+            get;
+            set;
+        }
         
 
     }
