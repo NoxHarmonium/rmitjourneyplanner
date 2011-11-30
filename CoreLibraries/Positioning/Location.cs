@@ -81,5 +81,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
             return String.Format("{0},{1}", latitude,longitude);
         }
 
+        /// <summary>
+        /// Parses a comma delimted latitude and longitude string and 
+        /// returns a corrosponding location object.
+        /// </summary>
+        /// <param name="locationString"></param>
+        /// <returns></returns>
+        public static Location Parse(string locationString)
+        {
+            int commaIndex = locationString.IndexOf(",");
+            string lat = locationString.Substring(0, commaIndex);
+            string lon = locationString.Substring(locationString.IndexOf(",")+1, locationString.Length - commaIndex-1);
+            return new Location(Convert.ToDouble(lat),
+                                Convert.ToDouble(lon));
+        }
     }
 }
