@@ -22,6 +22,35 @@ namespace RmitJourneyPlanner.CoreLibraries
         private List<INetworkDataProvider> networkProviders = new List<INetworkDataProvider>();
         private List<IPointDataProvider> pointDataProviders = new List<IPointDataProvider>();
         private Caching.ArcCache aCache = new Caching.ArcCache("RoutePlanner");
+
+        private Stack<INetworkNode> stack;
+        private List<DataProviders.INetworkNode> itinerary;
+        private TimeSpan minTimeSolved;
+        private INetworkNode minNode;
+        private DateTime startTime;
+        private INetworkNode current = null;
+
+        /// <summary>
+        /// Gets the current node being traversed.
+        /// </summary>
+        public INetworkNode Current
+        {
+            get
+            {
+                return current;
+            }
+        }
+
+        /// <summary>
+        /// Gets the node of the best path found so far.
+        /// </summary>
+        public INetworkNode BestNode
+        {
+            get
+            {
+                return minNode;
+            }
+        }
         
         /// <summary>
         /// This event fires on every iteration of the algorithm.
@@ -65,177 +94,140 @@ namespace RmitJourneyPlanner.CoreLibraries
             return false;
         }
 
+        private bool hasBeenOnRoute(INetworkNode current, INetworkNode next)
+        {
+            if (current != null)
+            {
+                while (current.Parent != null)
+                {
+                    if (current.CurrentRoute == next.CurrentRoute)
+                    {
+                        return true;
+                    }
+                    current = current.Parent;
+                    
+                }
+            }
+            return false;
+        }
+
+        
+        
         /// <summary>
-        /// Return the best route found between the point
+        /// Start solving a route
         /// </summary>
         /// <param name="itinerary"></param>
         /// <returns></returns>
-        public List<Types.Arc>[] Solve(List<DataProviders.INetworkNode> itinerary)
+        public void Start(List<DataProviders.INetworkNode> itinerary)
         {
 
-            Stack<INetworkNode> stack = new Stack<INetworkNode>();
+            this.itinerary = itinerary;
+            stack = new Stack<INetworkNode>();
+            itinerary.First().TotalTime = new TimeSpan(0, 0, 0);
+            minTimeSolved = TimeSpan.MaxValue;
+            INetworkNode minNode = null;
             stack.Push(itinerary.First());
-            DateTime currentTime = DateTime.Parse("11/30/2011 11:37 AM");
-            INetworkNode current = null;
-            while (stack.Count > 0)
-            {
+            startTime = DateTime.Parse("11/30/2011 11:37 AM");
+            current = null;
+            //while (stack.Count > 0)
+            //{
+
 
                 
-                INetworkNode next = stack.Pop();
-                while (hasDuplicates(current,next))
+            //}
+
+        }
+
+        /// <summary>
+        /// Solve the next iteration of the algorithm.
+        /// </summary>
+        /// <returns></returns>
+        public bool SolveStep()
+        {
+            INetworkNode next = stack.Pop();
+            while (hasDuplicates(current, next))
+            {
+                next = stack.Pop();
+            }
+            current = next;
+            if (current == itinerary.Last())
+            {
+                if (current.TotalTime < minTimeSolved)
                 {
-                    next = stack.Pop();
+                    minTimeSolved = current.TotalTime;
+                    minNode = current;
+                    //continue;
                 }
-                current = next;
-                if (current == itinerary.Last())
+            }
+            current.RetrieveData();
+
+            if (NextIterationEvent != null)
+            {
+                NextIterationEvent(this, new NextIterationEventArgs(current));
+            }
+
+            TramNetworkProvider tProvider = (TramNetworkProvider)networkProviders[0];
+            WalkingDataProvider wProvider = (WalkingDataProvider)pointDataProviders[0];
+
+            List<INetworkNode> areaNodes = tProvider.GetNodesAtLocation((Location)current, 1.0);
+            areaNodes.Add(itinerary.Last());
+            List<Arc> pArcs = new List<Arc>();
+            foreach (INetworkNode node in areaNodes)
+            {
+                if (node != current && current.CurrentRoute != node.CurrentRoute && !hasBeenOnRoute(current, node))
                 {
-                    throw new Exception("Goal found!");
+                    node.RetrieveData();
+                    pArcs.Add(wProvider.EstimateDistance((Location)current, (Location)node));
                 }
-                current.RetrieveData();
-                if (NextIterationEvent != null)
+            }
+
+            if (!(current is TerminalNode))
+            {
+
+                List<INetworkNode> routeNodes = tProvider.GetAdjacentNodes(current, current.CurrentRoute);
+                foreach (INetworkNode node in routeNodes)
                 {
-                    NextIterationEvent(this, new NextIterationEventArgs(current));
-                }
-
-                foreach (INetworkDataProvider nProvider in networkProviders)
-                {
-                    List<INetworkNode> nodes = nProvider.GetNodesAtLocation((Location)current, 1);
-                    nodes.Add(itinerary.Last());
-
-                    if (nProvider.GetAssociatedType() == current.GetType())
-                    {
-                        List<string> routes = nProvider.GetRoutesForNode(current);
-
-                        foreach (string route in routes)
-                        {
-                            List<INetworkNode> adjacent = nProvider.GetAdjacentNodes(current, route);
-                            nodes.AddRange(adjacent);
-                        }
-                    }
-
-                    List<Arc> localArcs = new List<Arc>();
-                    foreach (INetworkNode node in nodes)
-                    {
-                        if (!node.Equals(current))
-                        {
-                            
-                                                      
-                            node.RetrieveData();
-                            foreach (IPointDataProvider  pProvider in pointDataProviders)
-                            {
-                                
-                                localArcs.Add(pProvider.EstimateDistance((Location)current, (Location)node));
-                                if (node == null)
-                                {
-                                    throw new Exception("Destination node is null!");
-                                }
-                            }
-                            List<Arc> cachedArcs = aCache.GetArcs((Location)current, (Location)node, currentTime + current.TotalTime, node.CurrentRoute);
-                            if (cachedArcs.Count > 0  && cachedArcs[0].TransportMode == "Unavailable")
-                            {
-                                cachedArcs.Clear();
-                            }                             
-                            else
-                            {
-                                if (current.GetType() == nProvider.GetAssociatedType() &&
-                                    node.GetType() == nProvider.GetAssociatedType())
-                                {
-                                    cachedArcs.AddRange(nProvider.GetDistanceBetweenNodes(current, node, currentTime + current.TotalTime));
-                                    if (cachedArcs.Count == 0)
-                                    {
-
-                                        aCache.AddCacheEntry(currentTime + current.TotalTime,
-                                            new Arc(
-                                                (Location)current,
-                                                (Location)node,
-                                                new TimeSpan(999, 999, 999),
-                                                99999999.9999,
-                                                currentTime + current.TotalTime,
-                                                "Unavailable", node.CurrentRoute));
-
-                                    }
-                                    else
-                                    {
-                                        foreach (Arc arc in cachedArcs)
-                                        {
-                                            aCache.AddCacheEntry(currentTime + current.TotalTime, arc);
-                                            if (arc.Destination == null)
-                                            {
-                                                throw new Exception("Destination node is null!");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (cachedArcs.Count > 0)                                
-                            {
-                               // List<Arc> newCache = new List<Arc>();
-                                for (int i = 0; i <cachedArcs.Count; i ++)                                    
-                                {
-                                    Arc arc = cachedArcs[i];
-                                    INetworkNode source = nProvider.GetNodeAtLocation(arc.Source);
-                                    INetworkNode destination = nProvider.GetNodeAtLocation(arc.Destination);
-                                    if (destination == null)
-                                    {
-                                        //throw new Exception("Destination node is null!");
-                                    }
-                                    else
-                                    {
-                                        cachedArcs[i] = new Arc((Location)source, (Location)destination, arc.Time, arc.Distance, arc.DepartureTime, arc.TransportMode, arc.RouteId);
-                                    }
-                                   
-
-                                }
-                                //nProvider.get
-
-
-                            }
-
-
-                            localArcs.AddRange(cachedArcs);
-                            
-
-                            node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)itinerary.Last());
-                            
-                        }
-                    }
-
-                    localArcs.Sort(new Comparers.ArcComparer());
-                    List<INetworkNode> newNodes = new List<INetworkNode>();
-                    foreach (Arc arc in localArcs)
-                    {
-                        try
-                        {
-                            INetworkNode destination = (INetworkNode)arc.Destination;
-                            destination.Parent = current;
-                            destination.TotalTime = current.TotalTime + arc.Time;
-                            destination.CurrentRoute = arc.RouteId;
-                            destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)destination, (Location)itinerary.Last());
-                            if (!newNodes.Contains(destination))
-                            {
-                                newNodes.Add(destination);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-                    localArcs.Clear();
-
-                    newNodes.Sort(new Comparers.NodeComparer());
-                    
-                    foreach (INetworkNode node in newNodes)
-                    {
-                        stack.Push(node);
-                    }
-                    
+                    node.RetrieveData();
+                    pArcs.AddRange(tProvider.GetDistanceBetweenNodes(current, node, startTime + current.TotalTime));
                 }
 
             }
 
-            throw new NotImplementedException();
+            // pArcs.Sort(new Comparers.ArcComparer());
+            List<INetworkNode> destinations = new List<INetworkNode>();
+            foreach (Arc arc in pArcs)
+            {
+                INetworkNode destination = (INetworkNode)arc.Destination;
+                destination.Parent = current;
+                if (destination.Parent != null)
+                {
+                    destination.TotalTime = destination.Parent.TotalTime + arc.Time;
+                }
+                else
+                {
+                    destination.TotalTime = arc.Time;
+                }
+
+                if (destination.TotalTime < minTimeSolved)
+                {
+                    destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)destination, (Location)itinerary.Last());
+
+
+
+                    //destination.CurrentRoute = arc.RouteId;
+                    destinations.Add(destination);
+                }
+
+            }
+
+            destinations.Sort(new Comparers.NodeComparer());
+
+            foreach (INetworkNode node in destinations)
+            {
+                stack.Push(node);
+            }
+
+            return (stack.Count > 0);
         }
     }
 }
