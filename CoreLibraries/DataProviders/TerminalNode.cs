@@ -157,5 +157,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets or sets the Euclidian distance to the goal. Used for traversing route trees.
+        /// </summary>
+        public double EuclidianDistance
+        {
+            get;
+            set;
+        }
     }
 }
