@@ -93,7 +93,9 @@
             "Test radius",
             "Init node cache",
             "Test distance finding",
-            "Test route calc"});
+            "Test route calc",
+            "Init arc cache",
+            "Init schedule cache"});
             this.cmbActions.Location = new System.Drawing.Point(263, 12);
             this.cmbActions.Name = "cmbActions";
             this.cmbActions.Size = new System.Drawing.Size(369, 21);

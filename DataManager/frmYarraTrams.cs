@@ -61,7 +61,7 @@ namespace DataManager
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            try
+            //try
             {
                 if ((int)e.Argument == 0)
                 {
@@ -85,7 +85,8 @@ namespace DataManager
                         DataSet stops = api.GetListOfStopsByRouteNoAndDirection(route, true);
                         foreach (DataRow stop in stops.Tables[0].Rows)
                         {
-                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
+                           
+                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])),route);
                             count++;
                         }
 
@@ -94,7 +95,8 @@ namespace DataManager
                         stops = api.GetListOfStopsByRouteNoAndDirection(route, false);
                         foreach (DataRow stop in stops.Tables[0].Rows)
                         {
-                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])));
+                            
+                            cache.AddCacheEntry(stop["TID"].ToString(), new Location(Convert.ToDouble(stop["Latitude"]), Convert.ToDouble(stop["Longitude"])),route);
                             count++;
                         }
 
@@ -161,11 +163,22 @@ namespace DataManager
                     List<Arc>[] result = dfs.Solve(itinerary);
 
                 }
+                else if ((int)e.Argument == 5)
+                {
+                    ArcCache aCache = new ArcCache("RoutePlanner");
+                    aCache.InitializeCache();
+                }
+                else if ((int)e.Argument == 6)
+                {
+                    ScheduleCache sCache = new ScheduleCache("YarraTrams");
+                    sCache.InitializeCache();
+                }
+
             }
-            catch (Exception ex)
+            //catch (Exception ex)
             {
-                worker.ReportProgress(0, ex.Message);
-                worker.ReportProgress(0, ex.StackTrace);
+               // worker.ReportProgress(0, ex.Message);
+               // worker.ReportProgress(0, ex.StackTrace);
                 
             }
 
