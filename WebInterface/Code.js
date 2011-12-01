@@ -21,11 +21,22 @@ function clearOverlays() {
     }
 }
 
+var iterationCount = 0;
+var ready = true;
+
+function auto() {
+    if (ready == true) {
+        next();
+    }
+    setTimeout(auto, 50);
+
+}
 
 function next() {
     $('#nextStepButton').attr("disabled", true);
+    ready = false;
 
-
+    $('#iterationCount').text(iterationCount++);
 
     $.getJSON("./GetNext.aspx",
               {},
@@ -53,9 +64,9 @@ function next() {
                           });
 
                           markersArray.push(marker);
-                                                    
+
                           var item = $(document.createElement('li'));
-                          item.text(node.Type + node.Name  + " (" + node.TotalTime + ")");
+                          item.text(node.Type + node.Name + " (" + node.TotalTime + ")");
                           $('#dirList').append(item);
 
                           //$('#dirList').attr("disabled", true);
@@ -88,6 +99,7 @@ function next() {
 
                   });
                   $('#nextStepButton').attr("disabled", false);
+                  ready = true;
 
               });
 
