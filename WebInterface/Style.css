@@ -5,20 +5,31 @@
 	height: 100%;
 	width: 75%;
 	float: left;
-	
+	z-index: 4;	
 }
       #sideHatch
 {
 	
 	width: auto;
 	height: 100%;
-	z-index: 100;
-	padding: 20px;
+	z-index: 2;
+	padding: 20px;	
 	position: relative;
     left: 30px;
+    /*: left;*/
 
 }
-      H1 { font-family:Sans-Serif}
+      H1
+{
+	padding: 20px;
+	margin-top: -60px;
+	margin-right: -40px;
+	border-color: #000000;
+	font-family: Sans-Serif;
+	background-color: #FF0000;
+	color: #FFFFFF;
+	border-bottom-style: solid;
+}
       BODY { font-family:Sans-Serif}
       UL
 {
@@ -28,4 +39,8 @@
 {
 	padding: 20px;
 	margin: 20px;
+}
+body
+{
+	display:inline;
 }
