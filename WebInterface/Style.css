@@ -1,0 +1,31 @@
+﻿html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas
+{
+	height: 100%;
+	width: 75%;
+	float: left;
+	
+}
+      #sideHatch
+{
+	
+	width: auto;
+	height: 100%;
+	z-index: 100;
+	padding: 20px;
+	position: relative;
+    left: 30px;
+
+}
+      H1 { font-family:Sans-Serif}
+      BODY { font-family:Sans-Serif}
+      UL
+{
+	
+}
+#innerSideHatch
+{
+	padding: 20px;
+	margin: 20px;
+}
