@@ -9,22 +9,40 @@
     <title>Test page</title>
     
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map_canvas { height: 100% }
-    </style>
+    <link href="Style.css" rel="Stylesheet" />
+    <script type="text/javascript" src="Scripts/jquery-1.4.1.js" />
+    
+    
+           
+
+    
 
 </head>
 <body>
+    
     <uc1:GoogleMapsControl ID="GoogleMapsControl1" runat="server" />
     <form id="form1" runat="server">
+
+
     
     
         
     
-    
+    <div id="sideHatch" runat="server"> 
+        <div id="innerSideHatch" runat="server">
+            <h1> RMIT Travel Planner</h1>
+                <div id="directionsList"></div>
+                <button id="nextStepButton" onclick="next()" type="button" >Next Iteration </button>
+
+                <ul id="dirList">
+        
+        
+                </ul>
+        </div>
+    </div>
     </form>
+    
+
 </body>
 </html>
 
