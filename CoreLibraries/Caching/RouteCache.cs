@@ -124,6 +124,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         public void Dispose()
         {
             database.Close();
+            GC.SuppressFinalize(this);
+        }
+
+        ~RouteCache()
+        {
+            Dispose();
         }
     }
 }

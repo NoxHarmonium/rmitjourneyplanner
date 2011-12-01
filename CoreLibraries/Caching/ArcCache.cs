@@ -133,7 +133,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         public void Dispose()
         {
-            database.Close();
+           database.Close();
+           GC.SuppressFinalize(this);
+        }
+
+        ~ArcCache()
+        {
+            Dispose();
         }
     }
 }
