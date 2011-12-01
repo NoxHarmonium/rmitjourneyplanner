@@ -14,7 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     /// <summary>
     /// Represents a node in a transport network such a train station or tram stop.
     /// </summary>
-    public interface INetworkNode : IEquatable<INetworkNode>
+    public interface INetworkNode : IEquatable<INetworkNode>, ICloneable
     {
         /// <summary>
         /// Gets the DataProvider that the node belongs to.

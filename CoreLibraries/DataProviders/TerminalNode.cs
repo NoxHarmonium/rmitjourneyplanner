@@ -166,5 +166,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             get;
             set;
         }
+
+        public object Clone()
+        {
+            return new TerminalNode(this.id, this.Latitude, this.Longitude);
+        }
     }
 }

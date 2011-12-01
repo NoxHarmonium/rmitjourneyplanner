@@ -357,8 +357,20 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             get;
             set;
         }
-        
 
+
+
+        public object Clone()
+        {
+            TramStop cloned = new TramStop(this.id, provider);
+            cloned.CurrentRoute = this.CurrentRoute;
+            cloned.TotalTime = this.TotalTime;
+            cloned.EuclidianDistance = this.EuclidianDistance;
+            cloned.RetrieveData();
+
+            return cloned;
+
+        }
     }
 
    
