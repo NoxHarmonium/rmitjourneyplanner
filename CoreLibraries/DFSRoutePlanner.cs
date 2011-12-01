@@ -125,7 +125,7 @@ namespace RmitJourneyPlanner.CoreLibraries
             stack = new Stack<INetworkNode>();
             itinerary.First().TotalTime = new TimeSpan(0, 0, 0);
             minTimeSolved = TimeSpan.MaxValue;
-            INetworkNode minNode = null;
+            minNode = null;
             stack.Push(itinerary.First());
             startTime = DateTime.Parse("11/30/2011 11:37 AM");
             current = null;
@@ -194,26 +194,18 @@ namespace RmitJourneyPlanner.CoreLibraries
             }
 
             // pArcs.Sort(new Comparers.ArcComparer());
+            
             List<INetworkNode> destinations = new List<INetworkNode>();
             foreach (Arc arc in pArcs)
             {
-                INetworkNode destination = (INetworkNode)arc.Destination;
+                INetworkNode destination = (INetworkNode)((INetworkNode)arc.Destination).Clone();
+                ;
                 destination.Parent = current;
-                if (destination.Parent != null)
-                {
-                    destination.TotalTime = destination.Parent.TotalTime + arc.Time;
-                }
-                else
-                {
-                    destination.TotalTime = arc.Time;
-                }
+                destination.TotalTime = current.TotalTime + arc.Time;
 
                 if (destination.TotalTime < minTimeSolved)
                 {
                     destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)destination, (Location)itinerary.Last());
-
-
-
                     //destination.CurrentRoute = arc.RouteId;
                     destinations.Add(destination);
                 }
