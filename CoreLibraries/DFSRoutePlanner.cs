@@ -84,7 +84,7 @@ namespace RmitJourneyPlanner.CoreLibraries
             {
                 while (current.Parent != null)
                 {
-                    if (current.ID == next.ID)
+                    if (current.ID.Equals(next.ID))
                     {
                         return true;
                     }
@@ -100,7 +100,7 @@ namespace RmitJourneyPlanner.CoreLibraries
             {
                 while (current.Parent != null)
                 {
-                    if (current.CurrentRoute == next.CurrentRoute)
+                    if (current.CurrentRoute.Equals(next.CurrentRoute))
                     {
                         return true;
                     }
@@ -150,7 +150,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                 next = stack.Pop();
             }
             current = next;
-            if (current == itinerary.Last())
+            if (current.Equals(itinerary.Last()))
             {
                 if (current.TotalTime < minTimeSolved)
                 {
@@ -174,7 +174,7 @@ namespace RmitJourneyPlanner.CoreLibraries
             List<Arc> pArcs = new List<Arc>();
             foreach (INetworkNode node in areaNodes)
             {
-                if (node != current && current.CurrentRoute != node.CurrentRoute && !hasBeenOnRoute(current, node))
+                if (!node.Equals(current) && !current.CurrentRoute.Equals(node.CurrentRoute) && !hasBeenOnRoute(current, node))
                 {
                     node.RetrieveData();
                     pArcs.Add(wProvider.EstimateDistance((Location)current, (Location)node));
@@ -199,7 +199,9 @@ namespace RmitJourneyPlanner.CoreLibraries
             foreach (Arc arc in pArcs)
             {
                 INetworkNode destination = (INetworkNode)((INetworkNode)arc.Destination).Clone();
+                //INetworkNode destination = (INetworkNode)arc.Destination;
                 ;
+                //bool same = (destination.Equals( (INetworkNode)arc.Destination));
                 destination.Parent = current;
                 destination.TotalTime = current.TotalTime + arc.Time;
 
