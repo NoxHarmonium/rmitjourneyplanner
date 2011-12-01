@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     /// <summary>
     /// Caches Yarra Trams schedule data.
     /// </summary>
-    public class ScheduleCache
+    public class ScheduleCache : IDisposable
     {
 
          DataAccess.MySqlDatabase database;
@@ -32,6 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         {
             database = new DataAccess.MySqlDatabase();
             this.networkID = networkID;
+            database.Open();
         }
 
         /// <summary>
@@ -184,6 +185,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             }
 
 
+        }
+
+        public void Dispose()
+        {
+            database.Close();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     /// <summary>
     /// Caches the routes that intersect a node.
     /// </summary>
-    public class NodeRouteCache
+    public class NodeRouteCache : IDisposable
     {
 
 
@@ -32,6 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         {
             database = new DataAccess.MySqlDatabase();
             this.networkID = networkID;
+            database.Open();
         }
         
         /// <summary>
@@ -94,5 +95,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
+
+        public void Dispose()
+        {
+            database.Close();
+        }
     }
 }

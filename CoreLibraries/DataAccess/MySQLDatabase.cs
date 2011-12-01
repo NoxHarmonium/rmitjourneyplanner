@@ -97,9 +97,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             if (transaction == null)
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
-                Open();
+                //Open();
                 int result = command.ExecuteNonQuery();
-                Close();
+                //Close();
                 return result;
             }
             else
@@ -122,9 +122,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             {
                 DataTable table = new DataTable();
                 MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
-                Open();
+                //Open();
                 adapter.Fill(table);
-                Close();
+                //Close();
                 return table;
             }
             else

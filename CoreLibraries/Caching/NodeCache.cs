@@ -12,8 +12,8 @@ using System.Web;
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
-    class NodeCache <T> where T : INetworkNode
-    {
+    class NodeCache <T> :IDisposable where  T : INetworkNode
+    { 
         DataAccess.MySqlDatabase database;
         private string networkID;
 
@@ -25,6 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         {
             database = new DataAccess.MySqlDatabase();
             this.networkID = networkID;
+            database.Open();
         }
 
         /// <summary>
@@ -133,5 +134,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
+
+        public void Dispose()
+        {
+            database.Close();
+        }
     }
 }

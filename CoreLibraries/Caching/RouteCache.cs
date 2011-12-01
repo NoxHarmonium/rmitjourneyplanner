@@ -12,7 +12,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     /// <summary>
     /// Caches route data for public transport.
     /// </summary>
-    class RouteCache
+    class RouteCache :IDisposable
     {
         DataAccess.MySqlDatabase database;
         private string networkID;
@@ -25,6 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         {
             database = new DataAccess.MySqlDatabase();
             this.networkID = networkID;
+            database.Open();
         }
 
         /// <summary>
@@ -116,8 +117,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
                 return null;
             
             
-        } 
+        }
 
 
+
+        public void Dispose()
+        {
+            database.Close();
+        }
     }
 }

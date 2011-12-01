@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     /// <summary>
     /// Allows high speed access and searching of multiple locations.
     /// </summary>
-    public class LocationCache
+    public class LocationCache : IDisposable
     {
 
         DataAccess.MySqlDatabase database;
@@ -32,6 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         {
             database = new DataAccess.MySqlDatabase();
             this.networkID = networkID;
+            database.Open();
         }
         
         /// <summary>
@@ -168,5 +169,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
+
+        public void Dispose()
+        {
+            database.Close();
+        }
     }
 }

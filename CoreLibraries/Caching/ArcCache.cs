@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
     /// <summary>
     /// A cache for arcs.
     /// </summary>
-    public class ArcCache
+    public class ArcCache : IDisposable
     {
 
          DataAccess.MySqlDatabase database;
@@ -32,6 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         public ArcCache(string networkID)
         {
             database = new DataAccess.MySqlDatabase();
+            database.Open();
             this.networkID = networkID;
         }
         
@@ -128,6 +129,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             }
 
 
+        }
+
+        public void Dispose()
+        {
+            database.Close();
         }
     }
 }
