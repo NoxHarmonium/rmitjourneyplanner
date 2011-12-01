@@ -16,26 +16,30 @@ namespace WebInterface
     /// </summary>
     public static class RouteSolver
     {
-        private DFSRoutePlanner planner;
+        private static DFSRoutePlanner planner;
 
-        public INetworkNode Current
+        public static INetworkNode Current
         {
             get;
             set;
         }
 
-        public INetworkNode Best
+        public static INetworkNode Best
         {
             get;
             set;
         }
 
-        public RouteSolver()
+        static RouteSolver()
         {
+            RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy =
+                new System.Net.WebProxy("http://aproxy.rmit.edu.au:8080", false, null, new System.Net.NetworkCredential("s3229159", "MuchosRowlies1"));
             planner = new DFSRoutePlanner();
+            planner.RegisterNetworkDataProvider(new TramNetworkProvider());
+            planner.RegisterPointDataProvider(new WalkingDataProvider());
         }
 
-        public void Reset(Location a, Location b)
+        public static void Reset(Location a, Location b)
         {
             List<INetworkNode> list = new List<INetworkNode>();
             TerminalNode start = new TerminalNode("Start", a.Latitude, a.Longitude);
@@ -48,9 +52,13 @@ namespace WebInterface
 
         }
 
-        public bool NextStep()
+        public static bool NextStep()
         {
-            return planner.SolveStep();
+            bool success = planner.SolveStep();
+            Current = planner.Current;
+            Best = planner.BestNode;
+            return success;
+
         }
     }
 }
