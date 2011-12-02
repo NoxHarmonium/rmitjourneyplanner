@@ -141,7 +141,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                         rCache.AddCacheEntry(routeId, downIds, false);
                     }
 
-                    Route route = new Route(routeId, new TramStop(downIds[0], this), null);
+                    Route route = new Route(routeId, null, new TramStop(downIds[0], this));
                     foreach (string id in downIds)
                     {
                         TramStop stop = nCache.GetNode(id, this);
@@ -151,7 +151,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                             stop = new TramStop(id, this);
                         }
                         stop.CurrentRoute = routeId;
-                        route.AddNode(stop, true);
+                        route.AddNode(stop, false);
                     }
                     node.CurrentRoute = routeId;
                     return route.GetAdjacent(node);
@@ -196,6 +196,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns></returns>
         public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination,DateTime requestTime)
         {
+            
             if (source is TramStop && destination is TramStop)
             {
                 List<string> sRoutes = nrCache.GetRoutes(source);
