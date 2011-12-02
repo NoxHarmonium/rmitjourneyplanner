@@ -30,6 +30,11 @@ namespace RmitJourneyPlanner.CoreLibraries
         private DateTime startTime;
         private INetworkNode current = null;
 
+        public DFSRoutePlanner()
+        {
+            MaxWalkingDistance = 1.0;
+        }
+
         /// <summary>
         /// Gets the current node being traversed.
         /// </summary>
@@ -50,6 +55,12 @@ namespace RmitJourneyPlanner.CoreLibraries
             {
                 return minNode;
             }
+        }
+
+        public double MaxWalkingDistance
+        {
+            get;
+            set;
         }
         
         /// <summary>
@@ -96,11 +107,14 @@ namespace RmitJourneyPlanner.CoreLibraries
 
         private bool hasBeenOnRoute(INetworkNode current, INetworkNode next)
         {
+            
+            
             if (current != null)
             {
                 while (current.Parent != null)
                 {
-                    if (current.CurrentRoute.Equals(next.CurrentRoute))
+                    
+                    if (current.BaseRoute.Equals(next.BaseRoute))
                     {
                         return true;
                     }
@@ -129,6 +143,7 @@ namespace RmitJourneyPlanner.CoreLibraries
             stack.Push(itinerary.First());
             startTime = DateTime.Parse("11/30/2011 11:37 AM");
             current = null;
+            
             //while (stack.Count > 0)
             //{
 
@@ -169,16 +184,22 @@ namespace RmitJourneyPlanner.CoreLibraries
             TramNetworkProvider tProvider = (TramNetworkProvider)networkProviders[0];
             WalkingDataProvider wProvider = (WalkingDataProvider)pointDataProviders[0];
 
-            List<INetworkNode> areaNodes = tProvider.GetNodesAtLocation((Location)current, 1.0);
+            List<INetworkNode> areaNodes = tProvider.GetNodesAtLocation((Location)current, 1.5);
             areaNodes.Add(itinerary.Last());
             List<Arc> pArcs = new List<Arc>();
             foreach (INetworkNode node in areaNodes)
             {
-                if (!node.Equals(current) && !current.CurrentRoute.Equals(node.CurrentRoute) && !hasBeenOnRoute(current, node))
+
+                if (!node.Equals(current) && !hasBeenOnRoute(current, node))
                 {
-                    node.RetrieveData();
-                    pArcs.Add(wProvider.EstimateDistance((Location)current, (Location)node));
+                    if ((node is TerminalNode) || !current.CurrentRoute.Equals(node.CurrentRoute))
+                    {
+
+                        node.RetrieveData();
+                        pArcs.Add(wProvider.EstimateDistance((Location)current, (Location)node));
+                    }
                 }
+               
             }
 
             if (!(current is TerminalNode))
@@ -188,7 +209,10 @@ namespace RmitJourneyPlanner.CoreLibraries
                 foreach (INetworkNode node in routeNodes)
                 {
                     node.RetrieveData();
-                    pArcs.AddRange(tProvider.GetDistanceBetweenNodes(current, node, startTime + current.TotalTime));
+                    if (! hasBeenOnRoute(current.Parent,node ))
+                    {
+                        pArcs.AddRange(tProvider.GetDistanceBetweenNodes(current, node, startTime + current.TotalTime));
+                    }
                 }
 
             }
@@ -205,7 +229,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                 destination.Parent = current;
                 destination.TotalTime = current.TotalTime + arc.Time;
 
-                if (destination.TotalTime < minTimeSolved)
+                if ((destination is TerminalNode)  || destination.TotalTime + (pointDataProviders[0].EstimateDistance((Location)destination,(Location)itinerary.Last()).Time) < minTimeSolved)
                 {
                     destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)destination, (Location)itinerary.Last());
                     //destination.CurrentRoute = arc.RouteId;
