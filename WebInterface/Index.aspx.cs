@@ -14,15 +14,17 @@ namespace WebInterface
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            btnReset.Click += new EventHandler(btnReset_Click);
+            
             RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy =
                 new System.Net.WebProxy("http://aproxy.rmit.edu.au:8080", false, null, new NetworkCredential("s3229159", "MuchosRowlies1"));
 
-            if (Request.Params["Next"] == null)
+            if (!RouteSolver.Ready)
             {
-                RouteSolver.Reset(new Location("13 Liverpool St, Coburg, Victoria, Australia"),
-                    new Location("1 Lygon St, Carlton, Victoria, Australia"));
+                RouteSolver.Reset(new Location(txtSource.Text),
+                  new Location(txtDestination.Text),Convert.ToDouble(txtMaxWalk.Text));
             }
-            
+
             INetworkNode current = RouteSolver.Current;
             GoogleMapsControl1.Nodes.Clear();
             /*
@@ -37,6 +39,12 @@ namespace WebInterface
              * */
             //GoogleMapsControl1.Nodes.Add(
             ///RouteSolver.Current
+        }
+
+        void btnReset_Click(object sender, EventArgs e)
+        {
+            RouteSolver.Reset(new Location(txtSource.Text),
+                   new Location(txtDestination.Text), Convert.ToDouble(txtMaxWalk.Text));
         }
     }
 }
