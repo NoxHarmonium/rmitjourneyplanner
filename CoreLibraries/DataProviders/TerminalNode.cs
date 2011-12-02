@@ -167,6 +167,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             set;
         }
 
+        /// <summary>
+        /// Creates a new terminal node with the same properties.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             return new TerminalNode(this.id, this.Latitude, this.Longitude);

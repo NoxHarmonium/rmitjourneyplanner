@@ -59,6 +59,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         }
 
+        /// <summary>
+        /// Gets the internal DataSet that hold all the data associated with this node.
+        /// </summary>
         public DataSet InternalData
         {
             get
@@ -379,7 +382,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
 
-
+        /// <summary>
+        /// Copies this node to a new node.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             TramStop cloned = new TramStop(this.id, provider);
@@ -404,7 +410,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                 {
                     return CurrentRoute.Remove(CurrentRoute.IndexOf("_"));
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return String.Empty;
                 }
