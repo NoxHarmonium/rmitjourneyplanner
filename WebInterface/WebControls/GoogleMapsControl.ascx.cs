@@ -50,7 +50,7 @@ namespace RMITTravelPlanner.WebControls
             csJavascript += "}";
             csJavascript += generateMapCode(-37.780323, 144.957103);
            
-            string include = "<script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?sensor=false\"></script>\n";
+            //string include = "<script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?sensor=false\"></script>\n";
             
             string header = String.Format("<script type=\"text/javascript\">{0}</script>\n", csJavascript);
 
@@ -108,6 +108,7 @@ namespace RMITTravelPlanner.WebControls
             //string marker = String.Format("var marker = new google.maps.Marker({{position: {0}, map: window.map,title:\"{1}\"}});", latlng, "Test");
             //output.Append(marker);
             output.Append("addMarkers();");
+            //output.Append("");
             output.Append("}");
 
             output.Append("window.onload = initialize;");
