@@ -83,6 +83,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
         /// <summary>
+        /// Gets the route number without any modifiers such as direction.
+        /// </summary>
+        string BaseRoute
+        {
+            get;            
+        }
+
+        /// <summary>
         /// Gets or sets the Euclidian distance to the goal. Used for traversing route trees.
         /// </summary>
         double EuclidianDistance

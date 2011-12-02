@@ -171,5 +171,16 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         {
             return new TerminalNode(this.id, this.Latitude, this.Longitude);
         }
+
+        /// <summary>
+        /// Gets the base route of this node. In a terminal node this is always an empty string.
+        /// </summary>
+        public string BaseRoute
+        {
+            get
+            {
+                return id;
+            }
+        }
     }
 }

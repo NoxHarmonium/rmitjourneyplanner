@@ -38,6 +38,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         private bool isPlatformStop;
         private string zones;
         private INetworkNode parent;
+        private DataSet internalData = null;
+
+
 
         /// <summary>
         /// Initializes a new instance of the TramStop class with a dataset retreived from the 
@@ -54,6 +57,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             //LoadData(parent, stopData);
 
 
+        }
+
+        public DataSet InternalData
+        {
+            get
+            {
+                return internalData;
+            }
         }
 
         /// <summary>
@@ -206,13 +217,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
 
         /// <summary>
-        /// Gets the information describing the TramStop from the cache.
+        /// Sets the properties of a Tram Stop by loading them from a DataSet.
         /// </summary>
-        /// <param name="stopData"></param>
-        private void loadData(DataSet stopData)
+        /// <param name="stopData">The DataSet retreived from the Tramtracker API for the TramStop.</param>
+        public void LoadData(DataSet stopData)
         {
 
-            
+            internalData = stopData;
             DataTable dataTable = stopData.Tables[0];
             DataRow dataRow = dataTable.Rows[0];
             string flagStopString = dataRow["FlagStopNo"].ToString();
@@ -262,9 +273,18 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// </summary>
         public void RetrieveData()
         {
-            DataSet data  = provider.GetNodeData(id);
-            loadData(data);
+            if (internalData == null)
+            {
+                DataSet data = provider.GetNodeData(id);
+                LoadData(data);
+                internalData = data;
+            }
+            else
+            {
+                LoadData(internalData);
+            }
         }
+
 
        
 
@@ -366,10 +386,29 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             cloned.CurrentRoute = this.CurrentRoute;
             cloned.TotalTime = this.TotalTime;
             cloned.EuclidianDistance = this.EuclidianDistance;
-            cloned.RetrieveData();
+            cloned.LoadData(this.internalData);
 
             return cloned;
 
+        }
+
+
+        /// <summary>
+        /// Gets the tram route without any direction modifiers.
+        /// </summary>
+        public string BaseRoute
+        {
+            get
+            {
+                try
+                {
+                    return CurrentRoute.Remove(CurrentRoute.IndexOf("_"));
+                }
+                catch (Exception e)
+                {
+                    return String.Empty;
+                }
+            }
         }
     }
 
