@@ -21,7 +21,7 @@ namespace RmitJourneyPlanner.CoreLibraries
     {
         private List<INetworkDataProvider> networkProviders = new List<INetworkDataProvider>();
         private List<IPointDataProvider> pointDataProviders = new List<IPointDataProvider>();
-        private Caching.ArcCache aCache = new Caching.ArcCache("RoutePlanner");
+        //private Caching.ArcCache aCache = new Caching.ArcCache("RoutePlanner");
 
         private Stack<INetworkNode> stack;
         private List<DataProviders.INetworkNode> itinerary;
@@ -30,6 +30,9 @@ namespace RmitJourneyPlanner.CoreLibraries
         private DateTime startTime;
         private INetworkNode current = null;
 
+        /// <summary>
+        /// Initilizes a new instance of a DFSRoutePlanner.
+        /// </summary>
         public DFSRoutePlanner()
         {
             MaxWalkingDistance = 1.0;
@@ -57,6 +60,10 @@ namespace RmitJourneyPlanner.CoreLibraries
             }
         }
 
+        /// <summary>
+        /// Gets or sets the max radius to search in around the current node 
+        /// to find another node of a different route or network.
+        /// </summary>
         public double MaxWalkingDistance
         {
             get;
@@ -160,7 +167,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         public bool SolveStep()
         {
             INetworkNode next = stack.Pop();
-            while (hasDuplicates(current, next))
+            while (stack.Count > 0 && hasDuplicates(current, next))
             {
                 next = stack.Pop();
             }
