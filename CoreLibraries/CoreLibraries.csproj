@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\ArcCache.cs" />
     <Compile Include="Caching\LocationCache.cs" />
     <Compile Include="Caching\NodeCache.cs" />
     <Compile Include="Caching\NodeRouteCache.cs" />
