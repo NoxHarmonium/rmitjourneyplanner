@@ -24,30 +24,47 @@ function clearOverlays() {
 var iterationCount = 0;
 var ready = true;
 
+next('false');
+
 function auto() {
     if (ready == true) {
-        next();
+        next('true');
     }
     setTimeout(auto, 50);
 
 }
 
-function next() {
+function next(param) {
     $('#nextStepButton').attr("disabled", true);
     ready = false;
 
-    $('#iterationCount').text(iterationCount++);
+    //$('#iterationCount').text(iterationCount++);
 
-    $.getJSON("./GetNext.aspx",
+    $.getJSON("./GetNext.aspx?next=" + param,
               {},
               function (data) {
                   clearOverlays();
                   var routeNo = 0;
+                  if (data.success == "true") {
+
+                      ('#innerSideHatch').append("<div>Best path found!</div>");
+                      return;
+                  }
+
+                  if (data.iteration) {
+                      $('#iterationCount').text(data.iteration);
+                  }
+                  else {
+                      $('#iterationCount').text('0');
+                  }
                   $.each(data.paths, function (i, Route) {
                       //alert(Route);
 
                       var polyPoints = new Array();
-                      $('#dirList li').remove()
+                      $('#dirList .directionEntry').remove();
+                      $('#dirList .directionEntryAlt').remove();
+
+                      var alt = false;
                       $.each(Route.Route, function (j, node) {
 
 
@@ -56,17 +73,48 @@ function next() {
                           //alert(node);
 
                           var myLatlng = new google.maps.LatLng(node.Latitude, node.Longitude);
+
                           polyPoints.push(myLatlng);
                           var marker = new google.maps.Marker({
                               position: myLatlng,
                               map: window.map,
-                              title: node.Name
+                              title: node.Name,
+                              icon: node.Image
                           });
 
                           markersArray.push(marker);
 
-                          var item = $(document.createElement('li'));
-                          item.text(node.Type + node.Name + " (" + node.TotalTime + ")");
+                          var item = $(document.createElement('div'));
+                          var type = $(document.createElement('div'));
+                          var name = $(document.createElement('div'));
+                          var time = $(document.createElement('div'));
+                          var image = $(document.createElement('img'));
+                          //image.attr("href") = node.Image;
+                          item.append("<img class='transportImage' src='" + node.Image + "'/>");
+
+
+                          type.text(node.Type);
+                          name.text(node.Name);
+                          time.text(" (" + node.TotalTime + ")");
+
+
+
+                          type.attr('class', 'typeSpan');
+                          name.attr('class', 'nameSpan');
+                          time.attr('class', 'timeSpan');
+
+                          item.append(type);
+                          item.append(name);
+                          item.append(time);
+
+                          if (alt) {
+                              item.attr('class', 'directionEntry');
+                          }
+                          else {
+                              item.attr('class', 'directionEntryAlt');
+
+                          }
+                          alt = !alt;
                           $('#dirList').append(item);
 
                           //$('#dirList').attr("disabled", true);
