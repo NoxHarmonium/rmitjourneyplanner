@@ -245,7 +245,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                 stack.Push(node);
             }
 
-            return (stack.Count > 0);
+            return !(stack.Count > 0);
         }
     }
 }
