@@ -17,6 +17,8 @@ namespace WebInterface
     public static class RouteSolver
     {
         private static DFSRoutePlanner planner;
+        private static bool ready = false;
+        private static int iteration = 0;
 
         public static INetworkNode Current
         {
@@ -30,6 +32,24 @@ namespace WebInterface
             set;
         }
 
+        public static bool Ready
+        {
+            get
+            {
+                return ready;
+            }
+            
+        }
+
+        public static int CurrentIteration
+        {
+            get
+            {
+                return iteration;
+            }
+
+        }
+
         static RouteSolver()
         {
             RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy =
@@ -39,7 +59,7 @@ namespace WebInterface
             planner.RegisterPointDataProvider(new WalkingDataProvider());
         }
 
-        public static void Reset(Location a, Location b)
+        public static void Reset(Location a, Location b, double maxWalk)
         {
             List<INetworkNode> list = new List<INetworkNode>();
             TerminalNode start = new TerminalNode("Start", a.Latitude, a.Longitude);
@@ -47,6 +67,9 @@ namespace WebInterface
             list.Add(start);
             list.Add(end);
             planner.Start(list);
+            planner.MaxWalkingDistance = maxWalk;
+            iteration = 0;
+            ready = true;
 
 
 
@@ -54,6 +77,7 @@ namespace WebInterface
 
         public static bool NextStep()
         {
+            iteration++;
             bool success = planner.SolveStep();
             Current = planner.Current;
             Best = planner.BestNode;
