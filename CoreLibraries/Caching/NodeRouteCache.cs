@@ -60,8 +60,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// <summary>
         /// Adds a new cache entry into the node/route cache.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="location"></param>
+        /// <param name="node"></param>
+        /// <param name="routeId"></param>
         public void AddCacheEntry(INetworkNode node, string routeId)
         {
            
@@ -74,6 +74,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             database.RunQuery(query);
         }
 
+        /// <summary>
+        /// Gets a list of routes that intersect with the given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public List<string> GetRoutes(INetworkNode node)
         {
             string query = String.Format("SELECT routeId FROM NodeRouteCache" +
@@ -95,13 +100,18 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
-
+        /// <summary>
+        /// Cleans up resources used by this object
+        /// </summary>
         public void Dispose()
         {
             database.Close();
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// A method called by the garbage collector to clean up this object.
+        /// </summary>
         ~NodeRouteCache()
         {
             Dispose();

@@ -66,6 +66,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// </summary>
         /// <param name="id"></param>
         /// <param name="location"></param>
+        /// <param name="routeId"></param>
         public void AddCacheEntry(string id, Location location,string routeId)
         {
             string query = String.Format("INSERT INTO LocationCache" +
@@ -169,13 +170,18 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
-
+        /// <summary>
+        /// Cleans up resources used by this object
+        /// </summary>
         public void Dispose()
         {
             database.Close();
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// A method called by the garbage collector to clean up this object.
+        /// </summary>
         ~LocationCache()
         {
             Dispose();

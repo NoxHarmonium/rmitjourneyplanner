@@ -72,7 +72,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
 
         }
-
+        
+        /// <summary>
+        /// Inserts a new trip schedule into the cache.
+        /// </summary>
+        /// <param name="tripID"></param>
+        /// <param name="scheduledDateTime"></param>
+        /// <param name="data"></param>
         public void AddTripSchedule(string tripID, DateTime scheduledDateTime,DataSet data)
         {
             using (StringWriter writer = new StringWriter())
@@ -92,6 +98,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
+        /// <summary>
+        /// Gets the trip schedule DataSet for the given parameters.
+        /// </summary>
+        /// <param name="tripID"></param>
+        /// <param name="scheduledDateTime"></param>
+        /// <returns></returns>
         public DataSet GetTripSchedule(string tripID, DateTime scheduledDateTime)
         {
             string query = string.Format("SELECT data FROM TripScheduleCache" +
@@ -151,6 +163,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
+        /// <summary>
+        /// Gets the schedule collection DataSet for the supplied parameters.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="routeId"></param>
+        /// <param name="lowFloor"></param>
+        /// <param name="requestDate"></param>
+        /// <returns></returns>
         public DataSet GetScheduleCollection(INetworkNode node, string routeId, bool lowFloor, DateTime requestDate)
         {
             string query = string.Format("SELECT data FROM ScheduleCollectionCache" +
@@ -187,12 +207,18 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
 
         }
 
+        /// <summary>
+        /// Cleans up resources used by this object
+        /// </summary>
         public void Dispose()
         {
             database.Close();
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// A method called by the garbage collector to clean up this object.
+        /// </summary>
         ~ScheduleCache()
         {
             Dispose();

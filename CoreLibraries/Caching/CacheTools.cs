@@ -20,7 +20,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// <summary>
         /// De escapes an XML string.
         /// </summary>
-        /// <param name="xml"></param>
+        /// <param name="s"></param>
         /// <returns></returns>
         public static string Deescape(string s)
         {
