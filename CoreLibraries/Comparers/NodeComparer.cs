@@ -25,9 +25,23 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
         /// <returns></returns>
         public int Compare(INetworkNode x, INetworkNode y)
         {
-            double fx = x.TotalTime.Milliseconds + (x.EuclidianDistance * 100000.0);
-            double fy = y.TotalTime.Milliseconds + (y.EuclidianDistance * 100000.0);
+            //double fx = x.TotalTime.Milliseconds + (x.EuclidianDistance * 100000.0);
+            //double fy = y.TotalTime.Milliseconds + (y.EuclidianDistance * 100000.0);
 
+             
+            
+
+            double fx = ((double)x.TotalTime.Ticks/1000000000.0 + x.EuclidianDistance);
+            double fy = ((double)y.TotalTime.Ticks/1000000000.0 + y.EuclidianDistance);
+            if (x.EuclidianDistance == 0)
+            {
+                fx = 0;
+            }
+
+            if (y.EuclidianDistance == 0)
+            {
+                fy = 0;
+            }
             int d = (int)fy - (int)fx;
             return d;
             
