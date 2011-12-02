@@ -106,10 +106,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 throw new Exception("Node doesn't exist in route.");
             }
-
-
+            
+            
             int index = sourceNodes.IndexOf(node);
-            nodes.AddRange(sourceNodes.GetRange(index+1,sourceNodes.Count-(index+1)));
+            nodes.AddRange(sourceNodes.GetRange(index + 1, sourceNodes.Count - (index + 1)));
+
+            
             
            
             return nodes;
