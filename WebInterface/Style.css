@@ -1,25 +1,33 @@
-﻿html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map_canvas
+﻿html
 {
 	height: 100%;
-	width: 75%;
-	float: left;
-	z-index: 4;	
 }
-      #sideHatch
+body
 {
-	
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+#map_canvas
+{
+	height: 100%;
+	width: 70%;
+	float: left;
+	z-index: 4;
+}
+#sideHatch
+{
 	width: auto;
 	height: 100%;
 	z-index: 2;
-	padding: 20px;	
+	padding: 20px;
 	position: relative;
-    left: 30px;
-    /*: left;*/
-
+	left: 30px; /*: left;*/
+	/*overflow:auto;*/
+	
+	
 }
-      H1
+H1
 {
 	padding: 20px;
 	margin-top: -60px;
@@ -30,10 +38,12 @@
 	color: #FFFFFF;
 	border-bottom-style: solid;
 }
-      BODY { font-family:Sans-Serif}
-      UL
+BODY
 {
-	
+	font-family: Sans-Serif;
+}
+UL
+{
 }
 #innerSideHatch
 {
@@ -42,5 +52,107 @@
 }
 body
 {
-	display:inline;
+	display: inline;
+}
+
+
+.directionEntry
+{
+	vertical-align: middle;
+	background-color: #EEEEEE;
+	margin-right: -30px;
+	padding-right: 30px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	display: table-row;
+}
+
+.directionEntryAlt
+{
+	vertical-align: middle;
+	background-color: #CDCDFF;
+	margin-right: -30px;
+	padding-right: 30px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	display: table-row;
+}
+
+.typeSpan
+{
+	display: table-cell;
+	text-align: right;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.nameSpan
+{
+	display: table-cell;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.timeSpan
+{
+	display: table-cell;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.transportImage
+{
+	vertical-align: middle;
+	padding-right: 20px;
+}
+
+#btnReset
+{
+	position: relative;
+	left: 60px;
+}
+
+
+#dirList
+{
+	margin-top: 10px;
+	display: table;
+}
+
+#buttons
+{
+	float: right;
+	vertical-align: middle;
+}
+
+#infoPanel
+{
+	float: left;
+	vertical-align: middle;
+}
+
+#topPanel
+{
+	vertical-align: middle;
+}
+
+#txtSource
+{
+	width: 300px;
+}
+#txtDestination
+{
+	width: 300px;
+}
+#txtMaxWalk
+{
+	width: 20px;
+}
+.textBoxRow
+{
+}
+
+#topPanel
+{
+	
 }
