@@ -170,8 +170,8 @@ namespace DataManager
                 }
                 else if ((int)e.Argument == 5)
                 {
-                    ArcCache aCache = new ArcCache("RoutePlanner");
-                    aCache.InitializeCache();
+                    //ArcCache aCache = new ArcCache("RoutePlanner");
+                    //aCache.InitializeCache();
                 }
                 else if ((int)e.Argument == 6)
                 {
