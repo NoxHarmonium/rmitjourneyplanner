@@ -55,7 +55,7 @@ namespace WebInterface
                         TimeSpan totalTime = current.TotalTime;
                         if (current.Parent != null)
                         {
-                            totalTime = current.Parent.TotalTime;
+                            totalTime = current.TotalTime - current.Parent.TotalTime;
                         }
                         
                         element.Append(String.Format(
@@ -66,7 +66,7 @@ namespace WebInterface
                                     "\t\t\t\"Type\": \"{4}\"\n",
                                     current.Latitude,
                                     current.Longitude,
-                                    current.ID,
+                                    current.ID + String.Format(" ({0})",current.TotalTime),
                                     totalTime,
                                     travelType));
 
