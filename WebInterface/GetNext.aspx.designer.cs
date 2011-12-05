@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebInterface {
+namespace RmitJourneyPlanner.WebInterface {
     
     
     public partial class GetNext {

@@ -1,47 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.SessionState;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Global.asax.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The global.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace WebInterface
 {
+    using System;
+
+    /// <summary>
+    /// The global.
+    /// </summary>
     public class Global : System.Web.HttpApplication
     {
+        #region Methods
 
-        void Application_Start(object sender, EventArgs e)
+        /// <summary>
+        /// The application_ end.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void Application_End(object sender, EventArgs e)
         {
-            // Code that runs on application startup
-
+            // Code that runs on application shutdown
         }
 
-        void Application_End(object sender, EventArgs e)
-        {
-            //  Code that runs on application shutdown
-
-        }
-
-        void Application_Error(object sender, EventArgs e)
+        /// <summary>
+        /// The application_ error.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void Application_Error(object sender, EventArgs e)
         {
             // Code that runs when an unhandled error occurs
-
         }
 
-        void Session_Start(object sender, EventArgs e)
+        /// <summary>
+        /// The application_ start.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void Application_Start(object sender, EventArgs e)
         {
-            // Code that runs when a new session is started
-
+            // Code that runs on application startup
         }
 
-        void Session_End(object sender, EventArgs e)
+        /// <summary>
+        /// The session_ end.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void Session_End(object sender, EventArgs e)
         {
             // Code that runs when a session ends. 
             // Note: The Session_End event is raised only when the sessionstate mode
             // is set to InProc in the Web.config file. If session mode is set to StateServer 
             // or SQLServer, the event is not raised.
-
         }
 
+        /// <summary>
+        /// The session_ start.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void Session_Start(object sender, EventArgs e)
+        {
+            // Code that runs when a new session is started
+        }
+
+        #endregion
     }
 }

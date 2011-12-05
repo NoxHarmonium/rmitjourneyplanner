@@ -1,50 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Text;
-using RmitJourneyPlanner.CoreLibraries.DataProviders;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetNext.aspx.cs" company="RMIT University">
+//    Copyright RMIT University 2011
+// </copyright>
+// <summary>
+//   Global object to solve routes.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
-namespace WebInterface
+namespace RmitJourneyPlanner.WebInterface
 {
+    using System;
+    using System.Text;
+
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.WebInterface.App_Data;
+
+    /// <summary>
+    /// The get next.
+    /// </summary>
     public partial class GetNext : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        #region Methods
+
+        /// <summary>
+        /// The page_ load.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        protected void PageLoad(object sender, EventArgs e)
         {
             bool success = false;
-            if (Request.Params["next"] == "true")
+            if (this.Request.Params["next"] == "true")
             {
-                RouteSolver.NextStep();
+                success = RouteSolver.NextStep();
             }
+
             if (!success)
             {
-                INetworkNode current = RouteSolver.Current;
-                StringBuilder JSON = new StringBuilder("{\n \"paths\": [{\n");
+                var json = new StringBuilder("{\n \"paths\": [{\n");
 
-                INetworkNode[] nodelist = new INetworkNode[] { RouteSolver.Current, RouteSolver.Best };
+                var nodelist = new[] { RouteSolver.Current, RouteSolver.Best };
                 int count = 0;
 
                 foreach (INetworkNode node in nodelist)
                 {
-                    current = node;
+                    INetworkNode current = node;
 
+                    json.Append("\t\"Route\":[ \n ");
 
-                    JSON.Append("\t\"Route\":[ \n ");
+                    var elements = new StringBuilder();
 
-                    StringBuilder elements = new StringBuilder();
-
-                    string baseImage;
-
-                    if (count == 0)
-                    {
-                        baseImage = "images/icons/red/";
-                    }
-                    else
-                    {
-                        baseImage = "images/icons/blue/";
-                    }
+                    string baseImage = count == 0 ? "images/icons/red/" : "images/icons/blue/";
 
                     if (current != null)
                     {
@@ -58,19 +68,19 @@ namespace WebInterface
                                 travelType = "Begin at the ";
                                 image += "../number_0.png";
                             }
+                            else if ((current.GetType() == current.Parent.GetType())
+                                     && current.GetType() == typeof(TramStop))
+                            {
+                                travelType = "Catch a tram to ";
+                                image += "tramway.png";
+                            }
                             else
-                                
-                                if ((current.GetType() == current.Parent.GetType()) && current.GetType() == typeof(TramStop))
-                                {
-                                    travelType = "Catch a tram to ";
-                                    image += "tramway.png";
-                                }
-                                else
-                                {
-                                    travelType = "Walk to ";
-                                    image += "pedestriancrossing.png";
-                                }
-                            StringBuilder element = new StringBuilder();
+                            {
+                                travelType = "Walk to ";
+                                image += "pedestriancrossing.png";
+                            }
+
+                            var element = new StringBuilder();
                             element.Append("\t\t{\n");
                             TimeSpan totalTime = current.TotalTime;
                             if (current.Parent != null)
@@ -78,23 +88,17 @@ namespace WebInterface
                                 totalTime = current.TotalTime - current.Parent.TotalTime;
                             }
 
-
-
-
-
-                            element.Append(String.Format(
-                                        "\t\t\t\"Latitude\": \"{0}\",\n" +
-                                        "\t\t\t\"Longitude\": \"{1}\",\n" +
-                                        "\t\t\t\"Name\": \"{2}\",\n" +
-                                        "\t\t\t\"TotalTime\": \"{3}\",\n" +
-                                        "\t\t\t\"Image\": \"{4}\",\n" +
-                                        "\t\t\t\"Type\": \"{5}\"\n",
-                                        current.Latitude,
-                                        current.Longitude,
-                                        current.ID + String.Format(" ({0})", current.TotalTime),
-                                        totalTime,
-                                        image,
-                                        travelType));
+                            element.Append(
+                                string.Format(
+                                    "\t\t\t\"Latitude\": \"{0}\",\n" + "\t\t\t\"Longitude\": \"{1}\",\n"
+                                    + "\t\t\t\"Name\": \"{2}\",\n" + "\t\t\t\"TotalTime\": \"{3}\",\n"
+                                    + "\t\t\t\"Image\": \"{4}\",\n" + "\t\t\t\"Type\": \"{5}\"\n", 
+                                    current.Latitude, 
+                                    current.Longitude, 
+                                    current.Id + string.Format(" ({0})", current.TotalTime), 
+                                    totalTime, 
+                                    image, 
+                                    travelType));
 
                             current = current.Parent;
                             if (!ifirst)
@@ -107,33 +111,33 @@ namespace WebInterface
                                 ifirst = false;
                             }
 
-
                             elements.Insert(0, element);
-
                         }
                     }
-                    JSON.Append(elements);
+
+                    json.Append(elements);
                     if (count == 1)
                     {
-                        JSON.Append("\t]}\n");
+                        json.Append("\t]}\n");
                     }
                     else
                     {
                         count++;
-                        JSON.Append("\t]},{\n");
+                        json.Append("\t]},{\n");
                     }
-
-
                 }
-                JSON.Append("], \"iteration\" : \"" + RouteSolver.CurrentIteration.ToString() +"\"}\n");
-                Response.Clear();
-                Response.Write(JSON);
+
+                json.Append("], \"iteration\" : \"" + RouteSolver.CurrentIteration.ToString() + "\"}\n");
+                this.Response.Clear();
+                this.Response.Write(json);
             }
             else
             {
-                Response.Clear();
-                Response.Write("{ \"success\": \"true\" }");
+                this.Response.Clear();
+                this.Response.Write("{ \"success\": \"true\" }");
             }
         }
+
+        #endregion
     }
 }

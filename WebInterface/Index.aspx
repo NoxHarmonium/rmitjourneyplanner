@@ -1,4 +1,10 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="WebInterface.Index" %>
+<%@ Import Namespace="System.Web.DynamicData" %>
+<%@ Import Namespace="System.Web.UI" %>
+<%@ Import Namespace="System.Web.UI.WebControls" %>
+<%@ Import Namespace="System.Web.UI.WebControls" %>
+<%@ Import Namespace="System.Web.UI.WebControls.Expressions" %>
+<%@ Import Namespace="System.Web.UI.WebControls.WebParts" %>
 
 <%@ Register Src="WebControls/GoogleMapsControl.ascx" TagName="GoogleMapsControl"
     TagPrefix="uc1" %>
@@ -36,10 +42,10 @@
                 </div>
             </div>
             <div>
-                <button id="nextStepButton" onclick="next('true')" type="button">
+                <button id="nextStepButton" onclick="next('true'); " type="button">
                     Next Iteration
                 </button>
-                <button id="autoButton" onclick="auto()" type="button">
+                <button id="autoButton" onclick="auto(); " type="button">
                     Auto Run
                 </button>
             </div>

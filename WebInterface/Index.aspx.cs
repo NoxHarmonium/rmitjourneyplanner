@@ -1,32 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using RmitJourneyPlanner.CoreLibraries.Positioning;
-using RmitJourneyPlanner.CoreLibraries.DataProviders;
-using System.Net;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Index.aspx.cs" company="RMIT University">
+//    Copyright RMIT University 2011
+// </copyright>
+// <summary>
+//   Global object to solve routes.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
-namespace WebInterface
+namespace RmitJourneyPlanner.WebInterface
 {
+    using System;
+    using System.Net;
+
+    using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.WebInterface.App_Data;
+
+    /// <summary>
+    /// The index.
+    /// </summary>
     public partial class Index : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        #region Methods
+
+        /// <summary>
+        /// The page_ load.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        protected void PageLoad(object sender, EventArgs e)
         {
-            btnReset.Click += new EventHandler(btnReset_Click);
-            
-            RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy =
-                new System.Net.WebProxy("http://aproxy.rmit.edu.au:8080", false, null, new NetworkCredential("s3229159", "MuchosRowlies1"));
+            this.btnReset.Click += this.BtnResetClick;
+
+            CoreLibraries.DataAccess.ConnectionInfo.Proxy =
+                new WebProxy(
+                    "http://aproxy.rmit.edu.au:8080", false, null, new NetworkCredential("s3229159", "MuchosRowlies1"));
 
             if (!RouteSolver.Ready)
             {
-                RouteSolver.Reset(new Location(txtSource.Text),
-                  new Location(txtDestination.Text),Convert.ToDouble(txtMaxWalk.Text));
+                RouteSolver.Reset(
+                    new Location(this.txtSource.Text), 
+                    new Location(this.txtDestination.Text), 
+                    Convert.ToDouble(this.txtMaxWalk.Text));
             }
 
-            INetworkNode current = RouteSolver.Current;
-            GoogleMapsControl1.Nodes.Clear();
+            this.GoogleMapsControl1.Nodes.Clear();
+
             /*
             if (current != null)
             {
@@ -37,14 +59,28 @@ namespace WebInterface
                 }
             }
              * */
-            //GoogleMapsControl1.Nodes.Add(
-            ///RouteSolver.Current
+
+            // GoogleMapsControl1.Nodes.Add(
+            // RouteSolver.Current
         }
 
-        void btnReset_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The btn reset_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BtnResetClick(object sender, EventArgs e)
         {
-            RouteSolver.Reset(new Location(txtSource.Text),
-                   new Location(txtDestination.Text), Convert.ToDouble(txtMaxWalk.Text));
+            RouteSolver.Reset(
+                new Location(this.txtSource.Text), 
+                new Location(this.txtDestination.Text), 
+                Convert.ToDouble(this.txtMaxWalk.Text));
         }
+
+        #endregion
     }
 }

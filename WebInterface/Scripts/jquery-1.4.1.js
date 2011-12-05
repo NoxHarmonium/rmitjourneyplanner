@@ -19,7 +19,7 @@
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * THE SOFTWARE IS PROVIdED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
@@ -48,7 +48,7 @@ var jQuery = function( selector, context ) {
 	// A central reference to the root jQuery(document)
 	rootjQuery,
 
-	// A simple way to check for HTML strings or ID strings
+	// A simple way to check for HTML strings or Id strings
 	// (both of which we optimize for)
 	quickExpr = /^[^<]*(<[\w\W]+>)[^>]*$|^#([\w-]+)$/,
 
@@ -104,7 +104,7 @@ jQuery.fn = jQuery.prototype = {
 
 		// Handle HTML strings
 		if ( typeof selector === "string" ) {
-			// Are we dealing with HTML string or an ID?
+			// Are we dealing with HTML string or an Id?
 			match = quickExpr.exec( selector );
 
 			// Verify a match, and that no context was specified for #id
@@ -138,7 +138,7 @@ jQuery.fn = jQuery.prototype = {
 
 					if ( elem ) {
 						// Handle the case where IE and Opera return items
-						// by name instead of ID
+						// by name instead of Id
 						if ( elem.id !== match[2] ) {
 							return rootjQuery.find( selector );
 						}
@@ -676,7 +676,7 @@ jQuery.extend({
 		return ret.concat.apply( [], ret );
 	},
 
-	// A global GUID counter for objects
+	// A global GUId counter for objects
 	guid: 1,
 
 	proxy: function( fn, proxy, thisObject ) {
@@ -1008,7 +1008,7 @@ jQuery.extend({
 			return null;
 		}
 
-		// Compute a unique ID for the element
+		// Compute a unique Id for the element
 		if ( !id ) { 
 			id = ++uuid;
 		}
@@ -1565,7 +1565,7 @@ jQuery.event = {
 			elem = window;
 		}
 
-		// Make sure that the function being executed has a unique ID
+		// Make sure that the function being executed has a unique Id
 		if ( !handler.guid ) {
 			handler.guid = jQuery.guid++;
 		}
@@ -2435,7 +2435,7 @@ jQuery.each(["live", "die"], function( i, name ) {
 		}
 		
 		return this;
-	}
+	};
 });
 
 function liveHandler( event ) {
@@ -2547,7 +2547,7 @@ if ( window.attachEvent && !window.addEventListener ) {
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * THE SOFTWARE IS PROVIdED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
@@ -2618,8 +2618,8 @@ var Sizzle = function(selector, context, results, seed) {
 			}
 		}
 	} else {
-		// Take a shortcut and set the context if the root selector is an ID
-		// (but not if it'll be faster if the inner selector is an ID)
+		// Take a shortcut and set the context if the root selector is an Id
+		// (but not if it'll be faster if the inner selector is an Id)
 		if ( !seed && parts.length > 1 && context.nodeType === 9 && !contextXML &&
 				Expr.match.ID.test(parts[0]) && !Expr.match.ID.test(parts[parts.length - 1]) ) {
 			var ret = Sizzle.find( parts.shift(), context, contextXML );
@@ -2833,7 +2833,7 @@ Sizzle.error = function( msg ) {
 };
 
 var Expr = Sizzle.selectors = {
-	order: [ "ID", "NAME", "TAG" ],
+	order: [ "Id", "NAME", "TAG" ],
 	match: {
 		ID: /#((?:[\w\u00c0-\uFFFF-]|\\.)+)/,
 		CLASS: /\.((?:[\w\u00c0-\uFFFF-]|\\.)+)/,
@@ -3450,7 +3450,7 @@ if ( document.querySelectorAll ) {
 			context = context || document;
 
 			// Only use querySelectorAll on non-XML documents
-			// (ID selectors don't work in non-HTML documents)
+			// (Id selectors don't work in non-HTML documents)
 			if ( !seed && context.nodeType === 9 && !isXML(context) ) {
 				try {
 					return makeArray( context.querySelectorAll(query), extra );
