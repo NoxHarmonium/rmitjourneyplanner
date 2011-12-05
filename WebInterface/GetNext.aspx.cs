@@ -31,9 +31,9 @@ namespace RmitJourneyPlanner.WebInterface
         /// <param name="e">
         /// The e.
         /// </param>
-        protected void PageLoad(object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
-            bool success = false;
+            var success = false;
             if (this.Request.Params["next"] == "true")
             {
                 success = RouteSolver.NextStep();
@@ -45,7 +45,7 @@ namespace RmitJourneyPlanner.WebInterface
 
                 var nodelist = new[] { RouteSolver.Current, RouteSolver.Best };
                 int count = 0;
-
+                string prevType = "finish.png";
                 foreach (INetworkNode node in nodelist)
                 {
                     INetworkNode current = node;
@@ -56,6 +56,8 @@ namespace RmitJourneyPlanner.WebInterface
 
                     string baseImage = count == 0 ? "images/icons/red/" : "images/icons/blue/";
 
+                    INetworkNode prev = node;
+
                     if (current != null)
                     {
                         bool ifirst = true;
@@ -63,22 +65,39 @@ namespace RmitJourneyPlanner.WebInterface
                         {
                             string travelType;
                             string image = baseImage;
-                            if (current.Parent == null)
+                            if (current is TerminalNode)
                             {
-                                travelType = "Begin at the ";
-                                image += "../number_0.png";
-                            }
-                            else if ((current.GetType() == current.Parent.GetType())
-                                     && current.GetType() == typeof(TramStop))
+                            
+                                if (current.Parent != null)
+                                {
+                                    travelType = "Walk to ";
+                                    image += "finish.png";
+
+                                }
+                                else
+                                {
+                                    travelType = "Begin at";
+                                    image += "start.png";
+
+                                }
+                        }
+                    else
+                                if (current.GetType() == typeof(TramStop) && current.Parent.GetType() == typeof(TramStop))
                             {
+
                                 travelType = "Catch a tram to ";
                                 image += "tramway.png";
+
+
                             }
                             else
                             {
                                 travelType = "Walk to ";
                                 image += "pedestriancrossing.png";
+
+
                             }
+
 
                             var element = new StringBuilder();
                             element.Append("\t\t{\n");
@@ -99,7 +118,7 @@ namespace RmitJourneyPlanner.WebInterface
                                     totalTime, 
                                     image, 
                                     travelType));
-
+                            prev = current;
                             current = current.Parent;
                             if (!ifirst)
                             {
