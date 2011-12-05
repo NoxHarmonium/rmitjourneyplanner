@@ -1,9 +1,5 @@
 ﻿var markersArray = [];
 var polyArray = [];
-
-///
-/// Clears all the overlays on the map.
-///
 function clearOverlays() {
     if (markersArray) {
         var marker = markersArray.pop();
@@ -31,13 +27,11 @@ var ready = true;
 next('false');
 
 function auto() {
-    var result ="undefined";
-    if (ready == "true") {
-        result = next('true');
+    if (ready == true) {
+        next('true');
     }
-    if (result == "false") {
-        setTimeout(auto, 50);
-    }
+    setTimeout(auto, 50);
+
 }
 
 function next(param) {
@@ -49,21 +43,21 @@ function next(param) {
     $.getJSON("./GetNext.aspx?next=" + param,
               {},
               function (data) {
-                  
+                  clearOverlays();
+                  var routeNo = 0;
                   if (data.success == "true") {
 
                       ('#innerSideHatch').append("<div>Best path found!</div>");
-                      return "true";
+                      return;
                   }
-                  clearOverlays();
-                  var routeNo = 0;
+
                   if (data.iteration) {
                       $('#iterationCount').text(data.iteration);
                   }
                   else {
                       $('#iterationCount').text('0');
                   }
-                  $.each(data.paths, function (i, route) {
+                  $.each(data.paths, function (i, Route) {
                       //alert(Route);
 
                       var polyPoints = new Array();
@@ -71,17 +65,12 @@ function next(param) {
                       $('#dirList .directionEntryAlt').remove();
 
                       var alt = false;
-                      $.each(route.Route, function (j, node) {
+                      $.each(Route.Route, function (j, node) {
 
-
-
-
-                          //alert(node);
-
-                          var myLatlng = new window.google.maps.LatLng(node.Latitude, node.Longitude);
+                          var myLatlng = new google.maps.LatLng(node.Latitude, node.Longitude);
 
                           polyPoints.push(myLatlng);
-                          var marker = new window.google.maps.Marker({
+                          var marker = new google.maps.Marker({
                               position: myLatlng,
                               map: window.map,
                               title: node.Name,
@@ -94,6 +83,7 @@ function next(param) {
                           var type = $(document.createElement('div'));
                           var name = $(document.createElement('div'));
                           var time = $(document.createElement('div'));
+                          var image = $(document.createElement('img'));
                           //image.attr("href") = node.Image;
                           item.append("<img class='transportImage' src='" + node.Image + "'/>");
 
@@ -132,7 +122,7 @@ function next(param) {
 
                       var polyPath;
                       if (routeNo++ == 0) {
-                          polyPath = new window.google.maps.Polyline({
+                          polyPath = new google.maps.Polyline({
                               path: polyPoints,
                               strokeColor: "#FF0000",
                               strokeOpacity: 0.6,
@@ -140,7 +130,7 @@ function next(param) {
                           });
                       }
                       else {
-                          polyPath = new window.google.maps.Polyline({
+                          polyPath = new google.maps.Polyline({
                               path: polyPoints,
                               strokeColor: "#0000FF",
                               strokeOpacity: 0.6,
@@ -153,7 +143,7 @@ function next(param) {
                   });
                   $('#nextStepButton').attr("disabled", false);
                   ready = true;
-                  return "false";
+
               });
 
 }
