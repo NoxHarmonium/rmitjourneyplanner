@@ -1,31 +1,143 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using RmitJourneyPlanner.CoreLibraries.Types;
-using RmitJourneyPlanner.CoreLibraries.DataProviders;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="RouteCache.cs">
+//   Copyright RMIT University 2011
+// </copyright>
+// <summary>
+//   Caches route data for public transport.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
+    #region
+
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+
+    using RmitJourneyPlanner.CoreLibraries.DataAccess;
+
+    #endregion
+
     /// <summary>
     /// Caches route data for public transport.
     /// </summary>
-    class RouteCache :IDisposable
+    internal class RouteCache : IDisposable
     {
-        DataAccess.MySqlDatabase database;
-        private string networkID;
+        #region Constants and Fields
 
         /// <summary>
-        /// Initilizes a new node cache.
+        ///   The SQL database that the cache utilizes.
         /// </summary>
-        /// <param name="networkID">The identifier of the data source.</param>
-        public RouteCache(string networkID)
+        private readonly MySqlDatabase database;
+
+        /// <summary>
+        ///   The network identifier which distinguishes different networks.
+        /// </summary>
+        private readonly string networkId;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RouteCache"/> class.
+        /// </summary>
+        /// <param name="networkId">
+        /// The ID of the calling transport network provider.
+        /// </param>
+        public RouteCache(string networkId)
         {
-            database = new DataAccess.MySqlDatabase();
-            this.networkID = networkID;
-            database.Open();
+            this.database = new MySqlDatabase();
+            this.networkId = networkId;
+            this.database.Open();
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="RouteCache"/> class.
+        /// </summary>
+        ~RouteCache()
+        {
+            this.Dispose();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Adds a route to the cache.
+        /// </summary>
+        /// <param name="routeId">
+        /// The route identifier.
+        /// </param>
+        /// <param name="ids">
+        /// A list of node identifiers that make up the route.
+        /// </param>
+        /// <param name="isUpDirection">
+        /// Specifies the direction of the route.
+        /// </param>
+        public void AddCacheEntry(string routeId, List<string> ids, bool isUpDirection)
+        {
+            // database.BeginTransaction();
+            int index = 0;
+
+            foreach (string id in ids)
+            {
+                string query =
+                    string.Format(
+                        "INSERT INTO RouteCache" + " (networkId,RouteId,stopID,stopIndex,stopDirection)"
+                        + " VALUES('{0}','{1}','{2}','{3}','{4}');", 
+                        this.networkId, 
+                        routeId, 
+                        id, 
+                        index++, 
+                        Convert.ToInt16(isUpDirection));
+                this.database.RunQuery(query);
+            }
+
+            // database.EndTransaction();
+        }
+
+        /// <summary>
+        /// Cleans up resources used by this object
+        /// </summary>
+        public void Dispose()
+        {
+            this.database.Close();
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Returns a list of node identifiers that corrospond to the specifed route and direction.
+        /// </summary>
+        /// <param name="routeId">
+        /// The route identifier.
+        /// </param>
+        /// <param name="isUpDirection">
+        /// Specifies which direction of the route to use.
+        /// </param>
+        /// <returns>
+        /// A list of node identifiers.
+        /// </returns>
+        public List<string> GetRoute(string routeId, bool isUpDirection)
+        {
+            string query =
+                string.Format(
+                    "SELECT RouteId,stopID,stopIndex,stopDirection " + "FROM RouteCache " + "WHERE RouteId='{0}' "
+                    + "AND stopDirection='{1}' ", 
+                    routeId, 
+                    Convert.ToInt16(isUpDirection));
+
+            DataTable data = this.database.GetDataSet(query);
+
+            if (data.Rows.Count > 0)
+            {
+                return (from DataRow row in data.Rows select row["stopID"].ToString()).ToList();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -33,103 +145,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// </summary>
         public void InitializeCache()
         {
-            //Delete any old tables
-            //database.RunQuery("DROP TABLE NodeCache;");
-            //Create new table
-            database.RunQuery("CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`RouteCache` ( " +
-                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +
-                                "`networkID` VARCHAR(45) NULL, " +
-                                "`routeID` VARCHAR(45) NULL ," +
-                                "`stopID` VARCHAR(45) NULL ," +
-                                "`stopIndex` INT UNSIGNED ," +
-                                "`stopDirection` INT UNSIGNED ," +
-                                "PRIMARY KEY (`cacheID`) ," +
-                                "INDEX `routeID` (`routeID` ASC)) " +
-                                "PACK_KEYS = 1;" +
-                                "DELETE FROM RouteCache;"
-                                );
-
-
-
+            // Delete any old tables
+            // database.RunQuery("DROP TABLE NodeCache;");
+            // Create new table
+            this.database.RunQuery(
+                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`RouteCache` ( "
+                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`networkId` VARCHAR(45) NULL, "
+                + "`RouteId` VARCHAR(45) NULL ," + "`stopID` VARCHAR(45) NULL ," + "`stopIndex` INT UNSIGNED ,"
+                + "`stopDirection` INT UNSIGNED ," + "PRIMARY KEY (`cacheID`) ," + "INDEX `RouteId` (`RouteId` ASC)) "
+                + "PACK_KEYS = 1;" + "DELETE FROM RouteCache;");
         }
 
-        /// <summary>
-        /// Adds a route to the cache.
-        /// </summary>
-        public void AddCacheEntry(string routeID, List<string> ids, bool isUpDirection)
-        {
-            //database.BeginTransaction();
-            int index = 0;
-
-                        
-            foreach (string id in ids)
-            {
-                string query = string.Format("INSERT INTO RouteCache" +
-                                        " (networkID,routeID,stopID,stopIndex,stopDirection)" +
-                                        " VALUES('{0}','{1}','{2}','{3}','{4}');",
-                                        networkID,
-                                        routeID,
-                                        id,
-                                        index++,
-                                        Convert.ToInt16(isUpDirection));
-                database.RunQuery(query);
-            }
-
-           // database.EndTransaction();
-
-        }
-
-        
-
-        /// <summary>
-        /// Returns a list of IDs the corrospond to the specifed route a direction.
-        /// </summary>
-        /// <param name="routeId"></param>
-        /// <param name="isUpDirection"></param>
-        /// <returns></returns>
-        public List<string> GetRoute(string routeId,bool isUpDirection)
-        {
-            
-            
-            
-                string query = string.Format("SELECT routeID,stopID,stopIndex,stopDirection " +
-                                            "FROM RouteCache " + 
-                                            "WHERE routeID='{0}' " +
-                                            "AND stopDirection='{1}' ",// +
-                                            //"ORDER BY stopIndex",
-                                            routeId,
-                                            Convert.ToInt16(isUpDirection));
-
-                DataTable data = database.GetDataSet(query);
-
-
-                if (data.Rows.Count > 0)
-                {
-                    List<string> ids = new List<string>();
-
-                    foreach (DataRow row in data.Rows)
-                    {
-                        ids.Add(row["stopID"].ToString());
-                    }
-
-                    return ids;
-                }
-                return null;
-            
-            
-        }
-
-
-
-        public void Dispose()
-        {
-            database.Close();
-            GC.SuppressFinalize(this);
-        }
-
-        ~RouteCache()
-        {
-            Dispose();
-        }
+        #endregion
     }
 }

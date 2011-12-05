@@ -1,210 +1,143 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ScheduleCaching.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="ScheduleCache.cs">
+//   Copyright RMIT University 2011
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Caches Yarra Trams schedule data.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
+    #region
+
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using DataProviders;
-    using Types;
     using System.Data;
     using System.IO;
-    using System.Web;
+    using System.Security;
+
+    using RmitJourneyPlanner.CoreLibraries.DataAccess;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+
+    #endregion
+
     /// <summary>
     /// Caches Yarra Trams schedule data.
     /// </summary>
-    public class ScheduleCache : IDisposable
+    internal class ScheduleCache : IDisposable
     {
-
-         DataAccess.MySqlDatabase database;
-        private string networkID;
+        #region Constants and Fields
 
         /// <summary>
-        /// Initilizes a new node cache.
+        ///   The SQL database that the cache utilizes.
         /// </summary>
-        /// <param name="networkID">The identifier of the data source.</param>
-        public ScheduleCache(string networkID)
+        private readonly MySqlDatabase database;
+
+        /// <summary>
+        ///   The network identifier to distinguish different schedule caches.
+        /// </summary>
+        private readonly string networkId;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleCache"/> class.
+        /// </summary>
+        /// <param name="networkId">
+        /// The ID of the calling transport network provider.
+        /// </param>
+        public ScheduleCache(string networkId)
         {
-            database = new DataAccess.MySqlDatabase();
-            this.networkID = networkID;
-            database.Open();
+            this.database = new MySqlDatabase();
+            this.networkId = networkId;
+            this.database.Open();
         }
 
         /// <summary>
-        /// Set up the database for the location cache. Clears all data.
+        /// Finalizes an instance of the <see cref="ScheduleCache"/> class. 
+        ///   A method called by the garbage collector to clean up this object.
         /// </summary>
-        public void InitializeCache()
+        ~ScheduleCache()
         {
-            //Delete any old tables
-            //database.RunQuery("DROP TABLE NodeCache;");
-            //Create new table
-            database.RunQuery("CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`ScheduleCollectionCache` ( " +
-                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +
-                                "`networkID` VARCHAR(45) NULL, " +
-                                "`stopID` VARCHAR(45) NULL ," +
-                                "`routeID` VARCHAR(45) NULL ," +
-                                "`lowFloor` INT UNSIGNED ," +
-                                "`requestDate` DATETIME NULL ," +
-                                "`data` TEXT ," +
-                                "PRIMARY KEY (`cacheID`)) " +
-                                "PACK_KEYS = 1;" +
-                                "DELETE FROM ScheduleCollectionCache;"
-                                );
-
-            database.RunQuery("CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`TripScheduleCache` ( " +
-                               "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +
-                               "`networkID` VARCHAR(45) NULL, " +
-                               "`tripID` INT UNSIGNED ," +
-                               "`scheduledDateTime` DATETIME ," +
-                               "`data` TEXT ," +
-                               "PRIMARY KEY (`cacheID`)) " +
-                               "PACK_KEYS = 1;" +
-                               "DELETE FROM TripScheduleCache;"
-                               );
-
-            
-
-
-
-        }
-        
-        /// <summary>
-        /// Inserts a new trip schedule into the cache.
-        /// </summary>
-        /// <param name="tripID"></param>
-        /// <param name="scheduledDateTime"></param>
-        /// <param name="data"></param>
-        public void AddTripSchedule(string tripID, DateTime scheduledDateTime,DataSet data)
-        {
-            using (StringWriter writer = new StringWriter())
-            {
-                data.WriteXml(writer, XmlWriteMode.WriteSchema);
-
-                string query = string.Format("INSERT INTO TripScheduleCache" +
-                                        " (networkID,tripID,scheduledDateTime,data)" +
-                                        " VALUES('{0}','{1}','{2}','{3}');",
-                                        networkID,
-                                        tripID,
-                                        scheduledDateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                System.Security.SecurityElement.Escape(
-                                        writer.ToString()));
-                database.RunQuery(query);
-            }
-
+            this.Dispose();
         }
 
-        /// <summary>
-        /// Gets the trip schedule DataSet for the given parameters.
-        /// </summary>
-        /// <param name="tripID"></param>
-        /// <param name="scheduledDateTime"></param>
-        /// <returns></returns>
-        public DataSet GetTripSchedule(string tripID, DateTime scheduledDateTime)
-        {
-            string query = string.Format("SELECT data FROM TripScheduleCache" +
-                                        " WHERE networkID='{0}' AND " +
-                                        " tripID='{1}' AND " +
-                                        "scheduledDateTime='{2}'",
-                                        networkID,
-                                        tripID,
-                                        scheduledDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+        #endregion
 
-            DataTable result = database.GetDataSet(query);
-            if (result.Rows.Count == 0)
-            {
-                return null;
-            }
-            else if (result.Rows.Count > 1)
-            {
-                throw new InvalidDataException("The there is more than one record for the specified parameters.");
-            }
-            else
-            {
-                string xmlData = result.Rows[0]["data"].ToString();
-                xmlData = CacheTools.Deescape(xmlData);
-                StringReader reader = new StringReader(xmlData);
-                DataSet schedule = new DataSet();
-                schedule.ReadXml(reader, XmlReadMode.ReadSchema);
-                return schedule;
-            }
-
-
-        }
+        #region Public Methods
 
         /// <summary>
         /// Adds a schedule collection to the cache.
         /// </summary>
-        public void AddScheduleCollection(INetworkNode node, string routeId,bool lowFloor,DateTime requestDate,DataSet data)
+        /// <param name="node">
+        /// The node the schedule relates to.
+        /// </param>
+        /// <param name="routeId">
+        /// The route identifier that the schedule relates to.
+        /// </param>
+        /// <param name="lowFloor">
+        /// Determines if the schedule includes only low floor trams.
+        /// </param>
+        /// <param name="requestDate">
+        /// The request time the schedule was created for.
+        /// </param>
+        /// <param name="data">
+        /// The <see cref="DataSet"/> containing the schedule data.
+        /// </param>
+        public void AddScheduleCollection(
+            INetworkNode node, string routeId, bool lowFloor, DateTime requestDate, DataSet data)
         {
-            //database.BeginTransaction();
-            using (StringWriter writer = new StringWriter())
+            // database.BeginTransaction();
+            using (var writer = new StringWriter())
             {
                 data.WriteXml(writer, XmlWriteMode.WriteSchema);
 
-                string query = string.Format("INSERT INTO ScheduleCollectionCache" +
-                                        " (networkID,stopID,routeID,lowFloor,requestDate,data)" +
-                                        " VALUES('{0}','{1}','{2}','{3}','{4}','{5}');",
-                                        networkID,
-                                        node.ID,
-                                        routeId,
-                                        Convert.ToInt32(lowFloor),
-                                        requestDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                System.Security.SecurityElement.Escape(
-                                        writer.ToString()));
-                database.RunQuery(query);
+                string query =
+                    string.Format(
+                        "INSERT INTO ScheduleCollectionCache" + " (networkId,stopID,routeID,lowFloor,requestDate,data)"
+                        + " VALUES('{0}','{1}','{2}','{3}','{4}','{5}');", 
+                        this.networkId, 
+                        node.Id, 
+                        routeId, 
+                        Convert.ToInt32(lowFloor), 
+                        requestDate.ToString("yyyy-MM-dd HH:mm:ss"), 
+                        SecurityElement.Escape(writer.ToString()));
+                this.database.RunQuery(query);
             }
 
-           // database.EndTransaction();
-
+            // database.EndTransaction();
         }
 
         /// <summary>
-        /// Gets the schedule collection DataSet for the supplied parameters.
+        /// Inserts a new trip schedule into the cache.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="routeId"></param>
-        /// <param name="lowFloor"></param>
-        /// <param name="requestDate"></param>
-        /// <returns></returns>
-        public DataSet GetScheduleCollection(INetworkNode node, string routeId, bool lowFloor, DateTime requestDate)
+        /// <param name="tripId">
+        /// The unique identifier of the trip.
+        /// </param>
+        /// <param name="scheduledDateTime">
+        /// The date and time the trip was scheduled.
+        /// </param>
+        /// <param name="data">
+        /// The <see cref="DataSet"/> containing the schedule data.
+        /// </param>
+        public void AddTripSchedule(string tripId, DateTime scheduledDateTime, DataSet data)
         {
-            string query = string.Format("SELECT data FROM ScheduleCollectionCache" +
-                                        " WHERE networkID='{0}' AND " +
-                                        " stopID='{1}' AND " +
-                                        "routeID='{2}' AND " + 
-                                        "lowFloor='{3}' AND "+ 
-                                        "requestDate='{4}';",
-                                        networkID,
-                                        node.ID,
-                                        routeId,
-                                        Convert.ToInt32(lowFloor),
-                                        requestDate.ToString("yyyy-MM-dd HH:mm:ss"));
-
-            DataTable result = database.GetDataSet(query);
-            if (result.Rows.Count == 0)
+            using (var writer = new StringWriter())
             {
-                return null;
-            }
-            else if (result.Rows.Count > 1)
-            {
-                throw new InvalidDataException("The there is more than one record for the specified parameters.");
-            }
-            else
-            {
-                string xmlData = result.Rows[0]["data"].ToString();
-                xmlData = CacheTools.Deescape(xmlData);
-                StringReader reader = new StringReader(xmlData);
-                DataSet schedule = new DataSet();
-                schedule.ReadXml(reader, XmlReadMode.ReadSchema);
-                return schedule;
-            }
+                data.WriteXml(writer, XmlWriteMode.WriteSchema);
 
-
+                string query =
+                    string.Format(
+                        "INSERT INTO TripScheduleCache" + " (networkId,tripId,scheduledDateTime,data)"
+                        + " VALUES('{0}','{1}','{2}','{3}');", 
+                        this.networkId, 
+                        tripId, 
+                        scheduledDateTime.ToString("yyyy-MM-dd HH:mm:ss"), 
+                        SecurityElement.Escape(writer.ToString()));
+                this.database.RunQuery(query);
+            }
         }
 
         /// <summary>
@@ -212,16 +145,122 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// </summary>
         public void Dispose()
         {
-            database.Close();
+            this.database.Close();
             GC.SuppressFinalize(this);
         }
 
         /// <summary>
-        /// A method called by the garbage collector to clean up this object.
+        /// Gets the schedule collection DataSet for the supplied parameters.
         /// </summary>
-        ~ScheduleCache()
+        /// <param name="node">
+        /// The node the schedule relates to.
+        /// </param>
+        /// <param name="routeId">
+        /// The route identifier that the schedule relates to.
+        /// </param>
+        /// <param name="lowFloor">
+        /// Determines if the requested schedule is for a low floor tram.
+        /// </param>
+        /// <param name="requestDate">
+        /// The request date and time the schedule was requested for.
+        /// </param>
+        /// <returns>
+        /// A <see cref="DataSet"/> containing the schedule data.
+        /// </returns>
+        public DataSet GetScheduleCollection(INetworkNode node, string routeId, bool lowFloor, DateTime requestDate)
         {
-            Dispose();
+            string query =
+                string.Format(
+                    "SELECT data FROM ScheduleCollectionCache" + " WHERE networkId='{0}' AND " + " stopID='{1}' AND "
+                    + "routeID='{2}' AND " + "lowFloor='{3}' AND " + "requestDate='{4}';", 
+                    this.networkId, 
+                    node.Id, 
+                    routeId, 
+                    Convert.ToInt32(lowFloor), 
+                    requestDate.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            DataTable result = this.database.GetDataSet(query);
+            if (result.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            if (result.Rows.Count > 1)
+            {
+                throw new InvalidDataException("The there is more than one record for the specified parameters.");
+            }
+
+            string xmlData = result.Rows[0]["data"].ToString();
+            xmlData = CacheTools.Deescape(xmlData);
+            var reader = new StringReader(xmlData);
+            var schedule = new DataSet();
+            schedule.ReadXml(reader, XmlReadMode.ReadSchema);
+            return schedule;
         }
+
+        /// <summary>
+        /// Gets the trip schedule DataSet for the given parameters.
+        /// </summary>
+        /// <param name="tripId">
+        /// The unique trip identifier.
+        /// </param>
+        /// <param name="scheduledDateTime">
+        /// The scheduled date and time of the trip.
+        /// </param>
+        /// <returns>
+        /// A <see cref="DataSet"/> containing the trip data.
+        /// </returns>
+        public DataSet GetTripSchedule(string tripId, DateTime scheduledDateTime)
+        {
+            string query =
+                string.Format(
+                    "SELECT data FROM TripScheduleCache" + " WHERE networkId='{0}' AND " + " tripId='{1}' AND "
+                    + "scheduledDateTime='{2}'", 
+                    this.networkId, 
+                    tripId, 
+                    scheduledDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            DataTable result = this.database.GetDataSet(query);
+            if (result.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            if (result.Rows.Count > 1)
+            {
+                throw new InvalidDataException("The there is more than one record for the specified parameters.");
+            }
+
+            string xmlData = result.Rows[0]["data"].ToString();
+            xmlData = CacheTools.Deescape(xmlData);
+            var reader = new StringReader(xmlData);
+            var schedule = new DataSet();
+            schedule.ReadXml(reader, XmlReadMode.ReadSchema);
+            return schedule;
+        }
+
+        /// <summary>
+        /// Set up the database for the location cache. Clears all data.
+        /// </summary>
+        public void InitializeCache()
+        {
+            // Delete any old tables
+            // database.RunQuery("DROP TABLE NodeCache;");
+            // Create new table
+            this.database.RunQuery(
+                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`ScheduleCollectionCache` ( "
+                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`networkId` VARCHAR(45) NULL, "
+                + "`stopID` VARCHAR(45) NULL ," + "`routeID` VARCHAR(45) NULL ," + "`lowFloor` INT UNSIGNED ,"
+                + "`requestDate` DATETIME NULL ," + "`data` TEXT ," + "PRIMARY KEY (`cacheID`)) " + "PACK_KEYS = 1;"
+                + "DELETE FROM ScheduleCollectionCache;");
+
+            this.database.RunQuery(
+                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`TripScheduleCache` ( "
+                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`networkId` VARCHAR(45) NULL, "
+                + "`tripID` INT UNSIGNED ," + "`scheduledDateTime` DATETIME ," + "`data` TEXT ,"
+                + "PRIMARY KEY (`cacheID`)) " + "PACK_KEYS = 1;" + "DELETE FROM TripScheduleCache;");
+        }
+
+        #endregion
     }
 }

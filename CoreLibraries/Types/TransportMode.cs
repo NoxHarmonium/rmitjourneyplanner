@@ -1,7 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="TransportMode.cs">
+//   Copyright RMIT University 2011
+// </copyright>
+// <summary>
+//   Defines the transport mode used.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
@@ -11,15 +15,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     public enum TransportMode
     {
         /// <summary>
-        /// The transport mode is walking. 
+        ///   The transport mode is walking.
         /// </summary>
-        Walking = 0,
+        Walking = 0, 
+
         /// <summary>
-        /// The transport mode is driving.
+        ///   The transport mode is driving.
         /// </summary>
-        Driving = 1,
+        Driving = 1, 
+
         /// <summary>
-        /// The transport mode is cycling.
+        ///   The transport mode is cycling.
         /// </summary>
         Bicycling = 2
     }

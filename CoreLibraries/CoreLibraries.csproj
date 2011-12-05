@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="C5">
+      <HintPath>Include\C5.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.4.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,7 +71,7 @@
     <Compile Include="DataProviders\TramNetworkProvider.cs" />
     <Compile Include="DataProviders\TramStop.cs" />
     <Compile Include="DataProviders\WalkingDataProvider.cs" />
-    <Compile Include="DFSRoutePlanner.cs" />
+    <Compile Include="AStarRoutePlanner.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="EvolutionaryRoutePlanner.cs" />
     <Compile Include="IRoutePlanner.cs" />
@@ -93,6 +96,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Include\C5.dll" />
+    <Content Include="Include\C5.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

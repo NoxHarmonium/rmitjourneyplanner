@@ -1,27 +1,62 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EvolutionaryRoutePlanner.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="EvolutionaryRoutePlanner.cs">
+//   Copyright RMIT University 2011
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Finds the best route between nodes using evolutionary algorithms.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries
 {
+    #region
+
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+
+    #endregion
 
     /// <summary>
     /// Finds the best route between nodes using evolutionary algorithms.
     /// </summary>
     public class EvolutionaryRoutePlanner : IRoutePlanner
     {
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets the best node found so far.
+        /// </summary>
+        public INetworkNode BestNode
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        ///   Gets the current node being traversed.
+        /// </summary>
+        public INetworkNode Current
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Register a network data provider to use with the route planning.
         /// </summary>
-        /// <param name="provider"></param>
-        public void RegisterNetworkDataProvider(DataProviders.INetworkDataProvider provider)
+        /// <param name="provider">
+        /// </param>
+        public void RegisterNetworkDataProvider(INetworkDataProvider provider)
         {
             throw new NotImplementedException();
         }
@@ -29,18 +64,9 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// <summary>
         /// Register a point to point data provider for use with the route planning.
         /// </summary>
-        /// <param name="provider"></param>
-        public void RegisterPointDataProvider(DataProviders.IPointDataProvider provider)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Start solving a route
-        /// </summary>
-        /// <param name="itinerary"></param>
-        /// <returns></returns>
-        public void Start(List<DataProviders.INetworkNode> itinerary)
+        /// <param name="provider">
+        /// </param>
+        public void RegisterPointDataProvider(IPointDataProvider provider)
         {
             throw new NotImplementedException();
         }
@@ -48,32 +74,24 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// <summary>
         /// Solve the next iteration of the algorithm.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// The solve step.
+        /// </returns>
         public bool SolveStep()
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Gets the current node being traversed.
+        /// Start solving a route
         /// </summary>
-        public DataProviders.INetworkNode Current
+        /// <param name="itinerary">
+        /// </param>
+        public void Start(List<INetworkNode> itinerary)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Gets the best node found so far.
-        /// </summary>
-        public DataProviders.INetworkNode BestNode
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        #endregion
     }
 }

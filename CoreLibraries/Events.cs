@@ -1,41 +1,65 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Events.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="Events.cs">
+//   Copyright RMIT University 2011
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Represents the data produced by a next iteration event.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries
 {
+    #region
+
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using DataProviders;
+
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+
+    #endregion
 
     /// <summary>
     /// Represents the data produced by a next iteration event.
     /// </summary>
     public class NextIterationEventArgs : EventArgs
     {
-        
-        private INetworkNode node;
+        #region Constants and Fields
+
         /// <summary>
-        /// Initilizes a new instance of a NextIterationEventArgs object.
+        ///   The node.
         /// </summary>
-        /// <param name="currentNode"></param>
+        private readonly INetworkNode node;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NextIterationEventArgs"/> class. 
+        ///   Initilizes a new instance of a NextIterationEventArgs object.
+        /// </summary>
+        /// <param name="currentNode">
+        /// The current node being traversed.
+        /// </param>
         public NextIterationEventArgs(INetworkNode currentNode)
         {
             this.node = currentNode;
         }
-       /// <summary>
-       /// Gets the current node that the algorithm is expanding on this iteration.
-       /// </summary>
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets the current node that the algorithm is expanding on this iteration.
+        /// </summary>
         public INetworkNode CurrentNode
         {
             get
             {
-                return node;
+                return this.node;
             }
         }
+
+        #endregion
     }
 }

@@ -1,76 +1,117 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RmitJourneyPlanner.CoreLibraries.Types;
-using RmitJourneyPlanner.CoreLibraries.Positioning;
-using System.Xml;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="DistanceAPI.cs">
+//   Copyright RMIT University 2011
+// </copyright>
+// <summary>
+//   Interfaces with the Google Distance Matrix API to retrieve distances
+//   between points (as navigated by Google Maps).
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
+    #region
+
+    using System;
+    using System.Xml;
+
+    using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.Types;
+
+    #endregion
+
     /// <summary>
     /// Interfaces with the Google Distance Matrix API to retrieve distances
-    /// between points (as navigated by Google Maps).
+    ///   between points (as navigated by Google Maps).
     /// </summary>
-    class DistanceAPI : XMLRequester
+    internal class DistanceApi : XmlRequester
     {
+        #region Constructors and Destructors
+
         /// <summary>
-        /// Initializes a new instance of the DistanceAPI class.
+        ///   Initializes a new instance of the <see cref = "DistanceApi" /> class.
         /// </summary>
-        public DistanceAPI()
+        public DistanceApi()
             : base(Urls.DistanceApiUrl)
         {
             this.Parameters["sensor"] = "false";
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Returns the distance between 2 points using the default transport mode (driving).
         /// </summary>
-        /// <param name="pointA">The first point</param>
-        /// <param name="pointB">The second point</param>
-        /// <returns>The distance between pointA and pointB</returns>
+        /// <param name="pointA">
+        /// The first point
+        /// </param>
+        /// <param name="pointB">
+        /// The second point
+        /// </param>
+        /// <returns>
+        /// The distance between pointA and pointB
+        /// </returns>
         public Arc GetDistance(Location pointA, Location pointB)
         {
-            return GetDistance(pointA, pointB, TransportMode.Driving);
+            return this.GetDistance(pointA, pointB, TransportMode.Driving);
         }
 
         /// <summary>
         /// Returns the distance between 2 points using the specified transport mode.
         /// </summary>
-        /// <param name="pointA">The first point</param>
-        /// <param name="pointB">The second point</param>
-        /// <param name="transportMode">Specified the mode of transport used between points.</param>
-        /// <returns>The distance between pointA and pointB</returns>
+        /// <param name="pointA">
+        /// The first point
+        /// </param>
+        /// <param name="pointB">
+        /// The second point
+        /// </param>
+        /// <param name="transportMode">
+        /// Specified the mode of transport used between points.
+        /// </param>
+        /// <returns>
+        /// The distance between pointA and pointB
+        /// </returns>
         public Arc GetDistance(Location pointA, Location pointB, TransportMode transportMode)
         {
-            //Set parameters
+            // Set parameters
             this.Parameters["mode"] = transportMode.ToString().ToLower();
             this.Parameters["origins"] = pointA.ToString();
             this.Parameters["destinations"] = pointB.ToString();
 
-            //Make XML request
-            XmlDocument doc = base.Request();
-            XmlNode response = doc["DistanceMatrixResponse"];
+            // Make XML request
+            XmlDocument doc = this.Request();
 
-            //Check request status
-            if (response["status"].InnerText != "OK")
+            if (doc["DistanceMatrixResponse"] == null)
             {
-                throw new GoogleApiException(doc["GeocodeResponse"]["status"].InnerText);
+                throw new Exception("XML response is invalid.");
             }
 
-            //Extract element
+            XmlNode response = doc["DistanceMatrixResponse"];
+
+            if (response["status"] == null)
+            {
+                throw new Exception("XML response is invalid.");
+            }
+
+            // Check request status
+            if (response["status"].InnerText != "OK")
+            {
+                throw new GoogleApiException(response["status"].InnerText);
+            }
+
+            // Extract element
             XmlNode element = response["row"]["element"];
 
-            //Get results
-            TimeSpan duration = new TimeSpan(0, 0, Convert.ToInt32(element["duration"]["value"].InnerText));
+            // Get results
+            var duration = new TimeSpan(0, 0, Convert.ToInt32(element["duration"]["value"].InnerText));
             double distance = Convert.ToDouble(element["distance"]["value"].InnerText);
 
-            //Return new object
-            return new Arc(pointA, pointB,duration,distance,default(DateTime),transportMode.ToString());
-
+            // Return new object
+            return new Arc(pointA, pointB, duration, distance, default(DateTime), transportMode.ToString());
         }
-        
 
-        
+        #endregion
     }
 }

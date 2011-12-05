@@ -1,38 +1,32 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ConnectionInfo.cs" company="RMIT University">
-// By Sean Dawson
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="ConnectionInfo.cs">
+//   Copyright RMIT University 2011
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Contains the information used to connect to the internet.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.IO;
+    #region
+
     using System.Net;
+
+    #endregion
 
     /// <summary>
     /// Contains the information used to connect to the internet.
     /// </summary>
     public static class ConnectionInfo
     {
-        private static WebProxy proxy = null;
+        #region Public Properties
 
         /// <summary>
-        /// Gets or sets the proxy used by internet connections in this assembly.
+        ///   Gets or sets the proxy used by internet connections in this assembly.
         /// </summary>
-        public static WebProxy Proxy
-        {
-            get
-            {
-                return proxy;
-            }
-            set
-            {
-                proxy = value;
-            }
-        }
+        public static WebProxy Proxy { get; set; }
+
+        #endregion
     }
 }

@@ -1,103 +1,90 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="NodeRouteCache.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="NodeRouteCache.cs">
+//   Copyright RMIT University 2011
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Caches the routes that intersect a node.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Caching
 {
+    #region
+
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using DataProviders;
-    using Types;
     using System.Data;
+    using System.Linq;
+
+    using RmitJourneyPlanner.CoreLibraries.DataAccess;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+
+    #endregion
+
     /// <summary>
-    /// Caches the routes that intersect a node.
+    /// Caches the the relationships between nodes and routes. Used to determine what routes intersect a given node.
     /// </summary>
-    public class NodeRouteCache : IDisposable
+    internal class NodeRouteCache : IDisposable
     {
-
-
-        DataAccess.MySqlDatabase database;
-        private string networkID;
-
+        #region Constants and Fields
 
         /// <summary>
-        /// Initilizes a new node/route cache.
+        ///   The SQL database that the cache utilizes.
         /// </summary>
-        /// <param name="networkID">The identifier of the network.</param>
-        public NodeRouteCache(string networkID)
-        {
-            database = new DataAccess.MySqlDatabase();
-            this.networkID = networkID;
-            database.Open();
-        }
-        
+        private readonly MySqlDatabase database;
+
         /// <summary>
-        /// Set up the database for the node/route cache. Clears all data.
+        ///   The network identifier that is used to distinguish the node/route relations.
         /// </summary>
-        public void InitializeCache()
+        private readonly string networkId;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodeRouteCache"/> class.
+        /// </summary>
+        /// <param name="networkId">
+        /// The ID of the calling transport network provider.
+        /// </param>
+        public NodeRouteCache(string networkId)
         {
-            //Delete any old tables
-            //database.RunQuery("IF EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='LocationCache') DROP TABLE LocationCache;");
-            //Create new table
-            database.RunQuery("CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`NodeRouteCache` ( " +
-                                "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," +
-                                "`networkID` VARCHAR(45) NULL, " +
-                                "`nodeId` VARCHAR(45) NULL ," +
-                                "`routeId` VARCHAR(45) NULL ," +
-                                "PRIMARY KEY (`cacheID`) ," +
-                                "INDEX `sd` (`NodeId` ASC)) " +
-                                "PACK_KEYS = 1; DELETE FROM NodeRouteCache;");
-
-            
-
-
+            this.database = new MySqlDatabase();
+            this.networkId = networkId;
+            this.database.Open();
         }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="NodeRouteCache"/> class.
+        /// </summary>
+        ~NodeRouteCache()
+        {
+            this.Dispose();
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Adds a new cache entry into the node/route cache.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="routeId"></param>
+        /// <param name="node">
+        /// The node that is to be added to the cache.
+        /// </param>
+        /// <param name="routeId">
+        /// The route identifier that will be associated with the node.
+        /// </param>
         public void AddCacheEntry(INetworkNode node, string routeId)
         {
-           
-            string query = String.Format("INSERT INTO NodeRouteCache" +
-                                            " (networkID,nodeId,routeId)" +
-                                            " VALUES('{0}','{1}','{2}');",
-                                            networkID,
-                                            node.ID,
-                                            routeId);
-            database.RunQuery(query);
-        }
-
-        /// <summary>
-        /// Gets a list of routes that intersect with the given node.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public List<string> GetRoutes(INetworkNode node)
-        {
-            string query = String.Format("SELECT routeId FROM NodeRouteCache" +
-                                            " where nodeId='{0}';",
-                                            node.ID);
-
-            DataTable result = database.GetDataSet(query);
-            if (result == null || result.Rows.Count == 0)
-            {
-                return null;
-            }
-            List<string> routes = new List<string>();
-            foreach (DataRow row in result.Rows)
-            {
-                routes.Add(row[0].ToString());
-            }
-
-            return routes;
-
+            string query =
+                string.Format(
+                    "INSERT INTO NodeRouteCache" + " (networkId,nodeId,RouteId)" + " VALUES('{0}','{1}','{2}');", 
+                    this.networkId, 
+                    node.Id, 
+                    routeId);
+            this.database.RunQuery(query);
         }
 
         /// <summary>
@@ -105,16 +92,47 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
         /// </summary>
         public void Dispose()
         {
-            database.Close();
+            this.database.Close();
             GC.SuppressFinalize(this);
         }
 
         /// <summary>
-        /// A method called by the garbage collector to clean up this object.
+        /// Gets a list of routes that intersect with the given node.
         /// </summary>
-        ~NodeRouteCache()
+        /// <param name="node">
+        /// The node for which you want to find intersecting routes.
+        /// </param>
+        /// <returns>
+        /// A list of route identifiers that corrospond to the routes that intersect the given node.
+        /// </returns>
+        public List<string> GetRoutes(INetworkNode node)
         {
-            Dispose();
+            string query = string.Format("SELECT RouteId FROM NodeRouteCache" + " where nodeId='{0}';", node.Id);
+
+            DataTable result = this.database.GetDataSet(query);
+            if (result == null || result.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            return (from DataRow row in result.Rows select row[0].ToString()).ToList();
         }
+
+        /// <summary>
+        /// Set up the database for the node/route cache. Clears all data.
+        /// </summary>
+        public void InitializeCache()
+        {
+            // Delete any old tables
+            // database.RunQuery("IF EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='LocationCache') DROP TABLE LocationCache;");
+            // Create new table
+            this.database.RunQuery(
+                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`NodeRouteCache` ( "
+                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`networkId` VARCHAR(45) NULL, "
+                + "`nodeId` VARCHAR(45) NULL ," + "`RouteId` VARCHAR(45) NULL ," + "PRIMARY KEY (`cacheID`) ,"
+                + "INDEX `sd` (`NodeId` ASC)) " + "PACK_KEYS = 1; DELETE FROM NodeRouteCache;");
+        }
+
+        #endregion
     }
 }

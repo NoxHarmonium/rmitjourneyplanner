@@ -1,62 +1,96 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MySQLDatabase.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="MySQLDatabase.cs">
+//   Copyright RMIT University 2011
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Represents a MySQL database.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
+    #region
+
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Data;
-    using System.Data.Sql;
+
     using MySql.Data.MySqlClient;
+
+    #endregion
+
     /// <summary>
     /// Represents a MySQL database.
     /// </summary>
-    public class MySqlDatabase : ISQLDatabase
+    public class MySqlDatabase : ISqlDatabase
     {
-
-        private string connectionString = "server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=RmitJourneyPlanner";
-        private MySqlConnection connection;
-        private MySqlTransaction transaction = null;
+        #region Constants and Fields
 
         /// <summary>
-        /// Initilizes a new MySqlDatabase
+        ///   The connection.
+        /// </summary>
+        private MySqlConnection connection;
+
+        /// <summary>
+        ///   The connection string.
+        /// </summary>
+        private string connectionString =
+            "server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=RmitJourneyPlanner";
+
+        /// <summary>
+        ///   The transaction.
+        /// </summary>
+        private MySqlTransaction transaction;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "MySqlDatabase" /> class.
         /// </summary>
         public MySqlDatabase()
         {
-            connection = new MySqlConnection(connectionString);
+            this.connection = new MySqlConnection(this.connectionString);
         }
 
+        #endregion
+
+        #region Public Properties
+
         /// <summary>
-        /// Gets or sets the connection string that connects to the MySqlDatabase.
+        ///   Gets or sets the connection string that connects to the MySqlDatabase.
         /// </summary>
         public string ConnectionString
         {
             get
             {
-                return connectionString;
+                return this.connectionString;
             }
+
             set
             {
-                connectionString = value;
-                if (connection.State != ConnectionState.Closed)
+                this.connectionString = value;
+                if (this.connection.State != ConnectionState.Closed)
                 {
                     throw new Exception("You cannot change the connection string while the connection is open.");
                 }
-                connection = new MySqlConnection(connectionString);
+
+                this.connection = new MySqlConnection(this.connectionString);
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
-        /// Open the database connection.
+        /// Opens up a database transaction. All queries done between the execution of this and
+        ///   EndTransaction() will be in the one transaction.
         /// </summary>
-        public void Open()
+        public void BeginTransaction()
         {
-            connection.Open();
+            this.connection.Open();
+            this.transaction = this.connection.BeginTransaction();
         }
 
         /// <summary>
@@ -64,73 +98,80 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         public void Close()
         {
-            connection.Close();
+            this.connection.Close();
         }
-
-        /// <summary>
-        /// Opens up a database transaction. All queries done between the execution of this and
-        /// EndTransaction() will be in the one transaction.
-        /// </summary>
-        public void BeginTransaction()
-        {
-            connection.Open();
-            transaction = connection.BeginTransaction();
-        }
-
 
         /// <summary>
         /// Commits the current transaction.
         /// </summary>
         public void EndTransaction()
         {
-            transaction.Commit();
-            transaction = null;
+            this.transaction.Commit();
+            this.transaction = null;
         }
 
         /// <summary>
-        /// Runs a simple query with no return.
+        /// Runs a query and returns the results in a datatable.
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
+        /// <param name="query">
+        /// The SQL query to submit to the database.
+        /// </param>
+        /// <returns>
+        /// A datatable with the result of the query, or null if there are no results.
+        /// </returns>
+        public DataTable GetDataSet(string query)
+        {
+            if (this.transaction == null)
+            {
+                var table = new DataTable();
+                var adapter = new MySqlDataAdapter(query, this.connection);
+
+                // Open();
+                adapter.Fill(table);
+
+                // Close();
+                return table;
+            }
+
+            throw new NotImplementedException("TODO: Implement transactions with GetDataSet");
+        }
+
+        /// <summary>
+        /// Open the database connection.
+        /// </summary>
+        public void Open()
+        {
+            this.connection.Open();
+        }
+
+        /// <summary>
+        /// Runs a query with no result but returns the number of rows affected.
+        /// </summary>
+        /// <param name="query">
+        /// The SQL query to submit to the database.
+        /// </param>
+        /// <returns>
+        /// The number of rows affected by the query.
+        /// </returns>
         public int RunQuery(string query)
         {
-            if (transaction == null)
+            if (this.transaction == null)
             {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                //Open();
+                var command = new MySqlCommand(query, this.connection);
+
+                // Open();
                 int result = command.ExecuteNonQuery();
-                //Close();
+
+                // Close();
                 return result;
             }
             else
             {
-                MySqlCommand command = new MySqlCommand(query, connection, transaction);
+                var command = new MySqlCommand(query, this.connection, this.transaction);
                 return command.ExecuteNonQuery();
-
-
             }
         }
 
-        /// <summary>
-        /// Runs a query and returns the result in a datatable.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public System.Data.DataTable GetDataSet(string query)
-        {
-            if (transaction == null)
-            {
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
-                //Open();
-                adapter.Fill(table);
-                //Close();
-                return table;
-            }
-            else
-            {
-                throw new NotImplementedException("TODO: Implement transactions with GetDataSet");
-            }
-        }
+        #endregion
     }
 }

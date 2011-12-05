@@ -1,232 +1,311 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Net;
-using System.IO;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="XMLRequester.cs">
+//   Copyright RMIT University 2011
+// </copyright>
+// <summary>
+//   Abstract class that is inherited by classes who
+//   wish to request XML from a URL.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
-    
+    #region
+
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Net;
+    using System.Xml;
+
+    #endregion
+
     /// <summary>
     /// Abstract class that is inherited by classes who
-    /// wish to request XML from a URL.
+    ///   wish to request XML from a URL.
     /// </summary>
-    abstract class XMLRequester
+    internal abstract class XmlRequester
     {
-        private string baseUrl = null;
-        private bool escapeSpaces = true;
-        private bool cachingEnabled = false;
-        private Dictionary<String, object> parameters = new Dictionary<string,object>();
-        private Dictionary<String, object> headerParameters = new Dictionary<string, object>();
-        private RequestType requestType = RequestType.GET;
-        private string xmlNamespace = "";
-        private string soapAction = "";
-        private WebProxy proxy = null;
-       
+        #region Constants and Fields
 
         /// <summary>
-        /// initializes the XMLRequester with a URL.
+        ///   The base url.
         /// </summary>
-        /// <param name="baseUrl">The URL for the XML requst without the '?' symbol or parameters</param>
-        public XMLRequester(string baseUrl)
+        private readonly string baseUrl;
+
+        /// <summary>
+        ///   The <see cref = "WebProxy" /> object to use with the request.
+        /// </summary>
+        private readonly WebProxy proxy;
+
+        /// <summary>
+        ///   Determines whether spaces are escaped or not.
+        /// </summary>
+        private bool escapeSpaces = true;
+
+        /// <summary>
+        ///   The header parameters.
+        /// </summary>
+        private Dictionary<string, object> headerParameters = new Dictionary<string, object>();
+
+        /// <summary>
+        ///   The parameters.
+        /// </summary>
+        private Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        /// <summary>
+        ///   The request type.
+        /// </summary>
+        private RequestType requestType = RequestType.Get;
+
+        /// <summary>
+        ///   The SOAP action.
+        /// </summary>
+        private string soapAction = string.Empty;
+
+        /// <summary>
+        ///   The XML namespace.
+        /// </summary>
+        private string xmlNamespace = string.Empty;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlRequester"/> class.
+        /// </summary>
+        /// <param name="baseUrl">
+        /// The URL for the XML requst without the '?' symbol or parameters.
+        /// </param>
+        protected XmlRequester(string baseUrl)
         {
             this.baseUrl = baseUrl;
-            //System.Net.ServicePointManager.Expect100Continue = false;
+
+            // System.Net.ServicePointManager.Expect100Continue = false;
             this.proxy = ConnectionInfo.Proxy;
         }
-        
+
         /// <summary>
-        /// Initializes the XMLRequester with a URL and a proxy.
+        /// Initializes a new instance of the <see cref="XmlRequester"/> class.
         /// </summary>
-        /// <param name="baseUrl"></param>
-        /// <param name="proxy"></param>
-        public XMLRequester(string baseUrl, WebProxy proxy)
+        /// <param name="baseUrl">
+        /// TThe URL for the XML requst without the '?' symbol or parameters.
+        /// </param>
+        /// <param name="proxy">
+        /// The WebProxy object to use with the web request.
+        /// </param>
+        protected XmlRequester(string baseUrl, WebProxy proxy)
         {
+            this.baseUrl = baseUrl;
             this.proxy = proxy;
         }
 
-        /// <summary>
-        /// Gets or sets whether caching is enabled or not. 
-        /// Caching can speed up XML requests.
-        /// </summary>
-        public bool CachingEnabled
-        {
-            get
-            {
-                return cachingEnabled;
-            }
-            set
-            {
-                cachingEnabled = value;
-            }
-        }
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
-        /// Gets or sets whether to escape spaces in the URL with a plus symbol as requred by the Google API.
+        ///   Gets or sets a value indicating whether caching is enabled or not. 
+        ///   Caching can speed up XML requests.
+        /// </summary>
+        public bool CachingEnabled { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to escape spaces in the 
+        ///   URL with a plus symbol as requred by the Google API.
         /// </summary>
         public bool EscapeSpaces
         {
             get
             {
-                return escapeSpaces;
+                return this.escapeSpaces;
             }
+
             set
             {
-                escapeSpaces = value;
+                this.escapeSpaces = value;
+            }
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        ///   Gets or sets the key value pairs of the Soap header that will be sent in the request.
+        /// </summary>
+        protected Dictionary<string, object> HeaderParameters
+        {
+            get
+            {
+                return this.headerParameters;
             }
 
-
+            set
+            {
+                this.headerParameters = value;
+            }
         }
 
         /// <summary>
-        /// Gets or sets the key value pairs that will be sent in the XML request.
+        ///   Gets or sets the key value pairs that will be sent in the XML request.
         /// </summary>
-        protected Dictionary<String, object> Parameters
+        protected Dictionary<string, object> Parameters
         {
-            get { return parameters; }
-            set { parameters = value; }
+            get
+            {
+                return this.parameters;
+            }
+
+            set
+            {
+                this.parameters = value;
+            }
         }
 
         /// <summary>
-        /// Gets or sets the key value pairs of the SOAP header that will be sent in the request.
-        /// </summary>
-        protected Dictionary<String, object> HeaderParameters
-        {
-            get { return headerParameters; }
-            set { headerParameters = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the request type of the XMLRequester object.
+        ///   Gets or sets the request type of the <see cref = "XmlRequester" /> object.
         /// </summary>
         protected RequestType RequestType
         {
             get
             {
-                return requestType;
+                return this.requestType;
             }
+
             set
             {
-                requestType = value;
+                this.requestType = value;
             }
         }
 
         /// <summary>
-        /// Gets or sets the XML namespace used in SOAP requests.
-        /// </summary>
-        protected string SoapXmlNamespace
-        {
-            get
-            {
-                return xmlNamespace;
-            }
-            set
-            {
-                xmlNamespace = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the SoapAction parameter send in SOAP requests.
+        ///   Gets or sets the SoapAction parameter send in SOAP requests.
         /// </summary>
         protected string SoapAction
         {
             get
             {
-                return soapAction;
+                return this.soapAction;
             }
+
             set
             {
-                soapAction = value;
+                this.soapAction = value;
             }
         }
 
-   
+        /// <summary>
+        ///   Gets or sets the XML namespace used in SOAP requests.
+        /// </summary>
+        protected string SoapXmlNamespace
+        {
+            get
+            {
+                return this.xmlNamespace;
+            }
+
+            set
+            {
+                this.xmlNamespace = value;
+            }
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Sends the XML request with the specified parameters and returns the result.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns an <see cref="XmlDocument"/> containg the results of the request.
+        /// </returns>
         protected virtual XmlDocument Request()
         {
-            if (requestType == RequestType.GET)
+            if (this.requestType == RequestType.Get)
             {
                 // Create request URL from parameters
-                string requestURL = baseUrl + "?";
-                foreach (KeyValuePair<String, object> kvp in parameters)
+                string requestUrl = this.baseUrl + "?";
+                foreach (var kvp in this.parameters)
                 {
-                    string value = escapeSpaces ? kvp.Value as string : ((string)kvp.Value).Replace(" ", "+");
-                    requestURL += kvp.Key + "=" + value + "&";
+                    string value = this.escapeSpaces ? kvp.Value as string : ((string)kvp.Value).Replace(" ", "+");
+                    requestUrl += kvp.Key + "=" + value + "&";
                 }
 
+                var request = WebRequest.Create(requestUrl) as HttpWebRequest;
+                request.Proxy = this.proxy;
+                var response = request.GetResponse() as HttpWebResponse;
 
-                HttpWebRequest request = HttpWebRequest.Create(requestURL) as HttpWebRequest;
-                request.Proxy = proxy;
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-
-                //Read response stream into xml object
-                XmlDocument doc = new XmlDocument();
+                // Read response stream into xml object
+                var doc = new XmlDocument();
 
                 using (Stream responseStream = response.GetResponseStream())
                 {
+                    if (responseStream == null)
+                    {
+                        throw new NoNullAllowedException("The response stream was null");
+                    }
+
                     doc.Load(responseStream);
                     responseStream.Close();
                     return doc;
                 }
             }
-            else if (requestType == RequestType.SOAP)
-            {
-                XmlDocument doc = SOAP.GetSoapTemplate();
 
-                if (HeaderParameters.Count > 0)
+            if (this.requestType == RequestType.Soap)
+            {
+                XmlDocument doc = Soap.GetSoapTemplate();
+
+                if (this.HeaderParameters.Count > 0)
                 {
                     XmlNode headerNode = doc["soap:Envelope"]["soap:Header"];
-                    foreach (KeyValuePair<String, object> kvp in HeaderParameters)
+                    foreach (var kvp in this.HeaderParameters)
                     {
-                        XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
+                        XmlNode headerElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, this.xmlNamespace);
                         if (kvp.Value != null)
                         {
-                            XmlNode value = kvp.Value as XmlNode;
+                            var value = kvp.Value as XmlNode;
                             foreach (XmlNode node in value.ChildNodes)
                             {
                                 XmlNode newNode = doc.ImportNode(node, true);
                                 headerElement.AppendChild(newNode);
                             }
-                           
                         }
+
                         headerNode.AppendChild(headerElement);
-                    }                   
+                    }
                 }
-                
-                if (Parameters.Count > 0)
+
+                if (this.Parameters.Count > 0)
                 {
                     XmlNode bodyNode = doc["soap:Envelope"]["soap:Body"];
-                    foreach (KeyValuePair<String, object> kvp in Parameters)
+                    foreach (var kvp in this.Parameters)
                     {
-                        XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, xmlNamespace);
+                        XmlNode bodyElement = doc.CreateNode(XmlNodeType.Element, kvp.Key, this.xmlNamespace);
                         if (kvp.Value != null)
                         {
-                            XmlNode value = kvp.Value as XmlNode;
+                            var value = kvp.Value as XmlNode;
+
                             foreach (XmlNode node in value.ChildNodes)
                             {
                                 XmlNode newNode = doc.ImportNode(node, true);
                                 bodyElement.AppendChild(newNode);
                             }
+                        }
 
-                        }                        
                         bodyNode.AppendChild(bodyElement);
-                        
                     }
                 }
 
-                HttpWebRequest request = HttpWebRequest.Create(baseUrl) as HttpWebRequest;
+                var request = WebRequest.Create(this.baseUrl) as HttpWebRequest;
                 request.ContentType = "text/xml; charset=utf-8";
                 request.Method = "POST";
                 request.Accept = "text/xml";
-                request.Headers.Add("SOAPAction", soapAction);
-                request.Proxy = proxy;
+                request.Headers.Add("SOAPAction", this.soapAction);
+                request.Proxy = this.proxy;
 
                 using (Stream requestStream = request.GetRequestStream())
                 {
@@ -234,28 +313,27 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                     requestStream.Flush();
                     requestStream.Close();
 
-                    HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                    var response = request.GetResponse() as HttpWebResponse;
 
-
-                    //Read response stream into xml object
+                    // Read response stream into xml object
                     doc = new XmlDocument();
                     using (Stream responseStream = response.GetResponseStream())
                     {
+                        if (responseStream == null)
+                        {
+                            throw new NoNullAllowedException("The response stream was null");
+                        }
+
                         doc.Load(responseStream);
                         responseStream.Close();
                         return doc;
                     }
                 }
+            }
 
-            }
-            else
-            {
-                throw new ArgumentException("Incorrect request type: " + requestType.ToString());
-            }
+            throw new ArgumentException("Incorrect request type: " + this.requestType.ToString());
         }
 
-        
-
-
+        #endregion
     }
 }

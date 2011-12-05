@@ -1,134 +1,166 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Route.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="RMIT University" file="Route.cs">
+//   Copyright RMIT University 2011
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Represents a route made up of INetworkNodes.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
+    #region
+
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using DataProviders;
+
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+
+    #endregion
+
     /// <summary>
     /// Represents a route made up of INetworkNodes.
     /// </summary>
     public class Route
     {
-        private List<INetworkNode> upNodes = new List<INetworkNode>();
-        private List<INetworkNode> downNodes = new List<INetworkNode>();
-        private INetworkNode upDestination;
-        private INetworkNode downDestination;
-        private string id;
-
+        #region Constants and Fields
 
         /// <summary>
-        /// Initializes a new instance of the the Route class.
+        ///   The down nodes.
         /// </summary>
-        /// <param name="routeId">The ID of the specified route.</param>
-        /// <param name="upDestination">The end point in the up direction.</param>
-        /// <param name="downDestination">The end point in the down direction.</param>
-        public Route(string routeId, INetworkNode upDestination, INetworkNode downDestination)
+        private readonly List<INetworkNode> downNodes = new List<INetworkNode>();
+
+        /// <summary>
+        ///   The id.
+        /// </summary>
+        private readonly string id;
+
+        /// <summary>
+        ///   The up nodes.
+        /// </summary>
+        private readonly List<INetworkNode> upNodes = new List<INetworkNode>();
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Route"/> class. 
+        ///   Initializes a new instance of the the Route class.
+        /// </summary>
+        /// <param name="routeId">
+        /// The Id of the specified route.
+        /// </param>
+        public Route(string routeId)
         {
-            this.upDestination = upDestination;
-            this.downDestination = downDestination;
             this.id = routeId;
         }
 
-       
+        #endregion
 
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets the route Id.
+        /// </summary>
+        public string Id
+        {
+            get
+            {
+                return this.id;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Adds a node to the specfied route direction.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="isUpDirection"></param>
-        public void AddNode(INetworkNode node,bool isUpDirection)
+        /// <param name="node">
+        /// The node to add to the route.
+        /// </param>
+        /// <param name="isUpDirection">
+        /// A value determining what direction to add the node to.
+        /// </param>
+        public void AddNode(INetworkNode node, bool isUpDirection)
         {
             if (isUpDirection)
             {
-                upNodes.Add(node);
+                this.upNodes.Add(node);
             }
             else
             {
-                downNodes.Add(node);
-            }
-        }
-
-        /// <summary>
-        /// Get a list of nodes for the route in the specified direction.
-        /// </summary>
-        /// <param name="isUpDirection"></param>
-        /// <returns></returns>
-        public List<INetworkNode> GetNodes(bool isUpDirection)
-        {
-            List<INetworkNode> nodes = new List<INetworkNode>();
-
-            //Huh? Fix directions!
-            if (!isUpDirection)
-            {
-                //nodes.Add(downDestination);
-                nodes.AddRange(upNodes);
-                //nodes.Add(upDestination);
-                //nodes.Reverse();
-                return nodes;
-            }
-            else
-            {
-                //nodes.Add(upDestination);
-                nodes.AddRange(downNodes);
-                //nodes.Add(downDestination);
-                //nodes.Reverse();
-                return nodes;
+                this.downNodes.Add(node);
             }
         }
 
         /// <summary>
         /// Get the 2 adjacent nodes (one node up and one node down).
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /// <param name="node">
+        /// The node to get the adjacent nodes for.
+        /// </param>
+        /// <returns>
+        /// The 2 adjacent nodes.
+        /// </returns>
         public List<INetworkNode> GetAdjacent(INetworkNode node)
         {
             List<INetworkNode> sourceNodes;
-            List<INetworkNode> nodes = new List<INetworkNode>();
+            var nodes = new List<INetworkNode>();
 
-            if (upNodes.Contains(node))
+            if (this.upNodes.Contains(node))
             {
-                sourceNodes = upNodes;
+                sourceNodes = this.upNodes;
             }
-            else if (downNodes.Contains(node))
+            else if (this.downNodes.Contains(node))
             {
-                sourceNodes = downNodes;
+                sourceNodes = this.downNodes;
             }
             else
             {
                 throw new Exception("Node doesn't exist in route.");
             }
-            
-            
+
             int index = sourceNodes.IndexOf(node);
             nodes.AddRange(sourceNodes.GetRange(index + 1, sourceNodes.Count - (index + 1)));
 
-            
-            
-           
             return nodes;
         }
 
         /// <summary>
-        /// Gets the route ID.
+        /// Get a list of nodes for the route in the specified direction.
         /// </summary>
-        public string ID
+        /// <param name="isUpDirection">
+        /// A value determining the direction of the route to return nodes for.
+        /// </param>
+        /// <returns>
+        /// A list of <see cref="INetworkNode"/> objects.
+        /// </returns>
+        public List<INetworkNode> GetNodes(bool isUpDirection)
         {
-            get
+            var nodes = new List<INetworkNode>();
+
+            // Huh? Fix directions!
+            if (!isUpDirection)
             {
-                return id;
+                // nodes.Add(downDestination);
+                nodes.AddRange(this.upNodes);
+
+                // nodes.Add(upDestination);
+                // nodes.Reverse();
+                return nodes;
             }
+
+            // nodes.Add(upDestination);
+            nodes.AddRange(this.downNodes);
+
+            // nodes.Add(downDestination);
+            // nodes.Reverse();
+            return nodes;
         }
 
-
-
+        #endregion
     }
 }
