@@ -67,7 +67,7 @@ namespace DataManager
                 {
                     //Scrape stop data
                     worker.ReportProgress(0, "Getting client UUID...");
-                    TramTrackerAPI api = new TramTrackerAPI();
+                    TramTrackerApi api = new TramTrackerApi();
                     worker.ReportProgress(0, "UUID is now " + api.Guid);
                     worker.ReportProgress(0, "Init cache...");
                     LocationCache cache = new LocationCache("YarraTrams");
@@ -156,13 +156,13 @@ namespace DataManager
                     itinerary.Add(source);
                     itinerary.Add(destination);
 
-                    DFSRoutePlanner dfs = new DFSRoutePlanner();
-                    dfs.RegisterNetworkDataProvider(new TramNetworkProvider());
-                    dfs.RegisterPointDataProvider(new WalkingDataProvider());
-                    dfs.NextIterationEvent += new EventHandler<NextIterationEventArgs>(dfs_NextIterationEvent);
-                    dfs.Start(itinerary);
+                    AStarRoutePlanner aStar = new AStarRoutePlanner();
+                    aStar.RegisterNetworkDataProvider(new TramNetworkProvider());
+                    aStar.RegisterPointDataProvider(new WalkingDataProvider());
+                    aStar.NextIterationEvent += new EventHandler<NextIterationEventArgs>(dfs_NextIterationEvent);
+                    aStar.Start(itinerary);
 
-                    while (dfs.SolveStep())
+                    while (aStar.SolveStep())
                         ;
                         
                         
@@ -205,7 +205,7 @@ namespace DataManager
 
                 worker.ReportProgress(0, String.Format("Current node: [depth: {0}, id: {1}, route: {2}, name: {3}, suburb: {4}, location: {5}]",
                                                         depth,
-                                                        stop.ID,
+                                                        stop.Id,
                                                         stop.CurrentRoute,
                                                         stop.StopName,
                                                         stop.SuburbName,

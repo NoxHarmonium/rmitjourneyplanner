@@ -73,7 +73,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetDistanceTest()
         {
-            DistanceAPI target = new DistanceAPI();
+            DistanceApi target = new DistanceApi();
             Location pointA = new Location("Lonsdale Street, Melbourne, Victoria, Australia");
             Location pointB = new Location("Royal Park, Parkville, Victoria, Australia");
             TransportMode transportMode = TransportMode.Driving;
@@ -90,7 +90,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetDistanceTest1()
         {
-            DistanceAPI target = new DistanceAPI();
+            DistanceApi target = new DistanceApi();
             Location pointA = new Location("Lonsdale Street, Melbourne, Victoria, Australia");
             Location pointB = new Location("Royal Park, Parkville, Victoria, Australia");
             Arc expected = new Arc(pointA,pointB,new TimeSpan(0, 11, 0), 4700.0,default(DateTime), TransportMode.Driving.ToString());

@@ -75,13 +75,14 @@ namespace UnitTests
         [TestMethod()]
         public void RouteCacheConstructorTest()
         {
-            TramTrackerAPI api = new TramTrackerAPI();
+            TramTrackerApi api = new TramTrackerApi();
             DataSet upData = api.GetListOfStopsByRouteNoAndDirection("1",true);
             DataSet downData = api.GetListOfStopsByRouteNoAndDirection("1",false);
             TramStop upDestination = new TramStop(upData.Tables[0].Rows[ upData.Tables[0].Rows.Count-1]["TID"].ToString(),null);
             TramStop downDestination = new TramStop(downData.Tables[0].Rows[downData.Tables[0].Rows.Count-1]["TID"].ToString(),null);
 
-            Route route = new Route("1", upDestination, downDestination);
+            //this.downDestination = downDestination;
+            Route route = new Route("1");
             List<String> upIds = new List<string>();
             List<String> downIds = new List<string>();
         
@@ -111,7 +112,7 @@ namespace UnitTests
                
                 foreach(TramStop stop in nodes)
                 {
-                    Assert.AreEqual(stop.ID, ids[dir][count++]);
+                    Assert.AreEqual(stop.Id, ids[dir][count++]);
                 }
 
             }

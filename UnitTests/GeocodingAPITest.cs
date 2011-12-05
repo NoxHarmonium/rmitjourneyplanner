@@ -72,7 +72,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetLocationTest()
         {
-            GeocodingAPI target = new GeocodingAPI(); 
+            GeocodingApi target = new GeocodingApi(); 
             string locationString = "Cuzco, Peru"; 
             //string locationString = "Medevigatan M, 25657 RAMLOSA, Sweden"; // 56.0222365,12.7362315
             Location expected = new Location(-13.525, -71.9722222); 
@@ -88,7 +88,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetLocationStringTest()
         {
-            GeocodingAPI target = new GeocodingAPI(); 
+            GeocodingApi target = new GeocodingApi(); 
             Location location = new Location(-13.525, -71.9722222);
             string expected = "El Sol 627 Cuzco Peru";
             string actual;

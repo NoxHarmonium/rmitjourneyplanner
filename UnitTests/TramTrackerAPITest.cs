@@ -119,7 +119,7 @@ namespace UnitTests
 
                 XmlNode paramList = doc.CreateElement("ul");
 
-                MethodInfo[] methodInfos = typeof(TramTrackerAPI).GetMethods();
+                MethodInfo[] methodInfos = typeof(TramTrackerApi).GetMethods();
                 int count = 0;
                 foreach (MethodInfo info in methodInfos)
                 {
@@ -179,7 +179,7 @@ namespace UnitTests
         [TestMethod()]
         public void GuidTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); 
+            TramTrackerApi target = new TramTrackerApi(); 
             string actual;
             actual = target.Guid;
             
@@ -192,7 +192,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetDestinationsForAllRoutesTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); 
+            TramTrackerApi target = new TramTrackerApi(); 
             DataSet result = target.GetDestinationsForAllRoutes();
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count > 0);
@@ -207,7 +207,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetDestinationsForRouteTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); 
+            TramTrackerApi target = new TramTrackerApi(); 
             string routeId = "1"; 
             DataSet result = target.GetDestinationsForRoute(routeId);
             Assert.IsTrue(result.Tables.Count > 0);
@@ -224,7 +224,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetListOfStopsByRouteNoAndDirectionTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); // TODO: Initialize to an appropriate value
+            TramTrackerApi target = new TramTrackerApi(); // TODO: Initialize to an appropriate value
             string routeId = "1"; 
             bool isUpDirection = false; 
             DataSet result = target.GetListOfStopsByRouteNoAndDirection(routeId, isUpDirection);
@@ -239,7 +239,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetMainRoutesTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI();            
+            TramTrackerApi target = new TramTrackerApi();            
             DataSet result = target.GetMainRoutes();
             Assert.IsTrue(result.Tables.Count > 0);
             Assert.IsTrue(result.Tables[0].Rows.Count == 30);
@@ -252,7 +252,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetMainRoutesForStopTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); 
+            TramTrackerApi target = new TramTrackerApi(); 
             string stopNo = "1551";             
             DataSet result = target.GetMainRoutesForStop(stopNo);
             Assert.IsTrue(result.Tables.Count > 0);
@@ -268,7 +268,7 @@ namespace UnitTests
         public void GetNextPredictedArivalTimeTest()
         {
            // Assert.Inconclusive("Don't know how to find tram number.");
-            TramTrackerAPI target = new TramTrackerAPI();
+            TramTrackerApi target = new TramTrackerApi();
             string tramNo = "3001"; //C Class - Citadis    
             DataSet result = target.GetNextPredictedArivalTime(tramNo);
             Assert.IsTrue(result.Tables.Count > 0);
@@ -283,7 +283,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetNextPredictedRoutesCollectionTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI();
+            TramTrackerApi target = new TramTrackerApi();
             string stopNo = "1551";
             string routeNo = "8"; 
             bool lowFloor = false;
@@ -300,7 +300,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetSchedulesCollectionTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); 
+            TramTrackerApi target = new TramTrackerApi(); 
             string stopNo = "1551"; 
             string routeNo = "8";
             bool lowFloor = false;
@@ -319,7 +319,7 @@ namespace UnitTests
         {
 
 
-            TramTrackerAPI target = new TramTrackerAPI();
+            TramTrackerApi target = new TramTrackerApi();
              DateTime scheduledDateTime = DateTime.Now;
              DataSet schedules = target.GetSchedulesCollection("1551", "8", false, scheduledDateTime);
             string tripID = schedules.Tables[0].Rows[0][1].ToString();
@@ -338,7 +338,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetStopInformationTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI();
+            TramTrackerApi target = new TramTrackerApi();
             string stopNo = "1551";
             
             DataSet result = target.GetStopInformation(stopNo);
@@ -356,7 +356,7 @@ namespace UnitTests
         [TestMethod()]
         public void GetStopsAndRouteUpdatesSinceTest()
         {
-            TramTrackerAPI target = new TramTrackerAPI(); 
+            TramTrackerApi target = new TramTrackerApi(); 
             DateTime dateSince = DateTime.Parse("2/5/2010"); 
             DataSet result = target.GetStopsAndRoutesUpdatesSince(dateSince);           
             Assert.IsTrue(result.Tables.Count > 0);
