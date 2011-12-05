@@ -31,7 +31,7 @@ namespace RmitJourneyPlanner.WebInterface
         /// <param name="e">
         /// The e.
         /// </param>
-        protected void PageLoad(object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
             this.btnReset.Click += this.BtnResetClick;
 
