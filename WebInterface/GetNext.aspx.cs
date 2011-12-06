@@ -45,7 +45,6 @@ namespace RmitJourneyPlanner.WebInterface
 
                 var nodelist = new[] { RouteSolver.Current, RouteSolver.Best };
                 int count = 0;
-                string prevType = "finish.png";
                 foreach (INetworkNode node in nodelist)
                 {
                     INetworkNode current = node;
