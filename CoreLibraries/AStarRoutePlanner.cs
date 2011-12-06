@@ -255,13 +255,18 @@ namespace RmitJourneyPlanner.CoreLibraries
                     destination.Parent = this.current;
                     destination.TotalTime = this.current.TotalTime + arc.Time;
 
-                    destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                        (Location)destination, (Location)this.itinerary.Last());
+                    if (destination.TotalTime < minTimeSolved)
+                    {
 
-                    // destination.CurrentRoute = arc.RouteId;
-                    destinations.Add(destination);
+                        destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
+                            (Location)destination, (Location)this.itinerary.Last());
+
+                        // destination.CurrentRoute = arc.RouteId;
+                        destinations.Add(destination);
+                    }
                 }
             }
+            
 
             // destinations.Sort(new Comparers.NodeComparer());
             foreach (INetworkNode node in destinations)
