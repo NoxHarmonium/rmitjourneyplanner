@@ -40,12 +40,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
         {
             double fx = (x.TotalTime.Ticks / 1000000000.0) + x.EuclidianDistance;
             double fy = (y.TotalTime.Ticks / 1000000000.0) + y.EuclidianDistance;
-            if (x.EuclidianDistance.CompareTo(0) != 0)
+            if (x.EuclidianDistance == 0)
             {
                 fx = 0;
             }
 
-            if (y.EuclidianDistance.CompareTo(0) != 0)
+            if (y.EuclidianDistance == 0)
             {
                 fy = 0;
             }
