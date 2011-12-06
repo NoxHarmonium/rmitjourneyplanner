@@ -74,3 +74,4 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         #endregion
     }
+}
