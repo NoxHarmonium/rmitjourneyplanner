@@ -10,8 +10,12 @@
 namespace RmitJourneyPlanner.WebInterface
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
     using System.Text;
 
+    using RmitJourneyPlanner.CoreLibraries;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.WebInterface.App_Data;
 
@@ -43,7 +47,13 @@ namespace RmitJourneyPlanner.WebInterface
             {
                 var json = new StringBuilder("{\n \"paths\": [{\n");
 
-                var nodelist = new[] { RouteSolver.Current, RouteSolver.Best };
+                var nodelist = new List<INetworkNode>() { RouteSolver.Best };
+                foreach (var critter in RouteSolver.population )
+                {
+                    INetworkNode node = EvolutionaryRoutePlanner.ToLinkedNodes(critter.Route.GetNodes(false));
+                    nodelist.Add(node);
+                }
+
                 int count = 0;
                 foreach (INetworkNode node in nodelist)
                 {
@@ -134,7 +144,7 @@ namespace RmitJourneyPlanner.WebInterface
                     }
 
                     json.Append(elements);
-                    if (count == 1)
+                    if (count == nodelist.Count - 1)
                     {
                         json.Append("\t]}\n");
                     }
