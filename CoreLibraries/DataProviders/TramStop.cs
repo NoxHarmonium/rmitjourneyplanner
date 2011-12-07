@@ -354,7 +354,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
                     TotalTime = this.TotalTime, 
                     EuclidianDistance = this.EuclidianDistance
                 };
-            cloned.LoadData(this.internalData);
+            if (this.internalData != null)
+            {
+                cloned.LoadData(this.internalData);
+            }
 
             return cloned;
         }
