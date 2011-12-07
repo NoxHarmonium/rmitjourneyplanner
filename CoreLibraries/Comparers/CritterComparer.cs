@@ -29,7 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
         /// </returns>
         public int Compare(Types.Critter x, Types.Critter y)
         {
-            return (int)Math.Round(y.Fitness - x.Fitness);
+            return (int)Math.Round(x.Fitness - y.Fitness);
         }
     }
 }
