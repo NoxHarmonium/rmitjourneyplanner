@@ -9,12 +9,14 @@
 
 namespace RmitJourneyPlanner.WebInterface.App_Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Net;
 
     using RmitJourneyPlanner.CoreLibraries;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.Types;
 
     /// <summary>
     /// Global object to solve routes.
@@ -26,7 +28,7 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
         /// <summary>
         /// The planner.
         /// </summary>
-        private static readonly AStarRoutePlanner Planner;
+        private static readonly EvolutionaryRoutePlanner Planner;
 
         /// <summary>
         /// The iteration.
@@ -53,9 +55,10 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
                     false, 
                     null, 
                     new NetworkCredential("s3229159", "MuchosRowlies1"));
-            Planner = new AStarRoutePlanner();
+            Planner = new EvolutionaryRoutePlanner(DateTime.Parse("11/30/2011 11:37 AM"));
             Planner.RegisterNetworkDataProvider(new TramNetworkProvider());
             Planner.RegisterPointDataProvider(new WalkingDataProvider());
+            population = new List<Critter>();
         }
 
         #endregion
@@ -71,6 +74,14 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
         /// Gets or sets Current.
         /// </summary>
         public static INetworkNode Current { get; set; }
+
+        /// <summary>
+        /// Gets or sets population.
+        /// </summary>
+        public static List<Critter> population
+        {
+            get; set;
+        } 
 
         /// <summary>
         /// Gets CurrentIteration.
@@ -110,6 +121,7 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
             bool success = Planner.SolveStep();
             Current = Planner.Current;
             Best = Planner.BestNode;
+            population = Planner.Population;
             return success;
         }
 
@@ -133,9 +145,12 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
             list.Add(start);
             list.Add(end);
             Planner.Start(list);
-            Planner.MaxWalkingDistance = maxWalk;
+            //Planner.MaxWalkingDistance = maxWalk;
+            //Planner.MaxWalkingTime
             iteration = 0;
             ready = true;
+            population = Planner.Population;
+
         }
 
         #endregion
