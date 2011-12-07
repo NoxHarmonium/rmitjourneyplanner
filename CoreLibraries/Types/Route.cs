@@ -97,6 +97,28 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
+        /// Adds a range of nodes to the specfied route direction.
+        /// </summary>
+        /// <param name="nodes">
+        /// The node collection to add to the route.
+        /// </param>
+        /// <param name="isUpDirection">
+        /// A value determining what direction to add the node to.
+        /// </param>
+        public void AddNodeRange(List<INetworkNode> nodes,bool isUpDirection)
+        {
+            if (isUpDirection)
+            {
+                this.upNodes.AddRange(nodes);
+            }
+            else
+            {
+                this.downNodes.AddRange(nodes);
+            }
+
+        }
+
+        /// <summary>
         /// Get the 2 adjacent nodes (one node up and one node down).
         /// </summary>
         /// <param name="node">
