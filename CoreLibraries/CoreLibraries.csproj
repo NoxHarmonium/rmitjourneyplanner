@@ -51,6 +51,7 @@
     <Compile Include="Caching\RouteCache.cs" />
     <Compile Include="Caching\ScheduleCache.cs" />
     <Compile Include="Caching\CacheTools.cs" />
+    <Compile Include="Comparers\CritterComparer.cs" />
     <Compile Include="DataAccess\DistanceAPI.cs" />
     <Compile Include="DataAccess\GeocodingAPI.cs" />
     <Compile Include="DataAccess\GoogleApiException.cs" />
@@ -85,6 +86,7 @@
     </Compile>
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Comparers\ArcComparer.cs" />
+    <Compile Include="Types\Critter.cs" />
     <Compile Include="Types\NetworkArc.cs" />
     <Compile Include="Types\Route.cs" />
     <Compile Include="Types\TransportDirection.cs" />
