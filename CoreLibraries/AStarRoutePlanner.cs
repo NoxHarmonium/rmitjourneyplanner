@@ -86,9 +86,10 @@ namespace RmitJourneyPlanner.CoreLibraries
         ///   Initializes a new instance of the <see cref = "AStarRoutePlanner" /> class. 
         ///   Initilizes a new instance of a AStarRoutePlanner.
         /// </summary>
-        public AStarRoutePlanner()
+        public AStarRoutePlanner(DateTime departureTime)
         {
             this.MaxWalkingDistance = 1.0;
+            this.startTime = departureTime;
         }
 
         #endregion
@@ -255,7 +256,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                     destination.Parent = this.current;
                     destination.TotalTime = this.current.TotalTime + arc.Time;
 
-                    if (destination.TotalTime < minTimeSolved)
+                    //if (destination.TotalTime < minTimeSolved)
                     {
 
                         destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
@@ -292,7 +293,7 @@ namespace RmitJourneyPlanner.CoreLibraries
             this.minTimeSolved = TimeSpan.MaxValue;
             this.minNode = null;
             this.pQueue.Add(itinerary.First());
-            this.startTime = DateTime.Parse("11/30/2011 11:37 AM");
+            
             this.current = null;
 
             // while (pQueue.Count > 0)
