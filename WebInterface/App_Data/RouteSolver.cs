@@ -16,6 +16,8 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
     using RmitJourneyPlanner.CoreLibraries;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     /// <summary>
@@ -149,6 +151,7 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
             //Planner.MaxWalkingTime
             iteration = 0;
             ready = true;
+            Best = Planner.BestNode;
             population = Planner.Population;
 
         }
