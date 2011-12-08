@@ -17,6 +17,7 @@ namespace RmitJourneyPlanner.WebInterface
 
     using RmitJourneyPlanner.CoreLibraries;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.WebInterface.App_Data;
 
     /// <summary>
@@ -63,7 +64,7 @@ namespace RmitJourneyPlanner.WebInterface
 
                     var elements = new StringBuilder();
 
-                    string baseImage = count == 0 ? "images/icons/red/" : "images/icons/blue/";
+                    string baseImage = count == 0 ? "images/icons/blue/" : "images/icons/negs/";
 
                     INetworkNode prev = node;
 
@@ -116,17 +117,21 @@ namespace RmitJourneyPlanner.WebInterface
                                 totalTime = current.TotalTime - current.Parent.TotalTime;
                             }
 
+                            Random random = new Random((int)DateTime.Now.Ticks);
+
                             element.Append(
                                 string.Format(
                                     "\t\t\t\"Latitude\": \"{0}\",\n" + "\t\t\t\"Longitude\": \"{1}\",\n"
                                     + "\t\t\t\"Name\": \"{2}\",\n" + "\t\t\t\"TotalTime\": \"{3}\",\n"
-                                    + "\t\t\t\"Image\": \"{4}\",\n" + "\t\t\t\"Type\": \"{5}\"\n", 
+                                    + "\t\t\t\"Image\": \"{4}\",\n" + "\t\t\t\"Type\": \"{5}\",\n"
+                                    + "\t\t\t\"Colour\": \"{6}\"\n", 
                                     current.Latitude, 
                                     current.Longitude, 
                                     current.Id + string.Format(" ({0})", current.TotalTime), 
                                     totalTime, 
                                     image, 
-                                    travelType));
+                                    travelType,
+                                    "#" + random.Next(255).ToString("X2") + random.Next(255).ToString("X2") + random.Next(255).ToString("X2")));
                             prev = current;
                             current = current.Parent;
                             if (!ifirst)
