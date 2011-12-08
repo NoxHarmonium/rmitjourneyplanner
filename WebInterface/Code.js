@@ -59,10 +59,13 @@ function next(param) {
                   }
                   $.each(data.paths, function (i, Route) {
                       //alert(Route);
-
+                      var pColor = undefined;
                       var polyPoints = new Array();
-                      $('#dirList .directionEntry').remove();
-                      $('#dirList .directionEntryAlt').remove();
+
+                      if (routeNo == 0) {
+                          $('#dirList .directionEntry').remove();
+                          $('#dirList .directionEntryAlt').remove();
+                      }
 
                       var alt = false;
                       $.each(Route.Route, function (j, node) {
@@ -79,64 +82,83 @@ function next(param) {
 
                           markersArray.push(marker);
 
-                          var item = $(document.createElement('div'));
-                          var type = $(document.createElement('div'));
-                          var name = $(document.createElement('div'));
-                          var time = $(document.createElement('div'));
-                          var image = $(document.createElement('img'));
-                          //image.attr("href") = node.Image;
-                          item.append("<img class='transportImage' src='" + node.Image + "'/>");
+                          pColor = node.Colour;
+                          
+                          if (routeNo == 0) {
+
+                              var item = $(document.createElement('div'));
+                              var type = $(document.createElement('div'));
+                              var name = $(document.createElement('div'));
+                              var time = $(document.createElement('div'));
+                              //var image = $(document.createElement('img'));
+                              //image.attr("href") = node.Image;
+                              item.append("<img class='transportImage' src='" + node.Image + "'/>");
+
+                             
+
+                              type.text(node.Type);
+                              name.text(node.Name);
+                              time.text(" (" + node.TotalTime + ")");
 
 
-                          type.text(node.Type);
-                          name.text(node.Name);
-                          time.text(" (" + node.TotalTime + ")");
 
+                              type.attr('class', 'typeSpan');
+                              name.attr('class', 'nameSpan');
+                              time.attr('class', 'timeSpan');
 
+                              item.append(type);
+                              item.append(name);
+                              item.append(time);
 
-                          type.attr('class', 'typeSpan');
-                          name.attr('class', 'nameSpan');
-                          time.attr('class', 'timeSpan');
+                              if (alt) {
+                                  item.attr('class', 'directionEntry');
+                              }
+                              else {
+                                  item.attr('class', 'directionEntryAlt');
 
-                          item.append(type);
-                          item.append(name);
-                          item.append(time);
+                              }
+                              alt = !alt;
+                              $('#dirList').append(item);
 
-                          if (alt) {
-                              item.attr('class', 'directionEntry');
+                              //$('#dirList').attr("disabled", true);
                           }
-                          else {
-                              item.attr('class', 'directionEntryAlt');
-
-                          }
-                          alt = !alt;
-                          $('#dirList').append(item);
-
-                          //$('#dirList').attr("disabled", true);
-
 
 
 
 
                       });
-
                       var polyPath;
-                      if (routeNo++ == 0) {
+
+                      if (pColor) {
                           polyPath = new google.maps.Polyline({
                               path: polyPoints,
-                              strokeColor: "#FF0000",
-                              strokeOpacity: 0.6,
+                              strokeColor: String(pColor),
+                              strokeOpacity: 0.5,
                               strokeWeight: 2
                           });
+                          routeNo++;
                       }
                       else {
-                          polyPath = new google.maps.Polyline({
-                              path: polyPoints,
-                              strokeColor: "#0000FF",
-                              strokeOpacity: 0.6,
-                              strokeWeight: 2
-                          });
+                          if (routeNo++ == 0) {
+                              polyPath = new google.maps.Polyline({
+                                  path: polyPoints,
+                                  strokeColor: "#FF0000",
+                                  strokeOpacity: 0.5,
+                                  strokeWeight: 2
+                              });
+                          }
+                          else {
+                              polyPath = new google.maps.Polyline({
+                                  path: polyPoints,
+                                  strokeColor: "#0000FF",
+                                  strokeOpacity: 0.5,
+                                  strokeWeight: 2
+                              });
+                          }
+
                       }
+
+
                       polyPath.setMap(window.map);
                       polyArray.push(polyPath);
 
