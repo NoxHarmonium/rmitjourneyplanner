@@ -17,6 +17,9 @@ using RmitJourneyPlanner.CoreLibraries.DataAccess;
 
 namespace DataManager
 {
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional;
+
     public partial class frmYarraTrams : Form
     {
         private BackgroundWorker worker;
@@ -156,7 +159,7 @@ namespace DataManager
                     itinerary.Add(source);
                     itinerary.Add(destination);
 
-                    AStarRoutePlanner aStar = new AStarRoutePlanner();
+                    AStarRoutePlanner aStar = new AStarRoutePlanner(DateTime.Parse("11/30/2011 11:37 AM"));
                     aStar.RegisterNetworkDataProvider(new TramNetworkProvider());
                     aStar.RegisterPointDataProvider(new WalkingDataProvider());
                     aStar.NextIterationEvent += new EventHandler<NextIterationEventArgs>(dfs_NextIterationEvent);
