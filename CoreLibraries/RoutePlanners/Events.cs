@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries
+namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
 {
     #region
 

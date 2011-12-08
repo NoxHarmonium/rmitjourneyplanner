@@ -72,10 +72,10 @@
     <Compile Include="DataProviders\TramNetworkProvider.cs" />
     <Compile Include="DataProviders\TramStop.cs" />
     <Compile Include="DataProviders\WalkingDataProvider.cs" />
-    <Compile Include="AStarRoutePlanner.cs" />
-    <Compile Include="Events.cs" />
-    <Compile Include="EvolutionaryRoutePlanner.cs" />
-    <Compile Include="IRoutePlanner.cs" />
+    <Compile Include="RoutePlanners\Traditional\AStarRoutePlanner.cs" />
+    <Compile Include="RoutePlanners\Events.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\EvolutionaryRoutePlanner.cs" />
+    <Compile Include="RoutePlanners\IRoutePlanner.cs" />
     <Compile Include="Positioning\GeometryHelper.cs" />
     <Compile Include="Positioning\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,8 +100,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Include\C5.dll" />
-    <Content Include="Include\C5.pdb" />
+    <Content Include="Libraries\C5.dll" />
+    <Content Include="Libraries\C5.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

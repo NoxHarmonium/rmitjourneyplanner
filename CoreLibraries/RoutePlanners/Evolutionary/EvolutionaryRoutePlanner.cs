@@ -8,7 +8,7 @@
 // 
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries
+namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
     #region
 
@@ -79,7 +79,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         {
             this.ProbMinDistance = 0.7;
             this.ProbMinTransfers = 0.2;
-            this.MaxWalkingTime = new TimeSpan(0, 0, 15, 0);
+            this.MaxWalkingTime = new TimeSpan(0, 0, 25, 0);
             this.PopulationSize = 30;
             this.startTime = departureTime;
             this.ElitePop = 15;
@@ -345,31 +345,31 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// <returns>
         /// A random route.
         /// </returns>
-        private Route GenerateRandomRoute()
+        private Route GenerateRandomRoute(INetworkNode source, INetworkNode destination)
         {
-            INetworkNode current = this.itinerary.First();
+            INetworkNode current = source;
             Route currentRoute = new Route(Guid.NewGuid().ToString());
-            currentRoute.AddNode(this.itinerary.First(), true);
+            currentRoute.AddNode(source, true);
 
-            while (current != this.itinerary.Last())
+            while (!current.Equals(destination))
             {
                 double minDistance = double.MaxValue;
                 INetworkNode minNode = null;
                 double maxWalkDistance = this.MaxWalkingTime.TotalHours * 6.0;
 
                 var candidateNodes = this.networkProviders[0].GetNodesAtLocation(
-                    (Location)this.itinerary.First(), maxWalkDistance);
+                    (Location)source, maxWalkDistance);
 
                 if (
-                    this.pointDataProviders[0].EstimateDistance((Location)current, (Location)this.itinerary.Last()).
+                    this.pointDataProviders[0].EstimateDistance((Location)current, (Location)destination).
                         Distance < maxWalkDistance)
                 {
-                    candidateNodes.Add(this.itinerary.Last());
+                    candidateNodes.Add(destination);
                 }
                
                 if (candidateNodes.Count == 0)
                 {
-                    throw new Exception("Candidate nodes 0");
+                    throw new Exception("This node has no neighbors.");
 
                 }
 
@@ -385,13 +385,19 @@ namespace RmitJourneyPlanner.CoreLibraries
                 candidateNodes.AddRange(
                     tempCandidates.Where(candidateNode => !currentRoute.GetNodes(false).Contains(candidateNode)));
 
+                if (candidateNodes.Count == 0)
+                {
+                    candidateNodes.Add(destination);
+
+                }
+
                 // Calculate minimum distance node
                 foreach (var candidateNode in candidateNodes)
                 {
                     candidateNode.RetrieveData();
                     candidateNode.EuclidianDistance =
                         this.pointDataProviders[0].EstimateDistance(
-                            (Location)candidateNode, (Location)this.itinerary.Last()).Distance;
+                            (Location)candidateNode, (Location)destination).Distance;
                     if (candidateNode.EuclidianDistance < minDistance)
                     {
                         minNode = candidateNode;
@@ -419,12 +425,15 @@ namespace RmitJourneyPlanner.CoreLibraries
 
                 if (p <= this.ProbMinDistance || (transferNodes.Count == 0 && candidateNodes.Count == 0))
                 {
-                    currentRoute.AddNode(minNode, true);
+                    /*
                     if (minNode == null)
                     {
                         //throw new NullReferenceException("There are no routes left to take!");
-                        return null;
+                        minNode = destination;
                     }
+                     * */
+                    currentRoute.AddNode(minNode, true);
+
                     current = minNode;
                 }
                 else if ((p <= this.ProbMinDistance + this.ProbMinTransfers || candidateNodes.Count == 0)
@@ -470,6 +479,10 @@ namespace RmitJourneyPlanner.CoreLibraries
                         nodes[i], nodes[i + 1], this.startTime + totalTime);
                 if (arcs.Count > 0)
                 {
+                    if (i > 0 && nodes[i].CurrentRoute != nodes[i - 1].CurrentRoute)
+                    {
+                        totalTime = totalTime.Add(new TimeSpan(0, 0, 0, 30));
+                    }
                     totalTime = totalTime.Add(arcs[0].Time);
                 }
                 else
@@ -493,13 +506,15 @@ namespace RmitJourneyPlanner.CoreLibraries
                 Route route = null;
                 while (route == null)
                 {
-                    route = this.GenerateRandomRoute();
+                    route = this.GenerateRandomRoute(this.itinerary.First(), this.itinerary.Last());
                 }
                 var critter = new Critter(route, this.GetFitness(route));
                 this.Population.Add(critter);
             
             }
             this.Population.Sort(new CritterComparer());
+            this.BestNode = ToLinkedNodes(this.Population[0].Route.GetNodes(false));
+            
 
         }
 
@@ -510,10 +525,22 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// The critter that is to be mutated.
         /// </param>
         /// <returns>
+        /// A mutated critter.
         /// </returns>
         private Critter Mutate(Critter child)
         {
-            return child;
+            List<INetworkNode> nodes = child.Route.GetNodes(false);
+            int startIndex = this.random.Next(0, nodes.Count - 2);
+            int endIndex = this.random.Next(startIndex + 1, nodes.Count - 1);
+            INetworkNode begin = nodes[startIndex];
+            INetworkNode end = nodes[endIndex];
+            Route newSegment = this.GenerateRandomRoute(begin, end);
+            Route newRoute = new Route(Guid.NewGuid().ToString());
+            newRoute.AddNodeRange(nodes.GetRange(0, startIndex), true);
+            newRoute.AddNodeRange(newSegment.GetNodes(false), true);
+            newRoute.AddNodeRange(nodes.GetRange(endIndex+1,nodes.Count - 1 - endIndex), true);
+
+            return new Critter(newRoute, this.GetFitness(newRoute));
         }
 
         #endregion
