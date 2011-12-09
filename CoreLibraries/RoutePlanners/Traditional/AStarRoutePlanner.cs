@@ -5,6 +5,7 @@
 // <summary>
 //   Finds the best route between given nodes using a depth first search.
 // </summary>
+// 
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
@@ -41,6 +42,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
         /// </summary>
         private readonly List<IPointDataProvider> pointDataProviders = new List<IPointDataProvider>();
 
+        /// <summary>
+        ///   The start time.
+        /// </summary>
+        private readonly DateTime startTime;
+
         // private Caching.ArcCache aCache = new Caching.ArcCache("RoutePlanner");
 
         /// <summary>
@@ -73,19 +79,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
         /// </summary>
         private IntervalHeap<INetworkNode> pQueue;
 
-        /// <summary>
-        ///   The start time.
-        /// </summary>
-        private DateTime startTime;
-
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "AStarRoutePlanner" /> class. 
+        /// Initializes a new instance of the <see cref="AStarRoutePlanner"/> class. 
         ///   Initilizes a new instance of a AStarRoutePlanner.
         /// </summary>
+        /// <param name="departureTime">
+        /// The departure Time.
+        /// </param>
         public AStarRoutePlanner(DateTime departureTime)
         {
             this.MaxWalkingDistance = 1.0;
@@ -255,10 +259,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
                     // bool same = (destination.Equals( (INetworkNode)arc.Destination));
                     destination.Parent = this.current;
                     destination.TotalTime = this.current.TotalTime + arc.Time;
-
-                    //if (destination.TotalTime < minTimeSolved)
                     {
-
+                        // if (destination.TotalTime < minTimeSolved)
                         destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
                             (Location)destination, (Location)this.itinerary.Last());
 
@@ -267,7 +269,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
                     }
                 }
             }
-            
 
             // destinations.Sort(new Comparers.NodeComparer());
             foreach (INetworkNode node in destinations)
@@ -293,7 +294,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
             this.minTimeSolved = TimeSpan.MaxValue;
             this.minNode = null;
             this.pQueue.Add(itinerary.First());
-            
+
             this.current = null;
 
             // while (pQueue.Count > 0)

@@ -73,6 +73,16 @@
     <Compile Include="DataProviders\YarraTrams\TramNetworkProvider.cs" />
     <Compile Include="DataProviders\YarraTrams\TramStop.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\EvolutionaryProperties.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\IBreeder.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\IFitnessFunction.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\IMutator.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\IRouteGenerator.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\Tools.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\RandomRouteGenerator.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\Breeders\StandardBreeder.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\FitnessFunctions\StandardFitnessFunction.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\Mutators\StandardMutator.cs" />
     <Compile Include="RoutePlanners\Traditional\AStarRoutePlanner.cs" />
     <Compile Include="RoutePlanners\Events.cs" />
     <Compile Include="RoutePlanners\Evolutionary\EvolutionaryRoutePlanner.cs" />

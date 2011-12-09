@@ -164,7 +164,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// </returns>
         public object Clone()
         {
-            return new TerminalNode(this.id, this.Latitude, this.Longitude);
+            TerminalNode newNode = new TerminalNode(this.id, this.Latitude, this.Longitude);
+            newNode.TotalTime = this.TotalTime;
+            return newNode;
         }
 
         /// <summary>

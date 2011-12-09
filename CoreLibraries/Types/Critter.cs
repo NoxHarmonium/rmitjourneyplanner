@@ -79,7 +79,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Return a copy of this critter.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A cloned critter.</returns>
         public object Clone()
         {
             return new Critter((Route)this.Route.Clone(), this.fitness);

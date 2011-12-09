@@ -192,12 +192,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             var newRoute = new Route(this.id);
             
-            foreach (var networkNode in upNodes)
+            foreach (var networkNode in this.upNodes)
             {
                 newRoute.AddNode((INetworkNode)networkNode.Clone(), true);
             }
 
-            foreach (var networkNode in downNodes)
+            foreach (var networkNode in this.downNodes)
             {
                 newRoute.AddNode((INetworkNode)networkNode.Clone(), false);
             }
