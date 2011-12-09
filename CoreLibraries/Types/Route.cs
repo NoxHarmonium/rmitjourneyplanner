@@ -21,7 +21,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// Represents a route made up of INetworkNodes.
     /// </summary>
-    public class Route
+    public class Route : ICloneable
     {
         #region Constants and Fields
 
@@ -105,7 +105,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="isUpDirection">
         /// A value determining what direction to add the node to.
         /// </param>
-        public void AddNodeRange(List<INetworkNode> nodes,bool isUpDirection)
+        public void AddNodeRange(List<INetworkNode> nodes, bool isUpDirection)
         {
             if (isUpDirection)
             {
@@ -164,8 +164,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             var nodes = new List<INetworkNode>();
 
-            // Huh? Fix directions!
-            if (!isUpDirection)
+            if (isUpDirection)
             {
                 // nodes.Add(downDestination);
                 nodes.AddRange(this.upNodes);
@@ -184,5 +183,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         #endregion
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
