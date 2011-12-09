@@ -10,10 +10,12 @@
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
+    using System;
+
     /// <summary>
     /// Represents a member of a population in an evolutionary algorithm.
     /// </summary>
-    public class Critter
+    public class Critter : ICloneable
     {
         #region Constants and Fields
 
@@ -73,5 +75,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         #endregion
+
+        /// <summary>
+        /// Return a copy of this critter.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            return new Critter((Route)this.Route.Clone(), this.fitness);
+        }
     }
 }
