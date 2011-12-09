@@ -184,9 +184,25 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         #endregion
 
+        /// <summary>
+        /// Returns a copy of this route and copies all internal nodes.
+        /// </summary>
+        /// <returns>A new Route object.</returns>
         public object Clone()
         {
-            throw new NotImplementedException();
+            var newRoute = new Route(this.id);
+            
+            foreach (var networkNode in upNodes)
+            {
+                newRoute.AddNode((INetworkNode)networkNode.Clone(), true);
+            }
+
+            foreach (var networkNode in downNodes)
+            {
+                newRoute.AddNode((INetworkNode)networkNode.Clone(), false);
+            }
+
+            return newRoute;
         }
     }
 }
