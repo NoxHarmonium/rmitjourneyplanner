@@ -6,6 +6,7 @@
 //   A route planner takes a list of nodes and joins them up using the
 //   provided transport networks.
 // </summary>
+// 
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners

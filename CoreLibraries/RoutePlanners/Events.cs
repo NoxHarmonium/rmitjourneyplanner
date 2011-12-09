@@ -5,6 +5,7 @@
 // <summary>
 //   Represents the data produced by a next iteration event.
 // </summary>
+// 
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
