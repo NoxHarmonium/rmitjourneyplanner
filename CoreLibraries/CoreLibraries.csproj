@@ -73,6 +73,11 @@
     <Compile Include="DataProviders\YarraTrams\TramNetworkProvider.cs" />
     <Compile Include="DataProviders\YarraTrams\TramStop.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RoutePlanners\Evolutionary\EvolutionaryProperties.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IFitnessFunction.cs" />
@@ -111,10 +116,22 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Caching\SQL\rmitjourneyplanner_arccache.sql" />
+    <Resource Include="Caching\SQL\rmitjourneyplanner_locationcache.sql" />
+    <Resource Include="Caching\SQL\rmitjourneyplanner_nodecache.sql" />
+    <Resource Include="Caching\SQL\rmitjourneyplanner_noderoutecache.sql" />
+    <Resource Include="Caching\SQL\rmitjourneyplanner_routecache.sql" />
+    <Resource Include="Caching\SQL\rmitjourneyplanner_schedulecollectioncache.sql" />
+    <Resource Include="Caching\SQL\rmitjourneyplanner_tripschedulecache.sql" />
     <Content Include="Libraries\C5.dll" />
     <Content Include="Libraries\C5.pdb" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

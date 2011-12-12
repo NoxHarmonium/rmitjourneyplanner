@@ -26,7 +26,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     /// </summary>
     public class EvolutionaryProperties
     {
-        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EvolutionaryProperties"/> class. 
+        /// </summary>
         public EvolutionaryProperties()
         {
             this.NetworkDataProviders = new List<INetworkDataProvider>();

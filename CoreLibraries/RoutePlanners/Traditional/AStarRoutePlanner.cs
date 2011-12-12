@@ -20,6 +20,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
 
     using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.YarraTrams;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
