@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.DataProviders
+namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
 {
     #region
 
