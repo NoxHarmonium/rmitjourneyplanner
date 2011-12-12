@@ -12,8 +12,9 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
     using System;
     using System.Collections.Generic;
     using System.Net;
-    
 
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.YarraTrams;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
