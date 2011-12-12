@@ -115,7 +115,6 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 this.downNodes.AddRange(nodes);
             }
-
         }
 
         /// <summary>
