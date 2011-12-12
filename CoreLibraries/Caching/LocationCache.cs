@@ -202,12 +202,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             // Delete any old tables
             // database.RunQuery("IF EXISTS (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='LocationCache') DROP TABLE LocationCache;");
             // Create new table
-            this.database.RunQuery(
-                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`LocationCache` ( "
-                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`locationID` VARCHAR(45) NULL ,"
-                + "`networkId` VARCHAR(45) NULL, " + "`Latitude` DOUBLE NULL ," + "`Longitude` DOUBLE NULL ,"
-                + "`RouteId` VARCHAR(45) NULL ," + "PRIMARY KEY (`cacheID`) ," + "INDEX `Latitude` (`Latitude` ASC) ,"
-                + "INDEX `Longitude` (`Longitude` ASC) )" + "PACK_KEYS = 1; DELETE FROM LocationCache;");
+            this.database.RunQuery(Properties.Resources.rmitjourneyplanner_locationcache);
         }
 
         #endregion

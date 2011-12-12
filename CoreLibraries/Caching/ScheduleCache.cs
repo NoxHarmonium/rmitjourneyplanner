@@ -247,18 +247,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             // Delete any old tables
             // database.RunQuery("DROP TABLE NodeCache;");
             // Create new table
-            this.database.RunQuery(
-                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`ScheduleCollectionCache` ( "
-                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`networkId` VARCHAR(45) NULL, "
-                + "`stopID` VARCHAR(45) NULL ," + "`routeID` VARCHAR(45) NULL ," + "`lowFloor` INT UNSIGNED ,"
-                + "`requestDate` DATETIME NULL ," + "`data` TEXT ," + "PRIMARY KEY (`cacheID`)) " + "PACK_KEYS = 1;"
-                + "DELETE FROM ScheduleCollectionCache;");
-
-            this.database.RunQuery(
-                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`TripScheduleCache` ( "
-                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`networkId` VARCHAR(45) NULL, "
-                + "`tripID` INT UNSIGNED ," + "`scheduledDateTime` DATETIME ," + "`data` TEXT ,"
-                + "PRIMARY KEY (`cacheID`)) " + "PACK_KEYS = 1;" + "DELETE FROM TripScheduleCache;");
+            this.database.RunQuery(Properties.Resources.rmitjourneyplanner_schedulecollectioncache);
+            this.database.RunQuery(Properties.Resources.rmitjourneyplanner_tripschedulecache);
         }
 
         #endregion

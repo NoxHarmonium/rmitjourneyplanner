@@ -148,12 +148,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Caching
             // Delete any old tables
             // database.RunQuery("DROP TABLE NodeCache;");
             // Create new table
-            this.database.RunQuery(
-                "CREATE TABLE IF NOT EXISTS `rmitjourneyplanner`.`RouteCache` ( "
-                + "`cacheID` INT UNSIGNED NOT NULL AUTO_INCREMENT ," + "`networkId` VARCHAR(45) NULL, "
-                + "`RouteId` VARCHAR(45) NULL ," + "`stopID` VARCHAR(45) NULL ," + "`stopIndex` INT UNSIGNED ,"
-                + "`stopDirection` INT UNSIGNED ," + "PRIMARY KEY (`cacheID`) ," + "INDEX `RouteId` (`RouteId` ASC)) "
-                + "PACK_KEYS = 1;" + "DELETE FROM RouteCache;");
+            this.database.RunQuery(Properties.Resources.rmitjourneyplanner_routecache);
         }
 
         #endregion
