@@ -12,7 +12,9 @@ namespace RmitJourneyPlanner.WebInterface
     using System;
     using System.Net;
 
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.Types;
     using RmitJourneyPlanner.WebInterface.App_Data;
 
     /// <summary>
@@ -46,6 +48,8 @@ namespace RmitJourneyPlanner.WebInterface
                     new Location(this.txtDestination.Text), 
                     Convert.ToDouble(this.txtMaxWalk.Text));
             }
+
+            
 
             this.GoogleMapsControl1.Nodes.Clear();
 
