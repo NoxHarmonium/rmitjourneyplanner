@@ -73,19 +73,21 @@ function next(param) {
                           var myLatlng = new google.maps.LatLng(node.Latitude, node.Longitude);
 
                           polyPoints.push(myLatlng);
-                          var marker = new google.maps.Marker({
-                              position: myLatlng,
-                              map: window.map,
-                              title: node.Name,
-                              icon: node.Image
-                          });
+                         
 
-                          markersArray.push(marker);
+                          
 
                           pColor = node.Colour;
                           
                           if (routeNo == 0) {
 
+                              var marker = new google.maps.Marker({
+                                  position: myLatlng,
+                                  map: window.map,
+                                  title: node.Name,
+                                  icon: node.Image
+                              });
+                              markersArray.push(marker);
                               var item = $(document.createElement('div'));
                               var type = $(document.createElement('div'));
                               var name = $(document.createElement('div'));
