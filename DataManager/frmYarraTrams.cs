@@ -1,25 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Net;
-using RmitJourneyPlanner.CoreLibraries;
-
-using RmitJourneyPlanner.CoreLibraries.DataProviders;
-using RmitJourneyPlanner.CoreLibraries.Caching;
-using RmitJourneyPlanner.CoreLibraries.Positioning;
-using RmitJourneyPlanner.CoreLibraries.Types;
-using RmitJourneyPlanner.CoreLibraries.DataAccess;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="frmYarraTrams.cs" company="RMIT University">
+//   
+// </copyright>
+// <summary>
+//   Defines the frmYarraTrams type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace DataManager
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
+    using System.Net;
+    using System.Windows.Forms;
+
+    using RmitJourneyPlanner.CoreLibraries.Caching;
+    using RmitJourneyPlanner.CoreLibraries.DataAccess;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.YarraTrams;
+    using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional;
+    using RmitJourneyPlanner.CoreLibraries.Types;
 
+    /// <summary>
+    /// </summary>
     public partial class frmYarraTrams : Form
     {
         private BackgroundWorker worker;
@@ -27,8 +35,9 @@ namespace DataManager
         public frmYarraTrams()
         {
             InitializeComponent();
-            RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy = 
-                new System.Net.WebProxy("http://aproxy.rmit.edu.au:8080",false,null,new NetworkCredential("s3229159","MuchosRowlies1"));
+            RmitJourneyPlanner.CoreLibraries.DataAccess.ConnectionInfo.Proxy =
+                new System.Net.WebProxy(
+                    "http://aproxy.rmit.edu.au:8080", false, null, new NetworkCredential("s3229159", "MuchosRowlies1"));
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -37,7 +46,7 @@ namespace DataManager
             cmbActions.Enabled = false;
             btnStop.Enabled = true;
 
-            worker = new BackgroundWorker();
+            this.worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
