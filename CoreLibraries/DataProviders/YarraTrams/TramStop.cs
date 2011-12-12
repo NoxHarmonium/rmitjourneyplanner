@@ -7,13 +7,12 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.DataProviders
+namespace RmitJourneyPlanner.CoreLibraries.DataProviders.YarraTrams
 {
     #region
 
     using System;
     using System.Data;
-    using System.Text.RegularExpressions;
 
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -46,7 +45,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         ///   The flag stop no.
         /// </summary>
-        private int flagStopNo;
+        private string flagStopNo;
 
         /// <summary>
         ///   The has connecting buses.
@@ -173,7 +172,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         ///   Gets the stop number listed at the tram stop.
         /// </summary>
-        public int FlagStopNo
+        public string FlagStopNo
         {
             get
             {
@@ -406,15 +405,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             this.internalData = stopData;
             DataTable dataTable = stopData.Tables[0];
             DataRow dataRow = dataTable.Rows[0];
-            string flagStopString = dataRow["FlagStopNo"].ToString();
-            Match match = Regex.Match(flagStopString, "[a-zA-Z]");
-            while (match.Success)
-            {
-                flagStopString = flagStopString.Remove(match.Index, 1);
-                match = Regex.Match(flagStopString, "[a-zA-Z]");
-            }
-
-            this.flagStopNo = Convert.ToInt32(flagStopString);
+            this.flagStopNo = dataRow["FlagStopNo"].ToString();
             this.stopName = dataRow["StopName"].ToString();
 
             // Determine citydirection
