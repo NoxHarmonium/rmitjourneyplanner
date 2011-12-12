@@ -66,17 +66,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime time);
 
         /// <summary>
-        /// Gets the network node that is at the specfied location
-        /// </summary>
-        /// <param name="location">
-        /// A location.
-        /// </param>
-        /// <returns>
-        /// The node at that location or null if there is no node.
-        /// </returns>
-        INetworkNode GetNodeAtLocation(Location location);
-
-        /// <summary>
         /// Get the location of the node with the specified Id.
         /// </summary>
         /// <param name="id">

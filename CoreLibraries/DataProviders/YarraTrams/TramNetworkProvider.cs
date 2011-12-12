@@ -302,26 +302,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.YarraTrams
         }
 
         /// <summary>
-        /// Gets the network node that is at the specfied location
-        /// </summary>
-        /// <param name="location">
-        /// A location.
-        /// </param>
-        /// <returns>
-        /// The node at that location or null if there is no node.
-        /// </returns>
-        public INetworkNode GetNodeAtLocation(Location location)
-        {
-            string id = this.lCache.GetIdFromLocation(location);
-            if (id != null)
-            {
-                return new TramStop(this.lCache.GetIdFromLocation(location), this);
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Gets a DataSet containing all the data pertaining to a TramStop.
         /// </summary>
         /// <param name="id">
