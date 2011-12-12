@@ -12,12 +12,16 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
     using System;
     using System.Collections.Generic;
     using System.Net;
+    
 
-    using RmitJourneyPlanner.CoreLibraries;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     /// <summary>
@@ -57,7 +61,23 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
                     false, 
                     null, 
                     new NetworkCredential("s3229159", "MuchosRowlies1"));
-            Planner = new EvolutionaryRoutePlanner(DateTime.Parse("11/30/2011 11:37 AM"));
+            
+            
+            var properties = new EvolutionaryProperties();
+            properties.ProbMinDistance = 0.7;
+            properties.ProbMinTransfers = 0.2;
+            properties.MaximumWalkDistance = 1.5;
+            properties.PopulationSize = 50;
+            properties.DepartureTime = DateTime.Parse("11/30/2011 11:37 AM");
+            properties.NumberToKeep = 25;
+            properties.MutationRate = 0.1;
+            properties.RouteGenerator = new RandomRouteGenerator(properties);
+            properties.Mutator = new StandardMutator(properties);
+            properties.Breeder = new StandardBreeder(properties);
+            properties.FitnessFunction = new StandardFitnessFunction(properties);
+            
+
+            Planner = new EvolutionaryRoutePlanner(properties);
             Planner.RegisterNetworkDataProvider(new TramNetworkProvider());
             Planner.RegisterPointDataProvider(new WalkingDataProvider());
             population = new List<Critter>();
@@ -147,13 +167,18 @@ namespace RmitJourneyPlanner.WebInterface.App_Data
             list.Add(start);
             list.Add(end);
             Planner.Start(list);
+            foreach (Critter critter in Planner.Population)
+            {
+                Tools.ToLinkedNodes(
+                    critter.Route.GetNodes(true));
+            }
             //Planner.MaxWalkingDistance = maxWalk;
             //Planner.MaxWalkingTime
+           
             iteration = 0;
             ready = true;
-            Best = Planner.BestNode;
+            
             population = Planner.Population;
-
         }
 
         #endregion
