@@ -15,9 +15,8 @@ namespace RmitJourneyPlanner.WebInterface
     using System.Linq;
     using System.Text;
 
-    using RmitJourneyPlanner.CoreLibraries;
-    using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.WebInterface.App_Data;
 
     /// <summary>
@@ -51,8 +50,10 @@ namespace RmitJourneyPlanner.WebInterface
                 var nodelist = new List<INetworkNode>() { RouteSolver.Best };
                 foreach (var critter in RouteSolver.population )
                 {
-                    INetworkNode node = EvolutionaryRoutePlanner.ToLinkedNodes(critter.Route.GetNodes(false));
+
+                    INetworkNode node = Tools.ToLinkedNodes(critter.Route.GetNodes(true));
                     nodelist.Add(node);
+                    
                 }
 
                 int count = 0;
