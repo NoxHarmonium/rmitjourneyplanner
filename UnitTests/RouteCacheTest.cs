@@ -9,8 +9,8 @@ using System.Collections.Generic;
 
 namespace UnitTests
 {
-    
-    
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.YarraTrams;
+
     /// <summary>
     ///This is a test class for RouteCacheTest and is intended
     ///to contain all RouteCacheTest Unit Tests

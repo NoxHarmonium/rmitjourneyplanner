@@ -6,8 +6,8 @@ using RmitJourneyPlanner.CoreLibraries.Types;
 
 namespace UnitTests
 {
-    
-    
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.YarraTrams;
+
     /// <summary>
     ///This is a test class for TramNetworkProviderTest and is intended
     ///to contain all TramNetworkProviderTest Unit Tests
