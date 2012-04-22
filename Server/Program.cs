@@ -21,12 +21,19 @@ namespace Server
 
     class Program
     {
+        private static string filename = String.Empty;
+        
         static void Main(string[] args)
         {
             Console.WriteLine("-----------------------------------------------------------");
             Console.WriteLine("                    RMIT Journey Planner                   ");
             Console.WriteLine("                          Server                           ");
             Console.WriteLine("-----------------------------------------------------------");
+            
+            if (args.Length == 1)
+            {
+                filename = args[0];
+            }
 
             bool error = !RunServer(false);
 
@@ -154,7 +161,16 @@ namespace Server
                 }
                 else
                 {
-                    input = Console.ReadLine().Trim();
+                    if (filename == String.Empty)
+                    {
+                        input = Console.ReadLine().Trim();
+                    }
+                    else
+                    {
+                        input = "run " + filename;
+
+                    }
+                    
                 }
 
 
@@ -335,7 +351,7 @@ namespace Server
                                         }
                                         if (!created)
                                         {
-                                            throw new Exception("Unable to find a constuctor with those values.");
+                                            throw new Exception("Error executing constructor / Unable to find a constuctor with those values.");
                                         }
                                     }
 
