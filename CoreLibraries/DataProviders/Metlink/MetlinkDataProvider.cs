@@ -90,6 +90,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Logger.Log(this,"Error opening database: " + e.Message);
                 throw e;
             }
+            try
+            {
+               
             Logger.Log(this, "Route Generator Initializing...");
 
             Logger.Log(this, "Building node-route map...");
@@ -340,6 +343,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             }
             
             Logger.Log(this, "\nAdjacency data structure loaded successfully in {0} seconds.");
+            }
+            catch (Exception e)
+            {
+                Logger.Log(this, "Error intitilizing MetlinkDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
+                throw e;
+            }
         }
 
         /// <summary>
