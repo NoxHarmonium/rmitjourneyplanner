@@ -117,26 +117,5 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="rmitjourneyplanner_arccache" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Caching\SQL\rmitjourneyplanner_arccache.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="rmitjourneyplanner_locationcache" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Caching\SQL\rmitjourneyplanner_locationcache.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="rmitjourneyplanner_nodecache" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Caching\SQL\rmitjourneyplanner_nodecache.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="rmitjourneyplanner_noderoutecache" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Caching\SQL\rmitjourneyplanner_noderoutecache.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="rmitjourneyplanner_routecache" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Caching\SQL\rmitjourneyplanner_routecache.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="rmitjourneyplanner_schedulecollectioncache" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Caching\SQL\rmitjourneyplanner_schedulecollectioncache.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="rmitjourneyplanner_tripschedulecache" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Caching\SQL\rmitjourneyplanner_tripschedulecache.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
+  
 </root>

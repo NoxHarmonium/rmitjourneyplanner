@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="RandomRouteGenerator.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Generates routes between 2 points.
-// </summary>
-// 
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators
 {
@@ -23,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
     #endregion
 
     /// <summary>
-    /// Generates routes between 2 points.
+    ///   Generates routes between 2 points.
     /// </summary>
     public class RandomRouteGenerator : IRouteGenerator
     {
@@ -39,11 +33,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RandomRouteGenerator"/> class.
+        ///   Initializes a new instance of the <see cref="RandomRouteGenerator" /> class.
         /// </summary>
-        /// <param name="properties">
-        /// The properties.
-        /// </param>
+        /// <param name="properties"> The properties. </param>
         public RandomRouteGenerator(EvolutionaryProperties properties)
         {
             this.properties = properties;
@@ -54,22 +46,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         #region Public Methods
 
         /// <summary>
-        /// Generates a random route between source and destination nodes.
+        ///   Generates a random route between source and destination nodes.
         /// </summary>
-        /// <param name="source">
-        /// The source node.
-        /// </param>
-        /// <param name="destination">
-        /// The destination node.
-        /// </param>
-        /// <returns>
-        /// </returns>
-        public Route Generate(INetworkNode source, INetworkNode destination)
+        /// <param name="source"> The source node. </param>
+        /// <param name="destination"> The destination node. </param>
+        /// <param name="startTime"> </param>
+        /// <returns> </returns>
+        public Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime)
         {
-            Random random = new Random();
+            var random = new Random();
             INetworkNode current = source;
-            Route currentRoute = new Route(Guid.NewGuid().ToString());
-            currentRoute.AddNode(source, true);
+            var currentRoute = new Route(Guid.NewGuid().GetHashCode()) { source };
 
             while (!current.Equals(destination))
             {
@@ -77,8 +64,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 INetworkNode minNode = null;
                 double maxWalkDistance = this.properties.MaximumWalkDistance;
 
-                var candidateNodes = this.properties.NetworkDataProviders[0].GetNodesAtLocation(
-                    (Location)source, maxWalkDistance);
+                List<INetworkNode> candidateNodes =
+                    this.properties.NetworkDataProviders[0].GetNodesAtLocation((Location)source, maxWalkDistance);
 
                 if (
                     this.properties.PointDataProviders[0].EstimateDistance((Location)current, (Location)destination).
@@ -100,10 +87,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
                 var transferNodes = new List<INetworkNode>();
 
-                List<INetworkNode> tempCandidates = new List<INetworkNode>(candidateNodes);
+                var tempCandidates = new List<INetworkNode>(candidateNodes);
                 candidateNodes.Clear();
-                candidateNodes.AddRange(
-                    tempCandidates.Where(candidateNode => !currentRoute.GetNodes(true).Contains(candidateNode)));
+                candidateNodes.AddRange(tempCandidates.Where(candidateNode => !currentRoute.Contains(candidateNode)));
 
                 if (candidateNodes.Count == 0)
                 {
@@ -111,9 +97,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 }
 
                 // Calculate minimum distance node
-                foreach (var candidateNode in candidateNodes)
+                foreach (INetworkNode candidateNode in candidateNodes)
                 {
-                    candidateNode.RetrieveData();
+                    // candidateNode.RetrieveData();
                     candidateNode.EuclidianDistance =
                         this.properties.PointDataProviders[0].EstimateDistance(
                             (Location)candidateNode, (Location)destination).Distance;
@@ -126,8 +112,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
                 candidateNodes.Remove(minNode);
 
+                var nonTransferNodes = new List<INetworkNode>();
+
                 // Find nodes that are a transfer.
-                foreach (var candidateNode in candidateNodes)
+                foreach (INetworkNode candidateNode in candidateNodes)
                 {
                     if (!(current is TerminalNode))
                     {
@@ -135,10 +123,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                         {
                             transferNodes.Add(candidateNode);
                         }
+                        else
+                        {
+                            nonTransferNodes.Add(candidateNode);
+                        }
                     }
                 }
 
-                candidateNodes.RemoveAll(transferNodes.Contains);
+                candidateNodes = nonTransferNodes;
 
                 double p = random.NextDouble();
 
@@ -151,7 +143,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                         minNode = destination;
                     }
                      * */
-                    currentRoute.AddNode(minNode, true);
+                    currentRoute.Add(minNode);
 
                     current = minNode;
                 }
@@ -159,13 +151,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                           || candidateNodes.Count == 0) && transferNodes.Count != 0)
                 {
                     int index = random.Next(0, transferNodes.Count - 1);
-                    currentRoute.AddNode(transferNodes[index], true);
+                    currentRoute.Add(transferNodes[index]);
                     current = transferNodes[index];
                 }
                 else
                 {
                     int index = random.Next(0, candidateNodes.Count - 1);
-                    currentRoute.AddNode(candidateNodes[index], true);
+                    currentRoute.Add(candidateNodes[index]);
                     current = candidateNodes[index];
                 }
             }

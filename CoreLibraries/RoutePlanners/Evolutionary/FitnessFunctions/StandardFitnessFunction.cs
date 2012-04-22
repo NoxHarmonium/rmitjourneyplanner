@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="StandardFitnessFunction.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   A stock standard fitness function based on time.
-// </summary>
-// 
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions
 {
@@ -22,7 +16,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
     #endregion
 
     /// <summary>
-    /// A stock standard fitness function based on time.
+    ///   A stock standard fitness function based on time.
     /// </summary>
     public class StandardFitnessFunction : IFitnessFunction
     {
@@ -38,11 +32,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StandardFitnessFunction"/> class.
+        ///   Initializes a new instance of the <see cref="StandardFitnessFunction" /> class.
         /// </summary>
-        /// <param name="properties">
-        /// The properties.
-        /// </param>
+        /// <param name="properties"> The properties. </param>
         public StandardFitnessFunction(EvolutionaryProperties properties)
         {
             this.properties = properties;
@@ -53,17 +45,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         #region Public Methods
 
         /// <summary>
-        /// Returns a value representing the fitness of the route.
+        ///   Returns a value representing the fitness of the route.
         /// </summary>
-        /// <param name="route">
-        /// The route the is to be evaluated.
-        /// </param>
-        /// <returns>
-        /// A double value representing the fitness.
-        /// </returns>
+        /// <param name="route"> The route the is to be evaluated. </param>
+        /// <returns> A double value representing the fitness. </returns>
         public double GetFitness(Route route)
         {
-            List<INetworkNode> nodes = route.GetNodes(true);
+            List<INetworkNode> nodes = route;
             var totalTime = new TimeSpan();
 
             for (int i = 0; i < nodes.Count - 1; i++)

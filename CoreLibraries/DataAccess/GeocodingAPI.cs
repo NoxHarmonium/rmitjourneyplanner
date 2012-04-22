@@ -1,18 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="GeocodingAPI.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Interfaces with the Google Geocoding API to retrieve the
-//   coordinates from a location string and vice-versa.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
     #region
 
     using System;
+    using System.Globalization;
     using System.Xml;
 
     using RmitJourneyPlanner.CoreLibraries.Positioning;
@@ -20,8 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Interfaces with the Google Geocoding API to retrieve the 
-    ///   coordinates from a location string and vice-versa.
+    ///   Interfaces with the Google Geocoding API to retrieve the coordinates from a location string and vice-versa.
     /// </summary>
     internal class GeocodingApi : XmlRequester
     {
@@ -47,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "GeocodingApi" /> class.
+        ///   Initializes a new instance of the <see cref="GeocodingApi" /> class.
         /// </summary>
         public GeocodingApi()
             : base(Urls.GeocodingApiUrl)
@@ -142,7 +136,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
             set
             {
-                this.Parameters["sensor"] = value.ToString().ToLower();
+                this.Parameters["sensor"] = value.ToString(CultureInfo.InvariantCulture).ToLower();
             }
         }
 
@@ -151,18 +145,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Methods
 
         /// <summary>
-        /// Gets a new Location from a Google Maps search string.
+        ///   Gets a new Location from a Google Maps search string.
         /// </summary>
         /// OK
         /// <example>
-        /// Pizza shops near RMIT University
+        ///   Pizza shops near RMIT University
         /// </example>
-        /// <param name="locationString">
-        /// A Google Maps search string
-        /// </param>
-        /// <returns>
-        /// A <see cref="Location"/> object.
-        /// </returns>
+        /// <param name="locationString"> A Google Maps search string </param>
+        /// <returns> A <see cref="Location" /> object. </returns>
         public Location GetLocation(string locationString)
         {
             // Clear out old request data
@@ -194,14 +184,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a human readable address that is closest to the provided location.
+        ///   Gets a human readable address that is closest to the provided location.
         /// </summary>
-        /// <param name="location">
-        /// A location for which you want to find the nearest address
-        /// </param>
-        /// <returns>
-        /// The get location string.
-        /// </returns>
+        /// <param name="location"> A location for which you want to find the nearest address </param>
+        /// <returns> The get location string. </returns>
         public string GetLocationString(Location location)
         {
             this.Parameters.Remove("address");
@@ -235,7 +221,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Methods
 
         /// <summary>
-        /// Sets the bounds parameter for the XML request from the stored Location objects.
+        ///   Sets the bounds parameter for the XML request from the stored Location objects.
         /// </summary>
         private void SetBounds()
         {
@@ -245,10 +231,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 throw new ArgumentException("Cannot enable results bounding without setting bounds first");
             }
 
-            this.Parameters["bounds"] = this.boundsTopLeft.Latitude.ToString() + ","
-                                        + this.boundsTopLeft.Longitude.ToString() + "|"
-                                        + this.boundsBottomRight.Latitude.ToString() + ","
-                                        + this.boundsBottomRight.Longitude.ToString();
+            this.Parameters["bounds"] = this.boundsTopLeft.Latitude.ToString(CultureInfo.InvariantCulture) + ","
+                                        + this.boundsTopLeft.Longitude.ToString(CultureInfo.InvariantCulture) + "|"
+                                        + this.boundsBottomRight.Latitude.ToString(CultureInfo.InvariantCulture) + ","
+                                        + this.boundsBottomRight.Longitude.ToString(CultureInfo.InvariantCulture);
         }
 
         #endregion

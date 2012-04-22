@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="MySQLDatabase.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Represents a MySQL database.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
@@ -19,7 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Represents a MySQL database.
+    ///   Represents a MySQL database.
     /// </summary>
     public class MySqlDatabase : ISqlDatabase
     {
@@ -33,8 +28,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <summary>
         ///   The connection string.
         /// </summary>
-        private string connectionString =
-            "server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=RmitJourneyPlanner";
+        private string connectionString = Settings.Entries["ConnectionString"];
 
         /// <summary>
         ///   The transaction.
@@ -46,11 +40,33 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "MySqlDatabase" /> class.
+        ///   Initializes a new instance of the <see cref="MySqlDatabase" /> class.
         /// </summary>
         public MySqlDatabase()
         {
             this.connection = new MySqlConnection(this.connectionString);
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref="MySqlDatabase" /> class with a specified database name.
+        /// </summary>
+        /// <param name="database"> The database. </param>
+        public MySqlDatabase(string database)
+        {
+            this.connectionString =
+                "server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=" + database;
+            this.connection = new MySqlConnection(this.connectionString);
+        }
+
+        /// <summary>
+        ///   Finalizes an instance of the <see cref="MySqlDatabase" /> class. Finalizes this database object and makes sure that the connection is closed.
+        /// </summary>
+        ~MySqlDatabase()
+        {
+            if (this.connection.State == ConnectionState.Open)
+            {
+                this.connection.Close();
+            }
         }
 
         #endregion
@@ -84,8 +100,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Methods
 
         /// <summary>
-        /// Opens up a database transaction. All queries done between the execution of this and
-        ///   EndTransaction() will be in the one transaction.
+        ///   Opens up a database transaction. All queries done between the execution of this and EndTransaction() will be in the one transaction.
         /// </summary>
         public void BeginTransaction()
         {
@@ -94,7 +109,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Close the database connection.
+        ///   Close the database connection.
         /// </summary>
         public void Close()
         {
@@ -102,7 +117,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Commits the current transaction.
+        ///   Commits the current transaction.
         /// </summary>
         public void EndTransaction()
         {
@@ -110,15 +125,32 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             this.transaction = null;
         }
 
+
+        public object[] GetFastData(string query)
+        {
+
+            if (this.transaction == null)
+            {
+                var command = new MySqlCommand(query, connection);
+                var reader = command.ExecuteReader(CommandBehavior.SingleResult);
+                object[] o = new object[reader.FieldCount];
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    reader.Read();
+                    o[i] = reader.GetValue(i);
+                }
+                reader.Close();
+                return o;
+            }
+            return null;
+        }
+
+
         /// <summary>
-        /// Runs a query and returns the results in a datatable.
+        ///   Runs a query and returns the results in a datatable.
         /// </summary>
-        /// <param name="query">
-        /// The SQL query to submit to the database.
-        /// </param>
-        /// <returns>
-        /// A datatable with the result of the query, or null if there are no results.
-        /// </returns>
+        /// <param name="query"> The SQL query to submit to the database. </param>
+        /// <returns> A datatable with the result of the query, or null if there are no results. </returns>
         public DataTable GetDataSet(string query)
         {
             if (this.transaction == null)
@@ -137,7 +169,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Open the database connection.
+        ///   Open the database connection.
         /// </summary>
         public void Open()
         {
@@ -145,14 +177,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Runs a query with no result but returns the number of rows affected.
+        ///   Runs a query with no result but returns the number of rows affected.
         /// </summary>
-        /// <param name="query">
-        /// The SQL query to submit to the database.
-        /// </param>
-        /// <returns>
-        /// The number of rows affected by the query.
-        /// </returns>
+        /// <param name="query"> The SQL query to submit to the database. </param>
+        /// <returns> The number of rows affected by the query. </returns>
         public int RunQuery(string query)
         {
             if (this.transaction == null)

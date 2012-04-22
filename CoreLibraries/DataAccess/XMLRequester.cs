@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="XMLRequester.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Abstract class that is inherited by classes who
-//   wish to request XML from a URL.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
@@ -22,8 +16,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Abstract class that is inherited by classes who
-    ///   wish to request XML from a URL.
+    ///   Abstract class that is inherited by classes who wish to request XML from a URL.
     /// </summary>
     internal abstract class XmlRequester
     {
@@ -35,7 +28,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         private readonly string baseUrl;
 
         /// <summary>
-        ///   The <see cref = "WebProxy" /> object to use with the request.
+        ///   The <see cref="WebProxy" /> object to use with the request.
         /// </summary>
         private readonly WebProxy proxy;
 
@@ -74,11 +67,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlRequester"/> class.
+        ///   Initializes a new instance of the <see cref="XmlRequester" /> class.
         /// </summary>
-        /// <param name="baseUrl">
-        /// The URL for the XML requst without the '?' symbol or parameters.
-        /// </param>
+        /// <param name="baseUrl"> The URL for the XML requst without the '?' symbol or parameters. </param>
         protected XmlRequester(string baseUrl)
         {
             this.baseUrl = baseUrl;
@@ -88,14 +79,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlRequester"/> class.
+        ///   Initializes a new instance of the <see cref="XmlRequester" /> class.
         /// </summary>
-        /// <param name="baseUrl">
-        /// TThe URL for the XML requst without the '?' symbol or parameters.
-        /// </param>
-        /// <param name="proxy">
-        /// The WebProxy object to use with the web request.
-        /// </param>
+        /// <param name="baseUrl"> TThe URL for the XML requst without the '?' symbol or parameters. </param>
+        /// <param name="proxy"> The WebProxy object to use with the web request. </param>
         protected XmlRequester(string baseUrl, WebProxy proxy)
         {
             this.baseUrl = baseUrl;
@@ -107,14 +94,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets a value indicating whether caching is enabled or not. 
-        ///   Caching can speed up XML requests.
+        ///   Gets or sets a value indicating whether caching is enabled or not. Caching can speed up XML requests.
         /// </summary>
         public bool CachingEnabled { get; set; }
 
         /// <summary>
-        ///   Gets or sets a value indicating whether to escape spaces in the 
-        ///   URL with a plus symbol as requred by the Google API.
+        ///   Gets or sets a value indicating whether to escape spaces in the URL with a plus symbol as requred by the Google API.
         /// </summary>
         public bool EscapeSpaces
         {
@@ -166,7 +151,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        ///   Gets or sets the request type of the <see cref = "XmlRequester" /> object.
+        ///   Gets or sets the request type of the <see cref="XmlRequester" /> object.
         /// </summary>
         protected RequestType RequestType
         {
@@ -218,11 +203,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Methods
 
         /// <summary>
-        /// Sends the XML request with the specified parameters and returns the result.
+        ///   Sends the XML request with the specified parameters and returns the result.
         /// </summary>
-        /// <returns>
-        /// Returns an <see cref="XmlDocument"/> containg the results of the request.
-        /// </returns>
+        /// <returns> Returns an <see cref="XmlDocument" /> containg the results of the request. </returns>
         protected virtual XmlDocument Request()
         {
             if (this.requestType == RequestType.Get)

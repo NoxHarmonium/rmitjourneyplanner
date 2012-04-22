@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="EvolutionaryRoutePlanner.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Finds the best route between nodes using evolutionary algorithms.
-// </summary>
-// 
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
@@ -14,16 +8,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
 
     /// <summary>
-    /// Finds the best route between nodes using evolutionary algorithms.
+    ///   Finds the best route between nodes using evolutionary algorithms.
     /// </summary>
     public class EvolutionaryRoutePlanner : IRoutePlanner
     {
@@ -40,20 +36,32 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         private readonly Random random = new Random();
 
         /// <summary>
+        /// The result of each iteration.
+        /// </summary>
+        private Result result = default(Result);
+
+        /// <summary>
+        ///   The generation.
+        /// </summary>
+        private int generation;
+
+        /// <summary>
         ///   The population of the evolutionary algorithm.
         /// </summary>
         private List<Critter> population;
+
+        private int progress;
+
+        private int targetProgress;
 
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EvolutionaryRoutePlanner"/> class.
+        ///   Initializes a new instance of the <see cref="EvolutionaryRoutePlanner" /> class.
         /// </summary>
-        /// <param name="properties">
-        /// The <see cref="EvolutionaryProperties"/> object containing the properties of the run.
-        /// </param>
+        /// <param name="properties"> The <see cref="EvolutionaryProperties" /> object containing the properties of the run. </param>
         public EvolutionaryRoutePlanner(EvolutionaryProperties properties)
         {
             this.properties = properties;
@@ -90,93 +98,221 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
         }
 
+        /// <summary>
+        /// The result of each iteration.
+        /// </summary>
+        public Result Result
+        {
+            get
+            {
+                return this.result;
+            }
+        }
+
+        public int Progress
+        {
+            get
+            {
+                return this.progress;
+            }
+        }
+
+        public int TargetProgress
+        {
+            get
+            {
+                return this.targetProgress;
+            }
+        }
+
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// Register a network data provider to use with the route planning.
+        ///   Register a network data provider to use with the route planning.
         /// </summary>
-        /// <param name="provider">
-        /// The network provider to register.
-        /// </param>
+        /// <param name="provider"> The network provider to register. </param>
         public void RegisterNetworkDataProvider(INetworkDataProvider provider)
         {
             this.properties.NetworkDataProviders.Add(provider);
         }
 
         /// <summary>
-        /// Register a point to point data provider for use with the route planning.
+        ///   Register a point to point data provider for use with the route planning.
         /// </summary>
-        /// <param name="provider">
-        /// The point to point data provider to register.
-        /// </param>
+        /// <param name="provider"> The point to point data provider to register. </param>
         public void RegisterPointDataProvider(IPointDataProvider provider)
         {
             this.properties.PointDataProviders.Add(provider);
         }
+        
+        /// <summary>
+        ///   Repairs a route by taking out duplicates and loops.
+        /// </summary>
+        /// <param name="route"> The route to repair </param>
+        public Route RepairRoute(Route route)
+        {
+            var newNodes = new List<INetworkNode>();
+            List<INetworkNode> oldNodes = route;
+            for (int i = 0; i < oldNodes.Count; i++)
+            {
+                int count = 0;
+                int index = -1;
+                for (int j = 0; j < oldNodes.Count; j++)
+                {
+                    INetworkNode node = oldNodes[j];
+                    if (node.Equals(oldNodes[i]))
+                    {
+                        index = j;
+                        count++;
+                    }
+                }
+
+                if (count > 1)
+                {
+                    newNodes.Add(oldNodes[i]);
+                    if (index == -1)
+                    {
+                        throw new Exception("Houston we have a problem!");
+                    }
+
+                    i = index;
+                }
+                else
+                {
+                    newNodes.Add(oldNodes[i]);
+                }
+            }
+
+            var newRoute = new Route(route.Id);
+            newRoute.AddRange(newNodes);
+            return newRoute;
+        }
 
         /// <summary>
-        /// Solve the next iteration of the algorithm.
+        ///   Solve the next iteration of the algorithm.
         /// </summary>
-        /// <returns>
-        /// The solve step.
-        /// </returns>
+        /// <returns> The solve step. </returns>
         public bool SolveStep()
         {
+            this.progress = 0;
+            
+            var routesUsed = new Dictionary<int, int>();
+            
+            var sw = Stopwatch.StartNew();
             var eliteCritters = new List<Critter>(this.properties.NumberToKeep);
             var newCritters = new List<Critter>(this.properties.PopulationSize - this.properties.NumberToKeep);
             eliteCritters.AddRange(this.Population.GetRange(0, this.properties.NumberToKeep));
 
             for (int i = 0; i < this.properties.PopulationSize - this.properties.NumberToKeep; i += 2)
             {
-                Critter[] children = null;
-                while (children == null)
-                {
-                    Critter first = (Critter)eliteCritters[this.random.Next(eliteCritters.Count - 1)].Clone();
-                    Critter second = (Critter)eliteCritters[this.random.Next(eliteCritters.Count - 1)].Clone();
+                var first = (Critter)eliteCritters[this.random.Next(eliteCritters.Count - 1)].Clone();
+                var second = (Critter)eliteCritters[this.random.Next(eliteCritters.Count - 1)].Clone();
+                var children = new[] { first, second };
 
-                    children = this.properties.Breeder.Crossover(first, second);
+                bool doCrossover = this.random.NextDouble() <= this.properties.CrossoverRate;
+                bool doMutation = this.random.NextDouble() <= this.properties.MutationRate;
+                if (doCrossover)
+                {
+                    children = this.properties.Breeder.Crossover(children[0], children[1]) ?? children;
                 }
 
-                if (this.random.NextDouble() <= this.properties.MutationRate)
+                if (doMutation)
                 {
-                    children[0] = this.Mutate(children[0]);
-                    children[1] = this.Mutate(children[1]);
+                    children[0] = this.properties.Mutator.Mutate(children[0]);
+                    children[1] = this.properties.Mutator.Mutate(children[1]);
                 }
 
-                Tools.ToLinkedNodes(children[0].Route.GetNodes(true));
-                Tools.ToLinkedNodes(children[1].Route.GetNodes(true));
+                children[0].Fitness = this.properties.FitnessFunction.GetFitness(children[0].Route);
+                var ff = (AlFitnessFunction)this.properties.FitnessFunction;
+                foreach (int routeUsed in ff.RoutesUsed)
+                {
+                    if (!routesUsed.ContainsKey(routeUsed))
+                    {
+                        routesUsed.Add(routeUsed, 1);
+                    }
+                    else
+                    {
+                        routesUsed[routeUsed]++;
+                    }
+
+                }
+                children[1].Fitness = this.properties.FitnessFunction.GetFitness(children[1].Route);
+                
+                foreach (int routeUsed in ff.RoutesUsed)
+                {
+                    if (!routesUsed.ContainsKey(routeUsed))
+                    {
+                        routesUsed.Add(routeUsed, 1);
+                    }
+                    else
+                    {
+                        routesUsed[routeUsed]++;
+                    }
+
+                }
+                Tools.ToLinkedNodes(this.RepairRoute(children[0].Route));
+                Tools.ToLinkedNodes(this.RepairRoute(children[1].Route));
                 newCritters.AddRange(children);
+
+                progress++;
             }
 
             this.Population.Clear();
             this.Population.AddRange(newCritters);
+
+            foreach (var elite in eliteCritters)
+            {
+                this.properties.FitnessFunction.GetFitness(elite.Route);
+                progress++;
+                var ff = (AlFitnessFunction)this.properties.FitnessFunction;
+                foreach (int routeUsed in ff.RoutesUsed)
+                {
+                    if (!routesUsed.ContainsKey(routeUsed))
+                    {
+                        routesUsed.Add(routeUsed, 1);
+                    }
+                    else
+                    {
+                        routesUsed[routeUsed]++;
+                    }
+
+                }
+            }
+
+            /*
             foreach (var eliteCritter in eliteCritters)
             {
                 Tools.ToLinkedNodes(eliteCritter.Route.GetNodes(true));
             }
-
+            */
             this.Population.AddRange(eliteCritters);
             this.Population.Sort(new CritterComparer());
+            sw.Stop();
+            this.result.Totaltime = sw.Elapsed;
+            this.result.DiversityMetric = routesUsed.Keys.Count;
+            foreach (var critter in this.Population)
+            {
+                this.result.AverageFitness += critter.Fitness;
+            }
+            this.result.AverageFitness /= population.Count;
+            this.result.MinimumFitness = this.Population[0].Fitness;
 
-            this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route.GetNodes(true));
+
+            //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
+
+            this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
+            
 
             return false;
         }
 
         /// <summary>
-        /// Start solving a route
+        ///   Start solving a route
         /// </summary>
-        /// <param name="itinerary">
-        /// The list of nodes to plan a journey between.
-        /// </param>
-        public void Start(List<INetworkNode> itinerary)
+        public void Start()
         {
-            // this.InitPopulation(itinerary);
-            this.properties.Origin = itinerary.First();
-            this.properties.Destination = itinerary.Last();
-
             this.population = new List<Critter>();
             this.InitPopulation();
         }
@@ -186,50 +322,65 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Methods
 
         /// <summary>
-        /// Create the initial population.
+        ///   Create the initial population.
         /// </summary>
         private void InitPopulation()
         {
+            
+            this.population.Clear();
+            var sw = Stopwatch.StartNew();
+            var routesUsed = new Dictionary<int, int>();
+
+            targetProgress = this.properties.PopulationSize;
+            
+
             for (int i = 0; i < this.properties.PopulationSize; i++)
             {
+                progress = i + 1;
                 Route route = null;
                 while (route == null)
                 {
-                    route = this.properties.RouteGenerator.Generate(
-                        (INetworkNode)this.properties.Origin.Clone(), (INetworkNode)this.properties.Destination.Clone());
+                    route =
+                        this.RepairRoute(
+                            this.properties.RouteGenerator.Generate(
+                                (INetworkNode)this.properties.Origin.Clone(),
+                                (INetworkNode)this.properties.Destination.Clone(),
+                                this.properties.DepartureTime));
                 }
 
+                
                 var critter = new Critter(route, this.properties.FitnessFunction.GetFitness(route));
+                Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.Fitness,critter.Route.Count);
+                this.result.AverageFitness += critter.Fitness;
+                var ff = (AlFitnessFunction)this.properties.FitnessFunction;
+                foreach (int routeUsed in ff.RoutesUsed)
+                {
+                    if (!routesUsed.ContainsKey(routeUsed))
+                    {
+                        routesUsed.Add(routeUsed,1);
+                    }
+                    else
+                    {
+                        routesUsed[routeUsed]++;
+                    }
+
+                }
+
                 this.Population.Add(critter);
             }
-
+            
             this.Population.Sort(new CritterComparer());
-            this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route.GetNodes(true));
-        }
 
-        /// <summary>
-        /// Mutates a critter
-        /// </summary>
-        /// <param name="child">
-        /// The critter that is to be mutated.
-        /// </param>
-        /// <returns>
-        /// A mutated critter.
-        /// </returns>
-        private Critter Mutate(Critter child)
-        {
-            List<INetworkNode> nodes = child.Route.GetNodes(true);
-            int startIndex = this.random.Next(0, nodes.Count - 2);
-            int endIndex = this.random.Next(startIndex + 1, nodes.Count - 1);
-            INetworkNode begin = nodes[startIndex];
-            INetworkNode end = nodes[endIndex];
-            Route newSegment = this.properties.RouteGenerator.Generate(begin, end);
-            Route newRoute = new Route(Guid.NewGuid().ToString());
-            newRoute.AddNodeRange(nodes.GetRange(0, startIndex), true);
-            newRoute.AddNodeRange(newSegment.GetNodes(true), true);
-            newRoute.AddNodeRange(nodes.GetRange(endIndex + 1, nodes.Count - 1 - endIndex), true);
-
-            return new Critter(newRoute, this.properties.FitnessFunction.GetFitness(newRoute));
+            sw.Stop();
+            this.result.Totaltime = sw.Elapsed;
+            this.result.DiversityMetric = routesUsed.Keys.Count;
+            this.result.AverageFitness /= this.properties.PopulationSize;
+            Console.WriteLine("---EVALULATING FITTEST MEMBER---");
+            this.result.MinimumFitness = this.properties.FitnessFunction.GetFitness(this.population[0].Route);
+            this.result.Population = this.population;
+            Console.WriteLine("------------------------");
+            //Tools.SavePopulation(this.population, 0, this.properties);
+            this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
         }
 
         #endregion

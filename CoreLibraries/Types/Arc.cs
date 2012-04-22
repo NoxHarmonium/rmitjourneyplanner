@@ -1,24 +1,20 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="Arc.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   An object representing the time and distance between 2 points
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     #region
 
     using System;
+    using System.Globalization;
 
     using RmitJourneyPlanner.CoreLibraries.Positioning;
 
     #endregion
 
     /// <summary>
-    /// An object representing the time and distance between 2 points
+    ///   An object representing the time and distance between 2 points
     /// </summary>
     public class Arc
     {
@@ -64,33 +60,20 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Arc"/> class. 
-        ///   Initializes a new arc defining information between 2 points.
+        ///   Initializes a new instance of the <see cref="Arc" /> class. Initializes a new arc defining information between 2 points.
         /// </summary>
-        /// <param name="source">
-        /// The source location of the arc.
-        /// </param>
-        /// <param name="destination">
-        /// The destination location of the arc.
-        /// </param>
-        /// <param name="time">
-        /// The total time of the arc.
-        /// </param>
-        /// <param name="distance">
-        /// The total distance in Km of the arc.
-        /// </param>
-        /// <param name="departureTime">
-        /// The departure time of this arc. Set to default(DateTime) if departure time is not relivant.
-        /// </param>
-        /// <param name="transportMode">
-        /// Sets the transport id used in the arc.
-        /// </param>
+        /// <param name="source"> The source location of the arc. </param>
+        /// <param name="destination"> The destination location of the arc. </param>
+        /// <param name="time"> The total time of the arc. </param>
+        /// <param name="distance"> The total distance in Km of the arc. </param>
+        /// <param name="departureTime"> The departure time of this arc. Set to default(DateTime) if departure time is not relivant. </param>
+        /// <param name="transportMode"> Sets the transport id used in the arc. </param>
         public Arc(
-            Location source, 
-            Location destination, 
-            TimeSpan time, 
-            double distance, 
-            DateTime departureTime, 
+            Location source,
+            Location destination,
+            TimeSpan time,
+            double distance,
+            DateTime departureTime,
             string transportMode)
         {
             this.source = source;
@@ -102,37 +85,22 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Arc"/> class. 
-        ///   Initializes a new arc defining information between 2 points.
+        ///   Initializes a new instance of the <see cref="Arc" /> class. Initializes a new arc defining information between 2 points.
         /// </summary>
-        /// <param name="source">
-        /// The source location of the arc.
-        /// </param>
-        /// <param name="destination">
-        /// The destination location of the arc.
-        /// </param>
-        /// <param name="time">
-        /// The total time of the arc.
-        /// </param>
-        /// <param name="distance">
-        /// The total distance in Km of the arc.
-        /// </param>
-        /// <param name="departureTime">
-        /// The departure time of this arc. Set to default(DateTime) if departure time is not relivant.
-        /// </param>
-        /// <param name="transportMode">
-        /// Sets the transport id used in the arc.
-        /// </param>
-        /// <param name="routeId">
-        /// Sets the optional route Id.
-        /// </param>
+        /// <param name="source"> The source location of the arc. </param>
+        /// <param name="destination"> The destination location of the arc. </param>
+        /// <param name="time"> The total time of the arc. </param>
+        /// <param name="distance"> The total distance in Km of the arc. </param>
+        /// <param name="departureTime"> The departure time of this arc. Set to default(DateTime) if departure time is not relivant. </param>
+        /// <param name="transportMode"> Sets the transport id used in the arc. </param>
+        /// <param name="routeId"> Sets the optional route Id. </param>
         public Arc(
-            Location source, 
-            Location destination, 
-            TimeSpan time, 
-            double distance, 
-            DateTime departureTime, 
-            string transportMode, 
+            Location source,
+            Location destination,
+            TimeSpan time,
+            double distance,
+            DateTime departureTime,
+            string transportMode,
             string routeId)
         {
             this.source = source;
@@ -149,8 +117,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Properties
 
         /// <summary>
-        ///   Gets the departure time of this arc. If the departure time is equal to default(DateTime) then
-        ///   departure time is irrelivant.
+        ///   Gets the departure time of this arc. If the departure time is equal to default(DateTime) then departure time is irrelivant.
         /// </summary>
         public DateTime DepartureTime
         {
@@ -231,14 +198,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Methods
 
         /// <summary>
-        /// Returns if 2 distance objects are equal within 500 meters and to the minute.
+        ///   Returns if 2 distance objects are equal within 500 meters and to the minute.
         /// </summary>
-        /// <param name="obj">
-        /// The other location to compare this to.
-        /// </param>
-        /// <returns>
-        /// A value indicating if the 2 objects are equal.
-        /// </returns>
+        /// <param name="obj"> The other location to compare this to. </param>
+        /// <returns> A value indicating if the 2 objects are equal. </returns>
         public override bool Equals(object obj)
         {
             if (obj.GetType() == this.GetType())
@@ -257,14 +220,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// Serves as a hash funtion for an Arc.
+        ///   Returns the hash code for this arc.
         /// </summary>
-        /// <returns>
-        /// The get hash code.
-        /// </returns>
+        /// <returns> A unique (idealy) hash code representing this arc. </returns>
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (this.time.TotalSeconds + this.distance.ToString(CultureInfo.InvariantCulture)).GetHashCode();
         }
 
         #endregion

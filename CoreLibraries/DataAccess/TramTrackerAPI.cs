@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="TramTrackerAPI.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Interfaces with the Yarra Trams Tramtracker Soap webservice to get various data.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
@@ -14,6 +9,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Text.RegularExpressions;
     using System.Xml;
@@ -21,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Interfaces with the Yarra Trams Tramtracker Soap webservice to get various data.
+    ///   Interfaces with the Yarra Trams Tramtracker Soap webservice to get various data.
     /// </summary>
     internal class TramTrackerApi : XmlRequester
     {
@@ -78,8 +74,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets the operating system version that is reported to the Tramtracker webservice.
-        ///   This is usually autodetected and doesn't need to be changed off the default.
+        ///   Gets or sets the operating system version that is reported to the Tramtracker webservice. This is usually autodetected and doesn't need to be changed off the default.
         /// </summary>
         public string ClientOsVersion
         {
@@ -130,8 +125,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        ///   Gets or sets the web service version reported to the Tramtracker webservice. 
-        ///   This shouldn't need to be changed off the default.
+        ///   Gets or sets the web service version reported to the Tramtracker webservice. This shouldn't need to be changed off the default.
         /// </summary>
         public string ClientWebServiceVersion
         {
@@ -163,11 +157,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Methods
 
         /// <summary>
-        /// Gets a dataset containing the end-points of each tram route.
+        ///   Gets a dataset containing the end-points of each tram route.
         /// </summary>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetDestinationsForAllRoutes()
         {
             this.Parameters.Clear();
@@ -196,14 +188,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets the 2 end-points for a specific tram route.
+        ///   Gets the 2 end-points for a specific tram route.
         /// </summary>
-        /// <param name="routeId">
-        /// The route identifier.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="routeId"> The route identifier. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetDestinationsForRoute(string routeId)
         {
             this.Parameters.Clear();
@@ -223,17 +211,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a dataset containing a list of all the stops pertaining to the supplied parameters.
+        ///   Gets a dataset containing a list of all the stops pertaining to the supplied parameters.
         /// </summary>
-        /// <param name="routeId">
-        /// The route identifier.
-        /// </param>
-        /// <param name="isUpDirection">
-        /// A value that determines what direction the route is in.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="routeId"> The route identifier. </param>
+        /// <param name="isUpDirection"> A value that determines what direction the route is in. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetListOfStopsByRouteNoAndDirection(string routeId, bool isUpDirection)
         {
             this.Parameters.Clear();
@@ -244,7 +226,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             // Create data node
             var dict = new Dictionary<string, object>();
             dict["routeNo"] = routeId;
-            dict["isUpDirection"] = isUpDirection.ToString().ToLower();
+            dict["isUpDirection"] = isUpDirection.ToString(CultureInfo.InvariantCulture).ToLower();
 
             // XmlNode parameterNodes = Soap.BuildXmlFromDictionary(dict, this.SoapXmlNamespace);
             this.Parameters["GetListOfStopsByRouteNoAndDirection"] = Soap.BuildXmlFromDictionary(
@@ -255,11 +237,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a dataset containing a list of all main routes in the tram network.
+        ///   Gets a dataset containing a list of all main routes in the tram network.
         /// </summary>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetMainRoutes()
         {
             this.Parameters.Clear();
@@ -273,14 +253,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a dataset containing all the main routes that intersect the supplied stop number.
+        ///   Gets a dataset containing all the main routes that intersect the supplied stop number.
         /// </summary>
-        /// <param name="stopNo">
-        /// The TramTracker identifier.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="stopNo"> The TramTracker identifier. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetMainRoutesForStop(string stopNo)
         {
             this.Parameters.Clear();
@@ -299,14 +275,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a dataset containing the predicted arrival time of the supplied tram number.
+        ///   Gets a dataset containing the predicted arrival time of the supplied tram number.
         /// </summary>
-        /// <param name="tramNo">
-        /// The number of a tram.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="tramNo"> The number of a tram. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetNextPredictedArivalTime(string tramNo)
         {
             this.Parameters.Clear();
@@ -327,20 +299,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a dataset containing a collection of the next predicted trams for the supplied stop and route.
+        ///   Gets a dataset containing a collection of the next predicted trams for the supplied stop and route.
         /// </summary>
-        /// <param name="stopNo">
-        /// The TramTracker stop identifier.
-        /// </param>
-        /// <param name="routeNo">
-        /// The route identifier.
-        /// </param>
-        /// <param name="lowFloor">
-        /// Determines if a low floored tram is required.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="stopNo"> The TramTracker stop identifier. </param>
+        /// <param name="routeNo"> The route identifier. </param>
+        /// <param name="lowFloor"> Determines if a low floored tram is required. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetNextPredictedRoutesCollection(string stopNo, string routeNo, bool lowFloor)
         {
             this.Parameters.Clear();
@@ -353,7 +317,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             var dict = new Dictionary<string, object>();
             dict["stopNo"] = stopNo;
             dict["routeNo"] = routeNo;
-            dict["lowFloor"] = lowFloor.ToString().ToLower();
+            dict["lowFloor"] = lowFloor.ToString(CultureInfo.InvariantCulture).ToLower();
 
             this.Parameters["GetNextPredictedRoutesCollection"] = Soap.BuildXmlFromDictionary(
                 dict, this.SoapXmlNamespace);
@@ -363,23 +327,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a dataset containing a collection of schedules for the supplied stop and route.
+        ///   Gets a dataset containing a collection of schedules for the supplied stop and route.
         /// </summary>
-        /// <param name="stopNo">
-        /// The TramTracker stop identifier.
-        /// </param>
-        /// <param name="routeNo">
-        /// The route identifier.
-        /// </param>
-        /// <param name="lowFloor">
-        /// Determines if a low floored tram is required.
-        /// </param>
-        /// <param name="clientRequestDateTime">
-        /// The date and time of the request.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="stopNo"> The TramTracker stop identifier. </param>
+        /// <param name="routeNo"> The route identifier. </param>
+        /// <param name="lowFloor"> Determines if a low floored tram is required. </param>
+        /// <param name="clientRequestDateTime"> The date and time of the request. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetSchedulesCollection(
             string stopNo, string routeNo, bool lowFloor, DateTime clientRequestDateTime)
         {
@@ -393,7 +347,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             var dict = new Dictionary<string, object>();
             dict["stopNo"] = stopNo;
             dict["routeNo"] = routeNo;
-            dict["lowFloor"] = lowFloor.ToString().ToLower();
+            dict["lowFloor"] = lowFloor.ToString(CultureInfo.InvariantCulture).ToLower();
             dict["clientRequestDateTime"] = XmlConvert.ToString(
                 clientRequestDateTime, XmlDateTimeSerializationMode.Local);
 
@@ -404,17 +358,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a dataset containing the schedules for the specified trip Id.
+        ///   Gets a dataset containing the schedules for the specified trip Id.
         /// </summary>
-        /// <param name="tripId">
-        /// A trip identifier.
-        /// </param>
-        /// <param name="scheduledDateTime">
-        /// The scheduled date and time of the trip.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="tripId"> A trip identifier. </param>
+        /// <param name="scheduledDateTime"> The scheduled date and time of the trip. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetSchedulesForTrip(string tripId, DateTime scheduledDateTime)
         {
             this.Parameters.Clear();
@@ -435,14 +383,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Returns a dataset containing information about the specified stop such as location.
+        ///   Returns a dataset containing information about the specified stop such as location.
         /// </summary>
-        /// <param name="stopNo">
-        /// A TramTracker stop identfier.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="stopNo"> A TramTracker stop identfier. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetStopInformation(string stopNo)
         {
             this.Parameters.Clear();
@@ -462,15 +406,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Returns a dataset containing all the routes and stops that have changed
-        ///   since the specified date. This function is very useful for caching.
+        ///   Returns a dataset containing all the routes and stops that have changed since the specified date. This function is very useful for caching.
         /// </summary>
-        /// <param name="dateSince">
-        /// The specified date and time.
-        /// </param>
-        /// <returns>
-        /// A <see cref="DataSet"/> containing the results.
-        /// </returns>
+        /// <param name="dateSince"> The specified date and time. </param>
+        /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetStopsAndRoutesUpdatesSince(DateTime dateSince)
         {
             this.Parameters.Clear();
@@ -490,14 +429,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Returns true if the supplied string is in the correct format for a client UUID.
+        ///   Returns true if the supplied string is in the correct format for a client UUID.
         /// </summary>
-        /// <param name="uuid">
-        /// A TramTracker UUID.
-        /// </param>
-        /// <returns>
-        /// True if the UUID is valid, false if not.
-        /// </returns>
+        /// <param name="uuid"> A TramTracker UUID. </param>
+        /// <returns> True if the UUID is valid, false if not. </returns>
         public bool IsValidUuid(string uuid)
         {
             return new Regex(UuidFormat).IsMatch(uuid);
@@ -508,11 +443,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Methods
 
         /// <summary>
-        /// Generate the required header for the TramTracker webservice.
+        ///   Generate the required header for the TramTracker webservice.
         /// </summary>
-        /// <returns>
-        /// An <see cref="XmlNode"/> containing the required elements for a TramTracker request.
-        /// </returns>
+        /// <returns> An <see cref="XmlNode" /> containing the required elements for a TramTracker request. </returns>
         private XmlNode GenerateHeader()
         {
             /*
@@ -552,11 +485,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Requests the Tramtracker webservice for a new client UUID.
+        ///   Requests the Tramtracker webservice for a new client UUID.
         /// </summary>
-        /// <returns>
-        /// The new guid.
-        /// </returns>
+        /// <returns> The new guid. </returns>
         private string GetNewGuid()
         {
             this.Parameters.Clear();

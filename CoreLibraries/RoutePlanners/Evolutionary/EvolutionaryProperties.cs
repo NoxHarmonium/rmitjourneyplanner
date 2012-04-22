@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="EvolutionaryProperties.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Contains the properties related to one instance of an <see cref="EvolutionaryRoutePlanner" />.
-// </summary>
-// 
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
@@ -15,26 +9,29 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     using System;
     using System.Collections.Generic;
 
+    using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
 
     #endregion
 
-
-
     /// <summary>
-    /// Contains the properties related to one instance of an <see cref="EvolutionaryRoutePlanner"/>.
+    ///   Contains the properties related to one instance of an <see cref="EvolutionaryRoutePlanner" /> .
     /// </summary>
     public class EvolutionaryProperties
     {
+        #region Constructors and Destructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="EvolutionaryProperties"/> class. 
+        ///   Initializes a new instance of the <see cref="EvolutionaryProperties" /> class.
         /// </summary>
         public EvolutionaryProperties()
         {
             this.NetworkDataProviders = new List<INetworkDataProvider>();
             this.PointDataProviders = new List<IPointDataProvider>();
         }
-        
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -43,10 +40,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         public IBreeder Breeder { get; set; }
 
         /// <summary>
-        ///   Gets or sets the percentage of the population that will be crossed over on
-        ///   every iteration.
+        ///   Gets or sets the percentage of the population that will be crossed over on every iteration.
         /// </summary>
         public double CrossoverRate { get; set; }
+
+        /// <summary>
+        ///   Gets or sets Database.
+        /// </summary>
+        public MySqlDatabase Database { get; set; }
 
         /// <summary>
         ///   Gets or sets the departure time of the route planner.
@@ -62,6 +63,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         ///   Gets or sets the fitness function used to evaluate routes.
         /// </summary>
         public IFitnessFunction FitnessFunction { get; set; }
+
+        /// <summary>
+        ///   Gets or sets MaxDistance.
+        /// </summary>
+        public double MaxDistance { get; set; }
 
         /// <summary>
         ///   Gets or sets the maximum distance that can be walked.
@@ -104,14 +110,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         public int PopulationSize { get; set; }
 
         /// <summary>
-        ///   Gets or sets the probabiliy that a node that is closest to the goal will be chosen
-        ///   when initalizing routes.
+        ///   Gets or sets the probabiliy that a node that is closest to the goal will be chosen when initalizing routes.
         /// </summary>
         public double ProbMinDistance { get; set; }
 
         /// <summary>
-        ///   Gets or sets probability that a node of a different route will be chosen
-        ///   when initilizing routes.
+        ///   Gets or sets probability that a node of a different route will be chosen when initilizing routes.
         /// </summary>
         public double ProbMinTransfers { get; set; }
 

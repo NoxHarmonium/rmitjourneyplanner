@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="GeometryHelper.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   A collection of methods to help calculate geometry
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.Positioning
 {
@@ -16,30 +11,20 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
     #endregion
 
     /// <summary>
-    /// A collection of methods to help calculate geometry
+    ///   A collection of methods to help calculate geometry
     /// </summary>
     public static class GeometryHelper
     {
         #region Public Methods
 
         /// <summary>
-        /// Gets the distance between 2 points calculcated with the curvature of the earth.
+        ///   Gets the distance between 2 points calculcated with the curvature of the earth.
         /// </summary>
-        /// <param name="latitude1">
-        /// The latitude of the first point.
-        /// </param>
-        /// <param name="longitude1">
-        /// The longitude of the first point.
-        /// </param>
-        /// <param name="latitude2">
-        /// The latitude of the second point.
-        /// </param>
-        /// <param name="longitude2">
-        /// The longitude of the second point.
-        /// </param>
-        /// <returns>
-        /// The straight line distance in kilometers.
-        /// </returns>
+        /// <param name="latitude1"> The latitude of the first point. </param>
+        /// <param name="longitude1"> The longitude of the first point. </param>
+        /// <param name="latitude2"> The latitude of the second point. </param>
+        /// <param name="longitude2"> The longitude of the second point. </param>
+        /// <returns> The straight line distance in kilometers. </returns>
         public static double GetStraightLineDistance(
             double latitude1, double longitude1, double latitude2, double longitude2)
         {
@@ -47,17 +32,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         }
 
         /// <summary>
-        /// Gets the distance between 2 points calculated with the curvature of the earth.
+        ///   Gets the distance between 2 points calculated with the curvature of the earth.
         /// </summary>
-        /// <param name="locationA">
-        /// The first point.
-        /// </param>
-        /// <param name="locationB">
-        /// The second point.
-        /// </param>
-        /// <returns>
-        /// The  straight line distance in kilometers.
-        /// </returns>
+        /// <param name="locationA"> The first point. </param>
+        /// <param name="locationB"> The second point. </param>
+        /// <returns> The straight line distance in kilometers. </returns>
         public static double GetStraightLineDistance(Location locationA, Location locationB)
         {
             /*
@@ -90,48 +69,32 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         }
 
         /// <summary>
-        /// Converts the specified number to radians to degrees.
+        ///   Converts the specified number to radians to degrees.
         /// </summary>
-        /// <param name="x">
-        /// The value to convert to degrees.
-        /// </param>
-        /// <returns>
-        /// The value converted to degrees.
-        /// </returns>
+        /// <param name="x"> The value to convert to degrees. </param>
+        /// <returns> The value converted to degrees. </returns>
         public static double ToDegs(double x)
         {
             return x * (180.0 / Math.PI);
         }
 
         /// <summary>
-        /// Converts a given number in degrees into radians.
+        ///   Converts a given number in degrees into radians.
         /// </summary>
-        /// <param name="x">
-        /// The value to convert to radians.
-        /// </param>
-        /// <returns>
-        /// The value converted to radians.
-        /// </returns>
+        /// <param name="x"> The value to convert to radians. </param>
+        /// <returns> The value converted to radians. </returns>
         public static double ToRads(double x)
         {
             return x * (Math.PI / 180);
         }
 
         /// <summary>
-        /// Calculates the new position if you were to move along the bearing for a specified distance.
+        ///   Calculates the new position if you were to move along the bearing for a specified distance.
         /// </summary>
-        /// <param name="initial">
-        /// The initial location
-        /// </param>
-        /// <param name="bearing">
-        /// The bearing in degrees from north in degrees.
-        /// </param>
-        /// <param name="distance">
-        /// The distance travelled in kilometers
-        /// </param>
-        /// <returns>
-        /// The new position.
-        /// </returns>
+        /// <param name="initial"> The initial location </param>
+        /// <param name="bearing"> The bearing in degrees from north in degrees. </param>
+        /// <param name="distance"> The distance travelled in kilometers </param>
+        /// <returns> The new position. </returns>
         public static Location Travel(Location initial, double bearing, double distance)
         {
             /*
@@ -151,7 +114,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
             double lon2 = lon1
                           +
                           Math.Atan2(
-                              Math.Sin(bearing) * Math.Sin(distance / R) * Math.Cos(lat1), 
+                              Math.Sin(bearing) * Math.Sin(distance / R) * Math.Cos(lat1),
                               Math.Cos(distance / R) - Math.Sin(lat1) * Math.Sin(lat2));
 
             lon2 = (lon2 + 3.0 * Math.PI) % (2 * Math.PI) - Math.PI;

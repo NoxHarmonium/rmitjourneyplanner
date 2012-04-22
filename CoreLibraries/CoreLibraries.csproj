@@ -31,31 +31,42 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug\RmitJourneyPlanner.CoreLibraries.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="C5, Version=1.1.1.0, Culture=neutral, PublicKeyToken=06a1b38866503b69, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\C5.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.4.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\LocationCache.cs" />
-    <Compile Include="Caching\NodeCache.cs" />
-    <Compile Include="Caching\NodeRouteCache.cs" />
-    <Compile Include="Caching\RouteCache.cs" />
-    <Compile Include="Caching\ScheduleCache.cs" />
-    <Compile Include="Caching\CacheTools.cs" />
     <Compile Include="Comparers\CritterComparer.cs" />
     <Compile Include="DataAccess\DistanceAPI.cs" />
     <Compile Include="DataAccess\GeocodingAPI.cs" />
     <Compile Include="DataAccess\GoogleApiException.cs" />
+    <Compile Include="DataAccess\MetlinkDatabase.cs" />
     <Compile Include="DataAccess\MySQLDatabase.cs" />
     <Compile Include="DataAccess\RequestType.cs" />
     <Compile Include="DataAccess\SOAP.cs" />
@@ -69,20 +80,28 @@
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
     <Compile Include="Comparers\NodeComparer.cs" />
+    <Compile Include="DataProviders\Metlink\AltMetlinkDataProvider.cs" />
+    <Compile Include="DataProviders\Metlink\MetlinkDataProvider.cs" />
+    <Compile Include="DataProviders\Metlink\MetlinkNode.cs" />
     <Compile Include="DataProviders\TerminalNode.cs" />
-    <Compile Include="DataProviders\YarraTrams\TramNetworkProvider.cs" />
-    <Compile Include="DataProviders\YarraTrams\TramStop.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Logging\CallLog.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RoutePlanners\Evolutionary\EvolutionaryProperties.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\FitnessFunctions\ALFitnessFunction.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IFitnessFunction.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IMutator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IRouteGenerator.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\ALRouteGenerator.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\BDALRouteGenerator.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\OptimisedRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Tools.cs" />
     <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\RandomRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Breeders\StandardBreeder.cs" />
@@ -100,37 +119,42 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Types\AdjacencyList.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Comparers\ArcComparer.cs" />
     <Compile Include="Types\Critter.cs" />
     <Compile Include="Types\NetworkArc.cs" />
+    <Compile Include="Types\Result.cs" />
     <Compile Include="Types\Route.cs" />
     <Compile Include="Types\TransportDirection.cs" />
     <Compile Include="Types\TransportMode.cs" />
+    <Compile Include="Types\TransportTimeSpan.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Caching\SQL\rmitjourneyplanner_arccache.sql" />
-    <Resource Include="Caching\SQL\rmitjourneyplanner_locationcache.sql" />
-    <Resource Include="Caching\SQL\rmitjourneyplanner_nodecache.sql" />
-    <Resource Include="Caching\SQL\rmitjourneyplanner_noderoutecache.sql" />
-    <Resource Include="Caching\SQL\rmitjourneyplanner_routecache.sql" />
-    <Resource Include="Caching\SQL\rmitjourneyplanner_schedulecollectioncache.sql" />
-    <Resource Include="Caching\SQL\rmitjourneyplanner_tripschedulecache.sql" />
     <Content Include="Libraries\C5.dll" />
     <Content Include="Libraries\C5.pdb" />
+    <Content Include="Settings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Provider\MySql.Data.csproj">
+      <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
+      <Name>MySql.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

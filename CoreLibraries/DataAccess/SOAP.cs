@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="SOAP.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Contains tools to interface with Soap webservices.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
@@ -20,7 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Contains tools to interface with Soap webservices.
+    ///   Contains tools to interface with Soap webservices.
     /// </summary>
     internal static class Soap
     {
@@ -40,17 +35,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Methods
 
         /// <summary>
-        /// The build data set from SOAP response.
+        ///   The build data set from SOAP response.
         /// </summary>
-        /// <param name="responseDoc">
-        /// The response XML document from the SOAP request.
-        /// </param>
-        /// <returns>
-        /// A DataSet loaded from the supplied XML.
-        /// </returns>
-        /// <exception cref="Exception">
-        /// Throws an exception when Tramtracker sends an error message.
-        /// </exception>
+        /// <param name="responseDoc"> The response XML document from the SOAP request. </param>
+        /// <returns> A DataSet loaded from the supplied XML. </returns>
+        /// <exception cref="Exception">Throws an exception when Tramtracker sends an error message.</exception>
         public static DataSet BuildDataSetFromSoapResponse(XmlDocument responseDoc)
         {
             XmlNode response = responseDoc["soap:Envelope"]["soap:Body"].FirstChild;
@@ -73,18 +62,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Builds a set of XML nodes from a dictionary pair of named keys and values. 
-        ///   Each key corresponds to a node and each value corresponds to the inner text of that node.
+        ///   Builds a set of XML nodes from a dictionary pair of named keys and values. Each key corresponds to a node and each value corresponds to the inner text of that node.
         /// </summary>
-        /// <param name="dict">
-        /// A dictionary from which to build the XML off.
-        /// </param>
-        /// <param name="xmlNamespace">
-        /// The namespace of the XML.
-        /// </param>
-        /// <returns>
-        /// An <see cref="XmlNode"/> representing the supplied diictionary.
-        /// </returns>
+        /// <param name="dict"> A dictionary from which to build the XML off. </param>
+        /// <param name="xmlNamespace"> The namespace of the XML. </param>
+        /// <returns> An <see cref="XmlNode" /> representing the supplied diictionary. </returns>
         public static XmlNode BuildXmlFromDictionary(Dictionary<string, object> dict, string xmlNamespace)
         {
             var doc = new XmlDocument();
@@ -105,11 +87,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets the XML template for a soap request.
+        ///   Gets the XML template for a soap request.
         /// </summary>
-        /// <returns>
-        /// Returns an XML template to form the basis of a SOAP request.
-        /// </returns>
+        /// <returns> Returns an XML template to form the basis of a SOAP request. </returns>
         public static XmlDocument GetSoapTemplate()
         {
             var doc = new XmlDocument();

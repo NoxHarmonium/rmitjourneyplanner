@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InitSearch.aspx.cs" Inherits="AjaxServer.aspx.InitSearch" %>

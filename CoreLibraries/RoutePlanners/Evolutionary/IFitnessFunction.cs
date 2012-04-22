@@ -1,12 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="IFitnessFunction.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Represents a function which evaluates the fitness of a route.
-// </summary>
-// 
-// --------------------------------------------------------------------------------------------------------------------
+// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
@@ -17,21 +11,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     #endregion
 
     /// <summary>
-    /// Represents a function which evaluates the fitness of a route.
+    ///   Represents a function which evaluates the fitness of a route.
     /// </summary>
     public interface IFitnessFunction
     {
         #region Public Methods
 
         /// <summary>
-        /// Returns a value representing the fitness of the route.
+        ///   Returns a value representing the fitness of the route.
         /// </summary>
-        /// <param name="route">
-        /// The route the is to be evaluated.
-        /// </param>
-        /// <returns>
-        /// A double value representing the fitness.
-        /// </returns>
+        /// <param name="route"> The route the is to be evaluated. </param>
+        /// <returns> A double value representing the fitness. </returns>
         double GetFitness(Route route);
 
         #endregion

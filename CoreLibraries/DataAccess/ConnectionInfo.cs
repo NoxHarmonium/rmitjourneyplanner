@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="ConnectionInfo.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Contains the information used to connect to the internet.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
@@ -16,7 +11,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Contains the information used to connect to the internet.
+    ///   Contains the information used to connect to the internet.
     /// </summary>
     public static class ConnectionInfo
     {

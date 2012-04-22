@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="GoogleApiException.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Represents an error returned from the Google Maps API.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
@@ -16,7 +11,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Represents an error returned from the Google Maps API.
+    ///   Represents an error returned from the Google Maps API.
     /// </summary>
     internal class GoogleApiException : Exception
     {
@@ -32,11 +27,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the GoogleApiException class from the supplied error code.
+        ///   Initializes a new instance of the GoogleApiException class from the supplied error code.
         /// </summary>
-        /// <param name="errorCode">
-        /// The error code recieved from the Google Maps API.
-        /// </param>
+        /// <param name="errorCode"> The error code recieved from the Google Maps API. </param>
         public GoogleApiException(string errorCode)
             : base(GetDescription(errorCode))
         {
@@ -63,14 +56,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Methods
 
         /// <summary>
-        /// Converts the Google Maps API error codes into a human readable message.
+        ///   Converts the Google Maps API error codes into a human readable message.
         /// </summary>
-        /// <param name="errorCode">
-        /// The string recieved from the Google Maps API.
-        /// </param>
-        /// <returns>
-        /// A string containing a description of the error code.
-        /// </returns>
+        /// <param name="errorCode"> The string recieved from the Google Maps API. </param>
+        /// <returns> A string containing a description of the error code. </returns>
         private static string GetDescription(string errorCode)
         {
             switch (errorCode)

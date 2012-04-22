@@ -1,28 +1,23 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="TransportMode.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Defines the transport mode used.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     /// <summary>
-    /// Defines the transport mode used.
+    ///   Defines the transport mode used.
     /// </summary>
     public enum TransportMode
     {
         /// <summary>
         ///   The transport mode is walking.
         /// </summary>
-        Walking = 0, 
+        Walking = 0,
 
         /// <summary>
         ///   The transport mode is driving.
         /// </summary>
-        Driving = 1, 
+        Driving = 1,
 
         /// <summary>
         ///   The transport mode is cycling.

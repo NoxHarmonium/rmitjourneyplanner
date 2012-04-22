@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="Location.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Represents a location on earth.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.Positioning
 {
@@ -14,11 +9,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
     using System;
 
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
+    using RmitJourneyPlanner.CoreLibraries.Logging;
 
     #endregion
 
     /// <summary>
-    /// Represents a location on earth.
+    ///   Represents a location on earth.
     /// </summary>
     public class Location
     {
@@ -39,15 +35,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class. 
-        ///   Creates a Location object directly from the latitude and longitude.
+        ///   Initializes a new instance of the <see cref="Location" /> class. Creates a Location object directly from the latitude and longitude.
         /// </summary>
-        /// <param name="latitude">
-        /// The latitude of the location
-        /// </param>
-        /// <param name="longitude">
-        /// The longitude of the location
-        /// </param>
+        /// <param name="latitude"> The latitude of the location </param>
+        /// <param name="longitude"> The longitude of the location </param>
         public Location(double latitude, double longitude)
         {
             this.latitude = latitude;
@@ -55,13 +46,23 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class.
+        ///   Initializes a new instance of the <see cref="Location" /> class. Creates a Location object directly from the latitude and longitude.
         /// </summary>
-        /// <param name="location">
-        /// The location string to be resolved by the Google Maps API.
-        /// </param>
+        /// <param name="latitude"> The latitude of the location </param>
+        /// <param name="longitude"> The longitude of the location </param>
+        public Location(float latitude, float longitude)
+        {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref="Location" /> class.
+        /// </summary>
+        /// <param name="location"> The location string to be resolved by the Google Maps API. </param>
         public Location(string location)
         {
+            Logger.Log(this,"Querying Google API for location: {0}", location);
             var geocoding = new GeocodingApi();
             Location discoveredLocation = geocoding.GetLocation(location);
             this.latitude = discoveredLocation.Latitude;
@@ -109,30 +110,23 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         #region Public Methods
 
         /// <summary>
-        /// Parses a comma delimted latitude and longitude string and 
-        ///   returns a corrosponding location object.
+        ///   Parses a comma delimted latitude and longitude string and returns a corrosponding location object.
         /// </summary>
-        /// <param name="locationString">
-        /// The location string to parse to a location.
-        /// </param>
-        /// <returns>
-        /// A <see cref="Location"/> object that represents the provided location string.
-        /// </returns>
+        /// <param name="locationString"> The location string to parse to a location. </param>
+        /// <returns> A <see cref="Location" /> object that represents the provided location string. </returns>
         public static Location Parse(string locationString)
         {
-            int commaIndex = locationString.IndexOf(",");
+            int commaIndex = locationString.IndexOf(",", StringComparison.Ordinal);
             string lat = locationString.Substring(0, commaIndex);
             string lon = locationString.Substring(
-                locationString.IndexOf(",") + 1, locationString.Length - commaIndex - 1);
+                locationString.IndexOf(",", StringComparison.Ordinal) + 1, locationString.Length - commaIndex - 1);
             return new Location(Convert.ToDouble(lat), Convert.ToDouble(lon));
         }
 
         /// <summary>
-        /// Returns a comma delimited string of latitude and longitude.
+        ///   Returns a comma delimited string of latitude and longitude.
         /// </summary>
-        /// <returns>
-        /// A string.
-        /// </returns>
+        /// <returns> A string. </returns>
         public override string ToString()
         {
             return string.Format("{0},{1}", this.latitude, this.longitude);

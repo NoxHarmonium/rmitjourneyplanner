@@ -1,11 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="DrivingDataProvider.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Provides point to point data for driving.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
 {
@@ -21,7 +16,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
     #endregion
 
     /// <summary>
-    /// Provides point to point data for driving.
+    ///   Provides point to point data for driving.
     /// </summary>
     public class DrivingDataProvider : IPointDataProvider
     {
@@ -37,7 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "DrivingDataProvider" /> class.
+        ///   Initializes a new instance of the <see cref="DrivingDataProvider" /> class.
         /// </summary>
         public DrivingDataProvider()
         {
@@ -49,17 +44,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         #region Public Methods
 
         /// <summary>
-        /// Estimates the distance between 2 points. This method must always underestimate the time and distance.
+        ///   Estimates the distance between 2 points. This method must always underestimate the time and distance.
         /// </summary>
-        /// <param name="locationA">
-        /// The first point.
-        /// </param>
-        /// <param name="locationB">
-        /// The second point.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Arc"/> representing the distance between the 2 points.
-        /// </returns>
+        /// <param name="locationA"> The first point. </param>
+        /// <param name="locationB"> The second point. </param>
+        /// <returns> The <see cref="Arc" /> representing the distance between the 2 points. </returns>
         public Arc EstimateDistance(Location locationA, Location locationB)
         {
             double distance = GeometryHelper.GetStraightLineDistance(locationA, locationB);
@@ -68,34 +57,22 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         }
 
         /// <summary>
-        /// Gets the distance driving from locationA to locationB
+        ///   Gets the distance driving from locationA to locationB
         /// </summary>
-        /// <param name="locationA">
-        /// The first point.
-        /// </param>
-        /// <param name="locationB">
-        /// The second point.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Arc"/> representing the distance between the 2 points.
-        /// </returns>
+        /// <param name="locationA"> The first point. </param>
+        /// <param name="locationB"> The second point. </param>
+        /// <returns> The <see cref="Arc" /> representing the distance between the 2 points. </returns>
         public Arc GetDistance(Location locationA, Location locationB)
         {
             return this.distanceApi.GetDistance(locationA, locationB, TransportMode.Walking);
         }
 
         /// <summary>
-        /// Gets the path driven from locationA to locationB
+        ///   Gets the path driven from locationA to locationB
         /// </summary>
-        /// <param name="locationA">
-        /// The first point.
-        /// </param>
-        /// <param name="locationB">
-        /// The second point.
-        /// </param>
-        /// <returns>
-        /// A list of <see cref="Location"/> objects that designate a path.
-        /// </returns>
+        /// <param name="locationA"> The first point. </param>
+        /// <param name="locationB"> The second point. </param>
+        /// <returns> A list of <see cref="Location" /> objects that designate a path. </returns>
         public List<Location> GetPath(Location locationA, Location locationB)
         {
             throw new NotImplementedException();

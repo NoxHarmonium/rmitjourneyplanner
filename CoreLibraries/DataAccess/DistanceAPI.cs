@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="DistanceAPI.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Interfaces with the Google Distance Matrix API to retrieve distances
-//   between points (as navigated by Google Maps).
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
@@ -21,15 +15,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    /// Interfaces with the Google Distance Matrix API to retrieve distances
-    ///   between points (as navigated by Google Maps).
+    ///   Interfaces with the Google Distance Matrix API to retrieve distances between points (as navigated by Google Maps).
     /// </summary>
     internal class DistanceApi : XmlRequester
     {
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "DistanceApi" /> class.
+        ///   Initializes a new instance of the <see cref="DistanceApi" /> class.
         /// </summary>
         public DistanceApi()
             : base(Urls.DistanceApiUrl)
@@ -42,37 +35,23 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Methods
 
         /// <summary>
-        /// Returns the distance between 2 points using the default transport mode (driving).
+        ///   Returns the distance between 2 points using the default transport mode (driving).
         /// </summary>
-        /// <param name="pointA">
-        /// The first point
-        /// </param>
-        /// <param name="pointB">
-        /// The second point
-        /// </param>
-        /// <returns>
-        /// The distance between pointA and pointB
-        /// </returns>
+        /// <param name="pointA"> The first point </param>
+        /// <param name="pointB"> The second point </param>
+        /// <returns> The distance between pointA and pointB </returns>
         public Arc GetDistance(Location pointA, Location pointB)
         {
             return this.GetDistance(pointA, pointB, TransportMode.Driving);
         }
 
         /// <summary>
-        /// Returns the distance between 2 points using the specified transport mode.
+        ///   Returns the distance between 2 points using the specified transport mode.
         /// </summary>
-        /// <param name="pointA">
-        /// The first point
-        /// </param>
-        /// <param name="pointB">
-        /// The second point
-        /// </param>
-        /// <param name="transportMode">
-        /// Specified the mode of transport used between points.
-        /// </param>
-        /// <returns>
-        /// The distance between pointA and pointB
-        /// </returns>
+        /// <param name="pointA"> The first point </param>
+        /// <param name="pointB"> The second point </param>
+        /// <param name="transportMode"> Specified the mode of transport used between points. </param>
+        /// <returns> The distance between pointA and pointB </returns>
         public Arc GetDistance(Location pointA, Location pointB, TransportMode transportMode)
         {
             // Set parameters

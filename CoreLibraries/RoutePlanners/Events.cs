@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="RMIT University" file="Events.cs">
-//   Copyright RMIT University 2011
-// </copyright>
-// <summary>
-//   Represents the data produced by a next iteration event.
-// </summary>
-// 
-// --------------------------------------------------------------------------------------------------------------------
+﻿// RMIT Journey Planner
+// Written by Sean Dawson 2011.
+// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
 {
@@ -19,7 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
     #endregion
 
     /// <summary>
-    /// Represents the data produced by a next iteration event.
+    ///   Represents the data produced by a next iteration event.
     /// </summary>
     public class NextIterationEventArgs : EventArgs
     {
@@ -35,12 +29,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NextIterationEventArgs"/> class. 
-        ///   Initilizes a new instance of a NextIterationEventArgs object.
+        ///   Initializes a new instance of the <see cref="NextIterationEventArgs" /> class. Initilizes a new instance of a NextIterationEventArgs object.
         /// </summary>
-        /// <param name="currentNode">
-        /// The current node being traversed.
-        /// </param>
+        /// <param name="currentNode"> The current node being traversed. </param>
         public NextIterationEventArgs(INetworkNode currentNode)
         {
             this.node = currentNode;
