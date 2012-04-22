@@ -81,6 +81,15 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// </summary>
         public MetlinkDataProvider()
         {
+            try
+            {
+                this.database.Open();
+            }
+            catch (Exception e)
+            {
+                Logger.Log(this,"Error opening database: " + e.Message);
+                throw e;
+            }
             this.database.Open();
             Logger.Log(this, "Route Generator Initializing...");
 
