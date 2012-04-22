@@ -90,7 +90,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Logger.Log(this,"Error opening database: " + e.Message);
                 throw e;
             }
-            this.database.Open();
             Logger.Log(this, "Route Generator Initializing...");
 
             Logger.Log(this, "Building node-route map...");

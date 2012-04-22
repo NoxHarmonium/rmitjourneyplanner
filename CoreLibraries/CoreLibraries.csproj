@@ -139,9 +139,7 @@
   <ItemGroup>
     <Content Include="Libraries\C5.dll" />
     <Content Include="Libraries\C5.pdb" />
-    <Content Include="Settings.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

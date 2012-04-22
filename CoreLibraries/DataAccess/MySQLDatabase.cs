@@ -53,8 +53,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <param name="database"> The database. </param>
         public MySqlDatabase(string database)
         {
-            this.connectionString =
-                "server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=" + database;
+            this.connectionString = Settings.Entries["ConnectionString"];
+                //"server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=" + database;
             this.connection = new MySqlConnection(this.connectionString);
         }
 
