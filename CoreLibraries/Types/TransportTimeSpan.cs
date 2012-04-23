@@ -40,12 +40,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The waiting time component.
         /// </summary>
-        public TimeSpan WaitingTime;
+        private TimeSpan waitingTime;
 
         /// <summary>
         /// The travel time component.
         /// </summary>
-        public TimeSpan TravelTime;
+        private TimeSpan travelTime;
 
         /// <summary>
         /// Gets the total time of the traveled arc.
@@ -54,7 +54,37 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             get
             {
-                return WaitingTime + TravelTime;
+                return this.waitingTime + this.travelTime;
+            }
+        }
+
+        /// <summary>
+        /// The waiting time component.
+        /// </summary>
+        public TimeSpan WaitingTime
+        {
+            get
+            {
+                return waitingTime;
+            }
+            set
+            {
+                waitingTime = value;
+            }
+        }
+
+        /// <summary>
+        /// The travel time component.
+        /// </summary>
+        public TimeSpan TravelTime
+        {
+            get
+            {
+                return travelTime;
+            }
+            set
+            {
+                travelTime = value;
             }
         }
 
@@ -67,5 +97,44 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return this.TotalTime.ToString();
         }
 
+        /// <summary>
+        /// Returns if the 2 TransportTimeSpan objects are equal.
+        /// </summary>
+        /// <param name="other">An TransportTimeSpan to compare to.</param>
+        /// <returns>A boolean value.</returns>
+        public bool Equals(TransportTimeSpan other)
+        {
+            return other.waitingTime.Equals(this.waitingTime) && other.travelTime.Equals(this.travelTime);
+        }
+
+        /// <summary>
+        /// Returns if the 2 objects are equal.
+        /// </summary>
+        /// <param name="obj">An object to compare to.</param>
+        /// <returns>A boolean value.</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (obj.GetType() != typeof(TransportTimeSpan))
+            {
+                return false;
+            }
+            return Equals((TransportTimeSpan)obj);
+        }
+
+        /// <summary>
+        /// Returns a pseudo unique identifier for this object.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (this.waitingTime.GetHashCode() * 397) ^ this.travelTime.GetHashCode();
+            }
+        }
     }
 }

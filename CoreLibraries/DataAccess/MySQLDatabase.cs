@@ -16,7 +16,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     ///   Represents a MySQL database.
     /// </summary>
-    public class MySqlDatabase : ISqlDatabase
+    public class MySqlDatabase : ISqlDatabase, IDisposable
     {
         #region Constants and Fields
 
@@ -63,10 +63,22 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         ~MySqlDatabase()
         {
+            this.Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Dispose(bool disposing)
+        {
             if (this.connection.State == ConnectionState.Open)
             {
                 this.connection.Close();
             }
+            this.connection.Dispose();
         }
 
         #endregion

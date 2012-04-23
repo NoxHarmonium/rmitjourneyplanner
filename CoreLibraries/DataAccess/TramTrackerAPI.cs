@@ -433,7 +433,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         /// <param name="uuid"> A TramTracker UUID. </param>
         /// <returns> True if the UUID is valid, false if not. </returns>
-        public bool IsValidUuid(string uuid)
+        public static bool IsValidUuid(string uuid)
         {
             return new Regex(UuidFormat).IsMatch(uuid);
         }

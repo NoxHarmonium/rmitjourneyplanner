@@ -270,7 +270,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
         /// </summary>
         public void Start()
         {
-            this.itinerary = itinerary;
+            
             this.pQueue = new IntervalHeap<INetworkNode>(new NodeComparer());
             itinerary.First().TotalTime = new TimeSpan(0, 0, 0);
             this.closed = new List<INetworkNode>();

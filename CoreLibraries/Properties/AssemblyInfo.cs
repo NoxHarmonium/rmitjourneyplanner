@@ -49,5 +49,3 @@ using System.Runtime.InteropServices;
 // Assembly marked as compliant.
 
 [assembly: CLSCompliant(true)]
-[assembly: InternalsVisibleTo("UnitTests")]
-[assembly: InternalsVisibleTo("DataManager")]

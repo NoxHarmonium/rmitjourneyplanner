@@ -25,7 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
     /// <summary>
     ///   Providers data on the TransNET database.
     /// </summary>
-    public class MetlinkDataProvider : INetworkDataProvider, IDisposable
+    public sealed class MetlinkDataProvider : INetworkDataProvider, IDisposable
     {
         #region Constants and Fields
 
@@ -356,7 +356,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// </summary>
         ~MetlinkDataProvider()
         {
-            this.Dispose();
+            this.Dispose(false);
         }
 
         #endregion
@@ -368,8 +368,18 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// </summary>
         public void Dispose()
         {
-            this.database.Close();
+            this.Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Cleans up the resources used by this object.
+        /// </summary>
+        /// <param name="disposing"></param>
+        public void Dispose(bool disposing)
+        {
+            this.database.Dispose();
+            
         }
 
         /// <summary>
@@ -451,7 +461,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             DataTable result = this.database.GetDataSet(query);
 
             // departureTime.
-            if (result.Rows.Count > 0 && result.Rows[0][0].ToString() != string.Empty)
+            if (result.Rows.Count > 0 && !String.IsNullOrEmpty(result.Rows[0][0].ToString()))
             {
                 DateTime arrivalTime = this.ParseDate(result.Rows[0]["ArriveTime"].ToString());
                 arrivalTime += departureTime.Date - default(DateTime).Date;
@@ -519,7 +529,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 arrivalTime += departureTime.Date - default(DateTime).Date;
                 departTime += departureTime.Date - default(DateTime).Date;
 
-                TransportTimeSpan output;
+                TransportTimeSpan output = default(TransportTimeSpan);
                 output.WaitingTime = departTime - departureTime;
                 output.TravelTime = arrivalTime - departTime;
                 if (output.TotalTime.Ticks < 0)
@@ -585,6 +595,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         public INetworkNode GetNodeClosestToPointWithinArea(
             INetworkNode source, INetworkNode destination, double radius, bool allowTransfer)
         {
+            
             Location topLeft = GeometryHelper.Travel((Location)source, 315.0, radius);
             Location bottomRight = GeometryHelper.Travel((Location)source, 135.0, radius);
 

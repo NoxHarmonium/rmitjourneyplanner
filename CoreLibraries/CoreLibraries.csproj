@@ -50,6 +50,12 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>CoreLibrariesKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="C5, Version=1.1.1.0, Culture=neutral, PublicKeyToken=06a1b38866503b69, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -80,7 +86,6 @@
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
     <Compile Include="Comparers\NodeComparer.cs" />
-    <Compile Include="DataProviders\Metlink\AltMetlinkDataProvider.cs" />
     <Compile Include="DataProviders\Metlink\MetlinkDataProvider.cs" />
     <Compile Include="DataProviders\Metlink\MetlinkNode.cs" />
     <Compile Include="DataProviders\TerminalNode.cs" />
@@ -88,11 +93,6 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Logging\CallLog.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="RoutePlanners\Evolutionary\EvolutionaryProperties.cs" />
     <Compile Include="RoutePlanners\Evolutionary\FitnessFunctions\ALFitnessFunction.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IBreeder.cs" />
@@ -114,11 +114,6 @@
     <Compile Include="Positioning\GeometryHelper.cs" />
     <Compile Include="Positioning\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Types\AdjacencyList.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Comparers\ArcComparer.cs" />
@@ -131,22 +126,12 @@
     <Compile Include="Types\TransportTimeSpan.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <None Include="CoreLibrariesKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\C5.dll" />
     <Content Include="Libraries\C5.pdb" />
     <Content Include="Settings.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Provider\MySql.Data.csproj">

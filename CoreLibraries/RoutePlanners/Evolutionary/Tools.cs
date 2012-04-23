@@ -30,6 +30,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="population"> The population. </param>
         /// <param name="generation"> The generation. </param>
         /// <param name="properties"> The properties. </param>
+        /// <param name="filename">The filename. </param>
         public static void SavePopulation(List<Critter> population, int generation, EvolutionaryProperties properties, string filename)
         {
             //Console.ForegroundColor = ConsoleColor.Green;
@@ -37,7 +38,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             // List<KeyValuePair<List<int>, TimeSpan>> kvps = population.ToList();
             // kvps.Sort((x, y) => x.Value.CompareTo(y.Value));
             // File.Delete("Results.txt");
-            int order = 0;
             string template = new StreamReader("Template.htm").ReadToEnd();
             foreach (Critter kvp in population)
             {

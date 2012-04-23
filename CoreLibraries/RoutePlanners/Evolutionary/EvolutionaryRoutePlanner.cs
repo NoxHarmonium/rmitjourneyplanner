@@ -41,11 +41,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         private Result result = default(Result);
 
         /// <summary>
-        ///   The generation.
-        /// </summary>
-        private int generation;
-
-        /// <summary>
         ///   The population of the evolutionary algorithm.
         /// </summary>
         private List<Critter> population;

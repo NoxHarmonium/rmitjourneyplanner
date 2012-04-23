@@ -30,8 +30,6 @@ using System.Text;
 #if !CF
 using System.Net.Security;
 using System.Security.Authentication;
-using System.Globalization;
-using System.Text;
 #endif
 
 namespace MySql.Data.MySqlClient

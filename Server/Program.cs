@@ -133,7 +133,7 @@ namespace Server
             var results = new List<Result>();
             var loopCommands = new Queue<string>();
             var loopStack = new Stack<KeyValuePair<Queue<string>, int>>();
-            bool loop = false;
+            //bool loop = false;
 
             Socket socket = null;
             
@@ -323,7 +323,7 @@ namespace Server
                                         bool created = false;
                                         foreach (var constructor in type.GetConstructors())
                                         {
-                                            int count = 0;
+                                            //int count = 0;
 
                                             ParameterInfo[] infos = constructor.GetParameters();
                                             if (infos.Length == noParam)
@@ -548,7 +548,7 @@ namespace Server
                         Console.WriteLine("      There was an error invoking the new instance.\n      {0}", e.InnerException.Message); 
 
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException)
                     {
                         Console.WriteLine(
                             "   There was an error parsing your command. Type help for a list of commands.");

@@ -234,11 +234,7 @@ Regenerate:
                         throw new Exception("Next node is null.");
                     }
 
-                    if (current.Id == 20454 && next.Id == 7877)
-                    {
-                        string breakHere = "bfgfdfd";
-
-                    }
+                    
                 }
             }
 

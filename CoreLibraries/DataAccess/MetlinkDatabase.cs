@@ -15,7 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     ///   Allows queries to the Metlink database.
     /// </summary>
-    public class MetlinkDatabase : ISqlDatabase
+    public class MetlinkDatabase : ISqlDatabase, IDisposable
     {
         #region Constants and Fields
 
@@ -99,5 +99,23 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         #endregion
+
+        ~MetlinkDatabase()
+        {
+            this.Dispose();
+        }
+
+
+
+
+        public void Dispose()
+        {
+            if (connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            connection.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

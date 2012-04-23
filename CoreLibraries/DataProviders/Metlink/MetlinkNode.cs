@@ -100,6 +100,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         ///   Initializes a new instance of the <see cref="MetlinkNode" /> class. Sets the location of this node to position.
         /// </summary>
         /// <param name="id"> The tramtracker Id. </param>
+        /// <param name="stopSpecName">The short name of the node.</param>
         /// <param name="transportType"> </param>
         /// <param name="latitude"> </param>
         /// <param name="longitude"> </param>

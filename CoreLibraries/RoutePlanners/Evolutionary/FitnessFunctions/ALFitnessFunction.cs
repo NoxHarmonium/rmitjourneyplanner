@@ -45,6 +45,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             this.properties = properties;
         }
 
+        /// <summary>
+        /// The routes traversed when calculating the fitness.
+        /// </summary>
         public List<int> RoutesUsed
         {
             get
