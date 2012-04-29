@@ -52,7 +52,7 @@ namespace AjaxServer.aspx
                 properties.NumberToKeep = 50;
                 properties.MutationRate = 0.2;
                 properties.CrossoverRate = 0.7;
-                properties.RouteGenerator = new BdalRouteGenerator(properties);
+                properties.RouteGenerator = new AlRouteGenerator(properties);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);

@@ -83,6 +83,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         public Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime)
         {
             this.Initialize(source, destination);
+            int regenCount = 0;
             INetworkDataProvider provider = this.properties.NetworkDataProviders[0];
             
 Regenerate:
@@ -230,6 +231,11 @@ Regenerate:
                     if (next == null)
                     {
                         Console.WriteLine("Regenerating, no possible paths.");
+                        regenCount++;
+                        if (regenCount > 20)
+                        {
+                            throw new Exception("Regenerated path too many times.");
+                        }
                         goto Regenerate;
                         throw new Exception("Next node is null.");
                     }

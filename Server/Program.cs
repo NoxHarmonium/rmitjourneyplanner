@@ -15,6 +15,7 @@ namespace Server
 
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -133,6 +134,7 @@ namespace Server
             var results = new List<Result>();
             var loopCommands = new Queue<string>();
             var loopStack = new Stack<KeyValuePair<Queue<string>, int>>();
+            int resultIndex = 0;
             //bool loop = false;
 
             Socket socket = null;
@@ -211,7 +213,15 @@ namespace Server
                     try
                     {
 
-                        string[] segments =  splitWithQuotes(command);
+                        if (command.Contains("randomNode()"))
+                        {
+                            
+                        command = command.Replace(
+                            "randomNode()",
+                            ((MetlinkDataProvider)properties.NetworkDataProviders[0]).GetRandomNodeId().ToString(
+                                CultureInfo.InvariantCulture));
+                        }
+                    string[] segments =  splitWithQuotes(command);
                         switch (segments[0].ToLower())
                         {
                             case "//":
@@ -269,13 +279,26 @@ namespace Server
 
                             case "loop":
                                 string s;
-                                while ((s = commands.Dequeue().ToLower()) != "end loop")
+                                int nestLevel = 0;
+                                loopCommands.Clear();
+                                while ((s = commands.Dequeue().ToLower()) != "end loop" || nestLevel > 0)
                                 {
+                                    string[] split = s.Split(' ');
+                                    if (split.Length > 1 && split[0].Trim() == "loop")
+                                    {
+                                        nestLevel++;
+                                    }
+                                    if (s == "end loop")
+                                    {
+                                        nestLevel--;
+                                    }
                                     loopCommands.Enqueue(s);
                                 }
                                 var loopedCommands = new Queue<string>();
+                               
                                 for (int i = 0; i < int.Parse(segments[1]); i ++ )
                                 {
+                                     loopedCommands.Enqueue("// Loop " + i );
                                     foreach (var lcommand in loopCommands)
                                     {
                                         loopedCommands.Enqueue(lcommand);
@@ -310,12 +333,32 @@ namespace Server
                                         try
                                         {
                                             o = type.InvokeMember("", BindingFlags.CreateInstance, null, null, null);
+
                                         }
-                                        catch (Exception)
+                                        catch( MissingMethodException )
                                         {
                                             o = type.InvokeMember(
-                                                "", BindingFlags.CreateInstance, null, null, new object[] { properties });
+                                             "", BindingFlags.CreateInstance, null, null, new object[] { properties });
                                         }
+                                        catch (Exception e)
+                                        {
+                                            Logger.Log(typeof(Program), "Warning: Exception on instance creation: " + e.Message);
+                                            if (e.InnerException != null)
+                                            {
+                                                Logger.Log(
+                                                    typeof(Program),
+                                                    "-------> Inner exception: " + e.InnerException.Message);
+
+                                                if (e.InnerException.InnerException != null)
+                                                {
+                                                    Logger.Log(
+                                                        typeof(Program),
+                                                        "-------> ------->Inner inner exception: " + e.InnerException.InnerException.Message);
+                                                }
+                                            }
+                                        }
+
+                                       
                                     }
                                     else
                                     {
@@ -385,6 +428,7 @@ namespace Server
                                 {
                                     string propertyName = segments[1];
                                     string value = segments[2];
+                                  
                                     PropertyInfo info = typeof(EvolutionaryProperties).GetProperty(propertyName);
                                     if (info.PropertyType.IsValueType)
                                     {
@@ -471,17 +515,80 @@ namespace Server
                                 {
                                     Tools.SavePopulation(planner.Population.GetRange(0,1),0,properties,resultPath+ ".html");
                                 }
+
+                                if (segments[1].ToLower() == "saveline")
+                                {
+                                    if (resultWriter.BaseStream.CanWrite)
+                                    {
+                                        resultWriter.Close();
+                                    }
+                                    StreamReader reader = new StreamReader(resultPath);
+                                    string text = reader.ReadToEnd().Trim();
+                                    reader.Close();
+                                    string[] lines = text.Split('\n');
+                                    
+                                    
+                                    try
+                                    {
+                                        if (resultIndex < lines.Length)
+                                        {
+                                            if (resultIndex < results.Count)
+                                            {
+                                                lines[resultIndex] = lines[resultIndex].Trim() + ","
+                                                                     + results[resultIndex].AverageFitness;
+                                            }
+                                            else
+                                            {
+                                                lines[resultIndex] = lines[resultIndex].Trim() + ","
+                                                                     + "-1";
+                                            }
+                                            resultWriter = new StreamWriter(resultPath, false);
+                                            string st = String.Join("\n", lines);
+                                            resultWriter.Write(st);
+                                        }
+                                        else
+                                        {
+                                            resultWriter = new StreamWriter(resultPath, true);
+                                            if (resultIndex < results.Count)
+                                            {
+                                                resultWriter.WriteLine(results[resultIndex].AverageFitness);
+                                            }
+                                            else
+                                            {
+                                                resultWriter.WriteLine("-1");
+                                            }
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        
+                                        Console.WriteLine("Error writing things...");
+                                    }
+                                    
+                                }
                                 
 
                                 break;
 
                             case "start":
                                 //try
+                                try
+                                {
+                                    planner = new EvolutionaryRoutePlanner(properties);
+                                    planner.Start();
+                                    results.Clear();
+                                    results.Add(planner.Result);
+                                   
+                                }
+                                catch (Exception e)
+                                {
+                                    var r = new Result { AverageFitness = -1.0 };
+                                    results.Add(r);
+                                    Console.WriteLine("   Error starting travel planner:\n   {0}\n   {1}", e.Message, e.StackTrace);
+                                }
+                                
+                                resultIndex = 0;
 
-                                planner = new EvolutionaryRoutePlanner(properties);
-                                planner.Start();
-
-                                results.Add(planner.Result);
                                 /*
                                 if (resultWriter != null)
                                 {
@@ -513,29 +620,40 @@ namespace Server
                                 break;
 
                             case "step":
-                                int iterations = 1;
-                                if (segments.Length > 1)
+                                try
                                 {
-                                    int i;
-                                    if (Int32.TryParse(
-                                        segments[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out i))
+                                    int iterations = 1;
+                                    if (segments.Length > 1)
                                     {
-                                        iterations = i;
+                                        int i;
+                                        if (Int32.TryParse(
+                                            segments[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out i))
+                                        {
+                                            iterations = i;
+                                        }
                                     }
+
+                                    for (int i = 0; i < iterations; i++)
+                                    {
+                                        planner.SolveStep();
+                                        /*
+                                        if (resultWriter != null)
+                                        {
+                                            resultWriter.WriteLine(planner.Result.ToString());
+                                        }
+                                         * */
+                                        results.Add(planner.Result);
+                                    }
+                                    
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("   Error stepping travel planner:\n   {0}\n   {1}", e.Message, e.StackTrace);
+                                    var r = new Result { AverageFitness = -1.0 };
+                                    results.Add(r);
                                 }
 
-                                for (int i = 0; i < iterations; i++)
-                                {
-                                    planner.SolveStep();
-                                    /*
-                                    if (resultWriter != null)
-                                    {
-                                        resultWriter.WriteLine(planner.Result.ToString());
-                                    }
-                                     * */
-                                    results.Add(planner.Result);
-                                }
-                                
+                                resultIndex++;
 
                                 break;
                             default:
@@ -552,20 +670,22 @@ namespace Server
                     {
                         Console.WriteLine(
                             "   There was an error parsing your command. Type help for a list of commands.");
-                        commands.Clear();
+                        //commands.Clear();
 
                     }
-                        
                     catch (Exception e)
                     {
                         Console.WriteLine(
                             "   There was an error parsing your command. \n {0} \nType help for a list of commands.",
                             e.Message);
-                        
-                        commands.Clear();
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine("    Inner Exception Message: " + e.InnerException.Message);
+                        }
+                        //commands.Clear();
 
                     }
-                         
+                        
 
                 }
 

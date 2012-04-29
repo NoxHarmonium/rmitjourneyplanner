@@ -49,5 +49,6 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return String.Format(CultureInfo.InvariantCulture,"{0},{1},{2},{3}", Totaltime, MinimumFitness, AverageFitness,DiversityMetric);
         }
 
+       
     }
 }

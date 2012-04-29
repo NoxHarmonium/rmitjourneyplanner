@@ -228,9 +228,16 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 }
                 
                 Logger.Log(this, "\nGenerating proximity links  ... (Third Pass)");
+
+                nodeData =
+                    this.database.GetDataSet(
+                        @"SELECT MetlinkStopID 
+                    FROM tblStopInformation          
+                    ");
+
                 int linkCount = 0;
 
-                var nakedNodes = new List<MetlinkNode>();
+               // var nakedNodes = new List<MetlinkNode>();
                 var cycleNodes = new List<MetlinkNode>();
                 int count = 0;
                 foreach (DataRow row in nodeData.Rows)
@@ -255,15 +262,15 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                     nodes.Sort(new NodeComparer());
 
-                    var vistedRoutes = new Dictionary<int, int>();
+                    var vistedRoutes = new HashSet<int>();
 
                     foreach (INetworkNode closeNode in nodes)
                     {
                         if ( // closeNode.TransportType != MetlinkNode.TransportType  && 
                             closeNode.Id != metlinkNode.Id
-                            && !vistedRoutes.ContainsKey(Convert.ToInt32(closeNode.CurrentRoute)))
+                            && !vistedRoutes.Contains(Convert.ToInt32(closeNode.CurrentRoute)))
                         {
-                            vistedRoutes[Convert.ToInt32(closeNode.CurrentRoute)] = 1;
+                            vistedRoutes.Add(Convert.ToInt32(closeNode.CurrentRoute));
                             if (!this.list[id].Contains(this.list[Convert.ToInt32(closeNode.Id)][0]))
                             {
                                 // Logger.Log(this,"-->Adding proximity link: id1: {0} id2: {1}... [{2} s]", MetlinkNode.Id, closeNode.Id, stopwatch.ElapsedMilliseconds / 1000.0);
@@ -290,6 +297,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     Logger.Log(this, "Warning: There are {0} cyclic nodes.", cycleNodes.Count);
                 }
 
+
+                /*
                 if (nakedNodes.Any())
                 {
                     Logger.Log(this, "Warning: There are {0} naked nodes.", nakedNodes.Count);
@@ -322,7 +331,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     }
                 }
                   
-
+                */
                 Logger.Log(this, "Resolved. [{0} s]");
                 Logger.Log(this, "Total links: {0}", totalLinks);
 
@@ -389,7 +398,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <returns> A list of <see cref="INetworkNode" /> objects. </returns>
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
-            var outputNodes = new List<INetworkNode>();
+            var outputNodes = new List<INetworkNode>(this.list[node.Id].Count);
             for (int i = 1; i < this.list[node.Id].Count; i++)
             {
                 outputNodes.Add(this.list[node.Id][i]);
@@ -795,6 +804,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         public bool RoutesIntersect(INetworkNode first, INetworkNode second)
         {
             return this.routeMap[first.Id].Intersect(this.routeMap[second.Id]).Any();
+        }
+
+        public int GetRandomNodeId()
+        {
+            string query = "SELECT MetlinkStopID FROM tblStopInformation ORDER BY rand() LIMIT 1;";
+            return (int)this.database.GetDataSet(query).Rows[0][0];
+
         }
 
         #endregion

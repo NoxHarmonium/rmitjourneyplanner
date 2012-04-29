@@ -97,6 +97,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         /// </returns>
         public Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime)
         {
+            if (source == destination)
+            {
+                Route r = new Route(-1);
+                r.Add(source);
+                return r;
+            }
             this.Initialize(source, destination);
             INetworkDataProvider provider = this.properties.NetworkDataProviders[0];
 
