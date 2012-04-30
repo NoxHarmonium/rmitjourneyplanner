@@ -97,7 +97,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             var paths = new T[children.Length][];
             foreach (T child in children)
             {
-                if (!Visited.Contains(child))
+                if (!visited.Contains(child))
                 {
                     var newVisited = new HashSet<T>(visited) { current };
                     T[] path = this.RunDFS(child,depth + 1,newVisited);
