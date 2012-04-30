@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="PTDepthFirstSearch.cs" company="">
+// <copyright file="PTAStarSearch.cs" company="">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -18,17 +18,17 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class PTDepthFirstSearch : DepthFirstSearch<INetworkNode>
+    public class PTAStarSearch : DepthFirstSearch<INetworkNode>
     {
         private readonly INetworkDataProvider provider;
 
-        public PTDepthFirstSearch(bool bidirectional, int depth, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+        public PTAStarSearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(depth, bidirectional, origin, goal)
         {
             this.provider = provider;
         }
 
-        public PTDepthFirstSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+        public PTAStarSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(bidirectional,origin, goal)
         {
             this.provider = provider;
@@ -38,21 +38,18 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         {
             List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
 
-            /*
-             * Uncomment for greedy
-             * 
-            foreach (var child in nodes)
-            {
-                child.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)child, (Location)this.Goal);
-            }
-            nodes.Sort(new NodeComparer());
-             * */
-
             return nodes.ToArray();
         }
 
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
+
+            foreach (var node in nodes )
+            {
+                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
+            }
+            
+            Array.Sort(nodes,new NodeComparer());
             return nodes;
         }
     }

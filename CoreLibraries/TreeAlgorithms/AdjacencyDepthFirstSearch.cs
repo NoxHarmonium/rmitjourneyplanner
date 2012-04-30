@@ -24,7 +24,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         /// <param name="adjaencyMatrix"></param>
         /// <param name="origin"></param>
         /// <param name="goal"></param>
-        public AdjacencyDepthFirstSearch(int[][] adjaencyMatrix, int origin, int goal) : base(origin, goal)
+        public AdjacencyDepthFirstSearch(int[][] adjaencyMatrix, int origin, int goal) : base(false, origin, goal)
         {
             this.adjaencyMatrix = adjaencyMatrix;
         }
@@ -43,6 +43,11 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
             return adjacents.ToArray();
             //return ;
+        }
+
+        protected override int[] OrderChildren(int[] nodes)
+        {
+            return nodes;
         }
     }
 }
