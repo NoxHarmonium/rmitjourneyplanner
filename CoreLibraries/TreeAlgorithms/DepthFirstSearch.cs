@@ -27,6 +27,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
         protected bool Bidirectional;
 
+        
+
         protected T current;
 
         private int iterations;
@@ -71,13 +73,13 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         {
             this.iterations = 0;
             startTime = DateTime.Now;
-            return this.RunDFS(Origin,0, new HashSet<T>());
+            return this.RunDFS(Origin,0);
         }
 
-        protected T[] RunDFS(T node,int depth,HashSet<T> visited )
+        protected T[] RunDFS(T node,int depth)
         {
             this.iterations++;
-            if (iterations %1000000 == 0)
+            //if (iterations %1000000 == 0)
             {
                 Console.CursorLeft = 0;
                 Console.Write(iterations + " , " + (iterations / (DateTime.Now - startTime).TotalSeconds).ToString() + " i/s");
@@ -97,10 +99,11 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             var paths = new T[children.Length][];
             foreach (T child in children)
             {
-                if (!visited.Contains(child))
+                if (!Visited.Contains(child))
                 {
-                    var newVisited = new HashSet<T>(visited) { current };
-                    T[] path = this.RunDFS(child,depth + 1,newVisited);
+                    //var newVisited = new HashSet<T>(visited) { current };
+                    Visited.Add(child);
+                    T[] path = this.RunDFS(child,depth + 1);
 
                     if (path != null)
                     {

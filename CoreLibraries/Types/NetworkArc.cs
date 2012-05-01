@@ -57,7 +57,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             double distance,
             DateTime departureTime,
             string transportMode,
-            string routeId)
+            int routeId)
             : base((Location)source, (Location)destination, time, distance, departureTime, transportMode, routeId)
         {
         }

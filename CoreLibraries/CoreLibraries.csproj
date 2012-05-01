@@ -90,6 +90,7 @@
     <Compile Include="DataProviders\Metlink\MetlinkNode.cs" />
     <Compile Include="DataProviders\TerminalNode.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Logging\CallLog.cs" />
     <Compile Include="Logging\Logger.cs" />

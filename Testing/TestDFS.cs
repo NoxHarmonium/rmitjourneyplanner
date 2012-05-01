@@ -57,7 +57,7 @@ namespace Testing
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
             
-            Console.WriteLine("Result: " + String.Join(",",route.Cast<object>()) + " Time: " + sw.Elapsed.Seconds + " s");
+            Console.WriteLine("Result: " + String.Join(",",route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
             
             Console.WriteLine("Testing on PT network... (Greedy)");
             sw.Restart();
@@ -78,8 +78,46 @@ namespace Testing
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
 
-            Console.WriteLine("Result: " + String.Join(",", route.Cast<object>()) + " Time: " + sw.Elapsed.Seconds + " s");
+            Console.WriteLine("Testing on PT network... (A*)");
+            sw.Restart();
+            route = null;
+            depth = 7;
+            while (route == null)
+            {
+                Console.Write("Solving to depth: {0} --> ", depth++);
+                INetworkNode origin = provider.GetNodeFromId(19965);
+                INetworkNode destination = provider.GetNodeFromId(19879);
+                origin.CurrentRoute = provider.GetRoutesForNode(origin)[0];
+                destination.CurrentRoute = provider.GetRoutesForNode(destination)[0];
+                var tdfs = new PTAStarSearch(depth,false, provider, origin, destination);
+                Console.WriteLine("");
+                route = tdfs.Run();
+                Console.WriteLine("");
+                Console.WriteLine("Iterations: " + tdfs.Iterations);
+            }
 
+            Console.WriteLine("Result: " + String.Join(",", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            /*
+            Console.WriteLine("Testing on PT network... (Rand)");
+            sw.Restart();
+            route = null;
+            depth = 7;
+            while (route == null)
+            {
+                Console.Write("Solving to depth: {0} --> ", depth++);
+                INetworkNode origin = provider.GetNodeFromId(19965);
+                INetworkNode destination = provider.GetNodeFromId(19842);
+                origin.CurrentRoute = provider.GetRoutesForNode(origin)[0];
+                destination.CurrentRoute = provider.GetRoutesForNode(destination)[0];
+                var tdfs = new RandDepthFirstSearch(false, depth, provider, origin, destination);
+                Console.WriteLine("");
+                route = tdfs.Run();
+                Console.WriteLine("");
+                Console.WriteLine("Iterations: " + tdfs.Iterations);
+            }
+
+            Console.WriteLine("Result: " + String.Join(",", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+*/
         }
     }
 }

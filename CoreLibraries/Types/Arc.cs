@@ -38,7 +38,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The route id.
         /// </summary>
-        private readonly string routeId;
+        private readonly int routeId;
 
         /// <summary>
         ///   The source.
@@ -101,7 +101,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             double distance,
             DateTime departureTime,
             string transportMode,
-            string routeId)
+            int routeId)
         {
             this.source = source;
             this.destination = destination;
@@ -152,7 +152,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   Gets the optional route id for this arc.
         /// </summary>
-        public string RouteId
+        public int RouteId
         {
             get
             {

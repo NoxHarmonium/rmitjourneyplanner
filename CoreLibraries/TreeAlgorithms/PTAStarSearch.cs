@@ -18,38 +18,34 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class PTAStarSearch : DepthFirstSearch<INetworkNode>
+    public class PTAStarSearch : PTGreedySearch
     {
         private readonly INetworkDataProvider provider;
 
         public PTAStarSearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(depth, bidirectional, origin, goal)
+            : base(depth, bidirectional, provider, origin, goal)
         {
             this.provider = provider;
         }
 
         public PTAStarSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(bidirectional,origin, goal)
+            : base(bidirectional,provider,origin, goal)
         {
             this.provider = provider;
         }
 
-        protected override INetworkNode[] GetChildren(INetworkNode node)
-        {
-            List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
-
-            return nodes.ToArray();
-        }
-
+       
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
+            nodes = base.OrderChildren(nodes);
 
-            foreach (var node in nodes )
+            foreach (var node in nodes)
             {
                 node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
             }
-            
-            Array.Sort(nodes,new NodeComparer());
+
+            //Array.Sort(nodes, new NodeComparer());
+            nodes.ToList().StochasticSort();
             return nodes;
         }
     }

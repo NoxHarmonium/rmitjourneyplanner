@@ -50,6 +50,16 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             
             foreach (var node in nodes )
             {
+              
+                   //List<Arc> arcs = provider.GetDistanceBetweenNodes(current, node, departureTime);
+                    //arcs.Sort(new ArcComparer());
+                    //node.CurrentRoute = arcs[0].RouteId;
+                    //node.TotalTime = arcs[0].Time;
+                
+                
+                //node.TotalTime = provider.GetDistanceBetweenNodes(current,node,departureTime + current.TotalTime).
+                
+                
                 double distance = GeometryHelper.GetStraightLineDistance((Location)current, (Location)node);
                if (current.TransportType == node.TransportType)
                {
@@ -78,7 +88,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                {
                    node.TotalTime = TimeSpan.FromHours(distance / 4);
                }
-                
+               
             }
             
             Array.Sort(nodes,new NodeComparer());
