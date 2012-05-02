@@ -24,7 +24,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         /// <param name="adjaencyMatrix"></param>
         /// <param name="origin"></param>
         /// <param name="goal"></param>
-        public AdjacencyDepthFirstSearch(int[][] adjaencyMatrix, int origin, int goal) : base(false, origin, goal)
+        public AdjacencyDepthFirstSearch(int[][] adjaencyMatrix, int origin, int goal) : base(true, origin, goal)
         {
             this.adjaencyMatrix = adjaencyMatrix;
         }

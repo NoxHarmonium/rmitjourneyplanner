@@ -25,6 +25,37 @@ namespace RmitJourneyPlanner.CoreLibraries
             Rnd = new Random();
         }
         
+        /// <summary>
+        /// Concatenates 2 arrays and returns the result.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arrayA"></param>
+        /// <param name="arrayB"></param>
+        /// <returns></returns>
+        
+        public static T[] Concatenate<T>(this T[] arrayA, T[] arrayB)
+        {
+            if (arrayA == null && arrayB == null)
+            {
+                return null;
+            }
+            
+            if (arrayA == null)
+            {
+                return arrayB;
+            }
+            
+            if(arrayB == null )
+            {
+                return arrayA;
+            }
+
+            T[] result = new T[arrayA.Length + arrayB.Length];
+            arrayA.CopyTo(result,0);
+            arrayB.CopyTo(result,arrayA.Length);
+            return result;
+
+        }
         
         /// <summary>
         /// Sorts nodes probabilistically so they are in a rough order. 

@@ -34,13 +34,15 @@ namespace Testing
 
         public TestDFS()
         {
+           /*
             Console.WriteLine("Testing simple search on adjacency matrix...");
             var ADFS =
                 new AdjacencyDepthFirstSearch(adjacencyMatrix, 0, 5);
             int[] path = ADFS.Run();
             Console.WriteLine("Result: " + String.Join(",",path));
-            
-            
+
+            Console.ReadLine();
+            */
             var provider = new MetlinkDataProvider();
             INetworkNode[] route = null;
             int depth = 7;
@@ -50,7 +52,7 @@ namespace Testing
             while (route == null)
             {
                 Console.Write("Solving to depth: {0} --> ", depth++);
-                var tdfs = new PTDepthFirstSearch(false,depth,provider, provider.GetNodeFromId(19965), provider.GetNodeFromId(19842));
+                var tdfs = new PTDepthFirstSearch(true,depth,provider, provider.GetNodeFromId(19965), provider.GetNodeFromId(19842));
                 Console.WriteLine("");
                 route = tdfs.Run();
                 Console.WriteLine("");
@@ -58,7 +60,7 @@ namespace Testing
             }
             
             Console.WriteLine("Result: " + String.Join(",",route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
-            
+            Console.ReadLine();
             Console.WriteLine("Testing on PT network... (Greedy)");
             sw.Restart();
             
@@ -77,7 +79,7 @@ namespace Testing
                 Console.WriteLine("");
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
-
+            Console.WriteLine("Result: " + String.Join(",", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
             Console.WriteLine("Testing on PT network... (A*)");
             sw.Restart();
             route = null;

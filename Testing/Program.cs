@@ -16,6 +16,8 @@ namespace Testing
             RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += Logger_LogEvent;
             RmitJourneyPlanner.CoreLibraries.Logging.Logger.ProgressEvent += new RmitJourneyPlanner.CoreLibraries.Logging.ProgressEventHandler(Logger_ProgressEvent);
 
+            //Console.WriteLine(~0);
+            //Console.WriteLine(~1);
             TestDFS dfsTest = new TestDFS();
             //TestStoSort();
 
