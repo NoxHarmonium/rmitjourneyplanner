@@ -42,7 +42,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
 
 
-
+        private int runningThread =-1;
         private int iterations;
 
         private DateTime startTime;
@@ -124,18 +124,39 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             return results[0].Concatenate(results[1]);
         }
 
-        protected T[] RunDFS(T node, int depth)
+        private void WaitAndFlip()
         {
-            if (Bidirectional)
+            if(threadId == runningThread)
+            {
+                mutex.ReleaseMutex();
+            }
+            else
             {
                 mutex.WaitOne();
             }
+            runningThread = (runningThread == 0 ? 1 : 0);
+
+        }
+
+        protected T[] RunDFS(T node, int depth)
+        {
+            if (this.runningThread == threadId)
+            {
+                mutex.ReleaseMutex();
+            }
+            if (Bidirectional)
+            {
+                mutex.WaitOne();
+                this.runningThread = threadId;
+            }
             if (finished)
             {
+               
                 mutex.ReleaseMutex();
                 return new[] { node };
             }
-            this.Visited[threadId].Add(node);
+            
+            // this.Visited[threadId].Add(node);
             this.iterations++;
             T[] path = null;
             if (iterations % 10000 == 0)
@@ -156,7 +177,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 if (EqualityComparer<T>.Default.Equals(node, current[threadId == 0 ? 1 : 0]))
                 {
                     finished = true;
-                    mutex.ReleaseMutex();
+                    runningThread = -1;
                     return new[] { node };
                 }
 
@@ -169,7 +190,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 }
             }
 
+            
             current[threadId] = node;
+            Console.WriteLine("Setting threadId: {0} to {1}", threadId, node);
+
 
             if (depth > this.DepthLimit)
             {
@@ -190,8 +214,9 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 }
                 //var newVisited = new HashSet<T>(visited) { current };
 
+                
                 path = this.RunDFS(child, depth + 1);
-
+              
 
                 if (path == null)
                 {
