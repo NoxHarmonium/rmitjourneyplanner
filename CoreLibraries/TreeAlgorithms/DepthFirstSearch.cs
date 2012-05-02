@@ -13,36 +13,33 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     using System.Threading;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.Types;
 
     /// <summary>
     /// Performs a depth first search on a graph.
     /// </summary>
-    public abstract class DepthFirstSearch<T>
+    public abstract class DepthFirstSearch<T> 
     {
         protected HashSet<T>[] Visited = new HashSet<T>[2];
         protected INetworkDataProvider Provider;
         protected T Origin;
-
-        protected int DepthLimit = 16;
         protected T Goal;
-
-        [ThreadStatic]
-        protected static int threadId;
-
-        private bool finished = false;
+        protected int DepthLimit = 16;
+        
+      
         protected bool Bidirectional;
 
-        protected Mutex mutex = new Mutex();
 
 
-        protected T[] current = new T[2];
+        protected NodeWrapper<T>[] current = new NodeWrapper<T>[2];
 
      
         protected T[][] results = new T[2][];
 
+        private readonly Dictionary<NodeWrapper<T>, NodeWrapper<T>> map = new Dictionary<NodeWrapper<T>, NodeWrapper<T>>();
 
 
-        private int runningThread =-1;
+    
         private int iterations;
 
         private DateTime startTime;
@@ -82,8 +79,60 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
         }
 
-       
+       public T[] Run()
+       {
+           startTime = DateTime.Now;
+          
+           var stack = new Stack<NodeWrapper<T>>();
+           stack.Push(new NodeWrapper<T>(this.Origin));
+           current[0] = default(NodeWrapper<T>);
+           while (object.Equals(current[0],default(T)) || stack.Any() && !current[0].Node.Equals(Goal))
+           {
+               iterations++;
+               if (iterations % 10000 == 0)
+               {
 
+                   Console.CursorLeft = 0;
+
+                   Console.Write(
+                       "[" + 0 + "] - " + iterations + " , "
+                       + (iterations / (DateTime.Now - startTime).TotalSeconds).ToString() + " i/s");
+
+
+               }
+               current[0] = stack.Pop();
+               if (!Visited[0].Contains(current[0].Node))
+               {
+                   Visited[0].Add(current[0].Node);
+                   T[] children = this.OrderChildren(GetChildren(current[0].Node));
+
+
+                   foreach (T child in children){
+
+                       if (!child.Equals(current[0].Node))
+                       {
+                           var wrapper = new NodeWrapper<T>(child);
+                           map[wrapper] = current[0];
+                           stack.Push(wrapper);
+                       }
+                   }
+
+               }
+
+           }
+
+           var path = new List<T>();
+           NodeWrapper<T> v = current[0];
+           while (!v.Node.Equals(Origin))
+           {
+               path.Add(v.Node);
+               v = map[v];
+           }
+           path.Add(v.Node);
+           return path.ToArray();
+       }
+
+        /*
         /// <summary>
         /// Executes the Depth First Search.
         /// </summary>
@@ -137,6 +186,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             runningThread = (runningThread == 0 ? 1 : 0);
 
         }
+         
 
         protected T[] RunDFS(T node, int depth)
         {
@@ -236,7 +286,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
             return path;
         }
-    
+    */
         protected abstract T[] GetChildren(T node);
 
         protected abstract T[] OrderChildren(T[] nodes);

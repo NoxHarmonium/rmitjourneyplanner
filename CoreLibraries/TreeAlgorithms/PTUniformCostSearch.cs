@@ -60,10 +60,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 //node.TotalTime = provider.GetDistanceBetweenNodes(current,node,departureTime + current.TotalTime).
                 
                 
-                double distance = GeometryHelper.GetStraightLineDistance((Location)current[threadId], (Location)node);
-               if (current[threadId].TransportType == node.TransportType)
+                double distance = GeometryHelper.GetStraightLineDistance((Location)current[0].Node, (Location)node);
+               if (current[0].Node.TransportType == node.TransportType)
                {
-                   switch (current[threadId].TransportType)
+                   switch (current[0].Node.TransportType)
                    {
                        case "Train":
                            node.TotalTime = TimeSpan.FromHours(distance / 50);
@@ -78,7 +78,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                            break;
 
                        default:
-                           Console.WriteLine("Unknown transport type: " + current[threadId].TransportType);
+                           Console.WriteLine("Unknown transport type: " + current[0].Node.TransportType);
                            node.TotalTime = TimeSpan.FromHours(9999);
                            break;
                    }

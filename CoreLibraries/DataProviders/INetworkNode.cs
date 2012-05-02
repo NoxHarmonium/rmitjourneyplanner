@@ -8,12 +8,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
     using System;
 
+    using RmitJourneyPlanner.CoreLibraries.Types;
+
     #endregion
 
     /// <summary>
     ///   Represents a node in a transport network such a train station or tram stop.
     /// </summary>
-    public interface INetworkNode : IEquatable<INetworkNode>, ICloneable
+    public interface INetworkNode : IEquatable<INetworkNode>, ICloneable, INode
     {
         #region Public Properties
 
@@ -42,10 +44,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// </summary>
         double Longitude { get; }
 
-        /// <summary>
-        ///   Gets or sets the parent node to this node. Used for traversing route trees.
-        /// </summary>
-        INetworkNode Parent { get; set; }
+      
 
         /// <summary>
         ///   Gets the DataProvider that the node belongs to.

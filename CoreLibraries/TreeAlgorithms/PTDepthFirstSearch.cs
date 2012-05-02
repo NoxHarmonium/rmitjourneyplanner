@@ -37,18 +37,24 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         protected override INetworkNode[] GetChildren(INetworkNode node)
         {
             List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
-
             /*
-             * Uncomment for greedy
-             * 
-            foreach (var child in nodes)
+            INetworkNode[] clonedNodes = new INetworkNode[nodes.Count];
+            for (int i = 0; i < clonedNodes.Length; i++)
             {
-                child.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)child, (Location)this.Goal);
+                clonedNodes[i] = (INetworkNode) nodes[i].Clone();
             }
-            nodes.Sort(new NodeComparer());
-             * */
+            */
+                /*
+                 * Uncomment for greedy
+                 * 
+                foreach (var child in nodes)
+                {
+                    child.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)child, (Location)this.Goal);
+                }
+                nodes.Sort(new NodeComparer());
+                 * */
 
-            return nodes.ToArray();
+                return nodes.ToArray();
         }
 
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)

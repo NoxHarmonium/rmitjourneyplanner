@@ -183,5 +183,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
         #endregion
+
+        Types.INode Types.INode.Parent
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

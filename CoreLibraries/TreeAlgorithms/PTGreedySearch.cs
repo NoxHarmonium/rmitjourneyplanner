@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="PTAStarSearch.cs" company="">
+// <copyright file="PTGreedySearch.cs" company="">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -11,48 +11,49 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     using System.Linq;
     using System.Text;
 
-    using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
 
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class PTAStarSearch : PTUniformCostSearch
+    public class PTGreedySearch : PTDepthFirstSearch
     {
-        private readonly INetworkDataProvider provider;
+         private readonly INetworkDataProvider provider;
 
-        public PTAStarSearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(depth, bidirectional, provider, origin, goal)
+        public PTGreedySearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+            : base(bidirectional,depth,provider, origin, goal)
         {
             this.provider = provider;
         }
 
-        public PTAStarSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+        public PTGreedySearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(bidirectional,provider,origin, goal)
         {
             this.provider = provider;
         }
 
-       
+        
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
-            nodes = base.OrderChildren(nodes);
+           
 
             foreach (var node in nodes)
             {
                 node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
                 /*
-                node.EuclidianDistance = this.Bidirectional ? 
-                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.current[threadId == 0 ? 1 : 0]) : 
+                INetworkNode otherCurrent = this.current[threadId == 0 ? 1 : 0];
+                node.EuclidianDistance = this.Bidirectional && otherCurrent != null ?
+                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)otherCurrent) : 
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
-                * */
+                 */
             }
 
             //Array.Sort(nodes, new NodeComparer());
-            nodes.StochasticSort(0.5);
+            nodes.StochasticSort(0);
             
             return nodes;
         }
+
     }
 }

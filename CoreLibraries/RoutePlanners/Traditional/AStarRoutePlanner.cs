@@ -224,7 +224,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
                 foreach (INetworkNode node in routeNodes)
                 {
                     // node.RetrieveData();
-                    if (! this.hasBeenOnRoute(this.current.Parent, node))
+                    if (! this.hasBeenOnRoute((INetworkNode)this.current.Parent, node))
                     {
                         pArcs.AddRange(
                             tProvider.GetDistanceBetweenNodes(
@@ -334,7 +334,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
             while (node != null)
             {
                 nodes.Add(node);
-                node = node.Parent;
+                node = (INetworkNode)node.Parent;
             }
 
             nodes.Reverse();
@@ -360,7 +360,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
                         return true;
                     }
 
-                    current = current.Parent;
+                    current = (INetworkNode)current.Parent;
                 }
             }
 

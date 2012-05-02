@@ -264,5 +264,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         }
 
         #endregion
+
+        Types.INode Types.INode.Parent
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
