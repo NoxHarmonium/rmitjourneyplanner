@@ -253,7 +253,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <returns> The ID. </returns>
         public override string ToString()
         {
-            return this.id.ToString(CultureInfo.InvariantCulture);
+            if (stopSpecName == String.Empty)
+            {
+                return string.Format("{0}", this.Id);
+            }
+            
+            return String.Format("[MetlinkNode id: {0} - {1}]", this.id, this.stopSpecName);
+            
+            
         }
 
         #endregion

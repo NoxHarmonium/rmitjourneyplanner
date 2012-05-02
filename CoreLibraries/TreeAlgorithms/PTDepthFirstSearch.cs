@@ -53,6 +53,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
+            
+            nodes.StochasticSort(0.5);
             return nodes;
         }
     }

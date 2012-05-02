@@ -102,6 +102,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             {
 
                 Thread.CurrentThread.Name = "Thread A";
+                threadId = 0;
                 results[threadId] = this.RunDFS(this.Origin, 0);
 
             });
@@ -116,6 +117,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             threadA.Join();
             threadB.Join();
 
+            if (results[0] == null || results [1] == null)
+            {
+                return null;
+            }
             return results[0].Concatenate(results[1]);
         }
 
@@ -129,15 +134,19 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             {
                 mutex.ReleaseMutex();
                 return new[] { node };
-
             }
             this.Visited[threadId].Add(node);
             this.iterations++;
             T[] path = null;
-            //if (iterations % 10000 == 0)
+            if (iterations % 10000 == 0)
             {
+                
                 Console.CursorLeft = 0;
-                Console.Write("[" + Thread.CurrentThread.Name+ "] - " + iterations + " , " + (iterations / (DateTime.Now - startTime).TotalSeconds).ToString() + " i/s");
+
+                Console.Write(
+                    "[" + threadId + "] - " + iterations + " , "
+                    + (iterations / (DateTime.Now - startTime).TotalSeconds).ToString() + " i/s");
+                
 
             }
 
@@ -171,6 +180,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 return null;
             }
             T[] children = this.OrderChildren(GetChildren(node));
+            
 
             foreach (T child in children)
             {

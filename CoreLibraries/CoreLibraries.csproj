@@ -120,6 +120,7 @@
     <Compile Include="TreeAlgorithms\PTAStarSearch.cs" />
     <Compile Include="TreeAlgorithms\PTDepthFirstSearch.cs" />
     <Compile Include="TreeAlgorithms\PTGreedySearch.cs" />
+    <Compile Include="TreeAlgorithms\PTUniformCostSearch.cs" />
     <Compile Include="Types\AdjacencyList.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Comparers\ArcComparer.cs" />

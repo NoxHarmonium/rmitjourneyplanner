@@ -7,6 +7,7 @@
 namespace RmitJourneyPlanner.CoreLibraries
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -61,9 +62,19 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// Sorts nodes probabilistically so they are in a rough order. 
         /// </summary>
         /// <param name="list"></param>
-        public static void StochasticSort(this List<INetworkNode> list)
+        public static void StochasticSort(this ICollection<INetworkNode> list)
         {
-          
+            StochasticSort(list, 0.5);
+        }
+
+        /// <summary>
+        /// Sorts nodes probabilistically so they are in a rough order. 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="randomness"></param>
+        public static void StochasticSort(this ICollection<INetworkNode> list, double randomness)
+        {
+            
             var pDict = new Dictionary<INetworkNode, double>();
             //List<INetworkNode> nodes = new List<INetworkNode>(list.Count);
             double totalDistance = 0;
@@ -81,8 +92,8 @@ namespace RmitJourneyPlanner.CoreLibraries
                 double dPr = 1.0 / (t.EuclidianDistance / totalDistance);
                 double tPr = 1.0 / (t.TotalTime.TotalSeconds / totalTime.TotalSeconds);
                 double pr = 
-                    (Double.IsNaN(dPr) || Double.IsInfinity(dPr) ? 0: dPr) +
-                    (Double.IsNaN(tPr) || Double.IsInfinity(tPr) ? 0: tPr);
+                    (Double.IsNaN(dPr) || Double.IsInfinity(dPr) ? 1: dPr) +
+                    (Double.IsNaN(tPr) || Double.IsInfinity(tPr) ? 1: tPr);
               
                 pDict.Add(t, pr);
                 totalPr += pr;
@@ -102,10 +113,11 @@ namespace RmitJourneyPlanner.CoreLibraries
            
 
             var newNodes = new List<INetworkNode>();
+            var usedNodes = new List<INetworkNode>();
 
-            while (list.Count > 0)
+            while ((list.Except(usedNodes)).Any())
             {
-                double r = (Rnd.NextDouble() * Rnd.NextDouble()) * totalPr;
+                double r = (Rnd.NextDouble()*randomness) * totalPr;
                 int i;
                 for (i = 0; i < pairs.Count; i++)
                 {
@@ -114,12 +126,35 @@ namespace RmitJourneyPlanner.CoreLibraries
                 }
                 INetworkNode candidate = pairs[i].Key;
                 newNodes.Add(candidate);
-                list.Remove(candidate);
+                //list.Remove(candidate);
+
+                // Have to do it this way incase this function is running on a fixed array
+                // and remove wont work.
+                usedNodes.Add(candidate);
+
+
                 totalPr -= pairs[i].Value;
                 pairs.RemoveAt(i);
                 
             }
-            list.AddRange(newNodes);
+
+
+            var lArray = list as INetworkNode[];
+            if (lArray != null)
+            {
+                for (int i = 0; i < lArray.Length; i++)
+                {
+                    lArray[i] = newNodes[i];
+                }
+            }
+            else
+            {
+                var lList = (List<INetworkNode>)list;
+                lList.Clear();
+                lList.AddRange(newNodes);
+            }
+
+
 
         }
     }

@@ -14,7 +14,7 @@ namespace Testing
         static void Main(string[] args)
         {
             RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += Logger_LogEvent;
-            RmitJourneyPlanner.CoreLibraries.Logging.Logger.ProgressEvent += new RmitJourneyPlanner.CoreLibraries.Logging.ProgressEventHandler(Logger_ProgressEvent);
+            RmitJourneyPlanner.CoreLibraries.Logging.Logger.ProgressEvent += Logger_ProgressEvent;
 
             //Console.WriteLine(~0);
             //Console.WriteLine(~1);
@@ -43,7 +43,7 @@ namespace Testing
             for (int i = 0; i < 10; i++)
             {
 
-                nodes.StochasticSort();
+                nodes.StochasticSort(i / 10.0);
                 Console.WriteLine("After:  " + String.Join(",", nodes.Cast<object>()));
             }
         }

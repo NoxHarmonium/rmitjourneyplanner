@@ -19,20 +19,20 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class PTGreedySearch : DepthFirstSearch<INetworkNode>
+    public class PTUniformCostSearch : DepthFirstSearch<INetworkNode>
     {
         private readonly INetworkDataProvider provider;
 
         
         private readonly DateTime departureTime = DateTime.Now;
 
-        public PTGreedySearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+        public PTUniformCostSearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(depth, bidirectional, origin, goal)
         {
             this.provider = provider;
         }
 
-        public PTGreedySearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+        public PTUniformCostSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(bidirectional,origin, goal)
         {
             this.provider = provider;
@@ -91,7 +91,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                
             }
             
-            Array.Sort(nodes,new NodeComparer());
+            //Array.Sort(nodes,new NodeComparer());
+            nodes.StochasticSort(0.5);
             return nodes;
         }
     }

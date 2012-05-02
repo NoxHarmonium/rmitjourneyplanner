@@ -32,6 +32,8 @@ namespace Testing
                 new[] {0,0,0,0,0,0,0,0}
             };
 
+        
+
         public TestDFS()
         {
            /*
@@ -39,7 +41,7 @@ namespace Testing
             var ADFS =
                 new AdjacencyDepthFirstSearch(adjacencyMatrix, 0, 5);
             int[] path = ADFS.Run();
-            Console.WriteLine("Result: " + String.Join(",",path));
+            Console.WriteLine("Result: " + String.Join(",\n",path));
 
             Console.ReadLine();
             */
@@ -48,19 +50,21 @@ namespace Testing
             int depth = 7;
             
             Stopwatch sw = Stopwatch.StartNew();
+            /*
             Console.WriteLine("Testing on PT network... (DFS)");
             while (route == null)
             {
                 Console.Write("Solving to depth: {0} --> ", depth++);
-                var tdfs = new PTDepthFirstSearch(true,depth,provider, provider.GetNodeFromId(19965), provider.GetNodeFromId(19842));
+                var tdfs = new PTDepthFirstSearch(true, depth, provider, provider.GetNodeFromId(19965), provider.GetNodeFromId(19879));
                 Console.WriteLine("");
                 route = tdfs.Run();
                 Console.WriteLine("");
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
             
-            Console.WriteLine("Result: " + String.Join(",",route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            Console.WriteLine("Result: \n " + String.Join(",\n",route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
             Console.ReadLine();
+             * */
             Console.WriteLine("Testing on PT network... (Greedy)");
             sw.Restart();
             
@@ -70,16 +74,16 @@ namespace Testing
             {
                 Console.Write("Solving to depth: {0} --> ", depth++);
                 INetworkNode origin = provider.GetNodeFromId(19965);
-                INetworkNode destination = provider.GetNodeFromId(19842);
+                INetworkNode destination = provider.GetNodeFromId(19879);
                 origin.CurrentRoute = provider.GetRoutesForNode(origin)[0];
                 destination.CurrentRoute = provider.GetRoutesForNode(destination)[0];
-                var tdfs = new PTGreedySearch(depth, false, provider, origin, destination);
+                var tdfs = new PTGreedySearch(depth, true, provider, origin, destination);
                 Console.WriteLine("");
                 route = tdfs.Run();
                 Console.WriteLine("");
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
-            Console.WriteLine("Result: " + String.Join(",", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            Console.WriteLine("Result: \n" + String.Join(",\n", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
             Console.WriteLine("Testing on PT network... (A*)");
             sw.Restart();
             route = null;
@@ -91,14 +95,14 @@ namespace Testing
                 INetworkNode destination = provider.GetNodeFromId(19879);
                 origin.CurrentRoute = provider.GetRoutesForNode(origin)[0];
                 destination.CurrentRoute = provider.GetRoutesForNode(destination)[0];
-                var tdfs = new PTAStarSearch(depth,false, provider, origin, destination);
+                var tdfs = new PTAStarSearch(depth,true, provider, origin, destination);
                 Console.WriteLine("");
                 route = tdfs.Run();
                 Console.WriteLine("");
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
 
-            Console.WriteLine("Result: " + String.Join(",", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            Console.WriteLine("Result: \n" + String.Join(",\n", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
             /*
             Console.WriteLine("Testing on PT network... (Rand)");
             sw.Restart();
@@ -118,8 +122,19 @@ namespace Testing
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
 
-            Console.WriteLine("Result: " + String.Join(",", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            Console.WriteLine("Result: " + String.Join(",\n", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
 */
+        }
+
+        private MetlinkNode[] GetNodesFromIds(int[] ids,INetworkDataProvider provider)
+        {
+            MetlinkNode[] output = new MetlinkNode[ids.Length];
+            for (int i = 0; i < ids.Length; i++)
+            {
+                output[i] = new MetlinkNode(ids[i],provider);
+
+            }
+            return output;
         }
     }
 }

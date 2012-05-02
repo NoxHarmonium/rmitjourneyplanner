@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class PTAStarSearch : PTGreedySearch
+    public class PTAStarSearch : PTUniformCostSearch
     {
         private readonly INetworkDataProvider provider;
 
@@ -41,11 +41,14 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
             foreach (var node in nodes)
             {
-                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
+                node.EuclidianDistance = this.Bidirectional ? 
+                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.current[threadId == 0 ? 1 : 0]) : 
+                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
             }
 
             //Array.Sort(nodes, new NodeComparer());
-            nodes.ToList().StochasticSort();
+            nodes.StochasticSort(0.5);
+            
             return nodes;
         }
     }
