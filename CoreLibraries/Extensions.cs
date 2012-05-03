@@ -105,7 +105,7 @@ namespace RmitJourneyPlanner.CoreLibraries
             }
             */
             var pairs = new List<KeyValuePair<INetworkNode, double>>();
-            foreach (var kvp in (from entry in pDict orderby entry.Value descending select entry))
+            foreach (var kvp in (from entry in pDict orderby entry.Value ascending select entry))
             {
                 pairs.Add(kvp);
             }

@@ -28,8 +28,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.provider = provider;
         }
 
-        public PTDepthFirstSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(bidirectional,origin, goal)
+        public PTDepthFirstSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
+            : base(bidirectional,origin, destination)
         {
             this.provider = provider;
         }
@@ -49,7 +49,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                  * 
                 foreach (var child in nodes)
                 {
-                    child.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)child, (Location)this.Goal);
+                    child.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)child, (Location)this.Destination);
                 }
                 nodes.Sort(new NodeComparer());
                  * */

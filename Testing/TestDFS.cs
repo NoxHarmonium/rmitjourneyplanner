@@ -83,7 +83,7 @@ namespace Testing
                 Console.WriteLine("");
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
-            Console.WriteLine("Result: \n" + String.Join(",\n", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            Console.WriteLine("Result: \n" + String.Join(", ", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s  Total nodes: " + route.Length);
             Console.ReadLine();
             Console.WriteLine("Testing on PT network... (A*)");
             sw.Restart();
@@ -103,7 +103,7 @@ namespace Testing
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
 
-            Console.WriteLine("Result: \n" + String.Join(",\n", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            Console.WriteLine("Result: \n" + String.Join(", ", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s Total nodes: " + route.Length);
             /*
             Console.WriteLine("Testing on PT network... (Rand)");
             sw.Restart();

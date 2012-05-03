@@ -27,8 +27,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.provider = provider;
         }
 
-        public PTGreedySearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(bidirectional,provider,origin, goal)
+        public PTGreedySearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
+            : base(bidirectional,provider,origin, destination)
         {
             this.provider = provider;
         }
@@ -40,12 +40,12 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
             foreach (var node in nodes)
             {
-                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
+                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
                 /*
                 INetworkNode otherCurrent = this.current[threadId == 0 ? 1 : 0];
                 node.EuclidianDistance = this.Bidirectional && otherCurrent != null ?
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)otherCurrent) : 
-                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
+                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
                  */
             }
 

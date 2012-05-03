@@ -32,8 +32,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.provider = provider;
         }
 
-        public PTUniformCostSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(bidirectional,origin, goal)
+        public PTUniformCostSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
+            : base(bidirectional,origin, destination)
         {
             this.provider = provider;
         }

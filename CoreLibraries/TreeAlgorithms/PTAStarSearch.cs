@@ -28,8 +28,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.provider = provider;
         }
 
-        public PTAStarSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(bidirectional,provider,origin, goal)
+        public PTAStarSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
+            : base(bidirectional,provider,origin, destination)
         {
             this.provider = provider;
         }
@@ -41,16 +41,27 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
             foreach (var node in nodes)
             {
-                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
+                if (Bidirectional)
+                {
+                    INetworkNode otherNode = this.current[CurrentIndex == 0 ? 1 : 0].Node;
+                    node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)otherNode);
+                }
+                else
+                {
+
+                    node.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
+                        (Location)node, (Location)this.Destination);
+                }
                 /*
                 node.EuclidianDistance = this.Bidirectional ? 
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.current[threadId == 0 ? 1 : 0]) : 
-                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Goal);
+                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
                 * */
             }
 
             //Array.Sort(nodes, new NodeComparer());
-            nodes.StochasticSort(0.5);
+            //Array.Reverse(nodes);
+            nodes.StochasticSort(0);
             
             return nodes;
         }

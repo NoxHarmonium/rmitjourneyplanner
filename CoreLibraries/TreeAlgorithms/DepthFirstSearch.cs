@@ -23,10 +23,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         protected HashSet<T>[] Visited = new HashSet<T>[2];
         protected INetworkDataProvider Provider;
         protected T Origin;
-        protected T Goal;
+        protected T Destination;
         protected int DepthLimit = 16;
-        
-      
+
+        private int currentIndex = 0;
         protected bool Bidirectional;
 
 
@@ -57,16 +57,12 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         /// <param name="provider">The data provider which the graph can be derived from.</param>
         /// <param name="bidirectional"> </param>
         /// <param name="origin">The origin node.</param>
-        /// <param name="goal">The destination node.</param>
-        protected DepthFirstSearch(bool bidirectional, T origin, T goal)
+        /// <param name="destination">The destination node.</param>
+        protected DepthFirstSearch(bool bidirectional, T origin, T destination)
         {
-            this.Visited[0] = new HashSet<T>();
-            if (bidirectional)
-            {
-                this.Visited[1] = new HashSet<T>();
-            }
+           
             this.Origin = origin;
-            this.Goal = goal;
+            this.Destination = destination;
             this.Bidirectional = bidirectional;
 
         }
@@ -79,15 +75,50 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
         }
 
-       public T[] Run()
+        public int CurrentIndex
+        {
+            get
+            {
+                return currentIndex;
+            }
+        }
+
+        public T[] Run()
        {
            startTime = DateTime.Now;
-          
-           var stack = new Stack<NodeWrapper<T>>();
-           stack.Push(new NodeWrapper<T>(this.Origin));
-           current[0] = default(NodeWrapper<T>);
-           while (object.Equals(current[0],default(T)) || stack.Any() && !current[0].Node.Equals(Goal))
+
+           this.Visited[0] = new HashSet<T>();
+           
+
+           var stack = new Stack<NodeWrapper<T>>[2];
+           stack[0] = new Stack<NodeWrapper<T>>();
+           T[] goal = new T[2];
+           goal[0] = Destination;
+           current[0] = new NodeWrapper<T>(Origin);
+           
+
+           if (Bidirectional)
            {
+               this.Visited[1] = new HashSet<T>();
+               stack[1] = new Stack<NodeWrapper<T>>();
+               stack[1].Push(new NodeWrapper<T>(this.Destination));
+               goal[1] = Origin;
+               current[1] = new NodeWrapper<T>(Destination);
+           }
+           
+           stack[0].Push(new NodeWrapper<T>(this.Origin));
+           
+
+           current[0] = default(NodeWrapper<T>);
+           while (
+               Equals(current[0], default(T)) || 
+               (Bidirectional && Equals(current[1], default(T))) ||
+               stack[0].Any() &&
+               (Bidirectional && stack[1].Any()) &&
+               !current[0].Node.Equals(goal[0]) && 
+               !(Bidirectional && current[1].Node.Equals(goal[1])))
+           {
+               // Update debug info
                iterations++;
                if (iterations % 10000 == 0)
                {
@@ -100,30 +131,57 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
 
                }
-               current[0] = stack.Pop();
-               if (!Visited[0].Contains(current[0].Node))
+               for (int i = 0; i < (Bidirectional ? 2 : 1); i++)
                {
-                   Visited[0].Add(current[0].Node);
-                   T[] children = this.OrderChildren(GetChildren(current[0].Node));
-
-
-                   foreach (T child in children){
-
-                       if (!child.Equals(current[0].Node))
-                       {
-                           var wrapper = new NodeWrapper<T>(child);
-                           map[wrapper] = current[0];
-                           stack.Push(wrapper);
-                       }
+                   currentIndex = i;
+                   //Update goals
+                   if (Bidirectional)
+                   {
+                       goal[i] = current[i == 0 ? 1 : 0].Node;
                    }
+                   else
+                   {
+                       goal[i] = Destination;
+                   }
+                   //Update currents
+                   current[i] = stack[i].Pop();
+                
 
+
+                   if (!Visited[i].Contains(current[i].Node))
+                   {
+                       Visited[i].Add(current[i].Node);
+                       T[] children = this.OrderChildren(GetChildren(current[i].Node));
+
+
+                       foreach (T child in children)
+                       {
+
+                           if (!child.Equals(current[i].Node))
+                           {
+                               var wrapper = new NodeWrapper<T>(child);
+                               map[wrapper] = current[i];
+                               stack[i].Push(wrapper);
+                           }
+                       }
+
+                   }
                }
 
            }
 
            var path = new List<T>();
+
            NodeWrapper<T> v = current[0];
            while (!v.Node.Equals(Origin))
+           {
+               path.Add(v.Node);
+               v = map[v];
+           }
+           path.Add(v.Node);
+           path.Reverse();
+            v = current[1];
+           while (!v.Node.Equals(Destination))
            {
                path.Add(v.Node);
                v = map[v];
@@ -159,7 +217,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 {
                     Thread.CurrentThread.Name = "Thread B";
                     threadId = 1;
-                    results[threadId] = this.RunDFS(this.Goal, 0);
+                    results[threadId] = this.RunDFS(this.Destination, 0);
                 });
             threadA.Start();
             threadB.Start();
@@ -234,7 +292,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
             else
             {
-                if (EqualityComparer<T>.Default.Equals(node, Goal))
+                if (EqualityComparer<T>.Default.Equals(node, Destination))
                 {
                     return new[] { node };
                 }
