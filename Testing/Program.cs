@@ -6,6 +6,7 @@ using RmitJourneyPlanner.CoreLibraries;
 
 namespace Testing
 {
+    using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
 
@@ -18,8 +19,8 @@ namespace Testing
 
             //Console.WriteLine(~0);
             //Console.WriteLine(~1);
-            TestDFS dfsTest = new TestDFS();
-            //TestStoSort();
+            //TestDFS dfsTest = new TestDFS();
+            TestStoSort();
 
 
             Console.ReadLine();
@@ -30,7 +31,7 @@ namespace Testing
         {
 
             var nodes = new List<INetworkNode>();
-            for (int i = 2; i < 20; i++)
+            for (int i = 1; i < 11; i++)
             {
                 INetworkNode node = new MetlinkNode(i, "", "", 0, 0, null);
                 node.EuclidianDistance = i;
@@ -39,12 +40,16 @@ namespace Testing
                 //nodes.Add();
 
             }
-            Console.WriteLine("Before: " + String.Join(",", nodes.Cast<object>()));
-            for (int i = 0; i < 10; i++)
-            {
+            nodes.Shuffle();
 
-                nodes.StochasticSort(i / 10.0);
-                Console.WriteLine("After:  " + String.Join(",", nodes.Cast<object>()));
+            Console.WriteLine("Before: " + String.Join(",", nodes.Cast<object>()));
+            for (int i = 1; i < 11; i++)
+            {
+                var newNodes = new List<INetworkNode>(nodes);
+                newNodes.StochasticSort((i - 1) / 10.0);
+                newNodes.Reverse();
+               
+                Console.WriteLine("After:  " + String.Join(",", newNodes.Cast<object>()));
             }
         }
         static void Logger_ProgressEvent(object sender, int progress)

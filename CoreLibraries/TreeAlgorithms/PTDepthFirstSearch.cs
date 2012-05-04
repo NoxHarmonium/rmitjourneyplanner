@@ -22,7 +22,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     {
         private readonly INetworkDataProvider provider;
 
-        public PTDepthFirstSearch(bool bidirectional, int depth, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+        public PTDepthFirstSearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(depth, bidirectional, origin, goal)
         {
             this.provider = provider;
@@ -60,7 +60,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
             
-            nodes.StochasticSort(0.5);
+            nodes.StochasticSort(Entropy);
             return nodes;
         }
     }

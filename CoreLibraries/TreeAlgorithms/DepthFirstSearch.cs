@@ -3,6 +3,7 @@
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
+//#define VERBOSE_DEBUG
 
 namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 {
@@ -15,6 +16,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
+    
+
     /// <summary>
     /// Performs a depth first search on a graph.
     /// </summary>
@@ -26,6 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         protected T Destination;
         protected int DepthLimit = 16;
 
+        private double entropy = 0.5;
         private int currentIndex = 0;
         protected bool Bidirectional;
 
@@ -83,6 +87,18 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
         }
 
+        public double Entropy
+        {
+            get
+            {
+                return this.entropy;
+            }
+            set
+            {
+                this.entropy = value;
+            }
+        }
+
         public T[] Run()
        {
            startTime = DateTime.Now;
@@ -120,17 +136,18 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
            {
                // Update debug info
                iterations++;
+#if (VERBOSE_DEBUG)
+
                if (iterations % 10000 == 0)
                {
-
                    Console.CursorLeft = 0;
 
                    Console.Write(
                        "[" + 0 + "] - " + iterations + " , "
                        + (iterations / (DateTime.Now - startTime).TotalSeconds).ToString() + " i/s");
 
-
                }
+#endif
                for (int i = 0; i < (Bidirectional ? 2 : 1); i++)
                {
                    currentIndex = i;

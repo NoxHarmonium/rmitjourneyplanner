@@ -22,7 +22,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
          private readonly INetworkDataProvider provider;
 
         public PTGreedySearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(bidirectional,depth,provider, origin, goal)
+            : base(depth,bidirectional, provider, origin, goal)
         {
             this.provider = provider;
         }
@@ -50,7 +50,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
 
             //Array.Sort(nodes, new NodeComparer());
-            nodes.StochasticSort(0);
+            nodes.StochasticSort(Entropy);
             
             return nodes;
         }

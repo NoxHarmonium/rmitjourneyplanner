@@ -59,6 +59,22 @@ namespace RmitJourneyPlanner.CoreLibraries
         }
         
         /// <summary>
+        /// Shuffles a list of nodes so that they are placed in random order in the list.
+        /// </summary>
+        /// <param name="list"></param>
+        public static void Shuffle(this List<INetworkNode> list )
+        {
+            var newList = new List<INetworkNode>();
+            while (list.Any())
+            {
+                int index = Rnd.Next(list.Count - 1);
+                newList.Add(list[index]);
+                list.RemoveAt(index);
+            }
+            list.AddRange(newList);
+        }
+
+        /// <summary>
         /// Sorts nodes probabilistically so they are in a rough order. 
         /// </summary>
         /// <param name="list"></param>

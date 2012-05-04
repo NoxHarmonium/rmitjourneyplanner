@@ -50,21 +50,39 @@ namespace Testing
             int depth = 7;
             
             Stopwatch sw = Stopwatch.StartNew();
-            /*
+            
             Console.WriteLine("Testing on PT network... (DFS)");
             while (route == null)
             {
-                Console.Write("Solving to depth: {0} --> ", depth++);
-                var tdfs = new PTDepthFirstSearch(true, depth, provider, provider.GetNodeFromId(19965), provider.GetNodeFromId(19879));
-                Console.WriteLine("");
-                route = tdfs.Run();
-                Console.WriteLine("");
-                Console.WriteLine("Iterations: " + tdfs.Iterations);
+                for (int i = 0; i < 11; i++)
+                {
+                    checked
+                    {
+                        Console.Write("Solving to depth: {0} entropy {1} --> ", depth++, i / 10.0);
+                        long totalIterations = 0;
+                        long totalNodes = 0;
+                        for (int j = 0; j < 500; j++)
+                        {
+
+                            var tdfs = new PTGreedySearch(depth, true, provider, provider.GetNodeFromId(19965), provider.GetNodeFromId(19879));
+                            tdfs.Entropy = i / 10.0;
+                            route = tdfs.Run();
+                            totalIterations += tdfs.Iterations;
+                            totalNodes += route.Length;
+
+                        }
+                        Console.WriteLine(
+                            "Average Iterations: {0} Average Route Length: {1}",
+                            totalIterations / 500.0,
+                            totalNodes / 500.0);
+                    }
+                }
             }
             
-            Console.WriteLine("Result: \n " + String.Join(",\n",route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            //Console.WriteLine("Result: \n " + String.Join(",\n",route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
+            Console.WriteLine("Result: Time: " + sw.Elapsed.TotalSeconds + " s  Total nodes: " + route.Length);
             Console.ReadLine();
-             * */
+             
             Console.WriteLine("Testing on PT network... (Greedy)");
             sw.Restart();
             
@@ -83,7 +101,8 @@ namespace Testing
                 Console.WriteLine("");
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
-            Console.WriteLine("Result: \n" + String.Join(", ", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s  Total nodes: " + route.Length);
+           // Console.WriteLine("Result: \n" + String.Join(", ", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s  Total nodes: " + route.Length);
+            Console.WriteLine("Result: Time: " + sw.Elapsed.TotalSeconds + " s  Total nodes: " + route.Length);
             Console.ReadLine();
             Console.WriteLine("Testing on PT network... (A*)");
             sw.Restart();
@@ -103,7 +122,8 @@ namespace Testing
                 Console.WriteLine("Iterations: " + tdfs.Iterations);
             }
 
-            Console.WriteLine("Result: \n" + String.Join(", ", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s Total nodes: " + route.Length);
+            //Console.WriteLine("Result: \n" + String.Join(", ", route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s Total nodes: " + route.Length);
+            Console.WriteLine("Result: Time: " + sw.Elapsed.TotalSeconds + " s Total nodes: " + route.Length);
             /*
             Console.WriteLine("Testing on PT network... (Rand)");
             sw.Restart();

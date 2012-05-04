@@ -61,7 +61,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
             //Array.Sort(nodes, new NodeComparer());
             //Array.Reverse(nodes);
-            nodes.StochasticSort(0);
+            nodes.StochasticSort(Entropy);
             
             return nodes;
         }
