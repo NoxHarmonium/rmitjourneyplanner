@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 
 namespace AjaxServer.aspx
 {
+    using System.Threading;
+
     using AjaxServer.AspxComponents;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
@@ -41,6 +43,10 @@ namespace AjaxServer.aspx
                         string name = "Terminal";
                         if (mn != null)
                         {
+                            while (Global.busy)
+                            {
+                                Thread.Sleep(50);
+                            }
                             mn.RetrieveData();
                             name = mn.StopSpecName;
                         }

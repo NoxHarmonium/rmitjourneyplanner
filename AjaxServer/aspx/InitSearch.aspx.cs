@@ -49,7 +49,7 @@ namespace AjaxServer.aspx
                 properties.PopulationSize = 100;
                 properties.MaxDistance = 0.5;
                 properties.DepartureTime = DateTime.Parse(date + " " + time);
-                properties.NumberToKeep = 50;
+                properties.NumberToKeep = 25;
                 properties.MutationRate = 0.2;
                 properties.CrossoverRate = 0.7;
                 properties.RouteGenerator = new AlRouteGenerator(properties);
