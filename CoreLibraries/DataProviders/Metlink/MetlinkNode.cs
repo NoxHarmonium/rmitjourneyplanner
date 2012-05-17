@@ -219,6 +219,27 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             return this.id == other.Id && other is MetlinkNode;
         }
 
+        public override bool Equals(object obj)
+        {
+            var metlinkNode = obj as MetlinkNode;
+            if (metlinkNode != null)
+            {
+                return (metlinkNode).id == this.id;
+            }
+            
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.id;
+        }
+
+        bool IEquatable<INetworkNode>.Equals(INetworkNode other)
+        {
+            return this.Equals(other);
+        }
+
         /// <summary>
         ///   Sets the internal parameters of this node from a data table.
         /// </summary>

@@ -20,10 +20,12 @@ namespace Testing
             //Console.WriteLine(~0);
             //Console.WriteLine(~1);
             //TestDFS dfsTest = new TestDFS();
-            TestStoSort();
+            //TestStoSort();
+            TestJP jp = new TestJP();
+            jp.Test();
 
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
        

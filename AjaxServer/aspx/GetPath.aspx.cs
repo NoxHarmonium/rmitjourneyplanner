@@ -50,7 +50,7 @@ namespace AjaxServer.aspx
                             mn.RetrieveData();
                             name = mn.StopSpecName;
                         }
-                        Response.Write(node.Latitude + "," + node.Longitude + "," + node.Id + "," +node.TransportType + "," + name + ";");
+                        Response.Write(node.Latitude + "," + node.Longitude + "," + node.Id + "," +node.TransportType + "," + name + "," + node.CurrentRoute + ";");
                     }
                     Response.Write("#");
                 }

@@ -46,7 +46,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture,"{0},{1},{2},{3}", Totaltime, MinimumFitness, AverageFitness,DiversityMetric);
+            return String.Format(CultureInfo.InvariantCulture,"[Total Time, Min Fitness, Average Fitness, Diversity Metric][{0},{1},{2},{3}]", Totaltime, MinimumFitness, AverageFitness,DiversityMetric);
         }
 
        

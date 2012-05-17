@@ -30,7 +30,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         /// </summary>
         private readonly EvolutionaryProperties properties;
 
-        private List<int> routesUsed = new List<int>(); 
+        private readonly List<int> routesUsed = new List<int>(); 
 
         #endregion
 
@@ -107,16 +107,22 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         }
                         if (minTime.TravelTime != TimeSpan.MaxValue)
                         {
+                           
                             condensedRoute.Add(new[] { index, i, minRoute, (int)minTime.TotalTime.TotalSeconds });
                             routesUsed.Add(minRoute);
                         }
                         else
                         {
+                            
                             minTime.TravelTime =
                                 this.properties.PointDataProviders[0].EstimateDistance(
                                     (Location)route[index], (Location)route[i]).Time;
                             condensedRoute.Add(new[] { index, i, -1, (int)minTime.TotalTime.TotalSeconds });
                             //Logger.Log(this,"No service available. Adding walking link...");
+                        }
+                        for (int j = index; j < i; j++)
+                        {
+                            route[j].CurrentRoute = minRoute;
                         }
                         departureTime += minTime.TotalTime;
                         //Logger.Log(this,"{0} ({1}) ---[{4} <{6}>]---> {2} ({3})\n += W: {7} T: {5}", route[index].Id, ((MetlinkNode)route[index]).StopSpecName, route[i].Id, ((MetlinkNode)route[i]).StopSpecName,minRoute,minTime.TravelTime,route[i].TransportType,minTime.WaitingTime);

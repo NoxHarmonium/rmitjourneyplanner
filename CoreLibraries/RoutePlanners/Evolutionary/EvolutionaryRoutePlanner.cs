@@ -67,22 +67,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
-        ///   Gets the best node found so far.
-        /// </summary>
-        public INetworkNode BestNode { get; protected set; }
-
-        /// <summary>
-        ///   Gets the current node being traversed.
-        /// </summary>
-        public INetworkNode Current
-        {
-            get
-            {
-                return this.BestNode;
-            }
-        }
-
-        /// <summary>
         ///   The population of the evolutionary algorithm.
         /// </summary>
         public List<Critter> Population
@@ -200,23 +184,49 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             var newCritters = new List<Critter>(this.properties.PopulationSize - this.properties.NumberToKeep);
             eliteCritters.AddRange(this.Population.GetRange(0, this.properties.NumberToKeep));
 
+            var matingPool = new List<Critter>();
+            
+            // Begin tournament selection
+            for (int i = 0; i < this.properties.PopulationSize - this.properties.NumberToKeep; i ++)
+            {
+                var first = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
+                var second = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
+                var surviver = first.Fitness > second.Fitness ? second : first;
+                matingPool.Add(surviver);
+            }
+
             for (int i = 0; i < this.properties.PopulationSize - this.properties.NumberToKeep; i += 2)
             {
-                var first = (Critter)eliteCritters[this.random.Next(eliteCritters.Count - 1)].Clone();
-                var second = (Critter)eliteCritters[this.random.Next(eliteCritters.Count - 1)].Clone();
-                var children = new[] { first, second };
+                var first = (Critter)matingPool[this.random.Next(matingPool.Count - 1)].Clone();
+                var second = (Critter)matingPool[this.random.Next(matingPool.Count - 1)].Clone();
+
+                var endPoints = new KeyValuePair<int, int>[2];
+                endPoints[0] = new KeyValuePair<int, int>(first.Route.First().Id, first.Route.Last().Id);
+                endPoints[1] = new KeyValuePair<int, int>(second.Route.First().Id, second.Route.Last().Id);
 
                 bool doCrossover = this.random.NextDouble() <= this.properties.CrossoverRate;
                 bool doMutation = this.random.NextDouble() <= this.properties.MutationRate;
-                if (doCrossover)
+                Critter[] children = doCrossover
+                                         ? this.properties.Breeder.Crossover(first, second)
+                                         : new[] { first, second };
+
+                if (first.Route.First().Id != endPoints[0].Key || first.Route.Last().Id != endPoints[0].Value||
+                    second.Route.First().Id != endPoints[1].Key || second.Route.Last().Id != endPoints[1].Value)
                 {
-                    children = this.properties.Breeder.Crossover(children[0], children[1]) ?? children;
+                    throw new Exception("Path endpoints have lost consistancy!");
                 }
 
                 if (doMutation)
                 {
                     children[0] = this.properties.Mutator.Mutate(children[0]);
                     children[1] = this.properties.Mutator.Mutate(children[1]);
+                }
+
+
+                if (first.Route.First().Id != endPoints[0].Key || first.Route.Last().Id != endPoints[0].Value ||
+                    second.Route.First().Id != endPoints[1].Key || second.Route.Last().Id != endPoints[1].Value)
+                {
+                    throw new Exception("Path endpoints have lost consistancy!");
                 }
 
                 children[0].Fitness = this.properties.FitnessFunction.GetFitness(children[0].Route);
@@ -247,8 +257,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     }
 
                 }
-                Tools.ToLinkedNodes(this.RepairRoute(children[0].Route));
-                Tools.ToLinkedNodes(this.RepairRoute(children[1].Route));
+               // this.RepairRoute(children[0].Route);
+               // this.RepairRoute(children[1].Route);
+
+
+                if (first.Route.First().Id != endPoints[0].Key || first.Route.Last().Id != endPoints[0].Value ||
+                    second.Route.First().Id != endPoints[1].Key || second.Route.Last().Id != endPoints[1].Value)
+                {
+                    throw new Exception("Path endpoints have lost consistancy!");
+                }
                 newCritters.AddRange(children);
 
                 progress++;
@@ -297,7 +314,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
 
-            this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
+            //this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
             
 
             return false;
@@ -335,12 +352,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 Route route = null;
                 while (route == null)
                 {
-                    route =
-                        this.RepairRoute(
-                            this.properties.RouteGenerator.Generate(
+                    route = this.properties.RouteGenerator.Generate(
                                 (INetworkNode)this.properties.Origin.Clone(),
                                 (INetworkNode)this.properties.Destination.Clone(),
-                                this.properties.DepartureTime));
+                                this.properties.DepartureTime);
                 }
 
                 
@@ -375,7 +390,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             this.result.Population = this.population;
             Console.WriteLine("------------------------");
             //Tools.SavePopulation(this.population, 0, this.properties);
-            this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
+            //this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
         }
 
         #endregion

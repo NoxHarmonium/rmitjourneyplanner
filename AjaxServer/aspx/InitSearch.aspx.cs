@@ -19,6 +19,7 @@ namespace AjaxServer.aspx
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 
     public partial class InitSearch : System.Web.UI.Page
     {
@@ -50,9 +51,10 @@ namespace AjaxServer.aspx
                 properties.MaxDistance = 0.5;
                 properties.DepartureTime = DateTime.Parse(date + " " + time);
                 properties.NumberToKeep = 25;
-                properties.MutationRate = 0.2;
+                properties.MutationRate = 0.1;
                 properties.CrossoverRate = 0.7;
-                properties.RouteGenerator = new AlRouteGenerator(properties);
+                //properties.RouteGenerator = new AlRouteGenerator(properties);
+                properties.RouteGenerator = new DFSRoutePlanner(properties);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);
@@ -66,7 +68,7 @@ namespace AjaxServer.aspx
                 //properties.DataStructures = new DataStructures(properties);
 
                 Global.Planner = new EvolutionaryRoutePlanner(properties);
-                RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += new RmitJourneyPlanner.CoreLibraries.Logging.LogEventHandler(Logger_LogEvent);
+                RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += this.Logger_LogEvent;
                 
             }
             catch (Exception ex)

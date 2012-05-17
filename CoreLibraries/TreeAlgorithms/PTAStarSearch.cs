@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class PTAStarSearch : PTUniformCostSearch
+    public class PTAStarSearch : PTDepthFirstSearch
     {
         private readonly INetworkDataProvider provider;
 
@@ -37,11 +37,11 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
        
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
-            nodes = base.OrderChildren(nodes);
+            //nodes = base.OrderChildren(nodes);
 
             foreach (var node in nodes)
             {
-                if (Bidirectional)
+                if (this.Bidirectional)
                 {
                     INetworkNode otherNode = this.current[CurrentIndex == 0 ? 1 : 0].Node;
                     node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)otherNode);
@@ -57,6 +57,44 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.current[threadId == 0 ? 1 : 0]) : 
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
                 * */
+
+               double distance = GeometryHelper.GetStraightLineDistance((Location)current[0].Node, (Location)node);
+               if (current[CurrentIndex].Node.TransportType == node.TransportType)
+               {
+                   switch (current[CurrentIndex].Node.TransportType)
+                   {
+                       case "Train":
+                           node.TotalTime = TimeSpan.FromHours(distance / 60);
+                           break;
+
+                       case "Bus":
+                           node.TotalTime = TimeSpan.FromHours(distance / 30);
+                           break;
+
+                       case "Tram":
+                           node.TotalTime = TimeSpan.FromHours(distance / 40);
+                           break;
+
+                       case "V/Line Coach":
+                       case "Regional Bus":
+                             node.TotalTime = TimeSpan.FromHours(distance / 50);
+                           break;
+                            break;
+
+
+                       default:
+                           Console.WriteLine("Unknown transport type: " + current[0].Node.TransportType);
+                           node.TotalTime = TimeSpan.FromHours(9999);
+                           break;
+                   }
+
+               }
+               else
+               {
+                   node.TotalTime = TimeSpan.FromHours(distance / 2);
+               }
+               
+            
             }
 
             //Array.Sort(nodes, new NodeComparer());

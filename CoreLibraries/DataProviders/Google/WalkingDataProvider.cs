@@ -52,7 +52,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         public Arc EstimateDistance(Location locationA, Location locationB)
         {
             double distance = GeometryHelper.GetStraightLineDistance(locationA, locationB);
-            var time = new TimeSpan(0, 0, (int)((distance / 3.0) * 60.0 * 60.0));
+            var time = new TimeSpan(0, 0, (int)((distance / 1.0) * 60.0 * 60.0));
             return new Arc(locationA, locationB, time, distance, default(DateTime), "Walking");
         }
 

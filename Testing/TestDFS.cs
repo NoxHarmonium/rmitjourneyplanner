@@ -54,7 +54,7 @@ namespace Testing
             Console.WriteLine("Testing on PT network... (DFS)");
             while (route == null)
             {
-                for (int i = 0; i < 11; i++)
+                for (int i = 3; i < 11; i++)
                 {
                     checked
                     {
@@ -79,8 +79,10 @@ namespace Testing
                 }
             }
             
+            
             //Console.WriteLine("Result: \n " + String.Join(",\n",route.Cast<object>()) + " Time: " + sw.Elapsed.TotalSeconds + " s");
             Console.WriteLine("Result: Time: " + sw.Elapsed.TotalSeconds + " s  Total nodes: " + route.Length);
+            return;
             Console.ReadLine();
              
             Console.WriteLine("Testing on PT network... (Greedy)");

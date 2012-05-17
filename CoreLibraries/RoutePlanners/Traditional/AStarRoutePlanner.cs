@@ -101,28 +101,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
         #region Public Properties
 
         /// <summary>
-        ///   Gets the node of the best path found so far.
-        /// </summary>
-        public INetworkNode BestNode
-        {
-            get
-            {
-                return this.minNode;
-            }
-        }
-
-        /// <summary>
-        ///   Gets the current node being traversed.
-        /// </summary>
-        public INetworkNode Current
-        {
-            get
-            {
-                return this.current;
-            }
-        }
-
-        /// <summary>
         ///   Gets or sets the max radius to search in around the current node to find another node of a different route or network.
         /// </summary>
         public double MaxWalkingDistance { get; set; }
@@ -134,8 +112,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
         {
             get
             {
-                return new List<Critter>
-                    { this.BuildCritterFromNode(this.BestNode), this.BuildCritterFromNode(this.Current) };
+                throw new NotImplementedException("TODO: Fix the AStar planner.");
             }
         }
 

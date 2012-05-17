@@ -128,7 +128,7 @@ function processPaths(data) {
                 points.push(new google.maps.LatLng(parseFloat(pos[0]), parseFloat(pos[1])));
                 points2.push(new google.maps.LatLng(parseFloat(pos2[0]), parseFloat(pos2[1])));
 
-                $('#tblResults').append('<tr class=\'resultRow\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td></tr>");
+                $('#tblResults').append('<tr class=\'resultRow\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td><td>" + pos[5] + "</td></tr>");
         }
 
         } else {
@@ -137,7 +137,7 @@ function processPaths(data) {
                 var pos = nodes[j].split(',');
                 points.push(new google.maps.LatLng(parseFloat(pos[0]), parseFloat(pos[1])));
 
-                $('#tblResults').append('<tr class=\'resultRow\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td></tr>");
+                $('#tblResults').append('<tr class=\'resultRow\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td><td>" + pos[5] + "</td></tr>");
 
 
             }

@@ -21,16 +21,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         #region Public Properties
 
         /// <summary>
-        ///   Gets the best node found so far.
-        /// </summary>
-        INetworkNode BestNode { get; }
-
-        /// <summary>
-        ///   Gets the current node being traversed.
-        /// </summary>
-        INetworkNode Current { get; }
-
-        /// <summary>
         ///   Gets the population of the algorithm.
         /// </summary>
         List<Critter> Population { get; }

@@ -35,6 +35,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         private MySqlTransaction transaction;
 
+
+        private readonly Object databaseLock = new object();
+
         #endregion
 
         #region Constructors and Destructors
@@ -140,21 +143,23 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
         public object[] GetFastData(string query)
         {
-
-            if (this.transaction == null)
+            lock (this.databaseLock)
             {
-                var command = new MySqlCommand(query, connection);
-                var reader = command.ExecuteReader(CommandBehavior.SingleResult);
-                object[] o = new object[reader.FieldCount];
-                for (int i = 0; i < reader.FieldCount; i++)
+                if (this.transaction == null)
                 {
-                    reader.Read();
-                    o[i] = reader.GetValue(i);
+                    var command = new MySqlCommand(query, connection);
+                    var reader = command.ExecuteReader(CommandBehavior.SingleResult);
+                    object[] o = new object[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        reader.Read();
+                        o[i] = reader.GetValue(i);
+                    }
+                    reader.Close();
+                    return o;
                 }
-                reader.Close();
-                return o;
+                return null;
             }
-            return null;
         }
 
 
@@ -165,16 +170,19 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <returns> A datatable with the result of the query, or null if there are no results. </returns>
         public DataTable GetDataSet(string query)
         {
-            if (this.transaction == null)
+            lock (this.databaseLock)
             {
-                var table = new DataTable();
-                var adapter = new MySqlDataAdapter(query, this.connection);
+                if (this.transaction == null)
+                {
+                    var table = new DataTable();
+                    var adapter = new MySqlDataAdapter(query, this.connection);
 
-                // Open();
-                adapter.Fill(table);
+                    // Open();
+                    adapter.Fill(table);
 
-                // Close();
-                return table;
+                    // Close();
+                    return table;
+                }
             }
 
             throw new NotImplementedException("TODO: Implement transactions with GetDataSet");
@@ -195,20 +203,23 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <returns> The number of rows affected by the query. </returns>
         public int RunQuery(string query)
         {
-            if (this.transaction == null)
+            lock (this.databaseLock)
             {
-                var command = new MySqlCommand(query, this.connection);
+                if (this.transaction == null)
+                {
+                    var command = new MySqlCommand(query, this.connection);
 
-                // Open();
-                int result = command.ExecuteNonQuery();
+                    // Open();
+                    int result = command.ExecuteNonQuery();
 
-                // Close();
-                return result;
-            }
-            else
-            {
-                var command = new MySqlCommand(query, this.connection, this.transaction);
-                return command.ExecuteNonQuery();
+                    // Close();
+                    return result;
+                }
+                else
+                {
+                    var command = new MySqlCommand(query, this.connection, this.transaction);
+                    return command.ExecuteNonQuery();
+                }
             }
         }
 

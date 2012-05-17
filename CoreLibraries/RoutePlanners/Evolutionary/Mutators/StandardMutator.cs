@@ -52,6 +52,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
         {
             var random = new Random();
             List<INetworkNode> nodes = child.Route;
+            if (nodes.Count == 1) return child;
             int startIndex = random.Next(0, nodes.Count - 2);
             int endIndex = random.Next(startIndex + 1, nodes.Count - 1);
             INetworkNode begin = nodes[startIndex];

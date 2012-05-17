@@ -22,6 +22,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     {
         private readonly INetworkDataProvider provider;
 
+
+
         public PTDepthFirstSearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(depth, bidirectional, origin, goal)
         {
@@ -59,8 +61,20 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
+            var oldNodes = new List<INetworkNode>(nodes);
+
             
             nodes.StochasticSort(Entropy);
+
+            foreach (var node in oldNodes)
+            {
+                if (!nodes.Contains(node))
+                {
+                    throw new Exception("Nodes are not consistant after sort.");
+                }
+
+            }
+
             return nodes;
         }
     }

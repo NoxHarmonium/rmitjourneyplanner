@@ -106,7 +106,8 @@ namespace RmitJourneyPlanner.CoreLibraries
             foreach (INetworkNode t in list)
             {
                 double dPr = 1.0 / (t.EuclidianDistance / totalDistance);
-                double tPr = 1.0 / (t.TotalTime.TotalSeconds / totalTime.TotalSeconds);
+                double tPr = (1.0 / (t.TotalTime.TotalSeconds / totalTime.TotalSeconds))/100.0;
+
                 double pr = 
                     (Double.IsNaN(dPr) || Double.IsInfinity(dPr) ? 1: dPr) +
                     (Double.IsNaN(tPr) || Double.IsInfinity(tPr) ? 1: tPr);
@@ -120,13 +121,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                 probabilities[i] /= totalPr;
             }
             */
-            var pairs = new List<KeyValuePair<INetworkNode, double>>();
-            foreach (var kvp in (from entry in pDict orderby entry.Value ascending select entry))
-            {
-                pairs.Add(kvp);
-            }
-
-           
+            var pairs = (from entry in pDict orderby entry.Value ascending select entry).ToList();
 
             var newNodes = new List<INetworkNode>();
             var usedNodes = new List<INetworkNode>();

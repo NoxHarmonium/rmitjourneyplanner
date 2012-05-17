@@ -30,10 +30,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Route" /> class. Initializes a new instance of the the Route class.
+        ///   Initializes a new instance of the <see cref="Route" /> class. 
         /// </summary>
         /// <param name="routeId"> The Id of the specified route. </param>
         public Route(int routeId)
+        {
+            this.id = routeId;
+        }
+        /// <summary>
+        ///   Initializes a new instance of the <see cref="Route" /> class. 
+        /// </summary>
+        /// <param name="routeId"> The Id of the specified route. </param>
+        /// <param name="nodes">An list of <see cref="INetworkNode" /> objects to initialize the route with.</param>
+        public Route(int routeId, IEnumerable<INetworkNode> nodes ) : base(nodes)
         {
             this.id = routeId;
         }

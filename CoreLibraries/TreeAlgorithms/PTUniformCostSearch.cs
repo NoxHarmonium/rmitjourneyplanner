@@ -66,7 +66,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                    switch (current[0].Node.TransportType)
                    {
                        case "Train":
-                           node.TotalTime = TimeSpan.FromHours(distance / 50);
+                           node.TotalTime = TimeSpan.FromHours(distance / 60);
                            break;
 
                        case "Bus":
@@ -77,6 +77,13 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                            node.TotalTime = TimeSpan.FromHours(distance / 40);
                            break;
 
+                       case "V/Line Coach":
+                       case "Regional Bus":
+                             node.TotalTime = TimeSpan.FromHours(distance / 50);
+                           break;
+                            break;
+
+
                        default:
                            Console.WriteLine("Unknown transport type: " + current[0].Node.TransportType);
                            node.TotalTime = TimeSpan.FromHours(9999);
@@ -86,11 +93,11 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                }
                else
                {
-                   node.TotalTime = TimeSpan.FromHours(distance / 4);
+                   node.TotalTime = TimeSpan.FromHours(distance / 2);
                }
-               
             }
-            
+         
+
             //Array.Sort(nodes,new NodeComparer());
             nodes.StochasticSort(0.5);
             return nodes;

@@ -419,8 +419,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <returns> A list of <see cref="INetworkNode" /> objects. </returns>
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
+            List<MetlinkNode> adjacentNodes = this.list[node.Id];
             var outputNodes = new List<INetworkNode>(this.list[node.Id].Count);
-            for (int i = 1; i < this.list[node.Id].Count; i++)
+            for (int i = 2; i < adjacentNodes.Count; i++)
             {
                 /*
                 List<int> routes = this.routeMap[this.list[node.Id][i].Id];
@@ -431,7 +432,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     outputNodes.Add(subNode);
                 }
                  */
-                outputNodes.Add(this.list[node.Id][i]);
+                outputNodes.Add(adjacentNodes[i]);
 
             }
             return outputNodes;
