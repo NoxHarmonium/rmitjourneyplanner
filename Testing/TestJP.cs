@@ -192,6 +192,7 @@ namespace Testing
                         EvolutionaryRoutePlanner planner = new EvolutionaryRoutePlanner(properties);
                         Stopwatch sw = Stopwatch.StartNew();
                         planner.Start();
+
                         StreamWriter writer =
                             new StreamWriter(
                                 "results/" + testRoutes[i, 0].Id + "-" + testRoutes[i, 1].Id + ".csv", true);
@@ -211,12 +212,15 @@ namespace Testing
                             testRoutes[i, 1].StopSpecName,
                             DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
+                        writer.WriteLine(
+                        "Average Fitness, Minimum Fitenss, Diversity Metric, Total Time (Iteration), Total Time (Test),Iteration number");
 
-
+                        this.writeInfo(writer,planner,sw.Elapsed, 0);
+                        
                         for (int j = 0; j < 99; j++)
                         {
                             planner.SolveStep();
-                            this.writeInfo(writer, planner, sw.Elapsed);
+                            this.writeInfo(writer, planner, sw.Elapsed, i+1);
                         }
                         writer.Close();
                         properties.Database.Close();
@@ -260,17 +264,16 @@ namespace Testing
             
         }
 
-        private void writeInfo(StreamWriter writer, EvolutionaryRoutePlanner planner,TimeSpan time)
+        private void writeInfo(StreamWriter writer, EvolutionaryRoutePlanner planner,TimeSpan time, int iteration)
         {
+            
             writer.WriteLine(
-                        "Average Fitness, Minimum Fitenss, Diversity Metric, Total Time (Iteration), Total Time (Test)");
-            writer.WriteLine(
-                "{0},{1},{2},{3},{4}",
+                "{0},{1},{2},{3},{4},{5}",
                 planner.Result.AverageFitness,
                 planner.Result.MinimumFitness,
                 planner.Result.DiversityMetric,
                 planner.Result.Totaltime,
-                time);
+                time,iteration);
         }
     }
 }
