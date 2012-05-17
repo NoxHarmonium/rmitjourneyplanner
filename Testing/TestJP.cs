@@ -157,7 +157,7 @@ namespace Testing
             {
                 foreach (bool bidir in new []{false,true})
                 {
-                for (int i = 0; i < testRoutes.Length; i++)
+                for (int i = 0; i < testRoutes.GetLength(0); i++)
                 {
 
                     try
