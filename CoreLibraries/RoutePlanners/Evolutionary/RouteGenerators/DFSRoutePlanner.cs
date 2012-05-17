@@ -41,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 destination = properties.NetworkDataProviders[0].GetNodeClosestToPointWithinArea(destination, destination, 1.0, true);
             }
 
-            PTAStarSearch searchAlgorithm = new PTAStarSearch(false, properties.NetworkDataProviders[0], source, destination);
+            PTAStarSearch searchAlgorithm = new PTAStarSearch(properties.Bidirectional, properties.NetworkDataProviders[0], source, destination);
             INetworkNode[] nodes = searchAlgorithm.Run();
             //if (nodes.First() != destination || nodes.Last() != source)
             //{

@@ -155,6 +155,8 @@ namespace Testing
 
             while (cont)
             {
+                foreach (bool bidir in new []{false,true})
+                {
                 for (int i = 0; i < testRoutes.Length; i++)
                 {
 
@@ -175,6 +177,7 @@ namespace Testing
                         properties.NumberToKeep = 25;
                         properties.MutationRate = 0.1;
                         properties.CrossoverRate = 0.7;
+                        properties.Bidirectional = bidir;
                         //properties.RouteGenerator = new AlRouteGenerator(properties);
                         properties.RouteGenerator = new DFSRoutePlanner(properties);
                         properties.Mutator = new StandardMutator(properties);
@@ -195,21 +198,23 @@ namespace Testing
 
                         StreamWriter writer =
                             new StreamWriter(
-                                "results/" + testRoutes[i, 0].Id + "-" + testRoutes[i, 1].Id + ".csv", true);
+                                "results/" + testRoutes[i, 0].Id + "-" + testRoutes[i, 1].Id + bidir.ToString(CultureInfo.InvariantCulture) +  ".csv", true);
                         writer.WriteLine(
-                            "[New iteration {0}-{1} ({2}-{3}) @ {4}]",
+                            "[New iteration {0}-{1} ({2}-{3}) {4} @ {5}]",
                             testRoutes[i, 0].Id,
                             testRoutes[i, 1].Id,
                             testRoutes[i, 0].StopSpecName,
                             testRoutes[i, 1].StopSpecName,
+                            bidir,
                             DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
                         Console.WriteLine(
-                            "[New iteration {0}-{1} ({2}-{3}) @ {4}]",
+                            "[New iteration {0}-{1} ({2}-{3}) {4} @ {5}]",
                             testRoutes[i, 0].Id,
                             testRoutes[i, 1].Id,
                             testRoutes[i, 0].StopSpecName,
                             testRoutes[i, 1].StopSpecName,
+                            bidir,
                             DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
                         writer.WriteLine(
@@ -220,7 +225,7 @@ namespace Testing
                         for (int j = 0; j < 99; j++)
                         {
                             planner.SolveStep();
-                            this.writeInfo(writer, planner, sw.Elapsed, i+1);
+                            this.writeInfo(writer, planner, sw.Elapsed, j+1);
                         }
                         writer.Close();
                         properties.Database.Close();
@@ -231,17 +236,18 @@ namespace Testing
                         StreamWriter writer = new StreamWriter("error.log",true);
                         writer.WriteLine("[{0}] Exception!: {1} ({2}).\n{3}",DateTime.Now.ToString(CultureInfo.InvariantCulture),e,e.Message,e.StackTrace);
                         writer.WriteLine(
-                           "[Last error thrown on: {0}-{1} ({2}-{3}) @ {4}]",
+                           "[Last error thrown on: {0}-{1} ({2}-{3}) {4} @ {5}]",
                            testRoutes[i, 0].Id,
                            testRoutes[i, 1].Id,
                            testRoutes[i, 0].StopSpecName,
                            testRoutes[i, 1].StopSpecName,
+                           bidir,
                            DateTime.Now.ToString(CultureInfo.InvariantCulture));
                         writer.Close();
                     }
 
                 }
-                
+                }
 
                 var reader = new StreamReader("cont.txt");
                 string result = reader.ReadToEnd().Trim();

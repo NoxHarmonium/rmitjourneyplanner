@@ -35,6 +35,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
+        /// Gets or sets whether route generation should be bi-directional or not.
+        /// </summary>
+        public bool Bidirectional { get; set; }
+
+        /// <summary>
         ///   Gets or sets the breeder object used when crossing over routes.
         /// </summary>
         public IBreeder Breeder { get; set; }
