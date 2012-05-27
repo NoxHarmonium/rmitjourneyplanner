@@ -13,6 +13,7 @@ namespace AjaxServer.aspx
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
@@ -38,10 +39,12 @@ namespace AjaxServer.aspx
                 string destination = Request.Params["txtDestination"];
                 string date = Request.Params["txtDate"];
                 string time = Request.Params["txtTime"];
-
+                Console.WriteLine(Request.Params["chkBiDir"]);
+                bool biDir = this.Request.Params["chkBiDir"] == "on";
                 INetworkDataProvider metlinkProvider = new MetlinkDataProvider();
 
                 EvolutionaryProperties properties = new EvolutionaryProperties();
+                properties.Bidirectional = biDir;
                 properties.PointDataProviders.Add(new WalkingDataProvider());
                 properties.NetworkDataProviders.Add(metlinkProvider);
                 properties.ProbMinDistance = 0.7;

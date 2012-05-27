@@ -48,8 +48,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
             //    throw new Exception("Path is invalid!");
             //}
            // searchAlgorithm.Entropy = 0.0;
+            if (!properties.Bidirectional)
+            {
+                nodes = nodes.Reverse().ToArray();
+            }
 
-            return new Route(-1, nodes.Reverse());
+
+            return new Route(-1, nodes);
         }
     }
 }

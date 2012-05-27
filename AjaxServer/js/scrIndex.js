@@ -21,7 +21,7 @@ $("#btnStartSearch").click(function (e) {
 
     $('#btnStartSearch').button('loading');
 
-    $('#txtError').load('aspx/InitSearch.aspx?', { txtOrigin: $('#txtOrigin').val(), txtDestination: $('#txtDestination').val(), txtDate: $('#txtDate').val(), txtTime: $('#txtTime').val() }, function () {
+    $('#txtError').load('aspx/InitSearch.aspx?', { txtOrigin: $('#txtOrigin').val(), txtDestination: $('#txtDestination').val(), txtDate: $('#txtDate').val(), txtTime: $('#txtTime').val(), chkBiDir: $('#chkBiDir').val() }, function () {
         var text = $.trim($('#txtError').text());
 
         if (text == '') {

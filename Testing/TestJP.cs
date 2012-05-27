@@ -155,7 +155,7 @@ namespace Testing
 
             while (cont)
             {
-                foreach (bool bidir in new []{false,true})
+                foreach (bool bidir in new []{true,false})
                 {
                 for (int i = 0; i < testRoutes.GetLength(0); i++)
                 {
@@ -230,6 +230,7 @@ namespace Testing
                         writer.Close();
                         properties.Database.Close();
                     }
+                      
                     catch(Exception e)
                     {
                         Console.WriteLine("Exception!: {0} ({1}). Writing to error log...",e,e.Message);
@@ -245,7 +246,8 @@ namespace Testing
                            DateTime.Now.ToString(CultureInfo.InvariantCulture));
                         writer.Close();
                     }
-
+                      
+                    
                 }
                 }
 

@@ -142,6 +142,9 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         public T[] Run()
         {
            
+            if(origin.Equals(destination))
+                return new T[]{origin};
+            
             map.Clear();
             iterations = 0;
             startTime = DateTime.Now;

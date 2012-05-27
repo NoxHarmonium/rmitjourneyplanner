@@ -26,6 +26,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         ///   The distance api.
         /// </summary>
         private readonly DistanceApi distanceApi;
+        /// <summary>
+        /// The walking speed used in estimating distance.
+        /// </summary>
+        private double walkSpeed = 4.0; //KM/h
 
         #endregion
 
@@ -37,6 +41,21 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         public WalkingDataProvider()
         {
             this.distanceApi = new DistanceApi();
+        }
+
+        /// <summary>
+        /// The walking speed used in estimating distance.
+        /// </summary>
+        public double WalkSpeed
+        {
+            get
+            {
+                return this.walkSpeed;
+            }
+            set
+            {
+                this.walkSpeed = value;
+            }
         }
 
         #endregion
@@ -52,7 +71,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         public Arc EstimateDistance(Location locationA, Location locationB)
         {
             double distance = GeometryHelper.GetStraightLineDistance(locationA, locationB);
-            var time = new TimeSpan(0, 0, (int)((distance / 1.0) * 60.0 * 60.0));
+            var time = TimeSpan.FromHours(distance / WalkSpeed);
             return new Arc(locationA, locationB, time, distance, default(DateTime), "Walking");
         }
 

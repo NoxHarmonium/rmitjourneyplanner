@@ -1,5 +1,5 @@
 /* Author:
-	Sean Dawson
+Sean Dawson
 */
 var polyLines = new Array();
 var markers = new Array();
@@ -27,14 +27,14 @@ $('#frmPopControls').hide();
 $('#tabResults').hide();
 $('#tabRouteExplorer').hide();
 $('#txtError').hide();
-$('#txtPEtotal').attr("disabled", "disabled"); 
+$('#txtPEtotal').attr("disabled", "disabled");
 
 var id;
 
 function processPopulation(data) {
 
-    
-    
+
+
     $('#selPopulation').children().remove();
     var split = data.split(',');
     for (var n in split) {
@@ -66,43 +66,42 @@ function handleStatus(data) {
         $.get('aspx/Reset.aspx');
         id = setInterval('updateStatus()', 500);
         $('#divProgress').hide();
-       
+
     }
     else
         if (split[0] == '2') {
-        $('#divProgress').show();
-        $('#txtStatus').text('Loading...');
-        if (autorun) {
-            $('#txtProgress').html('Iteration: ' + split[3] + '<br/>');
-        } else {
-        
-            var percent = (parseFloat(split[1]) / parseFloat(split[2])) * 100.0;
-            $('#txtProgress').html('Iteration: ' + split[3] + '<br/>Generating route ' + split[1] + ' out of ' + split[2]); 
+            $('#divProgress').show();
+            $('#txtStatus').text('Loading...');
+            if (autorun) {
+                $('#txtProgress').html('Iteration: ' + split[3] + '<br/>');
+            } else {
+
+                var percent = (parseFloat(split[1]) / parseFloat(split[2])) * 100.0;
+                $('#txtProgress').html('Iteration: ' + split[3] + '<br/>Generating route ' + split[1] + ' out of ' + split[2]);
 
 
-            $('#progressBar').css('width', String(parseInt(percent)) + '%');
+                $('#progressBar').css('width', String(parseInt(percent)) + '%');
+            }
+
+
+            id = setInterval('updateStatus()', 300);
+
         }
-
-
-    id = setInterval('updateStatus()', 300);
-
-        }
-        else 
+        else
             if (split[0] == '3') {
                 $.get('aspx/GetPopulation.aspx', processPopulation);
                 if (autorun) {
                     step();
                 }
-         }
+            }
 }
- 
+
 $.get('aspx/CheckStatus.aspx', handleStatus);
-        
-function updateStatus()
-{
+
+function updateStatus() {
     //$('#divResults').hide();
     $('#lstPopulation').hide();
-    $('#frmPopControls').hide(); 
+    $('#frmPopControls').hide();
     $.get('aspx/CheckStatus.aspx', handleStatus);
     clearInterval(id);
 }
@@ -114,35 +113,49 @@ function processPaths(data) {
     }
     polyLines = new Array();
     $('.resultRow').remove();
-    for (var i = 0; i < paths.length - 1; i++ ) {
+    for (var i = 0; i < paths.length - 1; i++) {
         var nodes = paths[i].split(';');
         var points = new Array();
         var points2 = new Array();
         $('#txtPEtotal').val(nodes.length);
-
+        var oldRouteId = -1;
+        var routeId;
+        var pos;
+        var className;
         if (biDir) {
-            for (var j = 0; j < (nodes.length / 2) +1&& j < drawLimit / 2; j++) {
-
-                var pos = nodes[j].split(',');
-                var pos2 = nodes[nodes.length - j -1 ].split(',');
+            for (var j = 0; j < (nodes.length / 2) + 1 && j < drawLimit / 2; j++) {
+                pos = nodes[j].split(',');
+                var pos2 = nodes[nodes.length - j - 1].split(',');
                 points.push(new google.maps.LatLng(parseFloat(pos[0]), parseFloat(pos[1])));
                 points2.push(new google.maps.LatLng(parseFloat(pos2[0]), parseFloat(pos2[1])));
+                routeId = parseInt(pos[5]);
+                className = 'resultRow';
+                if (oldRouteId == routeId&& routeId != -1) {
+                    className = 'resultRow subRoute';
+                }
 
-                $('#tblResults').append('<tr class=\'resultRow\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td><td>" + pos[5] + "</td></tr>");
-        }
+
+                $('#tblResults').append('<tr class=\'' + className + '\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td><td>" + pos[5] + "</td></tr>");
+                oldRouteId = routeId;
+            }
 
         } else {
             for (var j = 0; j < nodes.length - 1 && j < drawLimit; j++) {
-
-                var pos = nodes[j].split(',');
+                pos = nodes[j].split(',');
                 points.push(new google.maps.LatLng(parseFloat(pos[0]), parseFloat(pos[1])));
+                routeId = parseInt(pos[5]);
+                className = 'resultRow';
+                if (oldRouteId == routeId && routeId != -1) {
+                    className = 'resultRow subRoute';
+                }
 
-                $('#tblResults').append('<tr class=\'resultRow\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td><td>" + pos[5] + "</td></tr>");
+                oldRouteId = routeId;
+                $('#tblResults').append('<tr class=\'' + className + '\'><td>' + j + "</td><td>" + pos[2] + "</td><td>" + pos[3] + "</td><td>" + pos[4] + "</td><td>" + pos[5] + "</td></tr>");
 
 
             }
         }
-        
+
         var colour = colours[i];
         if (i > 5) {
             colour = "#000000";
@@ -164,13 +177,13 @@ function processPaths(data) {
             path2.setMap(map);
             polyLines.push(path2);
         }
-        
+
         polyLines.push(path);
 
 
     }
     $('.resultRow').unbind("mouseenter");
-    $('.resultRow').unbind("mouseleave"); 
+    $('.resultRow').unbind("mouseleave");
     $('.resultRow').mouseenter(function () {
         var index = parseInt($(this).children('td:first').text());
         var path = polyLines[0].getPath();
@@ -238,8 +251,8 @@ function refreshPaths() {
 
 function step() {
 
-    
-    $('#txtError').load('aspx/Step.aspx', function() {
+
+    $('#txtError').load('aspx/Step.aspx', function () {
         var text = $.trim($('#txtError').text());
 
         if (text == '0') {
@@ -269,8 +282,8 @@ $('#btnAuto').click(function () {
     step();
 });
 $('#btnReset').click(function () {
-    
-    
+
+
 });
 
 
@@ -304,18 +317,25 @@ $('#btnTabItinerary').click(function () {
 $('#btnPEForward').click(function () {
     $('#txtPEcurrent').val(String(parseInt($('#txtPEcurrent').val()) + 1));
     drawLimit = parseInt($('#txtPEcurrent').val());
-    
+
     refreshPaths();
 });
 
 $('#btnPEBack').click(function () {
-    $('#txtPEcurrent').val(String(parseInt($('#txtPEcurrent').val()) - 1 ));
+    $('#txtPEcurrent').val(String(parseInt($('#txtPEcurrent').val()) - 1));
     drawLimit = parseInt($('#txtPEcurrent').val());
-    
+
     refreshPaths();
 });
 
+$('#chkShowSubRoutes').change(function () {
+    if (this.checked) {
+        $('.subRoute').hide();
+    } else {
+        $('.subRoute').show();
+    }
 
+});
 
 $('#chkBirDir').change(function () {
     biDir = this.checked;
