@@ -55,6 +55,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         private readonly Dictionary<int, Dictionary<int, int>> routePathMap =
             new Dictionary<int, Dictionary<int, int>>();
 
+        private readonly Timetable timetable = new Timetable();
+
         #endregion
 
         //private readonly DataStructures dataStructures = new DataStructures();
@@ -366,19 +368,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                                         INNER JOIN tblServices s
                                         ON s.ServiceID = st.ServiceID
                                         ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime");
-
-                var timetable = new Timetable();
+             
                 foreach (DataRow row in timetableData.Rows)
                 {
-                    try
-                    {
-                        timetable.AddTimetableEntry(Convert.ToInt32(row[0]), Convert.ToInt32(row[1]), Convert.ToInt32(row[2].ToString(), 2), Convert.ToInt32(row[3]), Convert.ToInt32(row[4]));
-                    }
-                    catch (Exception e)
-                    {
-                        throw;
-                    }
-                    
+                    timetable.AddTimetableEntry(Convert.ToInt32(row[0]), Convert.ToInt32(row[1]), Convert.ToInt32(row[2].ToString(), 2), Convert.ToInt32(row[3]), Convert.ToInt32(row[4]));
                 }
                 timetable.Optimise();
 
