@@ -240,11 +240,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     // var nakedNodes = new List<MetlinkNode>();
                     var cycleNodes = new List<MetlinkNode>();
                     int count = 0;
-                    foreach (DataRow row in nodeData.Rows)
+                    foreach (DataRow node in nodeData.Rows)
                     {
                         // Console.SetCursorPosition(0, Console.CursorTop);
                         // Console.Write("{0,10:f2}%", 100.0 * ((double)count++ / (Double)nodeData.Rows.Count));
-                        var id = (int)row["MetlinkStopID"];
+                        var id = (int)node["MetlinkStopID"];
                         double progress = (count++ / (double)nodeData.Rows.Count) * 100;
                         Logger.UpdateProgress(this, (int)progress);
 
@@ -253,6 +253,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         MetlinkNode metlinkNode = this.list[id][0];
                         List<INetworkNode> nodes =
                             this.GetNodesAtLocation(new Location(metlinkNode.Latitude, metlinkNode.Longitude), 0.75);
+
+
 
                         foreach (INetworkNode closeNode in nodes)
                         {
@@ -296,6 +298,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     {
                         Logger.Log(this, "Warning: There are {0} cyclic nodes.", cycleNodes.Count);
                     }
+
+
+                 
 
 
                     /*
@@ -352,6 +357,32 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 }
 
                 Logger.Log(this, "\nAdjacency data structure loaded successfully in {0} seconds.");
+
+
+                Logger.Log(this, "Starting experimental timetable code...");
+
+                DataTable timetableData = database.GetDataSet(
+                    @"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime  FROM tblServiceTimes  st
+                                        INNER JOIN tblServices s
+                                        ON s.ServiceID = st.ServiceID
+                                        ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime");
+
+                var timetable = new Timetable();
+                foreach (DataRow row in timetableData.Rows)
+                {
+                    try
+                    {
+                        timetable.AddTimetableEntry(Convert.ToInt32(row[0]), Convert.ToInt32(row[1]), Convert.ToInt32(row[2].ToString(), 2), Convert.ToInt32(row[3]), Convert.ToInt32(row[4]));
+                    }
+                    catch (Exception e)
+                    {
+                        throw;
+                    }
+                    
+                }
+                timetable.Optimise();
+
+                Logger.Log(this, "Ending experimental timetable code...");
 
                 int sstCount = Convert.ToInt32(this.database.GetDataSet("SELECT count(*) FROM tblSST").Rows[0][0]);
                 if (sstCount == 0)
@@ -763,14 +794,25 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
             string query =
                 string.Format(
-                    "SELECT sr.MetlinkStopID, sr.RouteID FROM tblStopInformation si "
-                    + "INNER JOIN tblStopRoutes sr " + "ON sr.MetlinkStopID=si.MetlinkStopID " + "WHERE "
-                    + "si.GPSLat < {0} AND " + "si.GPSLong > {1} AND " + "si.GPSLat  > {2} AND " + "si.GPSLong < {3} "
-                    + "ORDER BY sr.RouteID;",
+                    @"SELECT DISTINCT si.MetlinkStopId, sr.RouteId, LineMainID, si.GPSLong, si.GPSLat, 
+	                    min(SQRT(POW(si.GPSLat - {4},2) + POW(si.GPSLong - {5},2))) AS distance 
+	                    FROM tblStopInformation si
+                    INNER JOIN tblStopRoutes sr 
+                    ON sr.MetlinkStopID=si.MetlinkStopID
+                    INNER JOIN tblLinesRoutes lr
+                    ON sr.RouteID=lr.RouteID
+                    INNER JOIN tblLines l
+                    ON lr.LineID=l.LineID
+                    WHERE si.GPSLat < {0} and si.GPSLong > {1} AND
+                    si.GPSLat > {2} AND si.GPSLong < {3}
+                    GROUP BY LineMainID
+                    ORDER BY DISTANCE",
                     topLeft.Latitude,
                     topLeft.Longitude,
                     bottomRight.Latitude,
-                    bottomRight.Longitude);
+                    bottomRight.Longitude,
+                    location.Latitude,
+                    location.Longitude);
 
             DataTable table = this.database.GetDataSet(query);
 
@@ -839,6 +881,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             return this.routeMap[first.Id].Intersect(this.routeMap[second.Id]).Any();
         }
 
+        /// <summary>
+        /// Returns a random integer that corrosponds to a stop in the Metlink database. 
+        /// Use for debugging.
+        /// </summary>
+        /// <returns>A Metlink stop ID.</returns>
         public int GetRandomNodeId()
         {
             string query = "SELECT MetlinkStopID FROM tblStopInformation ORDER BY rand() LIMIT 1;";

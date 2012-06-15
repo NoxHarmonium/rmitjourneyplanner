@@ -35,6 +35,7 @@ namespace AjaxServer.aspx
             else
             try
             {
+                Logger.LogEvent += (o, message) => { Console.WriteLine(message); };
                 string origin = Request.Params["txtOrigin"];
                 string destination = Request.Params["txtDestination"];
                 string date = Request.Params["txtDate"];
