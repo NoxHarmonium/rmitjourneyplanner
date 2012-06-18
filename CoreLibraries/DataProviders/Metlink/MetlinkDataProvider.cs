@@ -59,8 +59,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
         #endregion
 
-        //private readonly DataStructures dataStructures = new DataStructures();
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -501,6 +499,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <returns> A list of <see cref="Arc" /> objects that represent the multiple ways to get between the 2 points. </returns>
         public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime departureTime)
         {
+            /*
             string dowFilter = string.Empty;
             for (int j = 0; j < (int)departureTime.DayOfWeek; j++)
             {
@@ -508,7 +507,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             }
 
             dowFilter += "0%";
-
+            
             string query =
                 string.Format(
                     @"select st1.ServiceID, 
@@ -524,11 +523,29 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     dowFilter);
 
             DataTable result = this.database.GetDataSet(query);
+             * 
+             * */
+            int dowFilter = 1 << 6 - (int)departureTime.DayOfWeek;
+
+
+            var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
 
             // departureTime.
-            if (result.Rows.Count > 0 && !String.IsNullOrEmpty(result.Rows[0][0].ToString()))
+            if (departures.Length > 0)
             {
-                DateTime arrivalTime = this.ParseDate(result.Rows[0]["ArriveTime"].ToString());
+                int minTime = int.MaxValue;
+                Departure minDep = default(Departure);
+                foreach (Departure departure in departures)
+                {
+                    if (departure.departureTime >= minTime)
+                    {
+                        continue;
+                    }
+                    minDep = departure;
+                    minTime = minDep.departureTime;
+                }
+
+                DateTime arrivalTime = this.ParseDate(minDep.arrivalTime.ToString(CultureInfo.InvariantCulture));
                 arrivalTime += departureTime.Date - default(DateTime).Date;
 
                 TimeSpan output = arrivalTime - departureTime;
@@ -559,6 +576,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         public TransportTimeSpan GetDistanceBetweenNodes(
             INetworkNode source, INetworkNode destination, DateTime departureTime, int routeId)
         {
+            /*
             string dowFilter = string.Empty;
             for (int j = 0; j < (int)departureTime.DayOfWeek; j++)
             {
@@ -566,6 +584,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             }
 
             dowFilter += "0%";
+            
+
+           
+
 
             string query =
                 string.Format(
@@ -583,12 +605,21 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     dowFilter);
 
             DataTable result = this.database.GetDataSet(query);
+            */
+            
 
+            int dowFilter = 1 << 7 - (int)departureTime.DayOfWeek;
+            var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
             // departureTime.
-            if (result.Rows.Count > 0 && result.Rows[0][0].ToString() != string.Empty)
+            Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
+          
+
+
+            if (!departure.Equals(default(Departure)))
             {
-                DateTime departTime = this.ParseDate(result.Rows[0]["min(st1.DepartTime)"].ToString());
-                DateTime arrivalTime = this.ParseDate(result.Rows[0]["ArriveTime"].ToString());
+                //Departure departure = 
+                DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
+                DateTime arrivalTime = this.ParseDate(departure.arrivalTime.ToString(CultureInfo.InvariantCulture));
 
                 //Normalize dates
                 arrivalTime += departureTime.Date - default(DateTime).Date;

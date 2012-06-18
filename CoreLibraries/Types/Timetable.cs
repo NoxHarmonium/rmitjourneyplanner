@@ -153,6 +153,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public Departure[] GetDepartures(int stopId, int dayOfWeek, int time)
         {
             var routes = dataStructure[stopId];
+            /*
             return (from route in routes 
                     from dow in route.Value 
                     where (dow.Key & dayOfWeek) != 0 
@@ -163,6 +164,38 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                         routeId = route.Key, 
                         stopId = stopId }
                      ).ToArray();
+             * 
+             */
+            List<Departure> departures = new List<Departure>();
+
+            foreach (var route in routes)
+            {
+                foreach (var dow in route.Value)
+                {
+                    if((dow.Key & dayOfWeek) != 0 )
+                    {
+                        KeyValuePair<int, int> minTime = dow.Value.FirstOrDefault(timePair => timePair.Key > time);
+                        if (minTime.Equals(default(KeyValuePair<int,int>)))
+                        {
+                            continue;
+                        }
+
+                        departures.Add(new Departure
+                        {
+                            arrivalTime = minTime.Key,
+                            departureTime = minTime.Value,
+                            routeId = route.Key,
+                            stopId = stopId
+                        });
+
+                    }
+
+
+                }
+
+
+            }
+            return departures.ToArray();
         }
     }
 
