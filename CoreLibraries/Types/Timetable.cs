@@ -9,46 +9,59 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.Serialization;
     using System.Text;
 
     /// <summary>
     /// Represents a public transport timetable.
     /// </summary>
-    public class Timetable
+    [DataContract]
+    public class Timetable 
     {
         /// <summary>
         /// The index number of the stop Id in the entries list.
         /// </summary>
+        [DataMember(Order = 1)]
         private const int StopIdIndex= 0;
 
         /// <summary>
         /// The index number of the route Id in the entries list.
         /// </summary>
+        [DataMember(Order = 2)]
         private const int RouteIDIndex = 1;
         /// <summary>
         /// The index number of the day of week in the entries list.
         /// </summary>
+        [DataMember(Order = 3)]
         private const int dayOfWeekIndex = 2;
         /// <summary>
         /// The index number of the arrival time in the entries list.
         /// </summary>
+        [DataMember(Order = 4)]
         private const int arrivalTimeIndex = 3;
         /// <summary>
         /// The index number of the departure time in the entries list.
         /// </summary>
+        [DataMember(Order = 5)]
         private const int departureTimeIndex = 4;
 
         
         /// <summary>
         /// Stores the raw timetable entries.
         /// </summary>
+        [DataMember(Order = 6)]
         readonly private List<int[]> entries = new List<int[]>();
 
+        /// <summary>
+        /// The data structure containing the timetable data.
+        /// </summary>
+        [DataMember(Order = 7)]
         readonly private Dictionary<int, Dictionary<int, Dictionary<int, List<KeyValuePair<int, int>>>>> dataStructure = new Dictionary<int, Dictionary<int, Dictionary<int, List<KeyValuePair<int, int>>>>>();
 
         /// <summary>
         /// A value representing if the timetable has been optimised or not.
         /// </summary>
+        [DataMember(Order = 8)]
         private bool optimised = false;
 
         /// <summary>
@@ -141,6 +154,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             return dataStructure[stopId].Keys.ToArray();
         }
+
 
         /// <summary>
         /// Gets a list of arrival and departure times given a

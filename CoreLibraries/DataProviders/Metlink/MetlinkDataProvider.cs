@@ -12,6 +12,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
 
     using RmitJourneyPlanner.CoreLibraries.Comparers;
@@ -268,7 +270,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                         foreach (INetworkNode closeNode in nodes)
                         {
-                            if ( // closeNode.TransportType != MetlinkNode.TransportType  && 
+                            if ( !this.InSameLine((MetlinkNode)closeNode,metlinkNode) &&
                                 closeNode.Id != metlinkNode.Id
                                 && !vistedRoutes.Contains(Convert.ToInt32(closeNode.CurrentRoute)))
                             {
@@ -361,18 +363,44 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                 Logger.Log(this, "Starting experimental timetable code...");
 
-                DataTable timetableData = database.GetDataSet(
-                    @"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime  FROM tblServiceTimes  st
+                if (!File.Exists("TimetableCache.dat"))
+                {
+                    Logger.Log(this,"Timetable cache non existant. Rebuilding...");
+                    DataTable timetableData =
+                        database.GetDataSet(
+                            @"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime  FROM tblServiceTimes  st
                                         INNER JOIN tblServices s
                                         ON s.ServiceID = st.ServiceID
                                         ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime");
-             
-                foreach (DataRow row in timetableData.Rows)
-                {
-                    timetable.AddTimetableEntry(Convert.ToInt32(row[0]), Convert.ToInt32(row[1]), Convert.ToInt32(row[2].ToString(), 2), Convert.ToInt32(row[3]), Convert.ToInt32(row[4]));
-                }
-                timetable.Optimise();
 
+                    foreach (DataRow row in timetableData.Rows)
+                    {
+                        timetable.AddTimetableEntry(
+                            Convert.ToInt32(row[0]),
+                            Convert.ToInt32(row[1]),
+                            Convert.ToInt32(row[2].ToString(), 2),
+                            Convert.ToInt32(row[3]),
+                            Convert.ToInt32(row[4]));
+                    }
+                    timetable.Optimise();
+                   
+                    //IFormatter formatter = new BinaryFormatter();
+//Stream stream = new FileStream("TimetableCache.dat", FileMode.Create, FileAccess.Write, FileShare.None);
+                    //formatter.Serialize(stream, timetable);
+
+                    //ProtoBuf.Serializer.Serialize(stream, timetable);
+                    //stream.Close();
+                }
+                else
+                {
+                    Logger.Log(this,"Timetable cache found. Loading...");
+                    //IFormatter formatter = new BinaryFormatter();
+                    Stream stream = new FileStream("TimetableCache.dat", FileMode.Open, FileAccess.Read, FileShare.Read);
+                    //timetable = (Timetable)formatter.Deserialize(stream);
+                    timetable = ProtoBuf.Serializer.Deserialize<Timetable>(stream);
+                    stream.Close();
+               
+                }
                 Logger.Log(this, "Ending experimental timetable code...");
 
                 int sstCount = Convert.ToInt32(this.database.GetDataSet("SELECT count(*) FROM tblSST").Rows[0][0]);
@@ -401,6 +429,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Logger.Log(this, "Error intitilizing MetlinkDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
                 throw e;
             }
+
         }
 
         /// <summary>
@@ -433,7 +462,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             this.database.Dispose();
 
         }
-
+        
         /// <summary>
         ///   Gets the network nodes that are adjacent to the specified node.
         /// </summary>
@@ -445,6 +474,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             var outputNodes = new List<INetworkNode>(this.list[node.Id].Count);
             for (int i = 2; i < adjacentNodes.Count; i++)
             {
+                if (adjacentNodes[i] == node)
+                {
+                    throw new Exception(":(");
+
+                }
                 /*
                 List<int> routes = this.routeMap[this.list[node.Id][i].Id];
                 for (int j = 0; j < routes.Count; j++)
@@ -479,6 +513,28 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             }
 
             return valid;
+        }
+
+        private bool InSameLine(MetlinkNode node1, MetlinkNode node2)
+        {
+            string query = String.Format(
+                @"SELECT l1.LineMainID, l2.LineMainID FROM tblLinesStops ls1
+                    INNER JOIN tblLines l1
+                    ON l1.LineID = ls1.LineID
+                    INNER JOIN tblLinesStops ls2
+                    ON ls2.LineID = ls2.LineID
+                    INNER JOIN tblLines l2
+                    ON l2.LineID = ls2.LineID
+                    WHERE ls1.MetlinkStopID = {0} 
+                    AND
+                    ls2.MetlinkStopID =  {1}
+                    AND l1.LineMainID = l2.LineMainID",node1.Id,node2.Id);
+
+            return (database.GetDataSet(query).Rows.Count > 0);
+
+
+
+
         }
 
         /// <summary>
@@ -610,17 +666,26 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
             int dowFilter = 1 << 7 - (int)departureTime.DayOfWeek;
             var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
-            // departureTime.
+           
+            
             Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
-          
+           // Departure arrival = de
 
 
             if (!departure.Equals(default(Departure)))
             {
+              
+                
                 //Departure departure = 
                 DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
-                DateTime arrivalTime = this.ParseDate(departure.arrivalTime.ToString(CultureInfo.InvariantCulture));
 
+                 var arrivals = timetable.GetDepartures(
+                destination.Id, dowFilter, Convert.ToInt32(departTime.ToString("Hmm")));
+                
+               
+                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId);
+
+                DateTime arrivalTime = this.ParseDate(arrival.arrivalTime.ToString(CultureInfo.InvariantCulture));
                 //Normalize dates
                 arrivalTime += departureTime.Date - default(DateTime).Date;
                 departTime += departureTime.Date - default(DateTime).Date;

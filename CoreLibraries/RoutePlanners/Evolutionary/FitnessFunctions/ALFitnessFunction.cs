@@ -81,7 +81,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             {
                 if (i == routeRoutes.Count - 1 || !routeRoutes[i].Intersect(routeRoutes[i + 1]).Any())
                 {
-                    if (index != i)
+                    if (index != i && i-index > 1)
                     {
                         var availableRoutes = routeRoutes[index].Intersect(routeRoutes[i]);
                         var validRoutes =
@@ -105,6 +105,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                                 minRoute = routeId;
                             }
                         }
+                        
                         if (minTime.TravelTime != TimeSpan.MaxValue)
                         {
                            

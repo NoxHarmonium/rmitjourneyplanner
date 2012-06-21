@@ -29,12 +29,12 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         }
 
         public PTAStarSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
-            : base(bidirectional,provider,origin, destination)
+            : base(bidirectional, provider, origin, destination)
         {
             this.provider = provider;
         }
 
-       
+
         protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
         {
             //nodes = base.OrderChildren(nodes);
@@ -57,50 +57,62 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.current[threadId == 0 ? 1 : 0]) : 
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
                 * */
+                double distance = GeometryHelper.GetStraightLineDistance((Location)current[0].Node, (Location)node);
+                if (provider.GetRoutesForNode(current[0].Node).Intersect(provider.GetRoutesForNode(node)).Any())
+                {
 
-               double distance = GeometryHelper.GetStraightLineDistance((Location)current[0].Node, (Location)node);
-               if (current[CurrentIndex].Node.TransportType == node.TransportType)
-               {
-                   switch (current[CurrentIndex].Node.TransportType)
-                   {
-                       case "Train":
-                           node.TotalTime = TimeSpan.FromHours(distance / 60);
-                           break;
+                    
+                    if (current[CurrentIndex].Node.TransportType == node.TransportType)
+                    {
+                        switch (current[CurrentIndex].Node.TransportType)
+                        {
+                            case "Train":
+                                node.TotalTime = TimeSpan.FromHours(distance / 60);
+                                break;
 
-                       case "Bus":
-                           node.TotalTime = TimeSpan.FromHours(distance / 30);
-                           break;
+                            case "Bus":
+                                node.TotalTime = TimeSpan.FromHours(distance / 30);
+                                break;
 
-                       case "Tram":
-                           node.TotalTime = TimeSpan.FromHours(distance / 40);
-                           break;
+                            case "Tram":
+                                node.TotalTime = TimeSpan.FromHours(distance / 40);
+                                break;
 
-                       case "V/Line Coach":
-                       case "Regional Bus":
-                             node.TotalTime = TimeSpan.FromHours(distance / 50);
-                           break;
-                            break;
+                            case "V/Line Coach":
+                            case "Regional Bus":
+                                node.TotalTime = TimeSpan.FromHours(distance / 50);
+                                break;
+                                break;
 
 
-                       default:
-                           Console.WriteLine("Unknown transport type: " + current[0].Node.TransportType);
-                           node.TotalTime = TimeSpan.FromHours(9999);
-                           break;
-                   }
+                            default:
+                                Console.WriteLine("Unknown transport type: " + current[0].Node.TransportType);
+                                node.TotalTime = TimeSpan.FromHours(9999);
+                                break;
+                        }
+                        if (node.TotalTime == default(TimeSpan))
+                        {
+                            //TODO: Check this
+                        }
 
-               }
-               else
-               {
-                   node.TotalTime = TimeSpan.FromHours(distance / 2);
-               }
-               
-            
+                    }
+                }
+                else
+                {
+                    node.TotalTime = TimeSpan.FromHours(distance / 2);
+                    if (node.TotalTime == default(TimeSpan))
+                    {
+                        //TODO Check this.
+                    }
+                }
+                
+
             }
 
             //Array.Sort(nodes, new NodeComparer());
             //Array.Reverse(nodes);
             nodes.StochasticSort(Entropy);
-            
+
             return nodes;
         }
     }
