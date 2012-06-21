@@ -61,7 +61,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
                 
                 double distance = GeometryHelper.GetStraightLineDistance((Location)current[CurrentIndex].Node, (Location)wrapper.Node);
-                wrapper.Cost = distance;
+                wrapper.Cost = distance + current[CurrentIndex].Cost;
 
 
 

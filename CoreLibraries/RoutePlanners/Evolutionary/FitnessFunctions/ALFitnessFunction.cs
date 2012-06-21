@@ -121,7 +121,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                             condensedRoute.Add(new[] { index, i, -1, (int)minTime.TotalTime.TotalSeconds });
                             //Logger.Log(this,"No service available. Adding walking link...");
                         }
-                        for (int j = index; j < i; j++)
+                        for (int j = index; j < i+1; j++)
                         {
                             route[j].CurrentRoute = minRoute;
                         }
