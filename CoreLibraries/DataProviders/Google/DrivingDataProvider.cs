@@ -53,7 +53,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         {
             double distance = GeometryHelper.GetStraightLineDistance(locationA, locationB);
             var time = new TimeSpan(0, 0, (int)(distance / 0.0305555556));
-            return new Arc(locationA, locationB, time, distance, default(DateTime), "Driving");
+            return new Arc(locationA, locationB, new TransportTimeSpan(){TravelTime = time,WaitingTime = default(TimeSpan)}, distance, default(DateTime), "Driving");
         }
 
         /// <summary>

@@ -7,13 +7,16 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
     #region
 
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
 
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -68,85 +71,157 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         /// <exception cref="Exception"></exception>
         public double GetFitness(Route route)
         {
-            routesUsed.Clear();
-            var provider = this.properties.NetworkDataProviders[0];
+            INetworkDataProvider provider = properties.NetworkDataProviders[0];
+            DateTime initialDepart = properties.DepartureTime;
+            var routeMap = new Dictionary<int, List<MetlinkNode>>();
+            var routeIndexes = new Dictionary<int, int>();
+            //Maps a tree between routes. Key of pair is route id and value is intersection index
+            var routeTree = new Dictionary<int, List<KeyValuePair<int,int>>>();
 
-            var condensedRoute = new List<int[]>();
-            DateTime departureTime = this.properties.DepartureTime;
-
-            var routeRoutes = route.Select(provider.GetRoutesForNode).ToList();
-
-            int index = 0;
-            for (int i = 0; i < routeRoutes.Count; i++)
+            //Add initial children
+            routeTree[-1] = new List<KeyValuePair<int, int>>();
+            foreach (var routeId in provider.GetRoutesForNode(route[0]))
             {
-                if (i == routeRoutes.Count - 1 || !routeRoutes[i].Intersect(routeRoutes[i + 1]).Any())
-                {
-                    if (index != i && i-index > 1)
-                    {
-                        var availableRoutes = routeRoutes[index].Intersect(routeRoutes[i]);
-                        var validRoutes =
-                            availableRoutes.Where(
-                                validRoute => provider.IsValidOrder(route[index], route[i], validRoute)).ToList();
-
-                        var minTime = new TransportTimeSpan();
-                        
-                        minTime.TravelTime = TimeSpan.MaxValue;
-                        int minRoute = -1;
-                        foreach (var routeId in validRoutes)
-                        {
-                            TransportTimeSpan time = provider.GetDistanceBetweenNodes(route[index], route[i],departureTime,routeId );
-                                
-                                //.CalculateTime(route[index]
-                                //routeId, Convert.ToInt32(route[index].Id), Convert.ToInt32(route[i].Id), departureTime);
-
-                            if (time.TravelTime != default(TimeSpan) && time < minTime)
-                            {
-                                minTime = time;
-                                minRoute = routeId;
-                            }
-                        }
-                        
-                        if (minTime.TravelTime != TimeSpan.MaxValue)
-                        {
-                           
-                            condensedRoute.Add(new[] { index, i, minRoute, (int)minTime.TotalTime.TotalSeconds });
-                            routesUsed.Add(minRoute);
-                        }
-                        else
-                        {
-                            
-                            minTime.TravelTime =
-                                this.properties.PointDataProviders[0].EstimateDistance(
-                                    (Location)route[index], (Location)route[i]).Time;
-                            condensedRoute.Add(new[] { index, i, -1, (int)minTime.TotalTime.TotalSeconds });
-                            //Logger.Log(this,"No service available. Adding walking link...");
-                        }
-                        for (int j = index; j < i+1; j++)
-                        {
-                            route[j].CurrentRoute = minRoute;
-                        }
-                        departureTime += minTime.TotalTime;
-                        //Logger.Log(this,"{0} ({1}) ---[{4} <{6}>]---> {2} ({3})\n += W: {7} T: {5}", route[index].Id, ((MetlinkNode)route[index]).StopSpecName, route[i].Id, ((MetlinkNode)route[i]).StopSpecName,minRoute,minTime.TravelTime,route[i].TransportType,minTime.WaitingTime);
-                    }
-
-                    if (i != routeRoutes.Count - 1)
-                    {
-                        TimeSpan walkingTime =
-                            this.properties.PointDataProviders[0].EstimateDistance(
-                                (Location)route[i], (Location)route[i + 1]).Time;
-
-                        condensedRoute.Add(new[] { i, i + 1, -1, (int)walkingTime.TotalSeconds });
-                        departureTime += walkingTime;
-                        //Logger.Log(this,"{0} ({1}) ---[{4} <{6}>]---> {2} ({3})\n += {5}", route[i].Id, ((MetlinkNode)route[i]).StopSpecName, route[i+1].Id, ((MetlinkNode)route[i+1]).StopSpecName, "Route Link", walkingTime,"Walking");
-                    }
-                    index = i + 1;
-                }
-
-                route[i].TotalTime = departureTime - this.properties.DepartureTime;
+                routeTree[-1].Add(new KeyValuePair<int, int>(routeId,0));
             }
 
-            //Logger.Log(this,"Total travel time: {0}", departureTime - this.properties.DepartureTime);
-            return condensedRoute.Aggregate<int[], double>(0, (current, arc) => current + arc[3]);
+            // Build route legs
+            int counter = 0;
+            foreach (INetworkNode node in route)
+            {
+                List<int> routes = provider.GetRoutesForNode(node);
+                foreach (int subroute in routes)
+                {
+                    if (!routeMap.ContainsKey(subroute))
+                    {
+                        routeMap.Add(subroute,new List<MetlinkNode>());
+                    }
+                    routeMap[subroute].Add((MetlinkNode)node);
+                    routeIndexes[subroute] = counter;
+                }
+                counter++;
+            }
+
+            // Build route search tree
+            foreach (var kvp in routeMap)
+            {
+                foreach (var kvp2 in routeMap)
+                {
+                    if (kvp.Equals(kvp2))
+                    {
+                        continue;
+                    }
+
+                    
+                    
+                    IEnumerable<MetlinkNode> intersections = kvp.Value.Intersect(kvp2.Value);
+
+                    bool any = intersections.Any();
+                    if (!any)
+                    {
+                        continue;
+                    }
+
+                    if (routeIndexes[kvp2.Key] <= routeIndexes[kvp.Key] )
+                    {
+                        continue;
+                    }
+
+
+                    MetlinkNode intersect = intersections.First();
+                    
+                    
+                    
+                    int index = kvp.Value.IndexOf(intersect);
+                    if (!routeTree.ContainsKey(kvp.Key))
+                    {
+                        routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
+                    }
+                    routeTree[kvp.Key].Add(new KeyValuePair<int, int>(kvp2.Key, index));
+                }
+
+            }
+
+            foreach (var kvp in routeMap)
+            {
+                if (kvp.Value.Last() == route.Last())
+                {
+                    if (!routeTree.ContainsKey(kvp.Key))
+                    {
+                        routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
+                    }
+                    routeTree[kvp.Key].Add(new KeyValuePair<int, int>(-2,kvp.Value.Count-1));
+
+                }
+            }
+
+
+            //Build possible paths
+            NodeWrapper<int> current;
+            var stack = new Stack<NodeWrapper<int>>();
+            var searchMap = new Dictionary<NodeWrapper<int>, NodeWrapper<int>>();
+
+            stack.Push(new NodeWrapper<int>(-1));
+
+            var solutions = new List<List<NodeWrapper<int>>>();
+            while (stack.Count > 0)
+            {
+                current = stack.Pop();
+                
+
+                if (routeTree.ContainsKey(current.Node))
+                {
+                    var children = routeTree[current.Node];
+                    foreach (var child in children)
+                    {
+                        int destId = child.Key;
+                        int index = child.Value;
+                        double cost;
+                        if (index == 0) cost = 0;
+                        else
+                            cost =
+                                provider.GetDistanceBetweenNodes(
+                                    routeMap[current.Node][0],
+                                    routeMap[current.Node][index],
+                                    initialDepart.AddMilliseconds(current.Cost),
+                                    current.Node).TotalTime.TotalMilliseconds;
+
+                        var wrapper = new NodeWrapper<int>(destId, current.Cost + cost);
+                        stack.Push(wrapper);
+                        searchMap.Add(wrapper, new NodeWrapper<int>(current.Node));
+                    }
+                }
+                else
+                {
+                    if (current.Node == -2)
+                    {
+                        solutions.Add(new List<NodeWrapper<int>> { current });
+                    }
+                    else
+                    {
+                        
+                    }
+
+                }
+
+            }
+
+            foreach (var solution in solutions)
+            {
+                current = solution[0];
+                Console.Write("[Path: Total cost: {0} ]: ",current.Cost);
+                while (current.Node != -1)
+                {
+                    Console.Write("{0} ,",current.Node);
+                    current = searchMap[current];
+
+                }
+                Console.WriteLine("end.");
+            }
+           
+
+
+            throw new NotImplementedException();
         }
 
         #endregion

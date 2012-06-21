@@ -165,7 +165,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
             TimeSpan timeToEnd = this.current.TotalTime
                                  +
                                  this.pointDataProviders[0].EstimateDistance(
-                                     (Location)this.current, (Location)this.itinerary.Last()).Time;
+                                     (Location)this.current, (Location)this.itinerary.Last()).Time.TotalTime;
 
             if (timeToEnd < this.minTimeSolved)
             {
@@ -221,7 +221,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
                 {
                     // bool same = (destination.Equals( (INetworkNode)arc.Destination));
                     destination.Parent = this.current;
-                    destination.TotalTime = this.current.TotalTime + arc.Time;
+                    destination.TotalTime = this.current.TotalTime + arc.Time.TotalTime;
                     {
                         // if (destination.TotalTime < minTimeSolved)
                         destination.EuclidianDistance = GeometryHelper.GetStraightLineDistance(

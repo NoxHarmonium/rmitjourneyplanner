@@ -66,14 +66,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         totalTime = totalTime.Add(new TimeSpan(0, 0, 0, 30));
                     }
 
-                    totalTime = totalTime.Add(arcs[0].Time);
+                    totalTime = totalTime.Add(arcs[0].Time.TotalTime);
                 }
                 else
                 {
                     totalTime =
                         totalTime.Add(
                             this.properties.PointDataProviders[0].EstimateDistance(
-                                (Location)nodes[i], (Location)nodes[i + 1]).Time);
+                                (Location)nodes[i], (Location)nodes[i + 1]).Time.TotalTime);
                 }
             }
 

@@ -32,7 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public NetworkArc(
             INetworkNode source,
             INetworkNode destination,
-            TimeSpan time,
+            TransportTimeSpan time,
             double distance,
             DateTime departureTime,
             string transportMode)
@@ -53,7 +53,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public NetworkArc(
             INetworkNode source,
             INetworkNode destination,
-            TimeSpan time,
+            TransportTimeSpan time,
             double distance,
             DateTime departureTime,
             string transportMode,

@@ -555,70 +555,58 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <returns> A list of <see cref="Arc" /> objects that represent the multiple ways to get between the 2 points. </returns>
         public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime departureTime)
         {
-            /*
-            string dowFilter = string.Empty;
-            for (int j = 0; j < (int)departureTime.DayOfWeek; j++)
+            var arcs = new List<Arc>();
+            
+            int dowFilter = 1 << 7 - (int)departureTime.DayOfWeek;
+            var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
+            if (departures.Length == 0)
             {
-                dowFilter = dowFilter.Insert(0, "_");
+                return arcs;
             }
 
-            dowFilter += "0%";
-            
-            string query =
-                string.Format(
-                    @"select st1.ServiceID, 
-                    min(st1.DepartTime), st1.DepartTime,st2.ArriveTime, st1.RouteID frOM tblSST st1
-                    INNER JOIN tblSST st2
-                    ON st1.ServiceID=st2.ServiceID
-                    WHERE st1.DepartTime>{2} AND st1.SourceID={0} AND st1.DOW LIKE '{3}' 
-                    AND st2.DestID={1}
-                        ",
-                    source.Id,
-                    destination.Id,
-                    departureTime.ToString("Hmm"),
-                    dowFilter);
-
-            DataTable result = this.database.GetDataSet(query);
-             * 
-             * */
-            int dowFilter = 1 << 6 - (int)departureTime.DayOfWeek;
+            //Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
+            // Departure arrival = de
 
 
-            var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
-
-            // departureTime.
-            if (departures.Length > 0)
+            //Departure departure = 
+            foreach (var departure in departures)
             {
-                int minTime = int.MaxValue;
-                Departure minDep = default(Departure);
-                foreach (Departure departure in departures)
+                DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
+                int routeId = departure.routeId;
+
+                var arrivals = timetable.GetDepartures(
+                    destination.Id, dowFilter, Convert.ToInt32(departTime.ToString("Hmm")));
+
+
+                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId);
+
+                if (arrival.Equals(default(Departure)))
                 {
-                    if (departure.departureTime >= minTime)
-                    {
-                        continue;
-                    }
-                    minDep = departure;
-                    minTime = minDep.departureTime;
+                    continue;
                 }
 
-                DateTime arrivalTime = this.ParseDate(minDep.arrivalTime.ToString(CultureInfo.InvariantCulture));
+                DateTime arrivalTime = this.ParseDate(arrival.arrivalTime.ToString(CultureInfo.InvariantCulture));
+                //Normalize dates
                 arrivalTime += departureTime.Date - default(DateTime).Date;
+                departTime += departureTime.Date - default(DateTime).Date;
 
-                TimeSpan output = arrivalTime - departureTime;
-                if (output.Ticks < 0)
+                TransportTimeSpan output = default(TransportTimeSpan);
+                output.WaitingTime = departTime - departureTime;
+                output.TravelTime = arrivalTime - departTime;
+                if (output.TotalTime.Ticks < 0)
                 {
                     // throw new Exception("Negitive time span detected.");
-                    // Logger.Log(this,"WARNING: Negitive timespan between nodes detected!");
-                    return new List<Arc> {
-                            new Arc(
-                                (Location)source, (Location)destination, default(TimeSpan), -1, departureTime, "Unknown")
-                        };
+                    Logger.Log(this,"WARNING: Negitive timespan between nodes detected!");
+                    //return default(TransportTimeSpan);
+                    continue;
                 }
+                arcs.Add(new Arc((Location)source,(Location)destination,output,GeometryHelper.GetStraightLineDistance((Location)source,(Location)destination),departTime,"Unknown",departure.routeId));
 
-                return new List<Arc> { new Arc((Location)source, (Location)destination, output, -1, departureTime, "Unknown") };
+
             }
-            // Logger.Log(this,"WARNING: Null timespan between nodes detected!");
-            return new List<Arc> { new Arc((Location)source, (Location)destination, default(TimeSpan), -1, departureTime, "Unknown") };
+            return arcs;
+
+
         }
 
         /// <summary>

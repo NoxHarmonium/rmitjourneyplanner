@@ -72,7 +72,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         {
             double distance = GeometryHelper.GetStraightLineDistance(locationA, locationB);
             var time = TimeSpan.FromHours(distance / WalkSpeed);
-            return new Arc(locationA, locationB, time, distance, default(DateTime), "Walking");
+            return new Arc(locationA, locationB, new TransportTimeSpan() { TravelTime = time ,WaitingTime = default(TimeSpan)}, distance, default(DateTime), "Walking");
         }
 
         /// <summary>

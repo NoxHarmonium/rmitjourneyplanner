@@ -124,7 +124,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
                 node = (INetworkNode)arcs[0].Destination;
                 node.TransportType = arcs[0].TransportMode;
-                node.TotalTime = current.TotalTime + arcs[0].Time;
+                node.TotalTime = current.TotalTime + arcs[0].Time.TotalTime;
                 node.Parent = current;
                 currentRoute.Add(node);
                 current = node;

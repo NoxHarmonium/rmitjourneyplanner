@@ -48,7 +48,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The time.
         /// </summary>
-        private readonly TimeSpan time;
+        private readonly TransportTimeSpan time;
 
         /// <summary>
         ///   The transport mode.
@@ -71,7 +71,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public Arc(
             Location source,
             Location destination,
-            TimeSpan time,
+            TransportTimeSpan time,
             double distance,
             DateTime departureTime,
             string transportMode)
@@ -97,7 +97,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public Arc(
             Location source,
             Location destination,
-            TimeSpan time,
+            TransportTimeSpan time,
             double distance,
             DateTime departureTime,
             string transportMode,
@@ -174,7 +174,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   Gets the time between the 2 points using the specfied transport mode.
         /// </summary>
-        public TimeSpan Time
+        public TransportTimeSpan Time
         {
             get
             {
@@ -207,7 +207,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             if (obj.GetType() == this.GetType())
             {
                 var otherDistance = (Arc)obj;
-                if (otherDistance.Time.Minutes == this.Time.Minutes && otherDistance.Time.Hours == this.Time.Hours
+                if (otherDistance.Time.TotalTime.Minutes == this.Time.TotalTime.Minutes && otherDistance.Time.TotalTime.Hours == this.Time.TotalTime.Hours
                     && (otherDistance.Distance - this.Distance) < 500)
                 {
                     return true;
@@ -225,7 +225,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns> A unique (idealy) hash code representing this arc. </returns>
         public override int GetHashCode()
         {
-            return (this.time.TotalSeconds + this.distance.ToString(CultureInfo.InvariantCulture)).GetHashCode();
+            return (this.time.TotalTime.TotalSeconds + this.distance.ToString(CultureInfo.InvariantCulture)).GetHashCode();
         }
 
         #endregion

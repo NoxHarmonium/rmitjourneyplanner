@@ -27,7 +27,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
         /// <returns> A number less than 0 if x is less than y, and number greater than 0 if y is less than x and 0 if they are equal./&gt; </returns>
         public int Compare(Arc x, Arc y)
         {
-            return (int)(x.Time - y.Time).TotalMilliseconds;
+            return (int)(x.Time.TotalTime - y.Time.TotalTime).TotalMilliseconds;
         }
 
         #endregion

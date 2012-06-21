@@ -180,7 +180,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                      ).ToArray();
              * 
              */
-            List<Departure> departures = new List<Departure>();
+            var departures = new List<Departure>();
 
             foreach (var route in routes)
             {
