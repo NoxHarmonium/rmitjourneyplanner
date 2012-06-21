@@ -21,6 +21,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
     #endregion
 
+
+    public struct ClosedRoute
+    {
+        public int start;
+
+        public int end;
+
+        public int id;
+
+
+    }
+
     /// <summary>
     ///   The al fitness function.
     /// </summary>
@@ -73,192 +85,73 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         {
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
             DateTime initialDepart = properties.DepartureTime;
-            var routeMap = new Dictionary<int, List<MetlinkNode>>();
-            var routeIndexes = new Dictionary<int, int>();
-            //Maps a tree between routes. Key of pair is route id and value is intersection index
-            var routeTree = new Dictionary<int, List<KeyValuePair<int,int>>>();
+            var openRoutes = new List<int>();
+            var routeStartIndicies = new Dictionary<int, int>();
+            var closedRoutes = new List<ClosedRoute>();
+            var map = new Dictionary<int, List<int>>();
+            var closedRouteMap = new Dictionary<int, ClosedRoute>();
 
-            //Add initial children
-            routeTree[-1] = new List<KeyValuePair<int, int>>();
-            foreach (var routeId in provider.GetRoutesForNode(route[0]))
+            for (int i = 0; i < route.Count + 1; i++)
             {
-                routeTree[-1].Add(new KeyValuePair<int, int>(routeId,0));
-            }
-
-            // Build route legs
-            int counter = 0;
-             for (int i = 0; i < route.Count; i++)
-             {
-
-                var node = route[i];
-                List<int> routes = provider.GetRoutesForNode(node);
-
-                foreach (int subroute in routes)
+                List<int> routes;
+                if (i != route.Count)
                 {
-                    if (!routeMap.ContainsKey(subroute))
-                    {
-                        routeMap.Add(subroute,new List<MetlinkNode>());
-                    }
-                    routeMap[subroute].Add((MetlinkNode)node);
-                    routeIndexes[subroute] = counter;
-                }
-                counter++;
-            }
-
-           
-
-                // Build route search tree
-                foreach (var kvp in routeMap)
-                {
-                    foreach (var kvp2 in routeMap)
-                    {
-                        if (kvp.Equals(kvp2))
-                        {
-                            continue;
-                        }
-
-
-
-                        IEnumerable<MetlinkNode> intersections = kvp.Value.Intersect(kvp2.Value);
-
-                        if (routeIndexes[kvp2.Key] <= routeIndexes[kvp.Key])
-                        {
-                            continue;
-                        }
-
-                        bool any = intersections.Any();
-                        if (!any)
-                        {
-                            if (!routeTree.ContainsKey(kvp.Key))
-                            {
-                                routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
-                            }
-                            routeTree[kvp.Key].Add(new KeyValuePair<int, int>(kvp2.Key, -1));
-                        }
-                        else
-                        {
-                            
-
-
-                            MetlinkNode intersect = intersections.First();
-
-
-
-                            int index = kvp.Value.IndexOf(intersect);
-                            if (!routeTree.ContainsKey(kvp.Key))
-                            {
-                                routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
-                            }
-                            routeTree[kvp.Key].Add(new KeyValuePair<int, int>(kvp2.Key, index));
-                        }
-                    }
-
-                }
-
-            foreach (var kvp in routeMap)
-            {
-                if (kvp.Value.Last() == route.Last())
-                {
-                    if (!routeTree.ContainsKey(kvp.Key))
-                    {
-                        routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
-                    }
-                    routeTree[kvp.Key].Add(new KeyValuePair<int, int>(-2,kvp.Value.Count-1));
-
-                }
-            }
-
-            /*
-            for (int i = 0; i < route.Count-1 ; i++)
-            {
-                var node = route[i];
-                var succ = route[i + 1];
-                var nodeR = provider.GetRoutesForNode(node);
-                var succR = provider.GetRoutesForNode(succ);
-
-                if (nodeR.Intersect(succR).Any())
-                {
-                    continue;
-                }
-                foreach (var t in nodeR)
-                {
-                    foreach (var u in succR)
-                    {
-                        if (!routeTree.ContainsKey(t))
-                        {
-                            routeTree[t] = new List<KeyValuePair<int, int>>();
-                        }
-                        routeTree[t].Add(new KeyValuePair<int, int>(u, -1));
-                    }
-                }
-            }
-            */
-            //Build possible paths
-            NodeWrapper<int> current;
-            var stack = new Stack<NodeWrapper<int>>();
-            var searchMap = new Dictionary<NodeWrapper<int>, NodeWrapper<int>>();
-
-            stack.Push(new NodeWrapper<int>(-1));
-
-            var solutions = new List<List<NodeWrapper<int>>>();
-            while (stack.Count > 0)
-            {
-                current = stack.Pop();
-                
-
-                if (routeTree.ContainsKey(current.Node))
-                {
-                    var children = routeTree[current.Node];
-                    foreach (var child in children)
-                    {
-                        int destId = child.Key;
-                        int index = child.Value;
-                        double cost;
-                        
-                        if (index == 0 || index == -1) cost = 0;
-                        else
-                            cost =
-                                provider.GetDistanceBetweenNodes(
-                                    routeMap[current.Node][0],
-                                    routeMap[current.Node][index],
-                                    initialDepart.AddMilliseconds(current.Cost),
-                                    current.Node).TotalTime.TotalMilliseconds;
-
-                        var wrapper = new NodeWrapper<int>(destId, current.Cost + cost);
-                        stack.Push(wrapper);
-                        searchMap.Add(wrapper, new NodeWrapper<int>(current.Node));
-                    }
+                    var node = route[i];
+                    routes = provider.GetRoutesForNode(node);
                 }
                 else
                 {
-                    if (current.Node == -2)
+                    routes = new List<int>();
+                }
+                var newRoutes = routes.Where(routeId => !openRoutes.Contains(routeId)).ToList();
+                var closedRouteIds = openRoutes.Where(openRoute => !routes.Contains(openRoute)).ToList();
+                foreach (var newRoute in newRoutes)
+                {
+                    openRoutes.Add(newRoute);
+                    routeStartIndicies[newRoute] = i;
+                }
+
+                foreach (var closedRouteId in closedRouteIds)
+                {
+                    openRoutes.Remove(closedRouteId);
+                }
+
+                foreach (var closedRouteId in closedRouteIds)
+                {
+                    var closedRoute = new ClosedRoute { end = i, id = closedRouteId, start = routeStartIndicies[closedRouteId] };
+                    closedRouteMap[closedRouteId] = closedRoute;
+                    if (i != route.Count)
                     {
-                        solutions.Add(new List<NodeWrapper<int>> { current });
+                        foreach (var openRoute in openRoutes)
+                        {
+                            if (!map.ContainsKey(closedRouteId))
+                            {
+                                map[closedRouteId] = new List<int>();
+                            }
+                            map[closedRouteId].Add(openRoute);
+                        }
                     }
                     else
                     {
-                        
+                        if (!map.ContainsKey(closedRouteId))
+                        {
+                            map[closedRouteId] = new List<int>();
+                        }
+                        map[closedRouteId].Add(-1);
                     }
-
+                    closedRoutes.Add(closedRoute);
                 }
-
+                
+                
             }
-
-            foreach (var solution in solutions)
+            int current = 110;
+            while (current != -1)
             {
-                current = solution[0];
-                Console.Write("[Path: Total cost: {0} ]: ",current.Cost);
-                while (current.Node != -1)
-                {
-                    Console.Write("{0} ,",current.Node);
-                    current = searchMap[current];
+                Console.Write("{0}, ", current);
+                current = map[current][0];
 
-                }
-                Console.WriteLine("end.");
             }
-           
-
-
+            Console.WriteLine("");
             throw new NotImplementedException();
         }
 
