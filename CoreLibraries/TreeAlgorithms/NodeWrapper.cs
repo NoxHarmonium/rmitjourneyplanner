@@ -19,6 +19,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     {
         private readonly T node;
 
+        private double cost;
+
         /// <summary>
         /// Creates a new instance of the NodeWrapper class.
         /// </summary>
@@ -26,6 +28,19 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         public NodeWrapper(T node)
         {
             this.node = node;
+            this.cost = 0;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the NodeWrapper class.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="cost"></param>
+        public NodeWrapper(T node, double cost)
+        {
+            this.node = node;
+            this.cost = cost;
+
         }
 
         /// <summary>
@@ -36,6 +51,21 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             get
             {
                 return this.node;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the cost associated with this wrapper.
+        /// </summary>
+        public double Cost
+        {
+            get
+            {
+                return this.cost;
+            }
+            set
+            {
+                this.cost = value;
             }
         }
     }

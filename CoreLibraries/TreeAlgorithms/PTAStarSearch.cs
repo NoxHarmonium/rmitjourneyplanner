@@ -35,77 +35,37 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         }
 
 
-        protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
+        protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
             //nodes = base.OrderChildren(nodes);
 
-            foreach (var node in nodes)
+            foreach (var wrapper in nodes)
             {
                 if (this.Bidirectional)
                 {
                     INetworkNode otherNode = this.current[CurrentIndex == 0 ? 1 : 0].Node;
-                    node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)otherNode);
+                    wrapper.Node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)otherNode);
                 }
                 else
                 {
 
-                    node.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                        (Location)node, (Location)this.Destination);
+                    wrapper.Node.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
+                        (Location)wrapper.Node, (Location)this.Destination);
                 }
                 /*
                 node.EuclidianDistance = this.Bidirectional ? 
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.current[threadId == 0 ? 1 : 0]) : 
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
+                 * 
                 * */
-                double distance = GeometryHelper.GetStraightLineDistance((Location)current[0].Node, (Location)node);
-                if (provider.GetRoutesForNode(current[0].Node).Intersect(provider.GetRoutesForNode(node)).Any())
-                {
 
-                    
-                    if (current[CurrentIndex].Node.TransportType == node.TransportType)
-                    {
-                        switch (current[CurrentIndex].Node.TransportType)
-                        {
-                            case "Train":
-                                node.TotalTime = TimeSpan.FromHours(distance / 60);
-                                break;
-
-                            case "Bus":
-                                node.TotalTime = TimeSpan.FromHours(distance / 30);
-                                break;
-
-                            case "Tram":
-                                node.TotalTime = TimeSpan.FromHours(distance / 40);
-                                break;
-
-                            case "V/Line Coach":
-                            case "Regional Bus":
-                                node.TotalTime = TimeSpan.FromHours(distance / 50);
-                                break;
-                                break;
-
-
-                            default:
-                                Console.WriteLine("Unknown transport type: " + current[0].Node.TransportType);
-                                node.TotalTime = TimeSpan.FromHours(9999);
-                                break;
-                        }
-                        if (node.TotalTime == default(TimeSpan))
-                        {
-                            //TODO: Check this
-                        }
-
-                    }
-                }
-                else
-                {
-                    node.TotalTime = TimeSpan.FromHours(distance / 2);
-                    if (node.TotalTime == default(TimeSpan))
-                    {
-                        //TODO Check this.
-                    }
-                }
                 
+                double distance = GeometryHelper.GetStraightLineDistance((Location)current[CurrentIndex].Node, (Location)wrapper.Node);
+                wrapper.Cost = distance;
+
+
+
+
 
             }
 

@@ -34,13 +34,13 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         }
 
         
-        protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
+        protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
            
 
-            foreach (var node in nodes)
+            foreach (var wrapper in nodes)
             {
-                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
+                wrapper.Node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)this.Destination);
                 /*
                 INetworkNode otherCurrent = this.current[threadId == 0 ? 1 : 0];
                 node.EuclidianDistance = this.Bidirectional && otherCurrent != null ?

@@ -38,16 +38,24 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.provider = provider;
         }
 
-        protected override INetworkNode[] GetChildren(INetworkNode node)
+        protected override NodeWrapper<INetworkNode>[] GetChildren(INetworkNode node)
         {
             List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
 
-            return nodes.ToArray();
+            var wrappers = new NodeWrapper<INetworkNode>[nodes.Count];
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                wrappers[i] = new NodeWrapper<INetworkNode>(nodes[i]);
+
+            }
+
+            return wrappers;
         }
 
-        protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
+        protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
-            
+            /*
             foreach (var node in nodes )
             {
               
@@ -101,6 +109,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             //Array.Sort(nodes,new NodeComparer());
             nodes.StochasticSort(0.5);
             return nodes;
+             * */
+            throw new NotImplementedException();
         }
     }
 }

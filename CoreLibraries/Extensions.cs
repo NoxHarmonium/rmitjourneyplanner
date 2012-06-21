@@ -13,6 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries
     using System.Text;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 
     /// <summary>
     /// Extensions for various classes.
@@ -81,6 +82,89 @@ namespace RmitJourneyPlanner.CoreLibraries
         public static void StochasticSort(this ICollection<INetworkNode> list)
         {
             StochasticSort(list, 0.5);
+        }
+
+         /// <summary>
+        /// Sorts nodes probabilistically so they are in a rough order. 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="randomness"></param>
+        public static void StochasticSort(this ICollection<NodeWrapper<INetworkNode>> list, double randomness)
+        {
+            var pDict = new Dictionary<NodeWrapper<INetworkNode>, double>();
+            //List<INetworkNode> nodes = new List<INetworkNode>(list.Count);
+            double totalHeuristic = 0;
+            double totalCost = 0;
+            foreach (NodeWrapper<INetworkNode> wrapper in list)
+            {
+                totalHeuristic += wrapper.Node.EuclidianDistance;
+
+                totalCost += wrapper.Cost;
+            }
+            double totalPr = 0;
+
+            foreach (NodeWrapper<INetworkNode> t in list)
+            {
+                double dPr = 1.0 / (t.Node.EuclidianDistance / totalHeuristic);
+                double tPr = 1.0 / (t.Cost / totalCost);
+
+                double pr =
+                    (Double.IsNaN(dPr) || Double.IsInfinity(dPr) ? 1 : dPr) +
+                    (Double.IsNaN(tPr) || Double.IsInfinity(tPr) ? 1 : tPr);
+
+                pDict.Add(t, pr);
+                totalPr += pr;
+            }
+            /*
+            for (var i = 0; i < probabilities.Count; i++ )
+            {
+                probabilities[i] /= totalPr;
+            }
+            */
+            var pairs = (from entry in pDict orderby entry.Value ascending select entry).ToList();
+
+            var newNodes = new List<NodeWrapper<INetworkNode>>();
+            var usedNodes = new List<NodeWrapper<INetworkNode>>();
+
+            while ((list.Except(usedNodes)).Any())
+            {
+                double r = (Rnd.NextDouble() * randomness) * totalPr;
+                int i;
+                for (i = 0; i < pairs.Count; i++)
+                {
+                    r -= pairs[i].Value;
+                    if (r < 0) break;
+                }
+                NodeWrapper<INetworkNode> candidate = pairs[i].Key;
+                newNodes.Add(candidate);
+                //list.Remove(candidate);
+
+                // Have to do it this way incase this function is running on a fixed array
+                // and remove wont work.
+                usedNodes.Add(candidate);
+
+
+                totalPr -= pairs[i].Value;
+                pairs.RemoveAt(i);
+
+            }
+
+
+            var lArray = list as NodeWrapper<INetworkNode>[];
+            if (lArray != null)
+            {
+                for (int i = 0; i < lArray.Length; i++)
+                {
+                    lArray[i] = newNodes[i];
+                }
+            }
+            else
+            {
+                var lList = (List<NodeWrapper<INetworkNode>>)list;
+                lList.Clear();
+                lList.AddRange(newNodes);
+            }
+
         }
 
         /// <summary>

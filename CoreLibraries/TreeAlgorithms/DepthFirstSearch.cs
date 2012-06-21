@@ -217,17 +217,17 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
                    
                     Visited[i].Add(current[i].Node);
-                    T[] children = this.OrderChildren(GetChildren(current[i].Node));
+                    NodeWrapper<T>[] children = this.OrderChildren(GetChildren(current[i].Node));
 
 
-                    foreach (T child in children)
+                    foreach (NodeWrapper<T> child in children)
                     {
 
-                        if (!child.Equals(current[i].Node))
+                        if (!child.Node.Equals(current[i].Node))
                         {
-                            var wrapper = new NodeWrapper<T>(child);
-                            map[wrapper] = current[i];
-                            stack[i].Push(wrapper);
+                            
+                            map[child] = current[i];
+                            stack[i].Push(child);
                         }
                     }
 
@@ -440,9 +440,9 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             return path;
         }
     */
-        protected abstract T[] GetChildren(T node);
+        protected abstract NodeWrapper<T>[] GetChildren(T node);
 
-        protected abstract T[] OrderChildren(T[] nodes);
+        protected abstract NodeWrapper<T>[] OrderChildren(NodeWrapper<T>[] nodes);
 
 
     }

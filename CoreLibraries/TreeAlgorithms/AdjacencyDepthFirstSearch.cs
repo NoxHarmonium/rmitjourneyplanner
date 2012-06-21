@@ -29,14 +29,14 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.adjaencyMatrix = adjaencyMatrix;
         }
 
-        protected override int[] GetChildren(int node)
+        protected override NodeWrapper<int>[] GetChildren(int node)
         {
-            var adjacents = new List<int>();
+            var adjacents = new List<NodeWrapper<int>>();
             for (var i = 0; i < adjaencyMatrix[node].Length; i++)
             {
                 if (adjaencyMatrix[node][i] == 1)
                 {
-                    adjacents.Add(i);
+                    adjacents.Add(new NodeWrapper<int>(i));
 
                 }
 
@@ -45,7 +45,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             //return ;
         }
 
-        protected override int[] OrderChildren(int[] nodes)
+        protected override NodeWrapper<int>[] OrderChildren(NodeWrapper<int>[] nodes)
         {
             return nodes;
         }

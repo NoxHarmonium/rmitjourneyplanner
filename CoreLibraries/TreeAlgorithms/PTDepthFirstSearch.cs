@@ -36,32 +36,24 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.provider = provider;
         }
 
-        protected override INetworkNode[] GetChildren(INetworkNode node)
+        protected override NodeWrapper<INetworkNode>[] GetChildren(INetworkNode node)
         {
             List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
-            /*
-            INetworkNode[] clonedNodes = new INetworkNode[nodes.Count];
-            for (int i = 0; i < clonedNodes.Length; i++)
-            {
-                clonedNodes[i] = (INetworkNode) nodes[i].Clone();
-            }
-            */
-                /*
-                 * Uncomment for greedy
-                 * 
-                foreach (var child in nodes)
-                {
-                    child.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)child, (Location)this.Destination);
-                }
-                nodes.Sort(new NodeComparer());
-                 * */
+            
+            var wrappers = new NodeWrapper<INetworkNode>[nodes.Count];
 
-                return nodes.ToArray();
+            for (int i = 0; i < nodes.Count; i++ )
+            {
+                wrappers[i] = new NodeWrapper<INetworkNode>(nodes[i]);
+
+            }
+            
+            return wrappers;
         }
 
-        protected override INetworkNode[] OrderChildren(INetworkNode[] nodes)
+        protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
-            var oldNodes = new List<INetworkNode>(nodes);
+            var oldNodes = new List<NodeWrapper<INetworkNode>>(nodes);
 
             
             nodes.StochasticSort(Entropy);
