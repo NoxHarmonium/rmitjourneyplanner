@@ -87,9 +87,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
             // Build route legs
             int counter = 0;
-            foreach (INetworkNode node in route)
-            {
+             for (int i = 0; i < route.Count; i++)
+             {
+
+                var node = route[i];
                 List<int> routes = provider.GetRoutesForNode(node);
+
                 foreach (int subroute in routes)
                 {
                     if (!routeMap.ContainsKey(subroute))
@@ -102,45 +105,55 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 counter++;
             }
 
-            // Build route search tree
-            foreach (var kvp in routeMap)
-            {
-                foreach (var kvp2 in routeMap)
+           
+
+                // Build route search tree
+                foreach (var kvp in routeMap)
                 {
-                    if (kvp.Equals(kvp2))
+                    foreach (var kvp2 in routeMap)
                     {
-                        continue;
+                        if (kvp.Equals(kvp2))
+                        {
+                            continue;
+                        }
+
+
+
+                        IEnumerable<MetlinkNode> intersections = kvp.Value.Intersect(kvp2.Value);
+
+                        if (routeIndexes[kvp2.Key] <= routeIndexes[kvp.Key])
+                        {
+                            continue;
+                        }
+
+                        bool any = intersections.Any();
+                        if (!any)
+                        {
+                            if (!routeTree.ContainsKey(kvp.Key))
+                            {
+                                routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
+                            }
+                            routeTree[kvp.Key].Add(new KeyValuePair<int, int>(kvp2.Key, -1));
+                        }
+                        else
+                        {
+                            
+
+
+                            MetlinkNode intersect = intersections.First();
+
+
+
+                            int index = kvp.Value.IndexOf(intersect);
+                            if (!routeTree.ContainsKey(kvp.Key))
+                            {
+                                routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
+                            }
+                            routeTree[kvp.Key].Add(new KeyValuePair<int, int>(kvp2.Key, index));
+                        }
                     }
 
-                    
-                    
-                    IEnumerable<MetlinkNode> intersections = kvp.Value.Intersect(kvp2.Value);
-
-                    bool any = intersections.Any();
-                    if (!any)
-                    {
-                        continue;
-                    }
-
-                    if (routeIndexes[kvp2.Key] <= routeIndexes[kvp.Key] )
-                    {
-                        continue;
-                    }
-
-
-                    MetlinkNode intersect = intersections.First();
-                    
-                    
-                    
-                    int index = kvp.Value.IndexOf(intersect);
-                    if (!routeTree.ContainsKey(kvp.Key))
-                    {
-                        routeTree[kvp.Key] = new List<KeyValuePair<int, int>>();
-                    }
-                    routeTree[kvp.Key].Add(new KeyValuePair<int, int>(kvp2.Key, index));
                 }
-
-            }
 
             foreach (var kvp in routeMap)
             {
@@ -155,7 +168,31 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 }
             }
 
+            /*
+            for (int i = 0; i < route.Count-1 ; i++)
+            {
+                var node = route[i];
+                var succ = route[i + 1];
+                var nodeR = provider.GetRoutesForNode(node);
+                var succR = provider.GetRoutesForNode(succ);
 
+                if (nodeR.Intersect(succR).Any())
+                {
+                    continue;
+                }
+                foreach (var t in nodeR)
+                {
+                    foreach (var u in succR)
+                    {
+                        if (!routeTree.ContainsKey(t))
+                        {
+                            routeTree[t] = new List<KeyValuePair<int, int>>();
+                        }
+                        routeTree[t].Add(new KeyValuePair<int, int>(u, -1));
+                    }
+                }
+            }
+            */
             //Build possible paths
             NodeWrapper<int> current;
             var stack = new Stack<NodeWrapper<int>>();
@@ -177,7 +214,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         int destId = child.Key;
                         int index = child.Value;
                         double cost;
-                        if (index == 0) cost = 0;
+                        
+                        if (index == 0 || index == -1) cost = 0;
                         else
                             cost =
                                 provider.GetDistanceBetweenNodes(
