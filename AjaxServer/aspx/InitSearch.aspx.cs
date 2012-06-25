@@ -72,6 +72,7 @@ namespace AjaxServer.aspx
                 //properties.DataStructures = new DataStructures(properties);
 
                 Global.Planner = new EvolutionaryRoutePlanner(properties);
+              
                 RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += this.Logger_LogEvent;
                 
             }

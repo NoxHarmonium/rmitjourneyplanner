@@ -650,9 +650,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
             DataTable result = this.database.GetDataSet(query);
             */
-            
 
-            int dowFilter = 1 << 7 - (int)departureTime.DayOfWeek;
+            int dow = (int)departureTime.DayOfWeek;
+            if (dow < 1)
+            {
+                dow = 7;
+            }
+            int dowFilter = 1 << 7 - dow;
             var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
            
             

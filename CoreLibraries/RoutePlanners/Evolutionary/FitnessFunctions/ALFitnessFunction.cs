@@ -10,6 +10,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
     using System.Collections;
     using System.Collections.Generic;
     using System.Data;
+    using System.IO;
     using System.Linq;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
@@ -29,6 +30,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         public int end;
 
         public int id;
+
+        public int Length
+        {
+            get
+            {
+                return end - start;
+            }
+
+        }
 
 
     }
@@ -86,73 +96,184 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
             DateTime initialDepart = properties.DepartureTime;
             var openRoutes = new List<int>();
-            var routeStartIndicies = new Dictionary<int, int>();
-            var closedRoutes = new List<ClosedRoute>();
-            var map = new Dictionary<int, List<int>>();
-            var closedRouteMap = new Dictionary<int, ClosedRoute>();
-
-            for (int i = 0; i < route.Count + 1; i++)
+            var closedRoutes = new List<int>();
+            var closedRoutesIndex = new List<List<ClosedRoute>>();
+            var routeIndex = new Dictionary<int, int>();
+        
+          
+            for (int i = 0; i < route.Count; i++)
             {
-                List<int> routes;
-                if (i != route.Count)
+                
+                closedRoutesIndex.Add(new List<ClosedRoute>());
+                var routes = provider.GetRoutesForNode(route[i]);
+                foreach (int routeId in routes)
                 {
-                    var node = route[i];
-                    routes = provider.GetRoutesForNode(node);
-                }
-                else
-                {
-                    routes = new List<int>();
-                }
-                var newRoutes = routes.Where(routeId => !openRoutes.Contains(routeId)).ToList();
-                var closedRouteIds = openRoutes.Where(openRoute => !routes.Contains(openRoute)).ToList();
-                foreach (var newRoute in newRoutes)
-                {
-                    openRoutes.Add(newRoute);
-                    routeStartIndicies[newRoute] = i;
-                }
-
-                foreach (var closedRouteId in closedRouteIds)
-                {
-                    openRoutes.Remove(closedRouteId);
-                }
-
-                foreach (var closedRouteId in closedRouteIds)
-                {
-                    var closedRoute = new ClosedRoute { end = i, id = closedRouteId, start = routeStartIndicies[closedRouteId] };
-                    closedRouteMap[closedRouteId] = closedRoute;
-                    if (i != route.Count)
+                    if (!openRoutes.Contains(routeId) && !closedRoutes.Contains(routeId))
                     {
-                        foreach (var openRoute in openRoutes)
-                        {
-                            if (!map.ContainsKey(closedRouteId))
-                            {
-                                map[closedRouteId] = new List<int>();
-                            }
-                            map[closedRouteId].Add(openRoute);
-                        }
+                        openRoutes.Add(routeId);
+                        routeIndex[routeId] = i;
+
+                    }
+                }
+
+                var newOpenRoute = new List<int>();
+                foreach (var openRoute in openRoutes)
+                {
+                    if (!routes.Contains(openRoute))
+                    {
+                        closedRoutes.Add(openRoute);
+                        var cr = new ClosedRoute { end = i, id = openRoute, start = routeIndex[openRoute] };
+                        closedRoutesIndex[routeIndex[openRoute]].Add(cr);
+
                     }
                     else
                     {
-                        if (!map.ContainsKey(closedRouteId))
-                        {
-                            map[closedRouteId] = new List<int>();
-                        }
-                        map[closedRouteId].Add(-1);
+                        newOpenRoute.Add(openRoute);
                     }
-                    closedRoutes.Add(closedRoute);
                 }
-                
-                
+
+                openRoutes = newOpenRoute;
             }
-            int current = 110;
-            while (current != -1)
+            
+            /*
+            StreamWriter writer = new StreamWriter("test.csv",false);
+            for (int i = 0; i < closedRoutesIndex.Count; i++)
             {
-                Console.Write("{0}, ", current);
-                current = map[current][0];
+                foreach (var closedRoute in closedRoutesIndex[i])
+                {
+                    writer.Write("{0:000000}: ", closedRoute.id);
+                    for (int j = 0; j < closedRoute.start; j++)
+                    {
+                         writer.Write(" ");
+                    }
+                    for (int j = 0; j < closedRoute.end - closedRoute.start; j++)
+                    {
+                        writer.Write("*");
+                    }
+                    writer.WriteLine();
+                    
+                }
+             }
+           
+             * 
+             * */
+            var links = new Dictionary<int, List<int>>();
+            var timeSegments = new List<TransportTimeSpan>();
+            //StreamWriter writer = new StreamWriter("test.csv", false);
+            //writer.Write("                     ");
+            foreach (var routeId in route)
+            {
+                //writer.Write("{0:00000} ", routeId.Id);
 
             }
-            Console.WriteLine("");
-            throw new NotImplementedException();
+
+            var pointer = 0;
+            var totalTime = default(TimeSpan);
+            var currentTime = initialDepart;
+            double legs = 0.0;
+            //Console.WriteLine("-------Fitness Evaluation-------");
+            while (pointer < route.Count-1)
+            {
+                var t = closedRoutesIndex[pointer];
+                bool first = true;
+                TransportTimeSpan minTime = default(TransportTimeSpan);
+                ClosedRoute minClosedRoute = default(ClosedRoute);
+                
+                //If there are no closed routes for this node, create one.
+                if (t.Count == 0)
+                {
+                    minTime = properties.PointDataProviders[0].EstimateDistance(
+                                 (Location)route[pointer], (Location)route[pointer+1]).Time;
+                    minClosedRoute = new ClosedRoute { id = -1, start = pointer, end = pointer + 1 };
+
+                }
+                else
+                {
+
+
+                    foreach (var closedRoute in t)
+                    {
+                        TransportTimeSpan time = default(TransportTimeSpan);
+                        bool calced = false;
+                        if (closedRoute.Length > 1)
+                        {
+                            calced = true;
+                            time = provider.GetDistanceBetweenNodes(
+                                route[closedRoute.start], route[closedRoute.end - 1], currentTime, closedRoute.id);
+
+
+                        }
+                        if (time == default(TransportTimeSpan))
+                        {
+                            calced = false;
+                            time =
+                                properties.PointDataProviders[0].EstimateDistance(
+                                    (Location)route[closedRoute.start], (Location)route[closedRoute.end]).Time;
+                            if (time == default(TransportTimeSpan))
+                            {
+                                //throw new Exception("Walking time is zero. An error must of occurred.");
+                            }
+                        }
+
+                        if (first || time.TotalTime < minTime.TotalTime)
+                        {
+                            first = false;
+                            minTime = time;
+                            minClosedRoute = closedRoute;
+                        }
+
+                        //writer.Write(
+                        //    calced ? "{0:000000} [{1:dd\\.hh\\:mm\\:ss}]: " : "{0:000000}*[{1:dd\\.hh\\:mm\\:ss}]: ",
+                        //    closedRoute.id,
+                        //    time.TotalTime);
+
+
+
+                        //for (int j = 0; j < closedRoute.start; j++)
+                        //{
+                        //    writer.Write(" ");
+                        //}
+                        //for (int j = 0; j < closedRoute.end - closedRoute.start; j++)
+                        //{
+                        //    writer.Write("*");
+                        //}
+                        //writer.WriteLine();
+
+
+
+                    }
+                }
+
+                totalTime += minTime.TotalTime;
+                currentTime += minTime.TotalTime;
+
+                if (minClosedRoute.Equals(default(ClosedRoute)))
+                {
+                    throw new Exception("No minimum route found.");
+
+                }
+                if (minClosedRoute.end <= pointer)
+                {
+                    throw new Exception("Infinite loop detected.");
+                }
+
+                for (int i = pointer; i < minClosedRoute.end; i++ )
+                {
+                    route[i].CurrentRoute = minClosedRoute.id;
+                }
+                    pointer = minClosedRoute.end;
+
+                //Console.WriteLine("[{0}] : [{1}] -> [{2}] ({3})", minClosedRoute.id,minClosedRoute.start,minClosedRoute.end,minTime);
+                //initialDepart += minTime.TotalTime;
+                legs++;
+
+            }
+            //writer.Close();
+            //Console.WriteLine("Total Time: {0}", totalTime);
+            //Console.WriteLine("------------------------------");
+            return totalTime.TotalSeconds * legs;
+
+            //throw new NotImplementedException();
         }
 
         #endregion

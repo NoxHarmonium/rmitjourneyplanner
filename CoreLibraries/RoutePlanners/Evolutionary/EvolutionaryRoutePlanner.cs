@@ -49,6 +49,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
         private int targetProgress;
 
+        /// <summary>
+        /// The current iteration of the optimisation.
+        /// </summary>
+        private int iteration = 0;
+
         #endregion
 
         #region Constructors and Destructors
@@ -175,6 +180,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <returns> The solve step. </returns>
         public bool SolveStep()
         {
+            iteration++;
+            Console.WriteLine("Solving step {0}...", iteration);
             this.progress = 0;
             
             var routesUsed = new Dictionary<int, int>();
@@ -327,6 +334,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         {
             this.population = new List<Critter>();
             this.InitPopulation();
+            iteration = 0;
         }
 
         #endregion
