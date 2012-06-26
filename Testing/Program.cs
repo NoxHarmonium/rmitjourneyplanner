@@ -23,7 +23,9 @@ namespace Testing
             //TestStoSort();
             //TestJP jp = new TestJP();
             //jp.Test();
-            SpawnTravelPlanner sp = new SpawnTravelPlanner();
+            //SpawnTravelPlanner sp = new SpawnTravelPlanner();
+            TestFitnessFunction f = new TestFitnessFunction();
+            Console.ReadLine();
 
 
             //Console.ReadLine();

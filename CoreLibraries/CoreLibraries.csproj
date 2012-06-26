@@ -130,6 +130,7 @@
     <Compile Include="Types\AdjacencyList.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Comparers\ArcComparer.cs" />
+    <Compile Include="Types\ClosedRoute.cs" />
     <Compile Include="Types\Critter.cs" />
     <Compile Include="Types\Departure.cs" />
     <Compile Include="Types\INode.cs" />

@@ -65,6 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpawnTravelPlanner.cs" />
     <Compile Include="TestDFS.cs" />
+    <Compile Include="TestFitnessFunction.cs" />
     <Compile Include="TestJP.cs" />
   </ItemGroup>
   <ItemGroup>

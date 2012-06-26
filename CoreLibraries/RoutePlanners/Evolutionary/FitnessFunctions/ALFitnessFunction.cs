@@ -22,27 +22,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
     #endregion
 
-
-    public struct ClosedRoute
-    {
-        public int start;
-
-        public int end;
-
-        public int id;
-
-        public int Length
-        {
-            get
-            {
-                return end - start;
-            }
-
-        }
-
-
-    }
-
     /// <summary>
     ///   The al fitness function.
     /// </summary>
@@ -55,7 +34,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         /// </summary>
         private readonly EvolutionaryProperties properties;
 
-        private readonly List<int> routesUsed = new List<int>(); 
+        private readonly List<int> routesUsed = new List<int>();
 
         #endregion
 
@@ -93,21 +72,30 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         /// <exception cref="Exception"></exception>
         public double GetFitness(Route route)
         {
+            //TODO: Route 1942: Has alternate route at different times. Check it out....
+            
+            
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
             DateTime initialDepart = properties.DepartureTime;
             var openRoutes = new List<int>();
             var closedRoutes = new List<int>();
             var closedRoutesIndex = new List<List<ClosedRoute>>();
             var routeIndex = new Dictionary<int, int>();
-        
-          
+
+
             for (int i = 0; i < route.Count; i++)
             {
-                
+                route[i].RetrieveData();
+                Console.Write("{0:00000}[{1}]: ", route[i].Id,((MetlinkNode)route[i]).StopSpecName);
                 closedRoutesIndex.Add(new List<ClosedRoute>());
                 var routes = provider.GetRoutesForNode(route[i]);
+                
+                //TODO: REMOVE FOR PRODUCTION
+                routes.Sort();
+
                 foreach (int routeId in routes)
                 {
+                    Console.Write("{0:00000}, ", routeId);
                     if (!openRoutes.Contains(routeId) && !closedRoutes.Contains(routeId))
                     {
                         openRoutes.Add(routeId);
@@ -115,11 +103,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                     }
                 }
+                Console.WriteLine();
 
                 var newOpenRoute = new List<int>();
                 foreach (var openRoute in openRoutes)
                 {
-                    if (!routes.Contains(openRoute))
+                    if (!routes.Contains(openRoute) || (i == route.Count-1))
                     {
                         closedRoutes.Add(openRoute);
                         var cr = new ClosedRoute { end = i, id = openRoute, start = routeIndex[openRoute] };
@@ -134,7 +123,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                 openRoutes = newOpenRoute;
             }
-            
+
             /*
             StreamWriter writer = new StreamWriter("test.csv",false);
             for (int i = 0; i < closedRoutesIndex.Count; i++)
@@ -171,20 +160,21 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             var totalTime = default(TimeSpan);
             var currentTime = initialDepart;
             double legs = 0.0;
-            //Console.WriteLine("-------Fitness Evaluation-------");
-            while (pointer < route.Count-1)
+            Console.WriteLine("-------Fitness Evaluation-------");
+            while (pointer < route.Count - 1)
             {
                 var t = closedRoutesIndex[pointer];
                 bool first = true;
                 TransportTimeSpan minTime = default(TransportTimeSpan);
-                ClosedRoute minClosedRoute = default(ClosedRoute);
-                
+                int maxLength = 0;
+                ClosedRoute bestClosedRoute = default(ClosedRoute);
+
                 //If there are no closed routes for this node, create one.
                 if (t.Count == 0)
                 {
                     minTime = properties.PointDataProviders[0].EstimateDistance(
-                                 (Location)route[pointer], (Location)route[pointer+1]).Time;
-                    minClosedRoute = new ClosedRoute { id = -1, start = pointer, end = pointer + 1 };
+                                 (Location)route[pointer], (Location)route[pointer + 1]).Time;
+                    bestClosedRoute = new ClosedRoute { id = -1, start = pointer, end = pointer + 1 };
 
                 }
                 else
@@ -193,11 +183,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                     foreach (var closedRoute in t)
                     {
+                        Console.WriteLine("      ClosedRoute({0})",closedRoute.ToString());
+                        
                         TransportTimeSpan time = default(TransportTimeSpan);
                         bool calced = false;
                         if (closedRoute.Length > 1)
                         {
                             calced = true;
+                            if (closedRoute.Length > 3)
+                            {
+                                string test = "dffd";
+                            }
                             time = provider.GetDistanceBetweenNodes(
                                 route[closedRoute.start], route[closedRoute.end - 1], currentTime, closedRoute.id);
 
@@ -215,11 +211,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                             }
                         }
 
-                        if (first || time.TotalTime < minTime.TotalTime)
+                        if (first || (time.TotalTime < minTime.TotalTime && closedRoute.Length >= maxLength))
                         {
                             first = false;
                             minTime = time;
-                            minClosedRoute = closedRoute;
+                            bestClosedRoute = closedRoute;
+                            maxLength = closedRoute.Length;
                         }
 
                         //writer.Write(
@@ -247,30 +244,33 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 totalTime += minTime.TotalTime;
                 currentTime += minTime.TotalTime;
 
-                if (minClosedRoute.Equals(default(ClosedRoute)))
+                if (bestClosedRoute.Equals(default(ClosedRoute)))
                 {
                     throw new Exception("No minimum route found.");
 
                 }
-                if (minClosedRoute.end <= pointer)
+                if (bestClosedRoute.end <= pointer)
                 {
                     throw new Exception("Infinite loop detected.");
                 }
 
-                for (int i = pointer; i < minClosedRoute.end; i++ )
+                for (int i = pointer; i < bestClosedRoute.end; i++)
                 {
-                    route[i].CurrentRoute = minClosedRoute.id;
+                    route[i].CurrentRoute = bestClosedRoute.id;
                 }
-                    pointer = minClosedRoute.end;
+                pointer = bestClosedRoute.end;
 
-                //Console.WriteLine("[{0}] : [{1}] -> [{2}] ({3})", minClosedRoute.id,minClosedRoute.start,minClosedRoute.end,minTime);
+                Console.WriteLine("[{0}] : [{1}] -> [{2}] ({3})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime);
                 //initialDepart += minTime.TotalTime;
-                legs++;
+                if (bestClosedRoute.id != -1)
+                {
+                    legs++;
+                }
 
             }
             //writer.Close();
-            //Console.WriteLine("Total Time: {0}", totalTime);
-            //Console.WriteLine("------------------------------");
+            Console.WriteLine("Total Time: {0}", totalTime);
+            Console.WriteLine("------------------------------");
             return totalTime.TotalSeconds * legs;
 
             //throw new NotImplementedException();
@@ -278,7 +278,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
         #endregion
 
-      
+
 
         #region Methods
 
@@ -350,7 +350,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             {
                 date = "0000";
             }
-            
+
             if (date == "0" || date == "-1")
             {
                 date = "0000";
