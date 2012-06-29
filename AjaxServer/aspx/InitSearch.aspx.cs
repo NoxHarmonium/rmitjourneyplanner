@@ -56,7 +56,7 @@ namespace AjaxServer.aspx
                 properties.DepartureTime = DateTime.Parse(date + " " + time);
                 properties.NumberToKeep = 25;
                 properties.MutationRate = 0.1;
-                properties.CrossoverRate = 0;
+                properties.CrossoverRate = 0.7;
                 //properties.RouteGenerator = new AlRouteGenerator(properties);
                 properties.RouteGenerator = new DFSRoutePlanner(properties);
                 properties.Mutator = new StandardMutator(properties);
