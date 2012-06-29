@@ -21,6 +21,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
         private double cost;
 
+        private Guid guid;
+
         /// <summary>
         /// Creates a new instance of the NodeWrapper class.
         /// </summary>
@@ -29,6 +31,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         {
             this.node = node;
             this.cost = 0;
+            guid = Guid.NewGuid();
         }
 
         /// <summary>
@@ -40,6 +43,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         {
             this.node = node;
             this.cost = cost;
+            guid = Guid.NewGuid();
 
         }
 

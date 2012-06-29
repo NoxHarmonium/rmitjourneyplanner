@@ -18,5 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public int arrivalTime;
 
         public int departureTime;
+
+        public int order;
     }
 }

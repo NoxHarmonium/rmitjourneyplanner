@@ -86,7 +86,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             for (int i = 0; i < route.Count; i++)
             {
                 route[i].RetrieveData();
-                Console.Write("{0:00000}[{1}]: ", route[i].Id,((MetlinkNode)route[i]).StopSpecName);
+                //Console.Write("{0:00000}[{1}]: ", route[i].Id,((MetlinkNode)route[i]).StopSpecName);
                 closedRoutesIndex.Add(new List<ClosedRoute>());
                 var routes = provider.GetRoutesForNode(route[i]);
                 
@@ -95,7 +95,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                 foreach (int routeId in routes)
                 {
-                    Console.Write("{0:00000}, ", routeId);
+                    //Console.Write("{0:00000}, ", routeId);
                     if (!openRoutes.Contains(routeId) && !closedRoutes.Contains(routeId))
                     {
                         openRoutes.Add(routeId);
@@ -160,7 +160,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             var totalTime = default(TimeSpan);
             var currentTime = initialDepart;
             double legs = 0.0;
-            Console.WriteLine("-------Fitness Evaluation-------");
+            //Console.WriteLine("-------Fitness Evaluation-------");
             while (pointer < route.Count - 1)
             {
                 var t = closedRoutesIndex[pointer];
@@ -174,7 +174,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 {
                     minTime = properties.PointDataProviders[0].EstimateDistance(
                                  (Location)route[pointer], (Location)route[pointer + 1]).Time;
-                    bestClosedRoute = new ClosedRoute { id = -1, start = pointer, end = pointer + 1 };
+                    bestClosedRoute = new ClosedRoute { id = -2, start = pointer, end = pointer + 1 };
 
                 }
                 else
@@ -183,7 +183,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                     foreach (var closedRoute in t)
                     {
-                        Console.WriteLine("      ClosedRoute({0})",closedRoute.ToString());
+                       // Console.WriteLine("      ClosedRoute({0})",closedRoute.ToString());
                         
                         TransportTimeSpan time = default(TransportTimeSpan);
                         bool calced = false;
@@ -260,17 +260,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 }
                 pointer = bestClosedRoute.end;
 
-                Console.WriteLine("[{0}] : [{1}] -> [{2}] ({3})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime);
+                //Console.WriteLine("[{0}] : [{1}] -> [{2}] ({3})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime);
                 //initialDepart += minTime.TotalTime;
-                if (bestClosedRoute.id != -1)
-                {
+                //if (bestClosedRoute.id != -1)
+                //{
                     legs++;
-                }
+                //}
 
             }
             //writer.Close();
-            Console.WriteLine("Total Time: {0}", totalTime);
-            Console.WriteLine("------------------------------");
+            //Console.WriteLine("Total Time: {0}", totalTime);
+            //Console.WriteLine("------------------------------");
             return totalTime.TotalSeconds * legs;
 
             //throw new NotImplementedException();

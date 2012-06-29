@@ -44,6 +44,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         [DataMember(Order = 5)]
         private const int departureTimeIndex = 4;
+        
+        /// <summary>
+        /// The index number of the order in the entries list.
+        /// </summary>
+        [DataMember(Order = 6)]
+        private const int orderIndex = 5;
 
         
         /// <summary>
@@ -56,7 +62,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The data structure containing the timetable data.
         /// </summary>
         [DataMember(Order = 7)]
-        readonly private Dictionary<int, Dictionary<int, Dictionary<int, List<KeyValuePair<int, int>>>>> dataStructure = new Dictionary<int, Dictionary<int, Dictionary<int, List<KeyValuePair<int, int>>>>>();
+        readonly private Dictionary<int, Dictionary<int, Dictionary<int, List<int[]>>>> dataStructure = new Dictionary<int, Dictionary<int, Dictionary<int, List<int[]>>>>();
 
         /// <summary>
         /// A value representing if the timetable has been optimised or not.
@@ -83,9 +89,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="departureTime">The departure time from this stop.</param>
         /// <param name="routeId">The route associated with this stop.</param>
         /// <param name="dayOfWeek">The binary representation of which days the service runs on.</param>
-        public void AddTimetableEntry(int stopId, int routeId, int dayOfWeek, int arrivalTime, int departureTime)
+        public void AddTimetableEntry(int stopId, int routeId, int dayOfWeek, int arrivalTime, int departureTime,int order)
         {
-            entries.Add(new[] {stopId,routeId,dayOfWeek,arrivalTime,departureTime} );
+            entries.Add(new[] {stopId,routeId,dayOfWeek,arrivalTime,departureTime,order} );
         }
 
         /// <summary>
@@ -100,9 +106,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             int currentRouteId = entries[0][RouteIDIndex];
             int currentDOW = entries[0][dayOfWeekIndex];
 
-            var times = new List<KeyValuePair<int, int>>();
-            var dowToTimes = new Dictionary<int, List<KeyValuePair<int, int>>>();
-            var routeToDOW = new Dictionary<int, Dictionary<int, List<KeyValuePair<int, int>>>>();
+            var times = new List<int[]>();
+            var dowToTimes = new Dictionary<int, List<int[]>>();
+            var routeToDOW = new Dictionary<int, Dictionary<int, List<int[]>>>();
             //var stopToRoute = new Dictionary<int, Dictionary<int, Dictionary<int, int[]>>>();
 
             int index = 0;
@@ -119,7 +125,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 if (currentDOW != entry[dayOfWeekIndex] || currentRouteId != entry[RouteIDIndex]  || currentStopId != entry[StopIdIndex])
                 {
                     dowToTimes.Add(currentDOW, times);
-                    times = new List<KeyValuePair<int, int>>();
+                    times = new List<int[]>();
                     currentDOW = entry[dayOfWeekIndex];
 
                 }
@@ -127,17 +133,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 if (currentRouteId != entry[RouteIDIndex] || currentStopId != entry[StopIdIndex])
                 {
                     routeToDOW.Add(currentRouteId, dowToTimes);
-                    dowToTimes = new Dictionary<int, List<KeyValuePair<int, int>>>();
+                    dowToTimes = new Dictionary<int, List<int[]>>();
                     currentRouteId = entry[RouteIDIndex];
                 }
 
                 if (currentStopId != entry[StopIdIndex])
                 {
                     dataStructure.Add(currentStopId, routeToDOW);
-                    routeToDOW = new Dictionary<int, Dictionary<int, List<KeyValuePair<int, int>>>>();
+                    routeToDOW = new Dictionary<int, Dictionary<int, List<int[]>>>();
                     currentStopId = entry[StopIdIndex];
                 }
-                times.Add(new KeyValuePair<int, int>(entry[arrivalTimeIndex], entry[departureTimeIndex]));
+                times.Add(new[]{entry[arrivalTimeIndex], entry[departureTimeIndex],entry[orderIndex]});
             }
             
           entries.Clear();
@@ -188,18 +194,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 {
                     if((dow.Key & dayOfWeek) != 0 )
                     {
-                        KeyValuePair<int, int> minTime = dow.Value.FirstOrDefault(timePair => timePair.Key > time);
-                        if (minTime.Equals(default(KeyValuePair<int,int>)))
+                       int[] minTime = dow.Value.FirstOrDefault(timePair => timePair[0] > time);
+                        if (minTime == null)
                         {
                             continue;
                         }
 
                         departures.Add(new Departure
                         {
-                            arrivalTime = minTime.Key,
-                            departureTime = minTime.Value,
+                            arrivalTime = minTime[0],
+                            departureTime = minTime[1],
                             routeId = route.Key,
-                            stopId = stopId
+                            stopId = stopId,
+                            order = minTime[2]
                         });
 
                     }

@@ -41,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 destination = properties.NetworkDataProviders[0].GetNodeClosestToPointWithinArea(destination, destination, 1.0, true);
             }
 
-            PTDepthFirstSearch searchAlgorithm = new PTAStarSearch(properties.Bidirectional, properties.NetworkDataProviders[0], source, destination);
+            PTDepthFirstSearch searchAlgorithm = new PTGreedySearch(properties.Bidirectional, properties.NetworkDataProviders[0], source, destination);
             //PTDepthFirstSearch searchAlgorithm = new PTDepthFirstSearch(properties.Bidirectional,properties.NetworkDataProviders[0],source,destination);
             INetworkNode[] nodes = searchAlgorithm.Run();
             //if (nodes.First() != destination || nodes.Last() != source)
@@ -49,13 +49,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
             //    throw new Exception("Path is invalid!");
             //}
            // searchAlgorithm.Entropy = 0.0;
+
+         
+
             if (!properties.Bidirectional)
             {
                 nodes = nodes.Reverse().ToArray();
             }
 
+          
 
-            return new Route(-1, nodes);
+                return new Route(-1, nodes);
         }
     }
 }

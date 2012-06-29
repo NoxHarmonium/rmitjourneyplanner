@@ -225,7 +225,6 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
                         if (!child.Node.Equals(current[i].Node))
                         {
-                            
                             map[child] = current[i];
                             stack[i].Push(child);
                         }
@@ -246,6 +245,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
            
 
            NodeWrapper<T> v = current[0];
+            
            while (!v.Node.Equals(this.origin))
            {
                path.Add(v.Node);

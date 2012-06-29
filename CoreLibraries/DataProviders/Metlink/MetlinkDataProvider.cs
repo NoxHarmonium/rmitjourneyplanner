@@ -51,12 +51,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// </summary>
         private readonly Dictionary<int, List<int>> routeMap = new Dictionary<int, List<int>>();
 
-        /// <summary>
-        ///   The route path map.
-        /// </summary>
-        private readonly Dictionary<int, Dictionary<int, int>> routePathMap =
-            new Dictionary<int, Dictionary<int, int>>();
-
         private readonly Timetable timetable = new Timetable();
 
         #endregion
@@ -101,10 +95,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Logger.Log(this, "-->Querying this.database...");
                 DataTable nodeData =
                     this.database.GetDataSet(
-                        @"SELECT si.MetlinkStopID, sr.RouteID
-                FROM tblStopInformation si
-                INNER JOIN tblStopRoutes sr
-                ON si.MetlinkStopID=sr.MetlinkStopID");
+                        @"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.Sequence 
+                            FROM tblServices s
+                            INNER JOIN tblServiceTimes st
+                            ON s.ServiceID=st.ServiceID
+                            ORDER BY RouteID, s.ServiceID,ArrivalTime;
+                    ");
 
                 foreach (DataRow row in nodeData.Rows)
                 {
@@ -114,31 +110,35 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         this.routeMap[id] = new List<int>();
                     }
 
-                    this.routeMap[id].Add((int)row["RouteID"]);
-                }
-
-                Logger.Log(this, "Building route path map...");
-                Logger.Log(this, "Querying this.database...");
-
-                nodeData =
-                    this.database.GetDataSet(
-                        @"SELECT RouteID, MetlinkStopID, StopOrder FROM tblStopRoutes
-                    ORDER BY RouteID,StopOrder;
-                    ");
-
-                foreach (DataRow row in nodeData.Rows)
-                {
-                    var sourceRoute = (int)row["RouteID"];
-                    var nodeId = (int)row["MetlinkStopID"];
-                    var order = (int)row["StopOrder"];
-                    if (!this.routePathMap.ContainsKey(sourceRoute))
+                    var routeId = (int)row["RouteID"];
+                    if (!this.routeMap[id].Contains(routeId))
                     {
-                        this.routePathMap[sourceRoute] = new Dictionary<int, int>();
+                        this.routeMap[id].Add(routeId);
                     }
-
-                    this.routePathMap[sourceRoute][nodeId] = order;
                 }
+                
+               //ogger.Log(this, "Building route path map...");
+               Logger.Log(this, "Querying this.database...");
+               /*
+               nodeData =
+                   this.database.GetDataSet(
+                       @"SELECT RouteID, MetlinkStopID, StopOrder FROM tblStopRoutes
+                   ORDER BY RouteID,StopOrder;
+                   ");
+               
+               foreach (DataRow row in nodeData.Rows)
+               {
+                   var sourceRoute = (int)row["RouteID"];
+                   var nodeId = (int)row["MetlinkStopID"];
+                   var order = (int)row["Sequence"];
+                   if (!this.routePathMap.ContainsKey(sourceRoute))
+                   {
+                       this.routePathMap[sourceRoute] = new Dictionary<int, int>();
+                   }
 
+                   this.routePathMap[sourceRoute][nodeId] = order;
+               }
+                */
                 Logger.Log(this, "Reading nodes into structure...");
 
                 Logger.Log(this, "Querying this.database...");
@@ -206,9 +206,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     Logger.Log(this, "Querying this.database...");
                     nodeData =
                         this.database.GetDataSet(
-                            @"SELECT RouteID, MetlinkStopID, StopOrder 
-                    FROM tblStopRoutes
-                    ORDER BY RouteID, STopOrder
+                            @"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.DepartTime
+                            FROM tblServices s
+                            INNER JOIN tblServiceTimes st
+                            ON s.ServiceID=st.ServiceID
+                            ORDER BY RouteID,s.ServiceID, ArrivalTime
                     ");
 
                     for (int i = 0; i < nodeData.Rows.Count - 1; i++)
@@ -218,11 +220,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                         // var RouteID = (int)row["RouteID"];
                         var rowId = (int)row["MetlinkStopID"];
-                        var rowStopOrder = (int)row["StopOrder"];
-                        var nextId = (int)nextRow["MetlinkStopID"];
-                        var nextStopOrder = (int)nextRow["StopOrder"];
+                        var rowStopOrder = (short)row["DepartTime"];
+                        var rowServiceId = (int)row["ServiceID"];
 
-                        if (nextStopOrder >= rowStopOrder && !this.list[rowId].Contains(this.list[nextId][0]))
+                        var nextId = (int)nextRow["MetlinkStopID"];
+                        var nextStopOrder = (short)nextRow["DepartTime"];
+                        var nextServiceId = (int)nextRow["ServiceID"];
+
+                    
+                        if (nextStopOrder >= rowStopOrder && 
+                            !this.list[rowId].Contains(this.list[nextId][0])&&
+                            nextServiceId == rowServiceId)
                         {
                             this.list[rowId].Add(this.list[nextId][0]);
                             totalLinks++;
@@ -358,6 +366,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     }
                 }
 
+                var craigAdg = list[20035];
+             
+
                 Logger.Log(this, "\nAdjacency data structure loaded successfully in {0} seconds.");
 
 
@@ -368,19 +379,25 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     Logger.Log(this,"Timetable cache non existant. Rebuilding...");
                     DataTable timetableData =
                         database.GetDataSet(
-                            @"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime  FROM tblServiceTimes  st
+                            @"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID  FROM tblServiceTimes  st
                                         INNER JOIN tblServices s
                                         ON s.ServiceID = st.ServiceID
                                         ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime");
 
+                    
+                  
                     foreach (DataRow row in timetableData.Rows)
                     {
+                        var serviceId = Convert.ToInt32(timetableData.Rows[0][5]);
+                        
                         timetable.AddTimetableEntry(
                             Convert.ToInt32(row[0]),
                             Convert.ToInt32(row[1]),
-                            Convert.ToInt32(row[2].ToString(), 2),
+                            Convert.ToInt32(row[2]),
                             Convert.ToInt32(row[3]),
-                            Convert.ToInt32(row[4]));
+                            Convert.ToInt32(row[4]),
+                            Convert.ToInt32(row[5]));
+
                     }
                     timetable.Optimise();
                    
@@ -402,7 +419,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                
                 }
                 Logger.Log(this, "Ending experimental timetable code...");
-
+             
                 int sstCount = Convert.ToInt32(this.database.GetDataSet("SELECT count(*) FROM tblSST").Rows[0][0]);
                 if (sstCount == 0)
                 {
@@ -429,6 +446,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Logger.Log(this, "Error intitilizing MetlinkDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
                 throw e;
             }
+
+            var t = list[40221];
+            var z = t;
+
 
         }
 
@@ -652,6 +673,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             */
 
             int dow = (int)departureTime.DayOfWeek;
+
             if (dow < 1)
             {
                 dow = 7;
@@ -675,7 +697,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 destination.Id, dowFilter, Convert.ToInt32(departTime.ToString("Hmm")));
                 
                
-                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId);
+                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId && arrival1.order == departure.order);
+
+                if (arrival.Equals(default (Departure)))
+                {
+                    return default(TransportTimeSpan);
+                }
 
                 DateTime arrivalTime = this.ParseDate(arrival.arrivalTime.ToString(CultureInfo.InvariantCulture));
                 //Normalize dates
@@ -923,7 +950,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <returns> A list of routes that intersect this node. </returns>
         public List<int> GetRoutesForNode(INetworkNode node)
         {
-            return this.routeMap[node.Id];
+            if (this.routeMap.ContainsKey(node.Id))
+            {
+                return this.routeMap[node.Id];
+            }
+
+            Logger.Log(this,"Warning: Node {0} has no associated routes.",node);
+            return new List<int>();
         }
 
         /// <summary>
@@ -934,21 +967,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         public string GetStopMode(string stopModeId)
         {
             return StopModeTable[stopModeId];
-        }
-
-        /// <summary>
-        ///   Returns if the 2 nodes are in the correct order for the specified route.
-        /// </summary>
-        /// <param name="first"> </param>
-        /// <param name="second"> </param>
-        /// <param name="routeId"> </param>
-        /// <returns> </returns>
-        public bool IsValidOrder(INetworkNode first, INetworkNode second, int routeId)
-        {
-            int i1 = this.routePathMap[routeId][first.Id];
-            int i2 = this.routePathMap[routeId][second.Id];
-
-            return i1 <= i2;
         }
 
         /// <summary>

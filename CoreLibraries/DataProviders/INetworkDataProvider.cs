@@ -112,15 +112,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         List<int> GetRoutesForNode(INetworkNode node);
 
         /// <summary>
-        ///   Returns if the 2 nodes are in the correct order for the specified route.
-        /// </summary>
-        /// <param name="first"> </param>
-        /// <param name="second"> </param>
-        /// <param name="routeId"> </param>
-        /// <returns> </returns>
-        bool IsValidOrder(INetworkNode first, INetworkNode second, int routeId);
-
-        /// <summary>
         /// Gets a DataTable containing data relating to the specified node id
         /// </summary>
         /// <param name="metlinkStopId"></param>

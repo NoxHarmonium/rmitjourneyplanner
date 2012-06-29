@@ -58,7 +58,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             
             nodes.StochasticSort(Entropy);
 
-            if (oldNodes.Any(node => !nodes.Contains(node)))
+            if (oldNodes.Any(node => !nodes.Contains(node)) || nodes.Any(node => !oldNodes.Contains(node)))
             {
                 throw new Exception("Nodes are not consistant after sort.");
             }

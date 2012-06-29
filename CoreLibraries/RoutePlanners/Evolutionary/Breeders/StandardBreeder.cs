@@ -76,8 +76,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
                 return null;
             }
 
-            var firstChild = new Route(Guid.NewGuid().GetHashCode());
-            var secondChild = new Route(Guid.NewGuid().GetHashCode());
+            var firstChild = new Route(-1);
+            var secondChild = new Route(-1);
             KeyValuePair<int, int> crossoverPoint = crossoverPoints[random.Next(crossoverPoints.Count - 1)];
 
             firstChild.AddRange(firstNodes.GetRange(0, crossoverPoint.Key));

@@ -57,7 +57,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.current[threadId == 0 ? 1 : 0]) : 
                     GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
                  * 
-                * */
+                */
 
                 
                 double distance = GeometryHelper.GetStraightLineDistance((Location)current[CurrentIndex].Node, (Location)wrapper.Node);
