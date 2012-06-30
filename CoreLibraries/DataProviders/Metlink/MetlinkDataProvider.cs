@@ -200,16 +200,19 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 }
                 else
                 {
+                    
+                    
                     int totalLinks = 0;
                     Logger.Log(this, "\nBuilding route adjacencies... (Second Pass) [{0} s]");
 
                     Logger.Log(this, "Querying this.database...");
                     nodeData =
-                        this.database.GetDataSet(
-                            @"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.DepartTime
+                          this.database.GetDataSet(
+                              @"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.DepartTime
                             FROM tblServices s
                             INNER JOIN tblServiceTimes st
                             ON s.ServiceID=st.ServiceID
+                            WHERE st.DepartTime <> -1 AND st.ArrivalTime <> -1
                             ORDER BY RouteID,s.ServiceID, ArrivalTime
                     ");
 
@@ -222,13 +225,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         var rowId = (int)row["MetlinkStopID"];
                         var rowStopOrder = (short)row["DepartTime"];
                         var rowServiceId = (int)row["ServiceID"];
+                   
 
                         var nextId = (int)nextRow["MetlinkStopID"];
                         var nextStopOrder = (short)nextRow["DepartTime"];
                         var nextServiceId = (int)nextRow["ServiceID"];
 
                     
-                        if (nextStopOrder >= rowStopOrder && 
+                        if ((nextStopOrder >= rowStopOrder ||  nextStopOrder == 0) && 
                             !this.list[rowId].Contains(this.list[nextId][0])&&
                             nextServiceId == rowServiceId)
                         {
@@ -262,7 +266,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                         MetlinkNode metlinkNode = this.list[id][0];
                         List<INetworkNode> nodes =
-                            this.GetNodesAtLocation(new Location(metlinkNode.Latitude, metlinkNode.Longitude), 0.75);
+                            this.GetNodesAtLocation(new Location(metlinkNode.Latitude, metlinkNode.Longitude), 0.5);
 
 
 
@@ -275,6 +279,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         nodes.Sort(new NodeComparer());
 
                         var vistedRoutes = new HashSet<int>();
+                        
 
                         foreach (INetworkNode closeNode in nodes)
                         {

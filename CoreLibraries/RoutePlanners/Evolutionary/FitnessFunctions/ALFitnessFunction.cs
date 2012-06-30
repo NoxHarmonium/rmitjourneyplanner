@@ -73,8 +73,22 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         public double GetFitness(Route route)
         {
             //TODO: Route 1942: Has alternate route at different times. Check it out....
+
+
             
-            
+            for (int z = 0; z < route.Count - 1; z++)
+            {
+                bool fool = route[z].Id == 	20041 && route[z+1].Id == 20030;
+                var adj = properties.NetworkDataProviders[0].GetAdjacentNodes(route[z]);
+                if (!adj.Contains(route[z + 1]) || fool)
+                {
+                    throw new Exception("Death");
+                }
+
+            }
+
+           
+
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
             DateTime initialDepart = properties.DepartureTime;
             var openRoutes = new List<int>();

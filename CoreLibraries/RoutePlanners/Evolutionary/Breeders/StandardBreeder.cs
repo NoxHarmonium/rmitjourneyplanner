@@ -86,27 +86,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
             secondChild.AddRange(secondNodes.GetRange(0, crossoverPoint.Value));
             secondChild.AddRange(firstNodes.GetRange(crossoverPoint.Key, firstNodes.Count - crossoverPoint.Key));
 
-            for (int i = 0; i < firstChild.Count - 1; i++)
-            {
-                var adj = properties.NetworkDataProviders[0].GetAdjacentNodes(firstChild[i]);
-                if (!adj.Contains(firstChild[i+1]))
-                {
-                    throw new Exception("Death");
+          
 
-                }
-
-            }
-
-            for (int i = 0; i < secondChild.Count - 1; i++)
-            {
-                var adj = properties.NetworkDataProviders[0].GetAdjacentNodes(secondChild[i]);
-                if (!adj.Contains(secondChild[i + 1]))
-                {
-                    throw new Exception("Death");
-
-                }
-
-            }
+            
 
             var output = new[]
                 {

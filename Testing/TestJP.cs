@@ -82,9 +82,9 @@ namespace Testing
                         new MetlinkNode(19935, metlinkProvider)
                     }, // Coburg - Heidelberg
                     {
-                        new MetlinkNode(20005, metlinkProvider),
-                        new MetlinkNode(19855, metlinkProvider)
-                    }, // Epping - Frankston
+                        new MetlinkNode(19965, metlinkProvider),
+                        new MetlinkNode(628, metlinkProvider)
+                    }, // Coburg - Kew (Wilsmear/Grandview)
                     {
                         new MetlinkNode(19990, metlinkProvider),
                         new MetlinkNode(19246, metlinkProvider)
