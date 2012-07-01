@@ -172,7 +172,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns></returns>
         public Departure[] GetDepartures(int stopId, int dayOfWeek, int time)
         {
-            var routes = dataStructure[stopId];
+            Dictionary<int, Dictionary<int, List<int[]>>> routes;
+            
+            if (dataStructure.ContainsKey(stopId))
+            {
+                routes = dataStructure[stopId];
+            }
+            else
+            {
+                return new Departure[0];;
+            }
             /*
             return (from route in routes 
                     from dow in route.Value 

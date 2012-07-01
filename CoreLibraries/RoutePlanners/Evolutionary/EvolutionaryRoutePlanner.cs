@@ -217,11 +217,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                                          ? this.properties.Breeder.Crossover(first, second)
                                          : new[] { first, second };
 
-                if (first.Route.First().Id != endPoints[0].Key || first.Route.Last().Id != endPoints[0].Value||
-                    second.Route.First().Id != endPoints[1].Key || second.Route.Last().Id != endPoints[1].Value)
-                {
-                    throw new Exception("Path endpoints have lost consistancy!");
-                }
 
                 if (doMutation)
                 {
@@ -230,11 +225,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
 
 
-                if (first.Route.First().Id != endPoints[0].Key || first.Route.Last().Id != endPoints[0].Value ||
-                    second.Route.First().Id != endPoints[1].Key || second.Route.Last().Id != endPoints[1].Value)
-                {
-                    throw new Exception("Path endpoints have lost consistancy!");
-                }
 
                 children[0].Fitness = this.properties.FitnessFunction.GetFitness(children[0].Route);
                 var ff = (AlFitnessFunction)this.properties.FitnessFunction;
@@ -268,11 +258,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                // this.RepairRoute(children[1].Route);
 
 
-                if (first.Route.First().Id != endPoints[0].Key || first.Route.Last().Id != endPoints[0].Value ||
-                    second.Route.First().Id != endPoints[1].Key || second.Route.Last().Id != endPoints[1].Value)
-                {
-                    throw new Exception("Path endpoints have lost consistancy!");
-                }
                 newCritters.AddRange(children);
 
                 progress++;

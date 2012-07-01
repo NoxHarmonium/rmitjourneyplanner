@@ -36,8 +36,8 @@ namespace Testing
             EvolutionaryProperties properties = new EvolutionaryProperties();
 
 
-        
-            properties.DepartureTime = new DateTime(2012,6,25,9,9,9);
+
+            properties.DepartureTime = DateTime.Now;
             properties.PointDataProviders.Add(new WalkingDataProvider());
             properties.NetworkDataProviders.Add(provider);
             properties.FitnessFunction = new AlFitnessFunction(properties);
@@ -47,11 +47,10 @@ namespace Testing
             Route testRoute = new Route(-1)
                 {
                     
-                    new MetlinkNode(19841,provider),
+                    new MetlinkNode(19972,provider),
                     new MetlinkNode(19973,provider),
-                    new MetlinkNode(20041,provider),
-                    new MetlinkNode(20040,provider),
-                    new MetlinkNode(20039,provider)
+                    new MetlinkNode(22180,provider),
+                    new MetlinkNode(19854,provider)
                 };
 
             double score = properties.FitnessFunction.GetFitness(testRoute);
@@ -63,6 +62,7 @@ namespace Testing
                     new MetlinkNode(19877,provider)
                 };
             score = properties.FitnessFunction.GetFitness(testRoute);
+            Console.WriteLine("Score: {0}", score);
             //properties.Database.Open();
             //properties.DataStructures = new DataStructures(properties);
 

@@ -3,7 +3,7 @@
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
-#define VERBOSE_DEBUG
+//#define VERBOSE_DEBUG
 
 namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 {
@@ -32,7 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         private T destination;
         protected int DepthLimit = 16;
 
-        private double entropy = 0.5;
+        private double entropy = 0.8;
         private int currentIndex = 0;
 
         private bool bidirectional;

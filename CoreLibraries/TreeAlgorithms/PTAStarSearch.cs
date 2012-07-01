@@ -61,7 +61,38 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
                 
                 double distance = GeometryHelper.GetStraightLineDistance((Location)current[CurrentIndex].Node, (Location)wrapper.Node);
-                wrapper.Cost = distance + current[CurrentIndex].Cost;
+                /*
+
+                if (current[CurrentIndex].Node.TransportType != wrapper.Node.TransportType)
+                {
+                    distance /= 4;
+                }
+                else
+                {
+                    switch (current[CurrentIndex].Node.TransportType)
+                    {
+                        case "Train":
+                            distance /= 60;
+                            break;
+                        case "Bus":
+                            distance /= 30;
+                            break;
+                           
+                        case "Tram" :
+                            distance /= 40;
+                            break;
+
+
+
+
+                    }
+
+               
+
+                }
+                 *  */
+                wrapper.Cost = distance;// +current[CurrentIndex].Cost;
+                //wrapper.Cost = current[CurrentIndex].Cost;
 
 
 

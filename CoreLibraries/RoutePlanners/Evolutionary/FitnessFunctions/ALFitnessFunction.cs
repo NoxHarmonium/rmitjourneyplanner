@@ -76,18 +76,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
 
             
-            for (int z = 0; z < route.Count - 1; z++)
-            {
-                bool fool = route[z].Id == 	20041 && route[z+1].Id == 20030;
-                var adj = properties.NetworkDataProviders[0].GetAdjacentNodes(route[z]);
-                if (!adj.Contains(route[z + 1]) || fool)
-                {
-                    throw new Exception("Death");
-                }
-
-            }
-
-           
 
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
             DateTime initialDepart = properties.DepartureTime;
@@ -104,9 +92,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 closedRoutesIndex.Add(new List<ClosedRoute>());
                 var routes = provider.GetRoutesForNode(route[i]);
                 
-                //TODO: REMOVE FOR PRODUCTION
-                routes.Sort();
-
                 foreach (int routeId in routes)
                 {
                     //Console.Write("{0:00000}, ", routeId);
@@ -160,8 +145,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
            
              * 
              * */
-            var links = new Dictionary<int, List<int>>();
-            var timeSegments = new List<TransportTimeSpan>();
             //StreamWriter writer = new StreamWriter("test.csv", false);
             //writer.Write("                     ");
             foreach (var routeId in route)
@@ -197,7 +180,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                     foreach (var closedRoute in t)
                     {
-                       // Console.WriteLine("      ClosedRoute({0})",closedRoute.ToString());
+                        //Console.WriteLine("      ClosedRoute({0})",closedRoute.ToString());
                         
                         TransportTimeSpan time = default(TransportTimeSpan);
                         bool calced = false;
@@ -266,6 +249,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 if (bestClosedRoute.end <= pointer)
                 {
                     throw new Exception("Infinite loop detected.");
+                }
+
+                if (bestClosedRoute.Length == 1)
+                {
+                    bestClosedRoute.id = -1;
                 }
 
                 for (int i = pointer; i < bestClosedRoute.end; i++)
