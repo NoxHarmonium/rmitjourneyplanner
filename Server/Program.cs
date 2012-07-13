@@ -582,7 +582,7 @@ namespace Server
                                 }
                                 catch (Exception e)
                                 {
-                                    var r = new Result { AverageFitness = -1.0 };
+                                    var r = new Result { AverageFitness = new Fitness() };
                                     results.Add(r);
                                     Console.WriteLine("   Error starting travel planner:\n   {0}\n   {1}", e.Message, e.StackTrace);
                                 }
@@ -649,7 +649,7 @@ namespace Server
                                 catch (Exception e)
                                 {
                                     Console.WriteLine("   Error stepping travel planner:\n   {0}\n   {1}", e.Message, e.StackTrace);
-                                    var r = new Result { AverageFitness = -1.0 };
+                                    var r = new Result { AverageFitness = new Fitness()};
                                     results.Add(r);
                                 }
 

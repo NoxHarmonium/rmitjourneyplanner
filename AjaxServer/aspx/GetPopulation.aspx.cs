@@ -18,7 +18,7 @@ namespace AjaxServer.aspx
             int index = 0;
             foreach (Critter c in Global.Planner.Population)
             {
-                Response.Write("Member " + index++.ToString() + " (" + c.Fitness.ToString() + "),");
+                Response.Write("Member " + index++.ToString() + " (" + c.Fitness + "),");
 
             }
         }

@@ -45,7 +45,7 @@ namespace AjaxServer.aspx
                 INetworkDataProvider metlinkProvider = new MetlinkDataProvider();
 
                 EvolutionaryProperties properties = new EvolutionaryProperties();
-                properties.Bidirectional = false;
+                properties.Bidirectional = true;
                 properties.PointDataProviders.Add(new WalkingDataProvider());
                 properties.NetworkDataProviders.Add(metlinkProvider);
                 properties.ProbMinDistance = 0.7;

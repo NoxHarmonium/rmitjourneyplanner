@@ -22,7 +22,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </summary>
         /// <param name="route"> The route the is to be evaluated. </param>
         /// <returns> A double value representing the fitness. </returns>
-        double GetFitness(Route route);
+        Fitness GetFitness(Route route);
 
         #endregion
     }

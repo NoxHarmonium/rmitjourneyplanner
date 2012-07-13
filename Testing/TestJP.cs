@@ -218,7 +218,7 @@ namespace Testing
                             DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
                         writer.WriteLine(
-                        "Average Fitness, Minimum Fitenss, Diversity Metric, Total Time (Iteration), Total Time (Test),Iteration number");
+                        "Average UnifiedFitnessScore, Minimum Fitenss, Diversity Metric, Total Time (Iteration), Total Time (Test),Iteration number");
 
                         this.writeInfo(writer,planner,sw.Elapsed, 0);
                         

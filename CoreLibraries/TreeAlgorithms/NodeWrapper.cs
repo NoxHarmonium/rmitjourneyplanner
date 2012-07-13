@@ -19,8 +19,6 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     {
         private readonly T node;
 
-        private double cost;
-
         private Guid guid;
 
         /// <summary>
@@ -30,7 +28,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         public NodeWrapper(T node)
         {
             this.node = node;
-            this.cost = 0;
+            this.Cost = 0;
             guid = Guid.NewGuid();
         }
 
@@ -42,7 +40,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         public NodeWrapper(T node, double cost)
         {
             this.node = node;
-            this.cost = cost;
+            this.Cost = cost;
             guid = Guid.NewGuid();
 
         }
@@ -61,16 +59,6 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         /// <summary>
         /// Gets or sets the cost associated with this wrapper.
         /// </summary>
-        public double Cost
-        {
-            get
-            {
-                return this.cost;
-            }
-            set
-            {
-                this.cost = value;
-            }
-        }
+        public double Cost { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace AjaxServer.aspx
             }
             else
             {
-                Response.Write("2," + Global.Planner.Progress + "," + Global.Planner.TargetProgress + "," + Global.iteration);
+                Response.Write("2," + Global.Planner.Iteration + "," + 99 + "," + Global.Planner.Iteration);
             }
         }
     }

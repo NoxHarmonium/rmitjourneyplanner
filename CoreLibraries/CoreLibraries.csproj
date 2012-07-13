@@ -111,7 +111,6 @@
     <Compile Include="RoutePlanners\Evolutionary\Tools.cs" />
     <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\RandomRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Breeders\StandardBreeder.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\FitnessFunctions\StandardFitnessFunction.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Mutators\StandardMutator.cs" />
     <Compile Include="RoutePlanners\Traditional\AStarRoutePlanner.cs" />
     <Compile Include="RoutePlanners\Events.cs" />
@@ -133,6 +132,7 @@
     <Compile Include="Types\ClosedRoute.cs" />
     <Compile Include="Types\Critter.cs" />
     <Compile Include="Types\Departure.cs" />
+    <Compile Include="Types\Fitness.cs" />
     <Compile Include="Types\INode.cs" />
     <Compile Include="Types\NetworkArc.cs" />
     <Compile Include="Types\Result.cs" />

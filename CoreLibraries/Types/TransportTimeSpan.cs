@@ -37,6 +37,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return c1.TotalTime != c2.TotalTime;
         }
 
+        public static TransportTimeSpan operator +(TransportTimeSpan c1, TransportTimeSpan c2)
+        {
+            var output = new TransportTimeSpan
+                { waitingTime = c1.waitingTime + c2.waitingTime, travelTime = c1.travelTime + c2.travelTime };
+            return output;
+        }
+
         /// <summary>
         /// The waiting time component.
         /// </summary>

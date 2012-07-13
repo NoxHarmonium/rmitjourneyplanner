@@ -23,9 +23,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         private readonly Route route;
 
         /// <summary>
-        ///   The fitness.
+        ///   The UnifiedFitnessScore.
         /// </summary>
-        private double fitness;
+        private double unifiedFitnessScore;
 
         #endregion
 
@@ -35,11 +35,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         ///   Initializes a new instance of the <see cref="Critter" /> class.
         /// </summary>
         /// <param name="route"> The route. </param>
-        /// <param name="fitness"> The fitness. </param>
-        public Critter(Route route, double fitness)
+        /// <param name="unifiedFitnessScore"> The UnifiedFitnessScore. </param>
+        public Critter(Route route, Fitness fitness)
         {
             this.route = route;
-            this.fitness = fitness;
+            this.Fitness = fitness;
         }
 
         #endregion
@@ -47,20 +47,25 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets Fitness.
+        ///   Gets or sets UnifiedFitnessScore.
         /// </summary>
-        public double Fitness
+        public double UnifiedFitnessScore
         {
             get
             {
-                return this.fitness;
+                return this.unifiedFitnessScore;
             }
 
             set
             {
-                this.fitness = value;
+                this.unifiedFitnessScore = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the fitness object for this critter.
+        /// </summary>
+        public Fitness Fitness { get; set; }
 
         /// <summary>
         ///   Gets Route.
@@ -83,7 +88,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns> A cloned critter. </returns>
         public object Clone()
         {
-            return new Critter((Route)this.Route.Clone(), this.fitness);
+            return new Critter((Route)this.Route.Clone(), this.Fitness);
         }
 
         #endregion

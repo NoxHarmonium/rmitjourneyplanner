@@ -23,12 +23,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The minimum fitness value of the iteration.
         /// </summary>
-        public double MinimumFitness;
+        public Fitness MinimumFitness;
 
         /// <summary>
         /// The average fitness value of the iteration.
         /// </summary>
-        public double AverageFitness;
+        public Fitness AverageFitness;
 
         /// <summary>
         /// The population of the previous iteration.
@@ -46,7 +46,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture,"[Total Time, Min Fitness, Average Fitness, Diversity Metric][{0},{1},{2},{3}]", Totaltime, MinimumFitness, AverageFitness,DiversityMetric);
+            return String.Format(CultureInfo.InvariantCulture,"[Total Time, Min UnifiedFitnessScore, Average UnifiedFitnessScore, Diversity Metric][{0},{1},{2},{3}]", Totaltime, MinimumFitness, AverageFitness,DiversityMetric);
         }
 
        

@@ -70,11 +70,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         /// <param name="route"> The route. </param>
         /// <returns> The get fitness. </returns>
         /// <exception cref="Exception"></exception>
-        public double GetFitness(Route route)
+        public Fitness GetFitness(Route route)
         {
             //TODO: Route 1942: Has alternate route at different times. Check it out....
 
-
+            var fitness = new Fitness();
             
 
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
@@ -102,7 +102,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                     }
                 }
-                Console.WriteLine();
+                //Console.WriteLine();
 
                 var newOpenRoute = new List<int>();
                 foreach (var openRoute in openRoutes)
@@ -154,10 +154,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             }
 
             var pointer = 0;
-            var totalTime = default(TimeSpan);
+            var totalTime = default(TransportTimeSpan);
             var currentTime = initialDepart;
-            double legs = 0.0;
-            //Console.WriteLine("-------Fitness Evaluation-------");
+            int legs = 0;
+            //Console.WriteLine("-------UnifiedFitnessScore Evaluation-------");
             while (pointer < route.Count - 1)
             {
                 var t = closedRoutesIndex[pointer];
@@ -238,7 +238,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     }
                 }
 
-                totalTime += minTime.TotalTime;
+                totalTime += minTime;
                 currentTime += minTime.TotalTime;
 
                 if (bestClosedRoute.Equals(default(ClosedRoute)))
@@ -262,7 +262,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 }
                 pointer = bestClosedRoute.end;
 
-                //Console.WriteLine("[{0}] : [{1}] -> [{2}] ({3})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime);
+                Console.WriteLine("[{0}] : [{1}] -> [{2}] (W: {3} T: {4})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime.WaitingTime,minTime.TravelTime);
                 //initialDepart += minTime.TotalTime;
                 //if (bestClosedRoute.id != -1)
                 //{
@@ -273,7 +273,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             //writer.Close();
             //Console.WriteLine("Total Time: {0}", totalTime);
             //Console.WriteLine("------------------------------");
-            return totalTime.TotalSeconds * legs;
+            fitness.TotalTravelTime = totalTime.TravelTime;
+            fitness.TotalWaitingTime = totalTime.WaitingTime;
+            fitness.TotalJourneyTime = totalTime.TotalTime;
+            fitness.Changes = legs;
+
+            return fitness;
 
             //throw new NotImplementedException();
         }

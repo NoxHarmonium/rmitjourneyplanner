@@ -109,6 +109,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
         }
 
+        /// <summary>
+        /// The current iteration of the optimisation.
+        /// </summary>
+        public int Iteration
+        {
+            get
+            {
+                return this.iteration;
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -180,8 +191,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <returns> The solve step. </returns>
         public bool SolveStep()
         {
-            iteration++;
-            Console.WriteLine("Solving step {0}...", iteration);
+            this.iteration = this.Iteration + 1;
+            
+            Console.WriteLine("Solving step {0}...", this.Iteration);
             this.progress = 0;
             
             var routesUsed = new Dictionary<int, int>();
@@ -198,7 +210,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 var first = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
                 var second = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
-                var surviver = first.Fitness > second.Fitness ? second : first;
+                var surviver = first.UnifiedFitnessScore > second.UnifiedFitnessScore ? second : first;
                 matingPool.Add(surviver);
             }
 
@@ -259,6 +271,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
 
                 newCritters.AddRange(children);
+               
 
                 progress++;
             }
@@ -307,8 +320,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
 
             //this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
-            
 
+            Console.WriteLine("Average fitness: {0}", this.result.MinimumFitness);
             return false;
         }
 
@@ -319,7 +332,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         {
             this.population = new List<Critter>();
             this.InitPopulation();
-            iteration = 0;
+            this.iteration = 0;
         }
 
         #endregion
@@ -353,7 +366,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 
                 var critter = new Critter(route, this.properties.FitnessFunction.GetFitness(route));
-                Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.Fitness,critter.Route.Count);
+                Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
                 this.result.AverageFitness += critter.Fitness;
                 var ff = (AlFitnessFunction)this.properties.FitnessFunction;
                 foreach (int routeUsed in ff.RoutesUsed)

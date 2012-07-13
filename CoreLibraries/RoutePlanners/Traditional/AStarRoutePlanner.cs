@@ -317,7 +317,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
             nodes.Reverse();
             route.AddRange(nodes);
 
-            return new Critter(route, 0.0);
+            return new Critter(route, new Fitness());
         }
 
         /// <summary>

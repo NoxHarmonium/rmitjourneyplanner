@@ -41,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             string template = new StreamReader("Template.htm").ReadToEnd();
             foreach (Critter kvp in population)
             {
-                // Console.WriteLine("{0} : {1}", kvp.Fitness, kvp.Key.Count);
+                // Console.WriteLine("{0} : {1}", kvp.UnifiedFitnessScore, kvp.Key.Count);
                 string file = filename;
                            
                 string markerCode = string.Empty;
