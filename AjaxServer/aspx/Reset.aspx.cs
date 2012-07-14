@@ -16,6 +16,7 @@ namespace AjaxServer.aspx
 
             Global.busy = true;
             Global.Planner.Start();
+            Global.Planner.SolveStep();
             for (int i = 0; i < 100; i++)
             {
                //Global.Planner.SolveStep();

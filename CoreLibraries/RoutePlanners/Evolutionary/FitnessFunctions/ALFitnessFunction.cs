@@ -156,7 +156,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             var pointer = 0;
             var totalTime = default(TransportTimeSpan);
             var currentTime = initialDepart;
-            int legs = 0;
+            int legs = 1;
+            int totalBus = 0;
+            int totalTrain = 0;
+            int totalTram = 0;
+       
             //Console.WriteLine("-------UnifiedFitnessScore Evaluation-------");
             while (pointer < route.Count - 1)
             {
@@ -238,9 +242,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     }
                 }
 
+
+                
                 totalTime += minTime;
                 currentTime += minTime.TotalTime;
-
+                
+                
+                /*
                 if (bestClosedRoute.Equals(default(ClosedRoute)))
                 {
                     throw new Exception("No minimum route found.");
@@ -251,10 +259,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     throw new Exception("Infinite loop detected.");
                 }
 
+                
                 if (bestClosedRoute.Length == 1)
                 {
                     bestClosedRoute.id = -1;
                 }
+                */
+
 
                 for (int i = pointer; i < bestClosedRoute.end; i++)
                 {
@@ -262,11 +273,32 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 }
                 pointer = bestClosedRoute.end;
 
+               if (bestClosedRoute.id != -1)
+               {
+                   switch (route[bestClosedRoute.start].TransportType)
+                   {
+                       case "Train":
+                           totalTrain++;
+                           break;
+                       case "Tram":
+                           totalTram++;
+                           break;
+                       case "Bus":
+                           totalBus++;
+                           break;
+                   }
+                   legs++;
+               }
+               else
+               {
+                   fitness.WalkingTime += minTime.TotalTime;
+               }
+
                 Console.WriteLine("[{0}] : [{1}] -> [{2}] (W: {3} T: {4})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime.WaitingTime,minTime.TravelTime);
                 //initialDepart += minTime.TotalTime;
                 //if (bestClosedRoute.id != -1)
                 //{
-                    legs++;
+                    
                 //}
 
             }
@@ -277,6 +309,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             fitness.TotalWaitingTime = totalTime.WaitingTime;
             fitness.TotalJourneyTime = totalTime.TotalTime;
             fitness.Changes = legs;
+            fitness.PercentBuses = (double)totalBus / legs;
+            fitness.PercentTrains = (double)totalTrain / legs;
+            fitness.PercentTrams = (double)totalTram / legs;
+            Console.WriteLine("Evaluated fitness: {0}" , fitness);
 
             return fitness;
 

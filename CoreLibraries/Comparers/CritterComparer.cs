@@ -28,12 +28,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
         public int Compare(Critter x, Critter y)
         {
             // ReSharper disable CompareOfFloatsByEqualityOperator
-            if (x.Fitness == y.Fitness) // ReSharper restore CompareOfFloatsByEqualityOperator
+            if (x.UnifiedFitnessScore == y.UnifiedFitnessScore) // ReSharper restore CompareOfFloatsByEqualityOperator
             {
                 return 0;
             }
 
-            if (x.Fitness > y.Fitness)
+            if (x.UnifiedFitnessScore > y.UnifiedFitnessScore)
             {
                 return 1;
             }

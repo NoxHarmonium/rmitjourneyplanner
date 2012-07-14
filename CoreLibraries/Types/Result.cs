@@ -13,7 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// Represents a set of results from a journey planning operation.
     /// </summary>
-    public struct Result
+    public class Result
     {
         /// <summary>
         /// The total time to execute the iteration.
@@ -23,17 +23,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The minimum fitness value of the iteration.
         /// </summary>
-        public Fitness MinimumFitness;
+        public Fitness MinimumFitness = new Fitness();
 
         /// <summary>
         /// The average fitness value of the iteration.
         /// </summary>
-        public Fitness AverageFitness;
+        public Fitness AverageFitness = new Fitness();
 
         /// <summary>
         /// The population of the previous iteration.
         /// </summary>
-        public List<Critter> Population;
+        public List<Critter> Population = new List<Critter>();
 
         /// <summary>
         /// A measure of how diverse the population is.

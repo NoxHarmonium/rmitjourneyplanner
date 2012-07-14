@@ -7,15 +7,101 @@
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+
+    /// <summary>
+    /// A list of the parameters provided by the fitness class.
+    /// </summary>
+    public enum FitnessParameters
+    {
+        TotalJourneyTime,
+        Changes,
+        WalkingTime,
+        PercentTrams
+        //PercentBuses,
+        ////PercentTrains,
+        //PercentTrams,
+       // Co2Emmissions,
+        //PercentDisableFriendly,
+      
+        //TotalTravelTime ,
+        //TotalWaitingTime
+
+    }
 
     /// <summary>
     /// Represents the different aspects of a journey in order to evaluate fitness.
     /// </summary>
     public class Fitness
     {
+
+        /// <summary>
+        /// Returns the amount of fitness parameters available.
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                return Enum.GetValues(typeof(FitnessParameters)).Length;
+            }
+        }
+
+        /// <summary>
+        /// Returns the amount of fitness parameters available.
+        /// </summary>
+        public static int ParameterCount
+        {
+            get
+            {
+                return Enum.GetValues(typeof(FitnessParameters)).Length;
+            }
+        }
+        
+        /// <summary>
+        /// References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
+        /// </summary>
+        /// <param name="i">The index of the parameter. <see cref="FitnessParameters"/></param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if a index is refereced that is out of range.</exception>
+        public double this [int i]
+        {
+
+            get
+            {
+                switch ((FitnessParameters)i)
+                {
+                    case FitnessParameters.TotalJourneyTime:
+                        if (this.TotalJourneyTime.TotalSeconds <= 0) return double.MaxValue;
+                        return this.TotalJourneyTime.TotalSeconds;
+                     
+                    case FitnessParameters.Changes:
+                        return this.Changes;
+
+                     case FitnessParameters.WalkingTime:
+                        return this.WalkingTime.TotalSeconds;
+                    //case FitnessParameters.Co2Emmissions:
+                    //    return this.Co2Emmissions;
+
+                    //case FitnessParameters.PercentBuses:
+                    //    return 1-this.PercentBuses;
+
+                    //case FitnessParameters.PercentDisableFriendly:
+                    //    return 1 - this.PercentDisableFriendly;
+
+                    //case FitnessParameters.PercentTrains:
+                     //   return 1 - this.PercentTrains;
+
+                    case FitnessParameters.PercentTrams:
+                       return 1 - this.PercentTrams;
+
+                   // case FitnessParameters.TotalTravelTime:
+                   //     return this.TotalTravelTime.TotalSeconds;
+                        
+                   // case FitnessParameters.TotalWaitingTime:
+                   //     return this.TotalWaitingTime.TotalSeconds;
+                    default:
+                        throw new ArgumentOutOfRangeException("i");
+                }
+            }
+        }
         
         /// <summary>
         /// Adds 2 fitness objects together
@@ -84,6 +170,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The total time spent on a service in the journey.
         /// </summary>
         public TimeSpan TotalTravelTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total time walking in a journey.
+        /// </summary>
+        public TimeSpan WalkingTime { get; set; }
 
         /// <summary>
         /// The total time of the whole journey.

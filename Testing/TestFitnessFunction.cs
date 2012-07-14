@@ -43,7 +43,7 @@ namespace Testing
             properties.FitnessFunction = new AlFitnessFunction(properties);
             properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
 
-
+            /*
             Route testRoute = new Route(-1)
                 {
                     
@@ -66,22 +66,25 @@ namespace Testing
                     new MetlinkNode(9312,provider),
                     new MetlinkNode(20756,provider)
                 };
-
+            
             foreach (var node in testRoute)
             {
                 node.RetrieveData();
                 Console.WriteLine(node.ToString());
             }
             Fitness score = properties.FitnessFunction.GetFitness(testRoute);
-            /*
-            testRoute = new Route(-1)
+            */
+            var testRoute = new Route(-1)
                 {
                     
-                    new MetlinkNode(19876,provider),
-                    new MetlinkNode(19877,provider)
+                    new MetlinkNode(17315,provider),
+                    new MetlinkNode(17316,provider),
+                    new MetlinkNode(17317,provider),
+                    new MetlinkNode(17318,provider),
+                    new MetlinkNode(17319,provider)
                 };
-            score = properties.FitnessFunction.GetFitness(testRoute);
-             * */
+           var score = properties.FitnessFunction.GetFitness(testRoute);
+            
             Console.WriteLine("Score: {0}", score);
             //properties.Database.Open();
             //properties.DataStructures = new DataStructures(properties);

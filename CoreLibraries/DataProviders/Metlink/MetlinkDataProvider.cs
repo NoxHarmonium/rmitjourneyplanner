@@ -685,7 +685,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             }
             int dowFilter = 1 << 7 - dow;
             var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
-           
+            
             
             Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
            // Departure arrival = de

@@ -2,7 +2,7 @@
 {
     public static class Global
     {
-        public static RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.EvolutionaryRoutePlanner Planner;
+        public static RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.MoeaRoutePlanner Planner;
 
         public static bool ready;
 

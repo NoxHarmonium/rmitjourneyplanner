@@ -71,7 +71,7 @@ namespace AjaxServer.aspx
                 properties.Database.Open();
                 //properties.DataStructures = new DataStructures(properties);
 
-                Global.Planner = new EvolutionaryRoutePlanner(properties);
+                Global.Planner = new MoeaRoutePlanner(properties);
               
                 RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += this.Logger_LogEvent;
                 

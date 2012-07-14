@@ -46,6 +46,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         #region Public Properties
 
+        public int N { get; set; }
+
+        public int Rank { get; set; }
+
+        public double Distance { get; set; }
+
         /// <summary>
         ///   Gets or sets UnifiedFitnessScore.
         /// </summary>

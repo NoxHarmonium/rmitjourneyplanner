@@ -225,7 +225,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
 
             }
-            return departures.ToArray();
+            return departures.OrderBy(t => t.departureTime).ToArray();
         }
     }
 

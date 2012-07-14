@@ -95,6 +95,7 @@
     <Compile Include="DataProviders\TerminalNode.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\MOEARoutePlanner.cs" />
     <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\DFSRoutePlanner.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Logging\CallLog.cs" />
