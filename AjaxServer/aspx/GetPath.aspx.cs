@@ -31,7 +31,7 @@ namespace AjaxServer.aspx
                 }
                 if (components[0].Trim() != "undefined" && memberString.Trim() != String.Empty && memberString.Trim() != "undefined")
                 {
-                    Critter member = Global.Planner.Population[int.Parse(components[0])];
+                    Critter member = Global.Planner.Fronts[0].OrderBy(t => t.Fitness.NormalisedTravelTime).ToList()[int.Parse(components[0])];
                     int i = 0;
                     foreach (var node in member.Route)
                     {
@@ -50,7 +50,7 @@ namespace AjaxServer.aspx
                             mn.RetrieveData();
                             name = mn.StopSpecName;
                         }
-                        Response.Write(node.Latitude + "," + node.Longitude + "," + node.Id + "," +node.TransportType + "," + name + "," + node.CurrentRoute + ";");
+                        Response.Write(node.Latitude + "," + node.Longitude + "," + ((MetlinkNode)node).TotalTime.TotalMinutes + "," +node.TransportType + "," + name + "," + node.CurrentRoute + ";");
                     }
                     Response.Write("#");
                 }

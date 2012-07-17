@@ -239,6 +239,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 p.N = 0;
                 foreach (var q in r)
                 {
+                    if (p == q)
+                        continue;
+                    
                     if (this.IsDominated(p,q))
                     {
                         s[p].Add(q);
@@ -342,10 +345,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             var sw = Stopwatch.StartNew();
            
             var q = new List<Critter>(this.properties.PopulationSize);
-           
-
+            foreach (var x in f)
+            {
+                x.Clear();
+            }
+            f.Clear();
             var matingPool = new List<Critter>();
-            
+
+          
             
             for (int i = 0; i < this.properties.PopulationSize/2; i ++)
             {
@@ -370,8 +377,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
 
 
-
-                //children[0].Fitness = this.properties.FitnessFunction.GetFitness(children[0].Route);
+                if (doCrossover || doMutation)
+                {
+                    children[0].Fitness = this.properties.FitnessFunction.GetFitness(children[0].Route);
+                    children[1].Fitness = this.properties.FitnessFunction.GetFitness(children[1].Route);
+                }
                 //var ff = (AlFitnessFunction)this.properties.FitnessFunction;
                 
 
@@ -380,10 +390,33 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 progress++;
             }
 
+           
             
-            var r = new List<Critter>();
-            r.AddRange(this.population);
+            var r = this.population.Select(p => (Critter)p.Clone()).ToList();
+
+           
+
+            //r.AddRange(this.population);
             r.AddRange(q);
+
+            
+
+            double maxTime = r.Max(c => c.Fitness.TotalJourneyTime).TotalHours;
+            double minTime = r.Min(c => c.Fitness.TotalJourneyTime).TotalHours;
+            int maxChanges = r.Max(c => c.Fitness.Changes);
+            int minChanges = r.Min(c => c.Fitness.Changes);
+
+            foreach (var c in r)
+            {
+                c.Fitness.NormalisedTravelTime = c.Fitness.TotalJourneyTime.TotalHours / (maxTime - minTime);
+                c.Fitness.NormalisedChanges = (double) c.Fitness.Changes / (maxChanges - minChanges);
+                Console.WriteLine("Critter normalised values: tt: {0}, ch: {1}",c.Fitness.NormalisedTravelTime,c.Fitness.NormalisedChanges);
+                c.N = 0;
+                c.Rank = 0;
+                c.Distance = 0;
+            }
+
+            
 
             this.nonDominatedSort(r);
 
@@ -398,7 +431,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
 
 
-
+            
            
             this.Fronts[j].Sort(CompareCritters);
             /*
@@ -413,6 +446,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             */
             this.population.AddRange(this.Fronts[j].GetRange(0, this.properties.PopulationSize-this.population.Count));
 
+            
+
            /*
             foreach (var eliteCritter in eliteCritters)
             {
@@ -422,20 +457,20 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
-            
+            /*
             foreach (var critter in this.Population)
             {
                 this.result.AverageFitness += critter.Fitness;
             }
             this.result.AverageFitness /= population.Count;
             this.result.MinimumFitness = this.Population[0].Fitness;
-
+            */
 
             //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
 
             //this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
 
-            Console.WriteLine("Average fitness: {0}", this.result.MinimumFitness);
+            //Console.WriteLine("Average fitness: {0}", this.result.MinimumFitness);
             return false;
         }
 
@@ -472,10 +507,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 Route route = null;
                 while (route == null)
                 {
-                    route = this.properties.RouteGenerator.Generate(
-                                (INetworkNode)this.properties.Origin.Clone(),
-                                (INetworkNode)this.properties.Destination.Clone(),
-                                this.properties.DepartureTime);
+                    route = (Route)this.properties.RouteGenerator.Generate(
+                        (INetworkNode)this.properties.Origin.Clone(),
+                        (INetworkNode)this.properties.Destination.Clone(),
+                        this.properties.DepartureTime).Clone();
                 }
 
                 

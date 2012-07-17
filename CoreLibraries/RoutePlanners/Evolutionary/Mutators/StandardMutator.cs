@@ -64,7 +64,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
             newRoute.AddRange(newSegment);
             newRoute.AddRange(nodes.GetRange(endIndex + 1, nodes.Count - 1 - endIndex));
 
-            return new Critter(newRoute, this.properties.FitnessFunction.GetFitness(newRoute));
+            return new Critter((Route)newRoute.Clone(),new Fitness());
 
             // return child;
         }

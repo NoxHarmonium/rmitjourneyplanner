@@ -14,7 +14,7 @@ namespace AjaxServer.aspx
         protected void Page_Load(object sender, EventArgs e)
         {
             Global.busy = true;
-            for (int i = 0; i < 100; i++)
+            //for (int i = 0; i < 100; i++)
             {
                 Global.Planner.SolveStep();
             }

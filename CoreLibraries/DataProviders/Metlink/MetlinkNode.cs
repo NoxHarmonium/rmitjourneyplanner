@@ -192,19 +192,22 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         public object Clone()
         {
             var newNode = new MetlinkNode(this.id, this.provider, this)
-                {
-                    EuclidianDistance = this.EuclidianDistance,
-                    TotalTime = this.TotalTime,
-                    CurrentRoute = this.CurrentRoute,
-                    TransportType = this.TransportType,
-                    stopSpecName = this.StopSpecName
-                };
+            {
+                EuclidianDistance = this.EuclidianDistance,
+                TotalTime = this.TotalTime,
+                CurrentRoute = this.CurrentRoute,
+                TransportType = this.TransportType,
+                stopSpecName = this.StopSpecName,
+                Latitude = this.Latitude,
+                Longitude = this.Longitude,
+                Parent = this.Parent, 
+                stopData = this.stopData
+            };
 
             newNode.LoadData(this.stopData);
 
             return newNode;
         }
-
         /// <summary>
         ///   Indicates whether the current object is equal to another object of the same type.
         /// </summary>

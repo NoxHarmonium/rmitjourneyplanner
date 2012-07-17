@@ -16,7 +16,7 @@ namespace AjaxServer.aspx
         protected void Page_Load(object sender, EventArgs e)
         {
             int index = 0;
-            foreach (Critter c in Global.Planner.Population)
+            foreach (Critter c in Global.Planner.Fronts[0].OrderBy(t => t.Fitness.NormalisedTravelTime))
             {
                 Response.Write("Member " + index++.ToString() + " (r:" + c.Rank + " n:" + c.N + "),");
 

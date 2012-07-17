@@ -95,8 +95,8 @@
 		setValue: function() {
 			var formated = DPGlobal.formatDate(this.date, this.format);
 			if (!this.isInput) {
-				if (this.component){
-					this.element.find('input').prop('value', formated);
+				if (this.component){					
+					this.element.find('input').find('.date').prop('value', formated);
 				}
 				this.element.data('date', formated);
 			} else {
@@ -343,7 +343,7 @@
 			var parts = date.split(format.separator),
 				date = new Date(1970, 1, 1, 0, 0, 0),
 				val;
-			if (parts.length == format.parts.length) {
+			//if (parts.length == format.parts.length) {
 				for (var i=0, cnt = format.parts.length; i < cnt; i++) {
 					val = parseInt(parts[i], 10)||1;
 					switch(format.parts[i]) {
@@ -363,7 +363,7 @@
 							break;
 					}
 				}
-			}
+			//}
 			return date;
 		},
 		formatDate: function(date, format){

@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "Provider\MySq
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{D0F55CDF-EB5B-4113-BC46-D2C558CF272F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JayrockClient", "JayrockClient\JayrockClient.csproj", "{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -91,6 +93,16 @@ Global
 		{D0F55CDF-EB5B-4113-BC46-D2C558CF272F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D0F55CDF-EB5B-4113-BC46-D2C558CF272F}.Release|x86.ActiveCfg = Release|x86
 		{D0F55CDF-EB5B-4113-BC46-D2C558CF272F}.Release|x86.Build.0 = Release|x86
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

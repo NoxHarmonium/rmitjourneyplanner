@@ -11,14 +11,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// A list of the parameters provided by the fitness class.
     /// </summary>
-    public enum FitnessParameters
+    public enum FitnessParameters 
     {
         TotalJourneyTime,
         Changes,
-        WalkingTime,
-        PercentTrams
-        //PercentBuses,
-        ////PercentTrains,
+        //WalkingTime,
+       // PercentTrams,
+       // PercentBuses,
+        //PercentTrains,
         //PercentTrams,
        // Co2Emmissions,
         //PercentDisableFriendly,
@@ -31,7 +31,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// Represents the different aspects of a journey in order to evaluate fitness.
     /// </summary>
-    public class Fitness
+    public class Fitness : ICloneable
     {
 
         /// <summary>
@@ -69,29 +69,29 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 switch ((FitnessParameters)i)
                 {
                     case FitnessParameters.TotalJourneyTime:
-                        if (this.TotalJourneyTime.TotalSeconds <= 0) return double.MaxValue;
-                        return this.TotalJourneyTime.TotalSeconds;
+                        //if (this.TotalJourneyTime.TotalSeconds <= 0) return double.MaxValue;
+                        return NormalisedTravelTime;
                      
                     case FitnessParameters.Changes:
-                        return this.Changes;
+                        return this.NormalisedChanges;
 
-                     case FitnessParameters.WalkingTime:
-                        return this.WalkingTime.TotalSeconds;
+                     //case FitnessParameters.WalkingTime:
+                      //  return this.WalkingTime.TotalSeconds;
                     //case FitnessParameters.Co2Emmissions:
                     //    return this.Co2Emmissions;
 
-                    //case FitnessParameters.PercentBuses:
-                    //    return 1-this.PercentBuses;
+                   // case FitnessParameters.PercentBuses:
+                   //     return (1 - this.PercentBuses);
 
                     //case FitnessParameters.PercentDisableFriendly:
                     //    return 1 - this.PercentDisableFriendly;
 
-                    //case FitnessParameters.PercentTrains:
-                     //   return 1 - this.PercentTrains;
+                  //  case FitnessParameters.PercentTrains:
+                   //     return 1 - this.PercentTrains;
 
-                    case FitnessParameters.PercentTrams:
-                       return 1 - this.PercentTrams;
-
+                    //case FitnessParameters.PercentTrams:
+                    //   return 1 - this.PercentTrams;
+//
                    // case FitnessParameters.TotalTravelTime:
                    //     return this.TotalTravelTime.TotalSeconds;
                         
@@ -166,6 +166,23 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return string.Format("TotalWaitingTime: {0}, TotalTravelTime: {1}, TotalJourneyTime: {2}, Changes: {3}, Co2Emmissions: {4}, PercentTrains: {5}, PercentBuses: {6}, PercentTrams: {7}, PercentDisableFriendly: {8}", this.TotalWaitingTime, this.TotalTravelTime, this.TotalJourneyTime, this.Changes, this.Co2Emmissions, this.PercentTrains, this.PercentBuses, this.PercentTrams, this.PercentDisableFriendly);
         }
 
+        public object Clone()
+        {
+            return new Fitness()
+                {
+                    Changes = this.Changes,
+                    Co2Emmissions = this.Co2Emmissions,
+                    NormalisedChanges = this.NormalisedChanges,
+                    NormalisedTravelTime = this.NormalisedTravelTime,
+                    PercentBuses = this.PercentBuses,
+                    PercentDisableFriendly = this.PercentDisableFriendly,
+                    PercentTrains = this.PercentTrains,
+                    PercentTrams = this.PercentTrams,
+                    TotalJourneyTime = this.TotalJourneyTime,
+                    TotalTravelTime = this.TotalTravelTime
+                };
+        }
+
         /// <summary>
         /// The total time spent on a service in the journey.
         /// </summary>
@@ -210,5 +227,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The percent of the journey that is accessable for disabled passengers. (0.0 - 1.0)
         /// </summary>
         public double PercentDisableFriendly { get; set; }
+
+        public double NormalisedTravelTime { get; set; }
+
+        public double NormalisedChanges { get; set; }
     }
 }

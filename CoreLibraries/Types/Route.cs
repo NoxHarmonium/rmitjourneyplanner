@@ -8,8 +8,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
 
     #endregion
 
@@ -92,7 +94,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public object Clone()
         {
             var newRoute = new Route(this.id);
-            newRoute.AddRange(this);
+            newRoute.AddRange(this.Select(node => (MetlinkNode)node.Clone()));
             return newRoute;
         }
 

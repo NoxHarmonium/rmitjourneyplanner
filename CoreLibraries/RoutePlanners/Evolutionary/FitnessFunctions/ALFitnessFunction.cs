@@ -243,7 +243,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 }
 
 
-                
+                if (minTime.TotalTime < TimeSpan.FromSeconds(0))
+                {
+                    throw new Exception("Negitive time encountered.");
+                }
                 totalTime += minTime;
                 currentTime += minTime.TotalTime;
                 
@@ -270,6 +273,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 for (int i = pointer; i < bestClosedRoute.end; i++)
                 {
                     route[i].CurrentRoute = bestClosedRoute.id;
+                    ((MetlinkNode)route[i]).TotalTime = totalTime.TotalTime;
+                    if (i > 0 &&((MetlinkNode)route[i]).TotalTime < ((MetlinkNode)route[i-1]).TotalTime)
+                    {
+                        throw new Exception("Negitive time encountered.");
+                    }
+
                 }
                 pointer = bestClosedRoute.end;
 
@@ -295,6 +304,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                }
 
                 Console.WriteLine("[{0}] : [{1}] -> [{2}] (W: {3} T: {4})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime.WaitingTime,minTime.TravelTime);
+
+
+                //Console.WriteLine("[t] : [{1}] -> [{2}] (W: {3} T: {4})", bestClosedRoute.id, bestClosedRoute.end, bestClosedRoute.end+1, minTime.WaitingTime, minTime.TravelTime);
                 //initialDepart += minTime.TotalTime;
                 //if (bestClosedRoute.id != -1)
                 //{
@@ -302,6 +314,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 //}
 
             }
+
+            ((MetlinkNode)route.Last()).TotalTime = route[route.Count - 2].TotalTime;
             //writer.Close();
             //Console.WriteLine("Total Time: {0}", totalTime);
             //Console.WriteLine("------------------------------");

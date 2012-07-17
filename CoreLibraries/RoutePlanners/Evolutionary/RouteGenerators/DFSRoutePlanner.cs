@@ -52,10 +52,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
          
 
-            if (!properties.Bidirectional)
-            {
-                nodes = nodes.Reverse().ToArray();
-            }
+            //if (!properties.Bidirectional)
+            //{
+            //    nodes = nodes.Reverse().ToArray();
+            //}
 
           
 

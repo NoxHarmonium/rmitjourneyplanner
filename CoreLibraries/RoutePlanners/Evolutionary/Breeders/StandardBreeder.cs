@@ -92,8 +92,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
 
             var output = new[]
                 {
-                    new Critter(firstChild, this.properties.FitnessFunction.GetFitness(firstChild)),
-                    new Critter(secondChild, this.properties.FitnessFunction.GetFitness(secondChild))
+                    new Critter((Route)firstChild.Clone(), new Fitness()),
+                    new Critter((Route)secondChild.Clone(), new Fitness())
                 };
 
             if (output == null || output[0] == null || output[1] == null)

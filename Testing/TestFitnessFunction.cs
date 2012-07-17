@@ -37,7 +37,7 @@ namespace Testing
 
 
 
-            properties.DepartureTime = DateTime.Parse("13/07/2012 2:00 PM");
+            properties.DepartureTime = DateTime.Parse("27/06/2012 10:15 AM");
             properties.PointDataProviders.Add(new WalkingDataProvider());
             properties.NetworkDataProviders.Add(provider);
             properties.FitnessFunction = new AlFitnessFunction(properties);
@@ -77,11 +77,14 @@ namespace Testing
             var testRoute = new Route(-1)
                 {
                     
-                    new MetlinkNode(17315,provider),
-                    new MetlinkNode(17316,provider),
-                    new MetlinkNode(17317,provider),
-                    new MetlinkNode(17318,provider),
-                    new MetlinkNode(17319,provider)
+                    new MetlinkNode(19965,provider),
+                    new MetlinkNode(19966,provider),
+                    new MetlinkNode(19967,provider),
+                    new MetlinkNode(19968,provider),
+                    new MetlinkNode(19969,provider),
+                    new MetlinkNode(19970,provider),
+                    new MetlinkNode(19971,provider),
+                    new MetlinkNode(19972,provider)
                 };
            var score = properties.FitnessFunction.GetFitness(testRoute);
             
