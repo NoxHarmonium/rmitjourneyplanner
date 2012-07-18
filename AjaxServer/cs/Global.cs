@@ -12,8 +12,12 @@
 
         static Global()
         {
-            utils.ConsoleHelper.Create();
-
+            
+#if __MonoCS__
+		//Dont do anything if mono	
+#else
+			utils.ConsoleHelper.Create();
+#endif
         }
 
     }

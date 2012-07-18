@@ -417,14 +417,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 {
                     Logger.Log(this,"Timetable cache found. Loading...");
                     //IFormatter formatter = new BinaryFormatter();
-                    Stream stream = new FileStream("TimetableCache.dat", FileMode.Open, FileAccess.Read, FileShare.Read);
+                   // Stream stream = new FileStream("TimetableCache.dat", FileMode.Open, FileAccess.Read, FileShare.Read);
                     //timetable = (Timetable)formatter.Deserialize(stream);
-                    timetable = ProtoBuf.Serializer.Deserialize<Timetable>(stream);
-                    stream.Close();
+                    //timetable = ProtoBuf.Serializer.Deserialize<Timetable>(stream);
+                    //stream.Close();
                
                 }
                 Logger.Log(this, "Ending experimental timetable code...");
-             
+             	/*
                 int sstCount = Convert.ToInt32(this.database.GetDataSet("SELECT count(*) FROM tblSST").Rows[0][0]);
                 if (sstCount == 0)
                 {
@@ -444,7 +444,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         ");
 
                 }
-
+				 */
             }
             catch (Exception e)
             {
