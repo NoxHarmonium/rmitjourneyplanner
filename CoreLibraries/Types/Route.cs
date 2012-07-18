@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     ///   Represents a route made up of INetworkNodes.
     /// </summary>
-    public class Route : List<INetworkNode>, ICloneable
+    public class Route : List<NodeWrapper>, ICloneable
     {
         #region Constants and Fields
 
@@ -44,9 +44,24 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         /// <param name="routeId"> The Id of the specified route. </param>
         /// <param name="nodes">An list of <see cref="INetworkNode" /> objects to initialize the route with.</param>
-        public Route(int routeId, IEnumerable<INetworkNode> nodes ) : base(nodes)
+        public Route(int routeId, IEnumerable<NodeWrapper> nodes ) : base(nodes)
         {
             this.id = routeId;
+        }
+		
+		/// <summary>
+        ///   Initializes a new instance of the <see cref="Route" /> class. 
+        /// </summary>
+        /// <param name="routeId"> The Id of the specified route. </param>
+        /// <param name="nodes">An list of <see cref="INetworkNode" /> objects to initialize the route with.</param>
+        public Route(int routeId, IEnumerable<INetworkNode> nodes )
+        {
+            foreach (INetworkNode node in nodes)
+			{
+				this.Add(node);	
+			}
+			
+			this.id = routeId;
         }
 
         #endregion
@@ -86,6 +101,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         }
         
+		public void Add(INetworkNode node)
+		{
+			this.Add(new NodeWrapper(node));	
+		}
+		
+		
         
         /// <summary>
         ///   Returns a copy of this route and copies all internal nodes.
@@ -94,7 +115,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public object Clone()
         {
             var newRoute = new Route(this.id);
-            newRoute.AddRange(this.Select(node => (MetlinkNode)node.Clone()));
+            newRoute.AddRange(this.Select(node => (NodeWrapper)node.Clone()));
             return newRoute;
         }
 

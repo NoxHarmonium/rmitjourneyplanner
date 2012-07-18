@@ -53,15 +53,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
         {
             var random = new Random();
 
-            List<INetworkNode> firstNodes = first.Route;
-            List<INetworkNode> secondNodes = second.Route;
+            List<NodeWrapper> firstNodes = first.Route;
+            List<NodeWrapper> secondNodes = second.Route;
             var crossoverPoints = new List<KeyValuePair<int, int>>();
             for (int i = 0; i < firstNodes.Count; i++)
             {
                 for (int j = 0; j < secondNodes.Count; j++)
                 {
-                    if (firstNodes[i].Equals(secondNodes[j]) && !(firstNodes[i] is TerminalNode)
-                        && !(secondNodes[j] is TerminalNode))
+                    if (firstNodes[i].Node.Equals(secondNodes[j].Node) && !(firstNodes[i].Node is TerminalNode)
+                        && !(secondNodes[j].Node is TerminalNode))
                     {
                         crossoverPoints.Add(new KeyValuePair<int, int>(i, j));
                         break;

@@ -307,10 +307,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Traditional
         private Critter BuildCritterFromNode(INetworkNode node)
         {
             var route = new Route(Guid.NewGuid().GetHashCode());
-            var nodes = new List<INetworkNode>();
+            var nodes = new List<NodeWrapper>();
             while (node != null)
             {
-                nodes.Add(node);
+                nodes.Add(new NodeWrapper(node));
                 node = (INetworkNode)node.Parent;
             }
 

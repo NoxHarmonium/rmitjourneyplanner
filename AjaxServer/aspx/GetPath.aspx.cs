@@ -39,7 +39,7 @@ namespace AjaxServer.aspx
                         {
                             break;
                         }
-                        MetlinkNode mn = node as MetlinkNode;
+                        MetlinkNode mn = node.Node as MetlinkNode;
                         string name = "Terminal";
                         if (mn != null)
                         {
@@ -50,7 +50,7 @@ namespace AjaxServer.aspx
                             mn.RetrieveData();
                             name = mn.StopSpecName;
                         }
-                        Response.Write(node.Latitude + "," + node.Longitude + "," + ((MetlinkNode)node).TotalTime.TotalMinutes + "," +node.TransportType + "," + name + "," + node.CurrentRoute + ";");
+                        Response.Write(node.Node.Latitude + "," + node.Node.Longitude + "," + node.TotalTime.TotalMinutes + "," +node.Node.TransportType + "," + name + "," + node.CurrentRoute + ";");
                     }
                     Response.Write("#");
                 }

@@ -156,9 +156,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         ///   Repairs a route by taking out duplicates and loops.
         /// </summary>
         /// <param name="route"> The route to repair </param>
+        [ObsoleteAttribute]
         public Route RepairRoute(Route route)
         {
-            var newNodes = new List<INetworkNode>();
+            /*
+			var newNodes = new List<INetworkNode>();
             List<INetworkNode> oldNodes = route;
             for (int i = 0; i < oldNodes.Count; i++)
             {
@@ -193,6 +195,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             var newRoute = new Route(route.Id);
             newRoute.AddRange(newNodes);
             return newRoute;
+            */
+			throw new NotSupportedException("This method is depricated.");
         }
 
         /// <summary>

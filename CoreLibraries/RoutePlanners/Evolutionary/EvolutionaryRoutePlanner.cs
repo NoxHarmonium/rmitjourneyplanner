@@ -148,15 +148,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="route"> The route to repair </param>
         public Route RepairRoute(Route route)
         {
-            var newNodes = new List<INetworkNode>();
-            List<INetworkNode> oldNodes = route;
+            var newNodes = new List<NodeWrapper>();
+            List<NodeWrapper> oldNodes = route;
             for (int i = 0; i < oldNodes.Count; i++)
             {
                 int count = 0;
                 int index = -1;
                 for (int j = 0; j < oldNodes.Count; j++)
                 {
-                    INetworkNode node = oldNodes[j];
+                    INetworkNode node = oldNodes[j].Node;
                     if (node.Equals(oldNodes[i]))
                     {
                         index = j;
@@ -220,8 +220,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 var second = (Critter)matingPool[this.random.Next(matingPool.Count - 1)].Clone();
 
                 var endPoints = new KeyValuePair<int, int>[2];
-                endPoints[0] = new KeyValuePair<int, int>(first.Route.First().Id, first.Route.Last().Id);
-                endPoints[1] = new KeyValuePair<int, int>(second.Route.First().Id, second.Route.Last().Id);
+                endPoints[0] = new KeyValuePair<int, int>(first.Route.First().Node.Id, first.Route.Last().Node.Id);
+                endPoints[1] = new KeyValuePair<int, int>(second.Route.First().Node.Id, second.Route.Last().Node.Id);
 
                 bool doCrossover = this.random.NextDouble() <= this.properties.CrossoverRate;
                 bool doMutation = this.random.NextDouble() <= this.properties.MutationRate;

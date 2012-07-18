@@ -478,7 +478,7 @@ namespace Server
                                     foreach (var critter in planner.Result.Population)
                                     {
                                         string line = critter.Route.Aggregate(
-                                            "", (current, node) => current + (node.Id + ","));
+                                            "", (current, node) => current + (node.Node.Id + ","));
                                         resultWriter.WriteLine(line);
                                     }
                                     resultWriter.WriteLine("[End Population Dump]");

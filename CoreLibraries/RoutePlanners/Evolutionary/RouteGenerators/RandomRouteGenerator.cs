@@ -56,7 +56,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         {
             var random = new Random();
             INetworkNode current = source;
-            var currentRoute = new Route(Guid.NewGuid().GetHashCode()) { source };
+            var currentRoute = new Route(Guid.NewGuid().GetHashCode()) { new NodeWrapper(source) };
 
             while (!current.Equals(destination))
             {
@@ -89,7 +89,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
                 var tempCandidates = new List<INetworkNode>(candidateNodes);
                 candidateNodes.Clear();
-                candidateNodes.AddRange(tempCandidates.Where(candidateNode => !currentRoute.Contains(candidateNode)));
+                candidateNodes.AddRange(tempCandidates.Where(candidateNode => !currentRoute.Where(r => r.Node.Equals(candidateNode)).Any()));
 
                 if (candidateNodes.Count == 0)
                 {
@@ -143,7 +143,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                         minNode = destination;
                     }
                      * */
-                    currentRoute.Add(minNode);
+                    currentRoute.Add(new NodeWrapper(minNode));
 
                     current = minNode;
                 }

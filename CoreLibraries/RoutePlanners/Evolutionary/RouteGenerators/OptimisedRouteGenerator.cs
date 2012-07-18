@@ -57,7 +57,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         {
             var random = new Random();
             INetworkNode current = source;
-            var currentRoute = new Route(Guid.NewGuid().GetHashCode()) { source };
+            var currentRoute = new Route(Guid.NewGuid().GetHashCode()) { new NodeWrapper(source) };
             INetworkDataProvider nProvider = this.properties.NetworkDataProviders[0];
             IPointDataProvider pProvider = this.properties.PointDataProviders[0];
             DateTime currentTime = this.properties.DepartureTime;
@@ -126,7 +126,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 node.TransportType = arcs[0].TransportMode;
                 node.TotalTime = current.TotalTime + arcs[0].Time.TotalTime;
                 node.Parent = current;
-                currentRoute.Add(node);
+                currentRoute.Add(new NodeWrapper(node));
                 current = node;
             }
 

@@ -51,12 +51,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
         public Critter Mutate(Critter child)
         {
             var random = new Random();
-            List<INetworkNode> nodes = child.Route;
+            List<NodeWrapper> nodes = child.Route;
             if (nodes.Count == 1) return child;
             int startIndex = random.Next(0, nodes.Count - 2);
             int endIndex = random.Next(startIndex + 1, nodes.Count - 1);
-            INetworkNode begin = nodes[startIndex];
-            INetworkNode end = nodes[endIndex];
+            INetworkNode begin = nodes[startIndex].Node;
+            INetworkNode end = nodes[endIndex].Node;
             Route newSegment = this.properties.RouteGenerator.Generate(
                 begin, end, this.properties.DepartureTime + begin.TotalTime);
             var newRoute = new Route(Guid.NewGuid().GetHashCode());

@@ -114,7 +114,7 @@ Regenerate:
                 if (current.Id != 0)
                 {
                     var newNode = provider.GetNodeFromId(current.Id);
-                    route.Add(newNode);
+                    route.Add(new NodeWrapper(newNode));
                 }
 
                 {
