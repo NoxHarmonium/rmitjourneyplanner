@@ -44,12 +44,12 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 if (this.Bidirectional)
                 {
                     INetworkNode otherNode = this.current[CurrentIndex == 0 ? 1 : 0].Node;
-                    wrapper.Node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)otherNode);
+                    wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)otherNode);
                 }
                 else
                 {
 
-                    wrapper.Node.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
+                    wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
                         (Location)wrapper.Node, (Location)this.Destination);
                 }
                 /*

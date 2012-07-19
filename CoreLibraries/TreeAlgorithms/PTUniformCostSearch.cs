@@ -61,7 +61,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
               
                    //List<Arc> arcs = provider.GetDistanceBetweenNodes(current, node, departureTime);
                     //arcs.Sort(new ArcComparer());
-                    //node.CurrentRoute = arcs[0].RouteId;
+                    //node.RouteId = arcs[0].RouteId;
                     //node.TotalTime = arcs[0].Time;
                 
                 

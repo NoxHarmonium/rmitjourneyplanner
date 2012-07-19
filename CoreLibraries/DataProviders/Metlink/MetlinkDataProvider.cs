@@ -20,6 +20,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -265,33 +266,33 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         //TODO: Make scan distance variable.
 
                         MetlinkNode metlinkNode = this.list[id][0];
-                        List<INetworkNode> nodes =
+                        var nodes =
                             this.GetNodesAtLocation(new Location(metlinkNode.Latitude, metlinkNode.Longitude), 0.5);
 
 
 
-                        foreach (INetworkNode closeNode in nodes)
+                        foreach (var closeNode in nodes)
                         {
                             closeNode.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                                metlinkNode.Latitude, metlinkNode.Longitude, closeNode.Latitude, closeNode.Longitude);
+                                metlinkNode.Latitude, metlinkNode.Longitude, closeNode.Node.Latitude, closeNode.Node.Longitude);
                         }
 
-                        nodes.Sort(new NodeComparer());
+                        nodes.Sort(new NodeComparer<MetlinkNode>());
 
                         var vistedRoutes = new HashSet<int>();
                         
 
-                        foreach (INetworkNode closeNode in nodes)
+                        foreach (var closeNode in nodes)
                         {
-                            if ( !this.InSameLine((MetlinkNode)closeNode,metlinkNode) &&
-                                closeNode.Id != metlinkNode.Id
+                            if ( !this.InSameLine((MetlinkNode)closeNode.Node,metlinkNode) &&
+                                closeNode.Node.Id != metlinkNode.Id
                                 && !vistedRoutes.Contains(Convert.ToInt32(closeNode.CurrentRoute)))
                             {
                                 vistedRoutes.Add(Convert.ToInt32(closeNode.CurrentRoute));
-                                if (!this.list[id].Contains(this.list[Convert.ToInt32(closeNode.Id)][0]))
+                                if (!this.list[id].Contains(this.list[Convert.ToInt32(closeNode.Node.Id)][0]))
                                 {
                                     // Logger.Log(this,"-->Adding proximity link: id1: {0} id2: {1}... [{2} s]", MetlinkNode.Id, closeNode.Id, stopwatch.ElapsedMilliseconds / 1000.0);
-                                    this.list[id].Add(this.list[Convert.ToInt32(closeNode.Id)][0]);
+                                    this.list[id].Add(this.list[Convert.ToInt32(closeNode.Node.Id)][0]);
                                     totalLinks++;
 
                                     // list[Convert.ToInt32(closeNode.Id)].Add(MetlinkNode);
@@ -510,7 +511,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 for (int j = 0; j < routes.Count; j++)
                 {
                     INetworkNode subNode = (INetworkNode)this.list[node.Id][i].Clone();
-                    subNode.CurrentRoute = routes[j];
+                    subNode.RouteId = routes[j];
                     outputNodes.Add(subNode);
                 }
                  */
@@ -752,13 +753,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     ",
                     routeId);
             DataTable result = this.database.GetDataSet(query);
-            List<INetworkNode> nodes = (from DataRow row in result.Rows select this.list[(int)row["MetlinkStopID"]][0]).Cast<INetworkNode>().ToList();
+            List<NodeWrapper<INetworkNode>> nodes = (from DataRow row in result.Rows select new NodeWrapper<INetworkNode>(this.list[(int)row["MetlinkStopID"]][0])).ToList();
             double minDistance = double.MaxValue;
-            INetworkNode minNode = null;
+            NodeWrapper<INetworkNode> minNode = null;
 
-            foreach (INetworkNode node in nodes)
+            foreach (var node in nodes)
             {
-                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)destination);
+                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node.Node, (Location)destination);
                 if (node.EuclidianDistance < minDistance)
                 {
                     minDistance = node.EuclidianDistance;
@@ -766,7 +767,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 }
             }
 
-            return minNode;
+            return minNode.Node;
         }
 
         /// <summary>
@@ -785,7 +786,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             Location bottomRight = GeometryHelper.Travel((Location)source, 135.0, radius);
 
             string query;
-            if (allowTransfer || source.CurrentRoute == -1)
+            if (allowTransfer || source.RouteId == -1)
             {
                 query =
                     string.Format(
@@ -810,7 +811,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         topLeft.Longitude,
                         bottomRight.Latitude,
                         bottomRight.Longitude,
-                        source.CurrentRoute);
+                        source.RouteId);
 
                 /*
                  * 
@@ -828,35 +829,22 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
             DataTable table = this.database.GetDataSet(query);
 
-            var nodes = new List<INetworkNode>();
-            foreach (DataRow row in table.Rows)
-            {
-                var node = list[(int)row["MetlinkStopID"]][0];
-                node.CurrentRoute = (int)row["RouteID"];
-
-                if (node.CurrentRoute == -1)
-                {
-                    throw new Exception("null route encountered!");
-                }
-
-                // node.RetrieveData();
-                nodes.Add(node);
-            }
+            var nodes = (from DataRow row in table.Rows select new NodeWrapper<INetworkNode>(this.list[(int)row["MetlinkStopID"]][0])).ToList();
 
             double minDistance = double.MaxValue;
-            INetworkNode minNode = null;
+            NodeWrapper<INetworkNode> minNode = null;
 
-            foreach (INetworkNode node in nodes)
+            foreach (var node in nodes)
             {
-                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node, (Location)destination);
-                if (node.EuclidianDistance < minDistance && !node.Equals(source))
+                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)node.Node, (Location)destination);
+                if (node.EuclidianDistance < minDistance && !node.Node.Equals(source))
                 {
                     minDistance = node.EuclidianDistance;
                     minNode = node;
                 }
             }
 
-            return minNode;
+            return minNode.Node;
         }
 
         /// <summary>
@@ -900,7 +888,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <param name="location"> The center point for the search. </param>
         /// <param name="radius"> The distance to look around the center point. </param>
         /// <returns> A list of <see cref="INetworkNode" /> objects that are in the specified area. </returns>
-        public List<INetworkNode> GetNodesAtLocation(Location location, double radius)
+        public List<NodeWrapper<MetlinkNode>> GetNodesAtLocation(Location location, double radius)
         {
             Location topLeft = GeometryHelper.Travel(location, 315.0, radius);
             Location bottomRight = GeometryHelper.Travel(location, 135.0, radius);
@@ -929,12 +917,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
             DataTable table = this.database.GetDataSet(query);
 
-            var nodes = new List<INetworkNode>();
+            var nodes = new List<NodeWrapper<MetlinkNode>>();
             foreach (DataRow row in table.Rows)
             {
 
 
-                var node = list[(int)row["MetlinkStopID"]][0];
+                var node = new NodeWrapper<MetlinkNode>(list[(int)row["MetlinkStopID"]][0]);
+                
                 node.CurrentRoute = (int)row["RouteID"];
                 if (node.CurrentRoute == -1)
                 {

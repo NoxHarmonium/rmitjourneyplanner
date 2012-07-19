@@ -9,6 +9,7 @@ namespace Testing
     using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 
     class Program
     {
@@ -35,10 +36,10 @@ namespace Testing
         static void TestStoSort()
         {
 
-            var nodes = new List<INetworkNode>();
+            var nodes = new List<NodeWrapper<INetworkNode>>();
             for (int i = 1; i < 11; i++)
             {
-                INetworkNode node = new MetlinkNode(i, "", "", 0, 0, null);
+                var node = new NodeWrapper<INetworkNode>(new MetlinkNode(i, "", "", 0, 0, null));
                 node.EuclidianDistance = i;
                 node.TotalTime = TimeSpan.FromSeconds(i);
                 nodes.Add(node);
@@ -46,11 +47,12 @@ namespace Testing
 
             }
             nodes.Shuffle();
+          
 
             Console.WriteLine("Before: " + String.Join(",", nodes.Cast<object>()));
             for (int i = 1; i < 11; i++)
             {
-                var newNodes = new List<INetworkNode>(nodes);
+                var newNodes = new List<NodeWrapper<INetworkNode>>(nodes);
                 newNodes.StochasticSort((i - 1) / 10.0);
                 newNodes.Reverse();
                

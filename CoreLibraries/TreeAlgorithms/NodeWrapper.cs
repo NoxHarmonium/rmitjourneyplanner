@@ -15,7 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     /// Represents a generic node for use in route searches. 
     /// Basically a wrapper for a generic type to give it a unique address for referencing.
     /// </summary>
-    public class NodeWrapper<T>
+    public class NodeWrapper<T> : ICloneable
     {
         private readonly T node;
 
@@ -57,8 +57,28 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         }
 
         /// <summary>
+        ///   Gets or sets the current route that the node is traversing.
+        /// </summary>
+        public int CurrentRoute { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the Euclidian distance to the goal. Used for traversing route trees.
+        /// </summary>
+        public double EuclidianDistance { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the total time taken to reach this node. Used for traversing route trees.
+        /// </summary>
+        public TimeSpan TotalTime { get; set; }
+
+        /// <summary>
         /// Gets or sets the cost associated with this wrapper.
         /// </summary>
         public double Cost { get; set; }
+
+        public object Clone()
+        {
+            return new NodeWrapper<T>(this.node, this.Cost);
+        }
     }
 }

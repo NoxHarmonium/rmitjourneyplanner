@@ -109,12 +109,9 @@
     <Compile Include="RoutePlanners\Evolutionary\IRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\ALRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\BDALRouteGenerator.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\OptimisedRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Tools.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\RandomRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Breeders\StandardBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Mutators\StandardMutator.cs" />
-    <Compile Include="RoutePlanners\Traditional\AStarRoutePlanner.cs" />
     <Compile Include="RoutePlanners\Events.cs" />
     <Compile Include="RoutePlanners\Evolutionary\EvolutionaryRoutePlanner.cs" />
     <Compile Include="RoutePlanners\IRoutePlanner.cs" />
@@ -143,7 +140,6 @@
     <Compile Include="Types\TransportDirection.cs" />
     <Compile Include="Types\TransportMode.cs" />
     <Compile Include="Types\TransportTimeSpan.cs" />
-    <Compile Include="Types\NodeWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CoreLibrariesKey.snk" />
@@ -158,6 +154,9 @@
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RoutePlanners\Traditional\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -40,13 +40,21 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
             foreach (var wrapper in nodes)
             {
-                wrapper.Node.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)this.Destination);
-                /*
-                INetworkNode otherCurrent = this.current[threadId == 0 ? 1 : 0];
-                node.EuclidianDistance = this.Bidirectional && otherCurrent != null ?
-                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)otherCurrent) : 
-                    GeometryHelper.GetStraightLineDistance((Location)node, (Location)this.Destination);
-                 */
+               
+                if (Bidirectional)
+                {
+                    INetworkNode otherCurrent = this.current[CurrentIndex == 0 ? 1 : 0].Node;
+                    wrapper.EuclidianDistance = this.Bidirectional && otherCurrent != null
+                                                         ? GeometryHelper.GetStraightLineDistance(
+                                                             (Location)wrapper.Node, (Location)otherCurrent)
+                                                         : GeometryHelper.GetStraightLineDistance(
+                                                             (Location)wrapper.Node, (Location)this.Destination);
+                }
+                else
+                {
+                    wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)this.Destination);
+                }
+
             }
 
             //Array.Sort(nodes, new NodeComparer());

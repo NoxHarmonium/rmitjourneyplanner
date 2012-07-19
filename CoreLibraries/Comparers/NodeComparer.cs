@@ -9,13 +9,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
     using System.Collections.Generic;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 
     #endregion
 
     /// <summary>
     ///   Compares to nodes on the basis on total time traversed.
     /// </summary>
-    public class NodeComparer : IComparer<INetworkNode>
+    public class NodeComparer<T> : IComparer<NodeWrapper<T>> where T : INetworkNode
     {
         #region Public Methods
 
@@ -25,7 +26,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Comparers
         /// <param name="x"> The first node to compare. </param>
         /// <param name="y"> The second node to compare. </param>
         /// <returns> A number less than 0 if x is less than y, and number greater than 0 if y is less than x and 0 if they are equal./&gt; </returns>
-        public int Compare(INetworkNode x, INetworkNode y)
+        public int Compare(NodeWrapper<T> x, NodeWrapper<T> y)
         {
             double fx = (x.TotalTime.Ticks / 1000000000.0) + x.EuclidianDistance;
             double fy = (y.TotalTime.Ticks / 1000000000.0) + y.EuclidianDistance;

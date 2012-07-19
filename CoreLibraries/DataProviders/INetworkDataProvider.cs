@@ -10,7 +10,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System.Collections.Generic;
     using System.Data;
 
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -102,7 +104,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <param name="location"> The center point for the search. </param>
         /// <param name="radius"> The distance to look around the center point. </param>
         /// <returns> A list of <see cref="INetworkNode" /> objects that are in the specified area. </returns>
-        List<INetworkNode> GetNodesAtLocation(Location location, double radius);
+        List<NodeWrapper<MetlinkNode>> GetNodesAtLocation(Location location, double radius);
 
         /// <summary>
         ///   Gets a list of routes that this node passes through.

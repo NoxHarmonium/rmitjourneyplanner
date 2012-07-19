@@ -17,8 +17,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         Changes,
         //WalkingTime,
        // PercentTrams,
-       // PercentBuses,
-        //PercentTrains,
+        PercentBuses,
+        PercentTrains,
         //PercentTrams,
        // Co2Emmissions,
         //PercentDisableFriendly,
@@ -80,18 +80,18 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     //case FitnessParameters.Co2Emmissions:
                     //    return this.Co2Emmissions;
 
-                   // case FitnessParameters.PercentBuses:
-                   //     return (1 - this.PercentBuses);
+                    case FitnessParameters.PercentBuses:
+                        return (1 - this.PercentBuses);
 
                     //case FitnessParameters.PercentDisableFriendly:
                     //    return 1 - this.PercentDisableFriendly;
 
-                  //  case FitnessParameters.PercentTrains:
-                   //     return 1 - this.PercentTrains;
+                    case FitnessParameters.PercentTrains:
+                        return 1 - this.PercentTrains;
 
                     //case FitnessParameters.PercentTrams:
                     //   return 1 - this.PercentTrams;
-//
+
                    // case FitnessParameters.TotalTravelTime:
                    //     return this.TotalTravelTime.TotalSeconds;
                         

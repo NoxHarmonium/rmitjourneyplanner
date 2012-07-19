@@ -95,8 +95,8 @@ namespace Testing
                 Console.Write("Solving to depth: {0} --> ", depth++);
                 INetworkNode origin = provider.GetNodeFromId(19965);
                 INetworkNode destination = provider.GetNodeFromId(19879);
-                origin.CurrentRoute = provider.GetRoutesForNode(origin)[0];
-                destination.CurrentRoute = provider.GetRoutesForNode(destination)[0];
+                origin.RouteId = provider.GetRoutesForNode(origin)[0];
+                destination.RouteId = provider.GetRoutesForNode(destination)[0];
                 var tdfs = new PTGreedySearch(depth, true, provider, origin, destination);
                 Console.WriteLine("");
                 route = tdfs.Run();
@@ -115,8 +115,8 @@ namespace Testing
                 Console.Write("Solving to depth: {0} --> ", depth++);
                 INetworkNode origin = provider.GetNodeFromId(19965);
                 INetworkNode destination = provider.GetNodeFromId(19879);
-                origin.CurrentRoute = provider.GetRoutesForNode(origin)[0];
-                destination.CurrentRoute = provider.GetRoutesForNode(destination)[0];
+                origin.RouteId = provider.GetRoutesForNode(origin)[0];
+                destination.RouteId = provider.GetRoutesForNode(destination)[0];
                 var tdfs = new PTAStarSearch(depth,true, provider, origin, destination);
                 Console.WriteLine("");
                 route = tdfs.Run();
@@ -136,8 +136,8 @@ namespace Testing
                 Console.Write("Solving to depth: {0} --> ", depth++);
                 INetworkNode origin = provider.GetNodeFromId(19965);
                 INetworkNode destination = provider.GetNodeFromId(19842);
-                origin.CurrentRoute = provider.GetRoutesForNode(origin)[0];
-                destination.CurrentRoute = provider.GetRoutesForNode(destination)[0];
+                origin.RouteId = provider.GetRoutesForNode(origin)[0];
+                destination.RouteId = provider.GetRoutesForNode(destination)[0];
                 var tdfs = new RandDepthFirstSearch(false, depth, provider, origin, destination);
                 Console.WriteLine("");
                 route = tdfs.Run();

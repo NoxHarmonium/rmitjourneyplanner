@@ -12,13 +12,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 
     #endregion
 
     /// <summary>
     ///   Represents a route made up of INetworkNodes.
     /// </summary>
-    public class Route : List<NodeWrapper>, ICloneable
+    public class Route : List<NodeWrapper<INetworkNode>>, ICloneable
     {
         #region Constants and Fields
 
@@ -44,7 +45,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         /// <param name="routeId"> The Id of the specified route. </param>
         /// <param name="nodes">An list of <see cref="INetworkNode" /> objects to initialize the route with.</param>
-        public Route(int routeId, IEnumerable<NodeWrapper> nodes ) : base(nodes)
+        public Route(int routeId, IEnumerable<NodeWrapper<INetworkNode>> nodes ) : base(nodes)
         {
             this.id = routeId;
         }
@@ -103,7 +104,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         
 		public void Add(INetworkNode node)
 		{
-			this.Add(new NodeWrapper(node));	
+			this.Add(new NodeWrapper<INetworkNode>(node));	
 		}
 		
 		
@@ -115,7 +116,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public object Clone()
         {
             var newRoute = new Route(this.id);
-            newRoute.AddRange(this.Select(node => (NodeWrapper)node.Clone()));
+            newRoute.AddRange(this.Select(node => (NodeWrapper<INetworkNode>)node.Clone()));
             return newRoute;
         }
 

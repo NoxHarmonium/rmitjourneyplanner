@@ -10,6 +10,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
     using System.Collections.Generic;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -53,8 +54,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
         {
             var random = new Random();
 
-            List<NodeWrapper> firstNodes = first.Route;
-            List<NodeWrapper> secondNodes = second.Route;
+            List<NodeWrapper<INetworkNode>> firstNodes = first.Route;
+            List<NodeWrapper<INetworkNode>> secondNodes = second.Route;
             var crossoverPoints = new List<KeyValuePair<int, int>>();
             for (int i = 0; i < firstNodes.Count; i++)
             {

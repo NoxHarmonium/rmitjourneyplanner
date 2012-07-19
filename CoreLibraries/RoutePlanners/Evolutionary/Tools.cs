@@ -13,6 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -45,9 +46,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 string file = filename;
                            
                 string markerCode = string.Empty;
-                foreach (INetworkNode t in kvp.Route)
+                foreach (NodeWrapper<INetworkNode> t in kvp.Route)
                 {
-                    int key = Convert.ToInt32(t.Id);
+                    int key = Convert.ToInt32(t.Node.Id);
                     TimeSpan time = t.TotalTime;
 
                     string latlng = string.Format(

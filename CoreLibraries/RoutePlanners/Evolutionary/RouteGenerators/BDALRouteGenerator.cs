@@ -21,6 +21,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -50,7 +51,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         /// <summary>
         ///   The origin nodes.
         /// </summary>
-        private List<INetworkNode> originNodes;
+        private List<NodeWrapper<MetlinkNode>> originNodes;
 
         /// <summary>
         ///   The stored destination.
@@ -100,7 +101,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
             if (source == destination)
             {
                 Route r = new Route(-1);
-                r.Add(new NodeWrapper(source));
+                r.Add(new NodeWrapper<INetworkNode>(source));
                 return r;
             }
             this.Initialize(source, destination);
@@ -134,13 +135,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 if (current[0].Id != 0)
                 {
                     INetworkNode newNode = provider.GetNodeFromId(current[0].Id);
-                    route[0].Add(new NodeWrapper(newNode));
+                    route[0].Add(new NodeWrapper<INetworkNode>(newNode));
                 }
 
                 if (current[1].Id != 0)
                 {
                     INetworkNode newNode = provider.GetNodeFromId(current[1].Id);
-                    route[1].Add(new NodeWrapper(newNode));
+                    route[1].Add(new NodeWrapper<INetworkNode>(newNode));
                 }
 
                 // Logger.Log(this,"-->-->Selecting node id: {0}", current.Id);
@@ -301,7 +302,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
                 if (!(source is INetworkNode))
                 {
-                    this.originNodes = new List<INetworkNode>();
+                    this.originNodes = new List<NodeWrapper<MetlinkNode>>();
                     double walkingDistance = 0;
 
                     //Logger.Log(this, "-->--> Finding source nodes... [{0} s]");
@@ -320,10 +321,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                     //    walkingDistance, 
                     //    0);
 
-                    foreach (INetworkNode networkNode in this.originNodes)
+                    foreach (var networkNode in this.originNodes)
                     {
                         networkNode.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                            (Location)networkNode, (Location)this.properties.Destination);
+                            (Location)networkNode.Node, (Location)this.properties.Destination);
                         //Console.WriteLine(
                         //    "-->-->--> [id: {0}] Location: {1} Type: {2} ED: {3} [{4} s]", 
                         //    networkNode.Id, 
@@ -335,7 +336,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 }
                 else
                 {
-                    this.originNodes = new List<INetworkNode> { this.storedOrigin };
+                    this.originNodes = new List<NodeWrapper<MetlinkNode>> { new NodeWrapper<MetlinkNode>((MetlinkNode)this.storedOrigin) };
                 }
 
                 if (!(destination is INetworkNode))
@@ -346,12 +347,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                     while (this.destinationNodes.Count == 0)
                     {
                         walkingDistance += 0.1;
-                        List<INetworkNode> mNodes =
+                        List<NodeWrapper<MetlinkNode>> mNodes =
                             this.properties.NetworkDataProviders[0].GetNodesAtLocation(
                                 (Location)this.properties.Destination, walkingDistance);
-                        foreach (INetworkNode mNode in mNodes)
+                        foreach (var mNode in mNodes)
                         {
-                            this.destinationNodes.Add((INetworkNode)mNode);
+                            this.destinationNodes.Add(mNode.Node);
                         }
                     }
 
@@ -380,10 +381,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                         //this.originNodes.Count, 
                        // walkingDistance, 
                        // 0);
-                    foreach (INetworkNode networkNode in this.originNodes)
+                    foreach (var networkNode in this.originNodes)
                     {
                         networkNode.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                            (Location)networkNode, (Location)this.properties.Destination);
+                            (Location)networkNode.Node, (Location)this.properties.Destination);
                         //Console.WriteLine(
                            // "-->-->--> [id: {0}] Location: {1} Type: {2} ED: {3} [{4} s]", 
                             //networkNode.Id, 
@@ -393,7 +394,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                            // 0);
                     }
 
-                    this.originNodes.Sort(new NodeComparer());
+                    this.originNodes.Sort(new NodeComparer<MetlinkNode>());
                 }
                 else
                 {

@@ -58,7 +58,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         ///   Gets or sets the current route of a terminal node which is always an empty string.
         /// </summary>
-        public int CurrentRoute
+        public int RouteId
         {
             get
             {
@@ -102,16 +102,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             }
         }
 
-        /// <summary>
-        ///   Gets the route Id of the terminal node which is always an empty string.
-        /// </summary>
-        public string RouteId
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
+        
 
         /// <summary>
         ///   Gets or sets the total time taken to get to the terminal node.

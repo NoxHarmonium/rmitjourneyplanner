@@ -130,6 +130,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
         }
 
+        /// <summary>
+        ///   Contains the state of the evolutionary route planner.
+        /// </summary>
+        public EvolutionaryProperties Properties
+        {
+            get
+            {
+                return this.properties;
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -140,7 +151,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="provider"> The network provider to register. </param>
         public void RegisterNetworkDataProvider(INetworkDataProvider provider)
         {
-            this.properties.NetworkDataProviders.Add(provider);
+            this.Properties.NetworkDataProviders.Add(provider);
         }
 
         /// <summary>
@@ -149,7 +160,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="provider"> The point to point data provider to register. </param>
         public void RegisterPointDataProvider(IPointDataProvider provider)
         {
-            this.properties.PointDataProviders.Add(provider);
+            this.Properties.PointDataProviders.Add(provider);
         }
         
         /// <summary>
@@ -348,7 +359,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             
             var sw = Stopwatch.StartNew();
            
-            var q = new List<Critter>(this.properties.PopulationSize);
+            var q = new List<Critter>(this.Properties.PopulationSize);
             foreach (var x in f)
             {
                 x.Clear();
@@ -358,7 +369,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
           
             
-            for (int i = 0; i < this.properties.PopulationSize/2; i ++)
+            for (int i = 0; i < this.Properties.PopulationSize/2; i ++)
             {
                 var first = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
                 var second = first;
@@ -367,24 +378,24 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     second = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
                 }
                 
-                bool doCrossover = this.random.NextDouble() <= this.properties.CrossoverRate;
-                bool doMutation = this.random.NextDouble() <= this.properties.MutationRate;
+                bool doCrossover = this.random.NextDouble() <= this.Properties.CrossoverRate;
+                bool doMutation = this.random.NextDouble() <= this.Properties.MutationRate;
                 Critter[] children = doCrossover
-                                         ? this.properties.Breeder.Crossover(first, second)
+                                         ? this.Properties.Breeder.Crossover(first, second)
                                          : new[] { first, second };
 
 
                 if (doMutation)
                 {
-                    children[0] = this.properties.Mutator.Mutate(children[0]);
-                    children[1] = this.properties.Mutator.Mutate(children[1]);
+                    children[0] = this.Properties.Mutator.Mutate(children[0]);
+                    children[1] = this.Properties.Mutator.Mutate(children[1]);
                 }
 
 
                 if (doCrossover || doMutation)
                 {
-                    children[0].Fitness = this.properties.FitnessFunction.GetFitness(children[0].Route);
-                    children[1].Fitness = this.properties.FitnessFunction.GetFitness(children[1].Route);
+                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route);
+                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route);
                 }
                 //var ff = (AlFitnessFunction)this.properties.FitnessFunction;
                 
@@ -427,7 +438,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             this.population.Clear();
             int j = 0;
 
-            while (this.population.Count + this.Fronts[j].Count <= this.properties.PopulationSize)
+            while (this.population.Count + this.Fronts[j].Count <= this.Properties.PopulationSize)
             {
                 this.crowdingDistanceAssignment(this.Fronts[j]);
                 this.population.AddRange(this.Fronts[j]);
@@ -448,7 +459,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     return -1;
                 });
             */
-            this.population.AddRange(this.Fronts[j].GetRange(0, this.properties.PopulationSize-this.population.Count));
+            this.population.AddRange(this.Fronts[j].GetRange(0, this.Properties.PopulationSize-this.population.Count));
 
             
 
@@ -502,26 +513,26 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             var sw = Stopwatch.StartNew();
             var routesUsed = new Dictionary<int, int>();
 
-            targetProgress = this.properties.PopulationSize;
+            targetProgress = this.Properties.PopulationSize;
             
 
-            for (int i = 0; i < this.properties.PopulationSize; i++)
+            for (int i = 0; i < this.Properties.PopulationSize; i++)
             {
                 progress = i + 1;
                 Route route = null;
                 while (route == null)
                 {
-                    route = (Route)this.properties.RouteGenerator.Generate(
-                        (INetworkNode)this.properties.Origin.Clone(),
-                        (INetworkNode)this.properties.Destination.Clone(),
-                        this.properties.DepartureTime).Clone();
+                    route = (Route)this.Properties.RouteGenerator.Generate(
+                        (INetworkNode)this.Properties.Origin.Clone(),
+                        (INetworkNode)this.Properties.Destination.Clone(),
+                        this.Properties.DepartureTime).Clone();
                 }
 
                 
-                var critter = new Critter(route, this.properties.FitnessFunction.GetFitness(route));
+                var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
                 Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
                 this.result.AverageFitness += critter.Fitness;
-                var ff = (AlFitnessFunction)this.properties.FitnessFunction;
+                var ff = (AlFitnessFunction)this.Properties.FitnessFunction;
                 foreach (int routeUsed in ff.RoutesUsed)
                 {
                     if (!routesUsed.ContainsKey(routeUsed))
@@ -543,9 +554,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
             this.result.DiversityMetric = routesUsed.Keys.Count;
-            this.result.AverageFitness /= this.properties.PopulationSize;
+            this.result.AverageFitness /= this.Properties.PopulationSize;
             Console.WriteLine("---EVALULATING FITTEST MEMBER---");
-            this.result.MinimumFitness = this.properties.FitnessFunction.GetFitness(this.population[0].Route);
+            this.result.MinimumFitness = this.Properties.FitnessFunction.GetFitness(this.population[0].Route);
             this.result.Population = this.population;
             Console.WriteLine("------------------------");
             //Tools.SavePopulation(this.population, 0, this.properties);

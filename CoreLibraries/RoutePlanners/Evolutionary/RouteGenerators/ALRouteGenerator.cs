@@ -15,6 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -44,7 +45,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         /// <summary>
         ///   The origin nodes.
         /// </summary>
-        private List<INetworkNode> originNodes;
+        private List<NodeWrapper<MetlinkNode>> originNodes;
 
         /// <summary>
         ///   The stored destination.
@@ -54,7 +55,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         /// <summary>
         ///   The stored origin.
         /// </summary>
-        private INetworkNode storedOrigin;
+        private MetlinkNode storedOrigin;
 
         #endregion
 
@@ -88,7 +89,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
             
 Regenerate:
 
-            var current = (MetlinkNode)this.originNodes[this.random.Next(this.originNodes.Count - 1)];
+            var current = (MetlinkNode)this.originNodes[this.random.Next(this.originNodes.Count - 1)].Node;
 
             MetlinkNode next = current;
             var routeDict = new Dictionary<MetlinkNode, int>();
@@ -114,7 +115,7 @@ Regenerate:
                 if (current.Id != 0)
                 {
                     var newNode = provider.GetNodeFromId(current.Id);
-                    route.Add(new NodeWrapper(newNode));
+                    route.Add(new NodeWrapper<INetworkNode>(newNode));
                 }
 
                 {
@@ -259,12 +260,12 @@ Regenerate:
             if (this.storedOrigin == null || this.storedDestination == null || this.storedOrigin.Id != source.Id
                 || this.storedDestination.Id != destination.Id)
             {
-                this.storedOrigin = source;
+                this.storedOrigin = (MetlinkNode)source;
                 this.storedDestination = destination;
 
                 if (!(source is MetlinkNode))
                 {
-                    this.originNodes = new List<INetworkNode>();
+                    this.originNodes = new List<NodeWrapper<MetlinkNode>>();
                     double walkingDistance = 0;
 
                     Logger.Log(this, "-->--> Finding source nodes... [{0} s]");
@@ -283,22 +284,22 @@ Regenerate:
                         walkingDistance,
                         0);
 
-                    foreach (INetworkNode networkNode in this.originNodes)
+                    foreach (var networkNode in this.originNodes)
                     {
                         networkNode.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                            (Location)networkNode, (Location)this.properties.Destination);
+                            (Location)networkNode.Node, (Location)this.properties.Destination);
                         Console.WriteLine(
                             "-->-->--> [id: {0}] Location: {1} Type: {2} ED: {3} [{4} s]",
-                            networkNode.Id,
-                            (Location)networkNode,
-                            networkNode.TransportType,
+                            networkNode.Node.Id,
+                            (Location)networkNode.Node,
+                            networkNode.Node.TransportType,
                             networkNode.EuclidianDistance.ToString("F"),
                             0);
                     }
                 }
                 else
                 {
-                    this.originNodes = new List<INetworkNode> { this.storedOrigin };
+                    this.originNodes = new List<NodeWrapper<MetlinkNode>> { new NodeWrapper<MetlinkNode>(this.storedOrigin) };
                 }
                 if (!(destination is MetlinkNode))
                 {
@@ -308,12 +309,12 @@ Regenerate:
                     while (this.destinationNodes.Count == 0)
                     {
                         walkingDistance += 0.1;
-                        List<INetworkNode> mNodes =
+                        List<NodeWrapper<MetlinkNode>> mNodes =
                             this.properties.NetworkDataProviders[0].GetNodesAtLocation(
                                 (Location)this.properties.Destination, walkingDistance);
-                        foreach (INetworkNode mNode in mNodes)
+                        foreach (NodeWrapper<MetlinkNode> mNode in mNodes)
                         {
-                            this.destinationNodes.Add((MetlinkNode)mNode);
+                            this.destinationNodes.Add(mNode.Node);
                         }
                     }
 
@@ -342,20 +343,20 @@ Regenerate:
                         this.originNodes.Count,
                         walkingDistance,
                         0);
-                    foreach (INetworkNode networkNode in this.originNodes)
+                    foreach (var networkNode in this.originNodes)
                     {
                         networkNode.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                            (Location)networkNode, (Location)this.properties.Destination);
+                            (Location)networkNode.Node, (Location)this.properties.Destination);
                         Console.WriteLine(
                             "-->-->--> [id: {0}] Location: {1} Type: {2} ED: {3} [{4} s]",
-                            networkNode.Id,
-                            (Location)networkNode,
-                            networkNode.TransportType,
+                            networkNode.Node.Id,
+                            (Location)networkNode.Node,
+                            networkNode.Node.TransportType,
                             networkNode.EuclidianDistance.ToString("F"),
                             0);
                     }
 
-                    this.originNodes.Sort(new NodeComparer());
+                    this.originNodes.Sort(new NodeComparer<MetlinkNode>());
                 }
                 else
                 {

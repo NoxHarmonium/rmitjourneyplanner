@@ -14,6 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
+    using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -148,8 +149,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="route"> The route to repair </param>
         public Route RepairRoute(Route route)
         {
-            var newNodes = new List<NodeWrapper>();
-            List<NodeWrapper> oldNodes = route;
+            var newNodes = new List<NodeWrapper<INetworkNode>>();
+            List<NodeWrapper<INetworkNode>> oldNodes = route;
             for (int i = 0; i < oldNodes.Count; i++)
             {
                 int count = 0;

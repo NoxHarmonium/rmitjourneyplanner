@@ -123,15 +123,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets the current route that the node is traversing.
+        ///   Gets or sets the route that this node belongs to (when retrieved with <see cref="MetlinkDataProvider.GetNodeClosestToPointWithinArea"/> ).
         /// </summary>
-        public int CurrentRoute { get; set; }
+        [Obsolete]
+        public int RouteId { get; set; }
 
-        /// <summary>
-        ///   Gets or sets the Euclidian distance to the goal. Used for traversing route trees.
-        /// </summary>
-        public double EuclidianDistance { get; set; }
-
+     
         /// <summary>
         ///   Gets a unique identifier for this node inside of it's network.
         /// </summary>
@@ -170,11 +167,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             }
         }
 
-        /// <summary>
-        ///   Gets or sets the total time taken to reach this node. Used for traversing route trees.
-        /// </summary>
-        public TimeSpan TotalTime { get; set; }
-
+       
         /// <summary>
         ///   Gets or sets the type of transport this node services.
         /// </summary>
@@ -193,9 +186,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         {
             var newNode = new MetlinkNode(this.id, this.provider, this)
             {
-                EuclidianDistance = this.EuclidianDistance,
-                TotalTime = this.TotalTime,
-                CurrentRoute = this.CurrentRoute,
+                //EuclidianDistance = this.EuclidianDistance,
+                //TotalTime = this.TotalTime,
+                //RouteId = this.RouteId,
                 TransportType = this.TransportType,
                 stopSpecName = this.StopSpecName,
                 Latitude = this.Latitude,

@@ -22,12 +22,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         ///   Gets or sets the current route that the node is traversing.
         /// </summary>
-        int CurrentRoute { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the Euclidian distance to the goal. Used for traversing route trees.
-        /// </summary>
-        double EuclidianDistance { get; set; }
+        int RouteId { get; set; }
 
         /// <summary>
         ///   Gets a unique identifier for this node inside of it's network.
@@ -50,12 +45,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         ///   Gets the DataProvider that the node belongs to.
         /// </summary>
         INetworkDataProvider Provider { get; }
-
-        /// <summary>
-        ///   Gets or sets the total time taken to reach this node. Used for traversing route trees.
-        /// </summary>
-        TimeSpan TotalTime { get; set; }
-
+       
         /// <summary>
         ///   Gets or sets the type of transport this node services.
         /// </summary>
