@@ -2,24 +2,23 @@ using System;
 
 namespace RmitJourneyPlanner.CoreLibraries
 {
-	public class Random : System.Random
+	/// <summary>
+	/// Wraps <see cref="System.Random"/> to be thread safe. Initializes one random object per thread.
+	/// </summary>
+    public class Random : System.Random
 	{
-		[ThreadStatic]
-		private System.Random random = new System.Random();
-		
-		[ThreadStatic]
-		private int seed = -1;
-		
+	    [ThreadStatic]
+	    private static System.Random random;
+
+	
+        /// <summary>
+        /// Returns a thread safe version of the <see cref="System.Random"/> class.
+        /// </summary>
+        /// <returns></returns>
 		public static System.Random GetInstance()
 		{
-			
-			if (random == null)
-			{
-				random = new Random();
-			}
-			return random;
-		}		
-		
+		    return random ?? (random = new Random());
+		}
 	}
 }
 

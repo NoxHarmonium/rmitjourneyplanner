@@ -11,6 +11,7 @@ namespace Testing
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using System.Threading;
 
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
@@ -74,21 +75,30 @@ namespace Testing
             }
             Fitness score = properties.FitnessFunction.GetFitness(testRoute);
             */
-            var testRoute = new Route(-1)
-                {
-                    
-                    new MetlinkNode(19965,provider),
-                    new MetlinkNode(19966,provider),
-                    new MetlinkNode(19967,provider),
-                    new MetlinkNode(19968,provider),
-                    new MetlinkNode(19969,provider),
-                    new MetlinkNode(19970,provider),
-                    new MetlinkNode(19971,provider),
-                    new MetlinkNode(19972,provider)
-                };
-           var score = properties.FitnessFunction.GetFitness(testRoute);
-            
-            Console.WriteLine("Score: {0}", score);
+            Console.WriteLine("Press Enter.");
+            Console.ReadLine();
+            for (int i = 0; i < 12; i++)
+            {
+                properties.DepartureTime = DateTime.Parse("27/06/2012 10:00 AM").AddMinutes(i*5);
+
+                var testRoute = new Route(-1)
+                    {
+                        new MetlinkNode(19965, provider),
+                        new MetlinkNode(19966, provider),
+                        new MetlinkNode(19967, provider),
+                        new MetlinkNode(19968, provider),
+                        new MetlinkNode(19969, provider),
+                        new MetlinkNode(19970, provider),
+                        new MetlinkNode(19971, provider),
+                        new MetlinkNode(19972, provider)
+                    };
+
+
+                var score = properties.FitnessFunction.GetFitness(testRoute);
+
+                Console.WriteLine("Score: {0}", score);
+                Thread.Sleep(1000);
+            }
             //properties.Database.Open();
             //properties.DataStructures = new DataStructures(properties);
 

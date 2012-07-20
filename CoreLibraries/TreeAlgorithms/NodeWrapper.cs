@@ -11,6 +11,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     using System.Linq;
     using System.Text;
 
+    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+
     /// <summary>
     /// Represents a generic node for use in route searches. 
     /// Basically a wrapper for a generic type to give it a unique address for referencing.

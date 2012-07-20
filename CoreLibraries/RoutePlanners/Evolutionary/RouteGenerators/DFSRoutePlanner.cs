@@ -54,7 +54,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
             //if (!properties.Bidirectional)
             //{
-            //    nodes = nodes.Reverse().ToArray();
+                //nodes = nodes.Reverse().ToArray();
             //}
 
           

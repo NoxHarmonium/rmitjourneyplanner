@@ -225,7 +225,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     
                     int totalLinks = 0;
                     Logger.Log(this, "\nBuilding route adjacencies... (Second Pass) [{0} s]");
-
+                    /*
                     Logger.Log(this, "Querying this.database...");
                     nodeData =
                           this.database.GetDataSet(
@@ -234,7 +234,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                             INNER JOIN tblServiceTimes st
                             ON s.ServiceID=st.ServiceID
                             WHERE st.DepartTime <> -1 AND st.ArrivalTime <> -1
-                            ORDER BY RouteID,s.ServiceID, ArrivalTime
+                            ORDER BY RouteID,s.ServiceID, ArrivalTime,Sequence
+                    ");
+                    */
+                    Logger.Log(this, "Querying this.database...");
+                    nodeData =
+                          this.database.GetDataSet(
+                              @"SELECT * FROM tblStopRoutes sr
+ORDER BY sr.RouteID, sr.StopOrder;
                     ");
 
                     for (i = 0; i < nodeData.Rows.Count - 1; i++)
@@ -244,13 +251,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                         // var RouteID = (int)row["RouteID"];
                         var rowId = (int)row["MetlinkStopID"];
-                        var rowStopOrder = (short)row["DepartTime"];
-                        var rowServiceId = (int)row["ServiceID"];
+                        var rowStopOrder = (int)row["StopOrder"];
+                        var rowServiceId = (int)row["RouteID"];
                    
 
                         var nextId = (int)nextRow["MetlinkStopID"];
-                        var nextStopOrder = (short)nextRow["DepartTime"];
-                        var nextServiceId = (int)nextRow["ServiceID"];
+                        var nextStopOrder = (int)nextRow["StopOrder"];
+                        var nextServiceId = (int)nextRow["RouteID"];
 
                     
                         if ((nextStopOrder >= rowStopOrder ||  nextStopOrder == 0) && 
@@ -304,7 +311,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                         foreach (var closeNode in nodes)
                         {
-                            if ( !this.InSameLine((MetlinkNode)closeNode.Node,metlinkNode) &&
+                            if ( !this.InSameLine(closeNode.Node,metlinkNode) &&
                                 closeNode.Node.Id != metlinkNode.Id
                                 && !vistedRoutes.Contains(Convert.ToInt32(closeNode.CurrentRoute)))
                             {

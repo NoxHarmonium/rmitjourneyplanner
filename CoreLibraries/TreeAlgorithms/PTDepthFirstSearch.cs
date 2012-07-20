@@ -38,8 +38,15 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
         protected override NodeWrapper<INetworkNode>[] GetChildren(INetworkNode node)
         {
-            List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
             
+            
+            List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
+
+            if (node.Id == 19967)
+            {
+                string gfkf = "dfdf";
+
+            }
             var wrappers = new NodeWrapper<INetworkNode>[nodes.Count];
 
             for (int i = 0; i < nodes.Count; i++ )

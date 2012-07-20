@@ -95,7 +95,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 foreach (int routeId in routes)
                 {
                     //Console.Write("{0:00000}, ", routeId);
-                    if (!openRoutes.Contains(routeId) && !closedRoutes.Contains(routeId))
+                    if (!openRoutes.Contains(routeId))// && !closedRoutes.Contains(routeId))
                     {
                         openRoutes.Add(routeId);
                         routeIndex[routeId] = i;
@@ -107,16 +107,22 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 var newOpenRoute = new List<int>();
                 foreach (var openRoute in openRoutes)
                 {
-                    if (!routes.Contains(openRoute) || (i == route.Count-1))
+                    if ((!routes.Contains(openRoute) || (i == route.Count - 1)))
                     {
-                        closedRoutes.Add(openRoute);
-                        var cr = new ClosedRoute { end = i, id = openRoute, start = routeIndex[openRoute] };
-                        closedRoutesIndex[routeIndex[openRoute]].Add(cr);
+
+                        if (routeIndex[openRoute] != i - 1)
+                        {
+                            closedRoutes.Add(openRoute);
+                            var cr = new ClosedRoute { end = i - 1, id = openRoute, start = routeIndex[openRoute] };
+                            closedRoutesIndex[routeIndex[openRoute]].Add(cr);
+                        }
 
                     }
                     else
                     {
+                        
                         newOpenRoute.Add(openRoute);
+                        
                     }
                 }
 
@@ -242,69 +248,92 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     }
                 }
 
-
-                if (minTime.TotalTime < TimeSpan.FromSeconds(0))
+                if (bestClosedRoute.id != -2)
                 {
-                    throw new Exception("Negitive time encountered.");
-                }
-                totalTime += minTime;
-                currentTime += minTime.TotalTime;
-                
-                
-                /*
-                if (bestClosedRoute.Equals(default(ClosedRoute)))
-                {
-                    throw new Exception("No minimum route found.");
-
-                }
-                if (bestClosedRoute.end <= pointer)
-                {
-                    throw new Exception("Infinite loop detected.");
-                }
-
-                
-                if (bestClosedRoute.Length == 1)
-                {
-                    bestClosedRoute.id = -1;
-                }
-                */
-
-
-                for (int i = pointer; i < bestClosedRoute.end; i++)
-                {
-                    route[i].CurrentRoute = bestClosedRoute.id;
-                    route[i].TotalTime = totalTime.TotalTime;
-                    if (i > 0 &&route[i].TotalTime < route[i-1].TotalTime)
+                    if (minTime.TotalTime < TimeSpan.FromSeconds(0))
                     {
                         throw new Exception("Negitive time encountered.");
                     }
+                    totalTime += minTime;
+                    currentTime += minTime.TotalTime;
 
+
+                    /*
+                    if (bestClosedRoute.Equals(default(ClosedRoute)))
+                    {
+                        throw new Exception("No minimum route found.");
+
+                    }
+                    if (bestClosedRoute.end <= pointer)
+                    {
+                        throw new Exception("Infinite loop detected.");
+                    }
+
+                
+                    if (bestClosedRoute.Length == 1)
+                    {
+                        bestClosedRoute.id = -1;
+                    }
+                    */
+
+
+                    for (int i = pointer; i <= bestClosedRoute.end; i++)
+                    {
+                        route[i].CurrentRoute = bestClosedRoute.id;
+                        route[i].TotalTime = totalTime.TotalTime;
+                        if (i > 0 && route[i].TotalTime < route[i - 1].TotalTime)
+                        {
+                            throw new Exception("Negitive time encountered.");
+                        }
+
+                    }
+                    pointer = bestClosedRoute.end;
+
+
+
+                    if (bestClosedRoute.id != -1)
+                    {
+                        switch (route[bestClosedRoute.start].Node.TransportType)
+                        {
+                            case "Train":
+                                totalTrain++;
+                                break;
+                            case "Tram":
+                                totalTram++;
+                                break;
+                            case "Bus":
+                                totalBus++;
+                                break;
+                        }
+                        legs++;
+                    }
+                    else
+                    {
+                        fitness.WalkingTime += minTime.TotalTime;
+                    }
+
+                    Console.WriteLine(
+                        "[{0}] : [{1}] -> [{2}] (W: {3} T: {4})",
+                        bestClosedRoute.id,
+                        bestClosedRoute.start,
+                        bestClosedRoute.end,
+                        minTime.WaitingTime,
+                        minTime.TravelTime);
                 }
-                pointer = bestClosedRoute.end;
-
-               if (bestClosedRoute.id != -1)
-               {
-                   switch (route[bestClosedRoute.start].Node.TransportType)
-                   {
-                       case "Train":
-                           totalTrain++;
-                           break;
-                       case "Tram":
-                           totalTram++;
-                           break;
-                       case "Bus":
-                           totalBus++;
-                           break;
-                   }
-                   legs++;
-               }
-               else
-               {
-                   fitness.WalkingTime += minTime.TotalTime;
-               }
-
-                Console.WriteLine("[{0}] : [{1}] -> [{2}] (W: {3} T: {4})", bestClosedRoute.id, bestClosedRoute.start, bestClosedRoute.end, minTime.WaitingTime,minTime.TravelTime);
-
+                else
+                {
+                    pointer = bestClosedRoute.end;
+                    totalTime += minTime;
+                    currentTime += minTime.TotalTime;
+                    Console.WriteLine(
+                      "[{0}] : [{1}] -> [{2}] (W: {3} T: {4})",
+                      "Walk",
+                      bestClosedRoute.start,
+                      bestClosedRoute.end,
+                      minTime.WaitingTime,
+                      minTime.TravelTime);
+                    fitness.WalkingTime += minTime.TotalTime;
+                }
 
                 //Console.WriteLine("[t] : [{1}] -> [{2}] (W: {3} T: {4})", bestClosedRoute.id, bestClosedRoute.end, bestClosedRoute.end+1, minTime.WaitingTime, minTime.TravelTime);
                 //initialDepart += minTime.TotalTime;
@@ -323,9 +352,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             fitness.TotalWaitingTime = totalTime.WaitingTime;
             fitness.TotalJourneyTime = totalTime.TotalTime;
             fitness.Changes = legs;
-            fitness.PercentBuses = (double)totalBus / legs;
-            fitness.PercentTrains = (double)totalTrain / legs;
-            fitness.PercentTrams = (double)totalTram / legs;
+            fitness.PercentBuses = new[] { totalBus, totalTrain, totalTram }.Max() / (double) legs;
+            //fitness.PercentBuses = (double)totalBus / legs;
+            //fitness.PercentTrains = (double)totalTrain / legs;
+            //fitness.PercentTrams = (double)totalTram / legs;
             Console.WriteLine("Evaluated fitness: {0}" , fitness);
 
             return fitness;
