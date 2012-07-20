@@ -140,6 +140,7 @@
     <Compile Include="Types\TransportDirection.cs" />
     <Compile Include="Types\TransportMode.cs" />
     <Compile Include="Types\TransportTimeSpan.cs" />
+    <Compile Include="Random.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CoreLibrariesKey.snk" />

@@ -11,6 +11,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
+	using CoreLibraries.Logging;
 
     /// <summary>
     /// Represents a public transport timetable.
@@ -111,16 +112,22 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             var routeToDOW = new Dictionary<int, Dictionary<int, List<int[]>>>();
             //var stopToRoute = new Dictionary<int, Dictionary<int, Dictionary<int, int[]>>>();
 
-            int index = 0;
-            
-            foreach (var entry in entries)
+            //int index = 0;
+            for (int index = 0; index < entries.Count; index++)
+            //foreach (var entry in entries)
             {
-                index++;
+                if ((index % 5000) == 0)
+				{
+					CoreLibraries.Logging.Logger.Log(this,"Optimising {0} of {1}",index,entries.Count);
+				}
+				//index++;
                 if (index == 102)
                 {
                     string xx = "xx";
 
                 }
+				
+				var entry = entries[index];
 
                 if (currentDOW != entry[dayOfWeekIndex] || currentRouteId != entry[RouteIDIndex]  || currentStopId != entry[StopIdIndex])
                 {
@@ -144,6 +151,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     currentStopId = entry[StopIdIndex];
                 }
                 times.Add(new[]{entry[arrivalTimeIndex], entry[departureTimeIndex],entry[orderIndex]});
+				
+				entries[index] = null;
             }
             
           entries.Clear();

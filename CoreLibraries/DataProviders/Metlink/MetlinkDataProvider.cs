@@ -36,6 +36,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         ///   The stop mode table.
         /// </summary>
         private static readonly Dictionary<string, string> StopModeTable = new Dictionary<string, string>();
+		
+		/// <summary>
+		/// The ammount of records to read in at any given time.
+		/// </summary>
+		private const int RecordChunk = 100000;
 
         /// <summary>
         ///   The Metlink database object.
@@ -94,30 +99,45 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                 Logger.Log(this, "Building node-route map...");
                 Logger.Log(this, "-->Querying this.database...");
-                DataTable nodeData =
-                    this.database.GetDataSet(
-                        @"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.Sequence 
+                DataTable nodeData = null;
+				int i = 0;
+				do {
+					
+                    Logger.Log(this,"Reading records {0}-{1}",i*RecordChunk,RecordChunk);
+					/*
+					nodeData = this.database.GetDataSet(
+                        String.Format(@"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.Sequence 
                             FROM tblServices s
                             INNER JOIN tblServiceTimes st
                             ON s.ServiceID=st.ServiceID
-                            ORDER BY RouteID, s.ServiceID,ArrivalTime;
-                    ");
-
-                foreach (DataRow row in nodeData.Rows)
-                {
-                    var id = (int)row["MetlinkStopID"];
-                    if (!this.routeMap.ContainsKey(id))
-                    {
-                        this.routeMap[id] = new List<int>();
-                    }
-
-                    var routeId = (int)row["RouteID"];
-                    if (!this.routeMap[id].Contains(routeId))
-                    {
-                        this.routeMap[id].Add(routeId);
-                    }
-                }
-                
+                            ORDER BY RouteID, s.ServiceID,ArrivalTime
+							LIMIT {0}, {1};",i *1000, (i*1000) + 1000));\
+					*/
+					nodeData = this.database.GetDataSet(
+                        String.Format(@"SELECT RouteID, MetlinkStopID 
+                            FROM tblStopRoutes
+                            ORDER BY RouteID, StopOrder
+							LIMIT {0}, {1};",i * RecordChunk, RecordChunk));
+					
+					if (nodeData != null)
+					{
+		                foreach (DataRow row in nodeData.Rows)
+		                {
+		                    var id = (int)row["MetlinkStopID"];
+		                    if (!this.routeMap.ContainsKey(id))
+		                    {
+		                        this.routeMap[id] = new List<int>();
+		                    }
+		
+		                    var routeId = (int)row["RouteID"];
+		                    if (!this.routeMap[id].Contains(routeId))
+		                    {
+		                        this.routeMap[id].Add(routeId);
+		                    }
+	                	}
+					}
+					i++;
+				} while (nodeData != null && nodeData.Rows.Count > 0);
                //ogger.Log(this, "Building route path map...");
                Logger.Log(this, "Querying this.database...");
                /*
@@ -217,7 +237,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                             ORDER BY RouteID,s.ServiceID, ArrivalTime
                     ");
 
-                    for (int i = 0; i < nodeData.Rows.Count - 1; i++)
+                    for (i = 0; i < nodeData.Rows.Count - 1; i++)
                     {
                         DataRow row = nodeData.Rows[i];
                         DataRow nextRow = nodeData.Rows[i + 1];
@@ -383,28 +403,42 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 if (!File.Exists("TimetableCache.dat"))
                 {
                     Logger.Log(this,"Timetable cache non existant. Rebuilding...");
-                    DataTable timetableData =
-                        database.GetDataSet(
-                            @"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID  FROM tblServiceTimes  st
-                                        INNER JOIN tblServices s
-                                        ON s.ServiceID = st.ServiceID
-                                        ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime");
-
-                    
-                  
-                    foreach (DataRow row in timetableData.Rows)
-                    {
-                        var serviceId = Convert.ToInt32(timetableData.Rows[0][5]);
+                    DataTable timetableData = new DataTable();
                         
-                        timetable.AddTimetableEntry(
-                            Convert.ToInt32(row[0]),
-                            Convert.ToInt32(row[1]),
-                            Convert.ToInt32(row[2]),
-                            Convert.ToInt32(row[3]),
-                            Convert.ToInt32(row[4]),
-                            Convert.ToInt32(row[5]));
-
-                    }
+					i = 0;
+                    
+                  	do
+					{
+	                    Logger.Log(this,"Adding rows {0} to {1} of {2}...",i*RecordChunk,RecordChunk,timetableData.Rows.Count);
+						timetableData = database.GetDataSet(
+	                            String.Format(@"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID  FROM tblServiceTimes  st
+	                                        INNER JOIN tblServices s
+											ON s.ServiceID = st.ServiceID 
+											ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime 
+											LIMIT {0},{1};",i*RecordChunk,RecordChunk));
+						
+						if(timetableData != null)
+						{
+							foreach (DataRow row in timetableData.Rows)
+		                    {                        
+									
+								var serviceId = Convert.ToInt32(timetableData.Rows[0][5]);
+		                        
+		                        timetable.AddTimetableEntry(
+		                            Convert.ToInt32(row[0]),
+		                            Convert.ToInt32(row[1]),
+		                            Convert.ToInt32(row[2]),
+		                            Convert.ToInt32(row[3]),
+		                            Convert.ToInt32(row[4]),
+		                            Convert.ToInt32(row[5]));
+		
+		                    }
+						}
+						i++;
+					} 
+					while(timetableData != null && timetableData.Rows.Count > 0);
+					
+					Logger.Log(this,"Optimising...");
                     timetable.Optimise();
                    
                     //IFormatter formatter = new BinaryFormatter();
@@ -450,13 +484,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
             catch (Exception e)
             {
                 Logger.Log(this, "Error intitilizing MetlinkDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
-                throw e;
+                throw;
             }
 
-            var t = list[40221];
-            var z = t;
-
-
+           
         }
 
         /// <summary>
