@@ -6,6 +6,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
     #region
 
+    using System;
+
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -23,6 +25,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="route"> The route the is to be evaluated. </param>
         /// <returns> A double value representing the fitness. </returns>
         Fitness GetFitness(Route route);
+
+        Fitness GetFitness(Route route,DateTime initialDeparture);
 
         #endregion
     }

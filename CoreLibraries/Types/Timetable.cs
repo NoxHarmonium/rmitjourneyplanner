@@ -8,6 +8,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
@@ -45,19 +46,23 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         [DataMember(Order = 5)]
         private const int departureTimeIndex = 4;
-        
+
         /// <summary>
         /// The index number of the order in the entries list.
         /// </summary>
         [DataMember(Order = 6)]
         private const int orderIndex = 5;
 
+        /// <summary>
+        /// The total number of parameters used in the timetable.
+        /// </summary>
+        private const int paramCount = 6;
         
         /// <summary>
         /// Stores the raw timetable entries.
         /// </summary>
         [DataMember(Order = 6)]
-        readonly private List<int[]> entries = new List<int[]>();
+        private List<int[]> entries = new List<int[]>();
 
         /// <summary>
         /// The data structure containing the timetable data.
@@ -170,6 +175,66 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return dataStructure[stopId].Keys.ToArray();
         }
 
+        /// <summary>
+        /// Saves the unoptimised data to a text file for caching.
+        /// </summary>
+        /// <param name="filename"></param>
+        public void Save(string filename)
+        {
+
+            int count = 0;
+            using (var writer = new BinaryWriter(new FileStream(filename,FileMode.Create)))
+            {
+                writer.Write(entries.Count);
+                foreach (var intArray in entries)
+                {
+                    var result = new byte[intArray.Length * sizeof(int)];
+                    Buffer.BlockCopy(intArray, 0, result, 0, result.Length);
+                    writer.Write(result);
+                    count++;
+
+                    if ((count % 10000)== 0)
+                    {
+                        Logger.Log(this,"Saving row number {0}...", count);
+
+                    }
+                }
+            }
+          
+        }
+
+        /// <summary>
+        /// Loads unoptimised data from a cached text file.
+        /// </summary>
+        /// <param name="filename"></param>
+        public void Load(string filename)
+        {
+            int count = 0;
+            using (var reader = new BinaryReader(new FileStream(filename, FileMode.Open)))
+            {
+                int length = reader.ReadInt32();
+                entries = new List<int[]>(length+1);
+                byte[] row;
+                
+
+                while ((row = reader.ReadBytes(paramCount * sizeof(int))).Length > 0)
+                {
+                    var intArray = new int[paramCount];
+                    Buffer.BlockCopy(row, 0, intArray, 0, intArray.Length*sizeof(int));
+                    entries.Add(intArray);
+                    count++;
+
+                    if ((count % 10000) == 0)
+                    {
+                        Logger.Log(this, "Loading row number {0} out of {1}...", count,length);
+
+                    }
+                }
+            }
+
+            this.Optimise();
+
+        }
 
         /// <summary>
         /// Gets a list of arrival and departure times given a

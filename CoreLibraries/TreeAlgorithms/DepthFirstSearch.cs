@@ -218,7 +218,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                    
                     Visited[i].Add(current[i].Node);
                     NodeWrapper<T>[] children = this.OrderChildren(GetChildren(current[i].Node));
-
+                    
 
                     foreach (NodeWrapper<T> child in children)
                     {

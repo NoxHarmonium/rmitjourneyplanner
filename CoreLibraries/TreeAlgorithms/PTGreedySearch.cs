@@ -55,12 +55,18 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                     wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)this.Destination);
                 }
 
+                //if (wrapper.Node.TransportType == "Train")
+                //{
+                //    wrapper.EuclidianDistance /= 2.0;
+               // }
+
             }
 
             //Array.Sort(nodes, new NodeComparer());
             nodes.StochasticSort(Entropy);
-            
+
             return nodes;
+            //return nodes.OrderBy(n => n.EuclidianDistance).Reverse().ToArray();
         }
 
     }

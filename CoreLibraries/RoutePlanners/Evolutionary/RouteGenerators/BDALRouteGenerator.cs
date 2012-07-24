@@ -41,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         /// <summary>
         ///   The random.
         /// </summary>
-        private readonly Random random = new Random();
+        private readonly Random random = CoreLibraries.Random.GetInstance();
 
         /// <summary>
         ///   The destination nodes.

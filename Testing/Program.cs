@@ -22,11 +22,11 @@ namespace Testing
             //Console.WriteLine(~1);
             //TestDFS dfsTest = new TestDFS();
             //TestStoSort();
-            //TestJP jp = new TestJP();
-            //jp.Test();
+            TestJP jp = new TestJP();
+            jp.Test();
             //SpawnTravelPlanner sp = new SpawnTravelPlanner();
-            TestFitnessFunction f = new TestFitnessFunction();
-            Console.ReadLine();
+           // TestFitnessFunction f = new TestFitnessFunction();
+            //Console.ReadLine();
 
 
             //Console.ReadLine();

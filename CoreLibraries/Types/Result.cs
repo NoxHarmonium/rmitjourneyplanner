@@ -20,6 +20,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         public TimeSpan Totaltime;
 
+        public Route BestPath = new Route(-1);
+
         /// <summary>
         /// The minimum fitness value of the iteration.
         /// </summary>

@@ -7,6 +7,7 @@
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A list of the parameters provided by the fitness class.
@@ -16,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         TotalJourneyTime,
         Changes,
         //WalkingTime,
-        PercentTrams,
+        //PercentTrams,
         PercentBuses,
         PercentTrains,
         //PercentTrams,
@@ -31,7 +32,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// Represents the different aspects of a journey in order to evaluate fitness.
     /// </summary>
-    public class Fitness : ICloneable
+    public class Fitness : ICloneable, IEquatable<Fitness>, IEqualityComparer<Fitness>
     {
 
         /// <summary>
@@ -75,8 +76,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     case FitnessParameters.Changes:
                         return this.NormalisedChanges;
 
-                     //case FitnessParameters.WalkingTime:
-                      //  return this.WalkingTime.TotalSeconds;
+                    // case FitnessParameters.WalkingTime:
+                     //  return this.WalkingTime.TotalSeconds;
                     //case FitnessParameters.Co2Emmissions:
                     //    return this.Co2Emmissions;
 
@@ -89,8 +90,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                    case FitnessParameters.PercentTrains:
                         return 1 - this.PercentTrains;
 
-                    case FitnessParameters.PercentTrams:
-                       return 1 - this.PercentTrams;
+                    //case FitnessParameters.PercentTrams:
+                     //  return 1 - this.PercentTrams;
 
                    // case FitnessParameters.TotalTravelTime:
                    //     return this.TotalTravelTime.TotalSeconds;
@@ -230,6 +231,97 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         public double NormalisedTravelTime { get; set; }
 
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(Fitness other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return other.TotalTravelTime.Equals(this.TotalTravelTime) && other.TotalWaitingTime.Equals(this.TotalWaitingTime) && other.WalkingTime.Equals(this.WalkingTime) && other.Changes == this.Changes && other.Co2Emmissions.Equals(this.Co2Emmissions) && other.PercentTrains.Equals(this.PercentTrains) && other.PercentBuses.Equals(this.PercentBuses) && other.PercentTrams.Equals(this.PercentTrams) && other.NormalisedTravelTime.Equals(this.NormalisedTravelTime) && other.NormalisedChanges.Equals(this.NormalisedChanges) && other.PercentDisableFriendly.Equals(this.PercentDisableFriendly) && other.TotalJourneyTime.Equals(this.TotalJourneyTime);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+        /// </returns>
+        /// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != typeof(Fitness))
+            {
+                return false;
+            }
+            return Equals((Fitness)obj);
+        }
+
+        /// <summary>
+        /// Serves as a hash function for a particular type. 
+        /// </summary>
+        /// <returns>
+        /// A hash code for the current <see cref="T:System.Object"/>.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result = this.TotalTravelTime.GetHashCode();
+                result = (result * 397) ^ this.TotalWaitingTime.GetHashCode();
+                result = (result * 397) ^ this.WalkingTime.GetHashCode();
+                result = (result * 397) ^ this.Changes;
+                result = (result * 397) ^ this.Co2Emmissions.GetHashCode();
+                result = (result * 397) ^ this.PercentTrains.GetHashCode();
+                result = (result * 397) ^ this.PercentBuses.GetHashCode();
+                result = (result * 397) ^ this.PercentTrams.GetHashCode();
+                result = (result * 397) ^ this.NormalisedTravelTime.GetHashCode();
+                result = (result * 397) ^ this.NormalisedChanges.GetHashCode();
+                result = (result * 397) ^ this.PercentDisableFriendly.GetHashCode();
+                result = (result * 397) ^ this.TotalJourneyTime.GetHashCode();
+                return result;
+            }
+        }
+
+        public static bool operator ==(Fitness left, Fitness right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Fitness left, Fitness right)
+        {
+            return !left.Equals(right);
+        }
+
         public double NormalisedChanges { get; set; }
+
+        public bool Equals(Fitness x, Fitness y)
+        {
+            return this.Equals(x, y);
+        }
+
+        public int GetHashCode(Fitness obj)
+        {
+            return obj.GetHashCode();
+        }
     }
 }

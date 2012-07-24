@@ -52,7 +52,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
         /// <returns> If the operation is successful then the result is returned, otherwise null. </returns>
         public Critter[] Crossover(Critter first, Critter second)
         {
-            var random = new Random();
+            var random = CoreLibraries.Random.GetInstance();
 
             List<NodeWrapper<INetworkNode>> firstNodes = first.Route;
             List<NodeWrapper<INetworkNode>> secondNodes = second.Route;

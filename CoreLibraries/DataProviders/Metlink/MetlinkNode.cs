@@ -248,6 +248,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 this.Latitude = Convert.ToDouble(data.Rows[0]["GPSLat"]);
                 this.Longitude = Convert.ToDouble(data.Rows[0]["GPSLong"]);
                 this.stopSpecName = data.Rows[0]["StopSpecName"].ToString();
+                this.TransportType = data.Rows[0]["StopModeName"].ToString();
             }
         }
 

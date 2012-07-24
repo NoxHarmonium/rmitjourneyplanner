@@ -64,21 +64,28 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
         #region Public Methods
 
+        public Fitness GetFitness(Route route)
+        {
+            return this.GetFitness(route,properties.DepartureTime);
+        }
+        
         /// <summary>
         ///   The get fitness.
         /// </summary>
         /// <param name="route"> The route. </param>
         /// <returns> The get fitness. </returns>
         /// <exception cref="Exception"></exception>
-        public Fitness GetFitness(Route route)
+        public Fitness GetFitness(Route route, DateTime initialDepart)
         {
             //TODO: Route 1942: Has alternate route at different times. Check it out....
+           
 
+            
             var fitness = new Fitness();
             
 
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
-            DateTime initialDepart = properties.DepartureTime;
+            
             var openRoutes = new List<int>();
             var closedRoutes = new List<int>();
             var closedRoutesIndex = new List<List<ClosedRoute>>();
@@ -110,10 +117,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     if ((!routes.Contains(openRoute) || (i == route.Count - 1)))
                     {
 
-                        if (routeIndex[openRoute] != i - 1)
+                        if (routeIndex[openRoute] != i - 1 || i == route.Count - 1)
                         {
                             closedRoutes.Add(openRoute);
-                            var cr = new ClosedRoute { end = i - 1, id = openRoute, start = routeIndex[openRoute] };
+                            ClosedRoute cr;
+                            cr = i != route.Count - 1 ? 
+                                new ClosedRoute { end = i - 1, id = openRoute, start = routeIndex[openRoute] } : 
+                                new ClosedRoute { end = i, id = openRoute, start = routeIndex[openRoute] };
                             closedRoutesIndex[routeIndex[openRoute]].Add(cr);
                         }
 
@@ -162,7 +172,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             var pointer = 0;
             var totalTime = default(TransportTimeSpan);
             var currentTime = initialDepart;
-            int legs = 1;
+            int legs = 0;
             int totalBus = 0;
             int totalTrain = 0;
             int totalTram = 0;
@@ -194,15 +204,33 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         
                         TransportTimeSpan time = default(TransportTimeSpan);
                         bool calced = false;
-                        if (closedRoute.Length > 1)
+                        //if (closedRoute.Length > 1)
                         {
                             calced = true;
-                            if (closedRoute.Length > 3)
+                            //if (closedRoute.Length > 3)
+                            //{
+                            //    string test = "dffd";
+                            //}
+                            if (closedRoute.end == route.Count - 1)
                             {
-                                string test = "dffd";
+                                time = provider.GetDistanceBetweenNodes(
+                               route[closedRoute.start].Node, route[closedRoute.end].Node, currentTime, closedRoute.id);
+                                if (time.TravelTime < TimeSpan.Zero || time.WaitingTime < TimeSpan.Zero)
+                                {
+                                    throw new Exception("Negitive time encountered.");
+                                }
                             }
-                            time = provider.GetDistanceBetweenNodes(
-                                route[closedRoute.start].Node, route[closedRoute.end - 1].Node, currentTime, closedRoute.id);
+                            else
+                            {
+                                time = provider.GetDistanceBetweenNodes(
+                               route[closedRoute.start].Node, route[closedRoute.end - 1].Node, currentTime, closedRoute.id);
+
+                                if (time.TravelTime < TimeSpan.Zero || time.WaitingTime < TimeSpan.Zero)
+                                {
+                                    throw new Exception("Negitive time encountered.");
+                                }
+                            }
+                           
 
 
                         }
@@ -218,7 +246,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                             }
                         }
 
-                        if (first || (time.TotalTime < minTime.TotalTime && closedRoute.Length >= maxLength))
+                        if (first || (time.TotalTime < minTime.TotalTime || (closedRoute.Length >= maxLength && calced)))
                         {
                             first = false;
                             minTime = time;
@@ -250,11 +278,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                 if (bestClosedRoute.id != -2)
                 {
-                    if (minTime.TotalTime < TimeSpan.FromSeconds(0))
+                    if (minTime.TravelTime < TimeSpan.Zero || minTime.WaitingTime < TimeSpan.Zero)
                     {
                         throw new Exception("Negitive time encountered.");
                     }
                     totalTime += minTime;
+                    if (totalTime.TravelTime < TimeSpan.Zero || totalTime.WaitingTime < TimeSpan.Zero)
+                    {
+                        throw new Exception("Negitive time encountered.");
+                    }
                     currentTime += minTime.TotalTime;
 
 
@@ -293,6 +325,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                     if (bestClosedRoute.id != -1)
                     {
+                        route[bestClosedRoute.start].Node.RetrieveData();
                         switch (route[bestClosedRoute.start].Node.TransportType)
                         {
                             case "Train":
@@ -311,7 +344,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     {
                         fitness.WalkingTime += minTime.TotalTime;
                     }
-
+                    /*
                     Console.WriteLine(
                         "[{0}] : [{1}] -> [{2}] (W: {3} T: {4})",
                         bestClosedRoute.id,
@@ -319,12 +352,22 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         bestClosedRoute.end,
                         minTime.WaitingTime,
                         minTime.TravelTime);
+                     * */
                 }
                 else
                 {
                     pointer = bestClosedRoute.end;
+                    if (minTime.TravelTime < TimeSpan.Zero || minTime.WaitingTime < TimeSpan.Zero)
+                    {
+                        throw new Exception("Negitive time encountered.");
+                    }
                     totalTime += minTime;
+                    if (totalTime.TravelTime < TimeSpan.Zero || totalTime.WaitingTime < TimeSpan.Zero)
+                    {
+                        throw new Exception("Negitive time encountered.");
+                    }
                     currentTime += minTime.TotalTime;
+                    /*
                     Console.WriteLine(
                       "[{0}] : [{1}] -> [{2}] (W: {3} T: {4})",
                       "Walk",
@@ -332,6 +375,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                       bestClosedRoute.end,
                       minTime.WaitingTime,
                       minTime.TravelTime);
+                     */
                     fitness.WalkingTime += minTime.TotalTime;
                 }
 
@@ -352,15 +396,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             fitness.TotalWaitingTime = totalTime.WaitingTime;
             fitness.TotalJourneyTime = totalTime.TotalTime;
             fitness.Changes = legs;
-            fitness.PercentBuses = new[] { totalBus, totalTrain, totalTram }.Max() / (double) legs;
-            //fitness.PercentBuses = (double)totalBus / legs;
-            //fitness.PercentTrains = (double)totalTrain / legs;
-            //fitness.PercentTrams = (double)totalTram / legs;
-            Console.WriteLine("Evaluated fitness: {0}" , fitness);
+            //fitness.PercentBuses = new[] { totalBus, totalTrain, totalTram }.Max() / (double) legs;
+            
+            fitness.PercentBuses = (double)totalBus / legs;
+            fitness.PercentTrains = (double)totalTrain / legs;
+            fitness.PercentTrams = (double)totalTram / legs;
+            //Console.WriteLine("Evaluated fitness: {0}" , fitness);
 
             return fitness;
-
-            //throw new NotImplementedException();
+          
         }
 
         #endregion

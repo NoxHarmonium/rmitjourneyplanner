@@ -40,7 +40,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 		/// <summary>
 		/// The ammount of records to read in at any given time.
 		/// </summary>
-		private const int RecordChunk = 100000;
+		private const int RecordChunk = 100000000;
 
         /// <summary>
         ///   The Metlink database object.
@@ -445,6 +445,9 @@ ORDER BY sr.RouteID, sr.StopOrder;
 					} 
 					while(timetableData != null && timetableData.Rows.Count > 0);
 					
+                    Logger.Log(this,"Saving cache file...");
+                    timetable.Save("TimetableCache.dat");
+
 					Logger.Log(this,"Optimising...");
                     timetable.Optimise();
                    
@@ -463,6 +466,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     //timetable = (Timetable)formatter.Deserialize(stream);
                     //timetable = ProtoBuf.Serializer.Deserialize<Timetable>(stream);
                     //stream.Close();
+                    timetable.Load("TimetableCache.dat");
                
                 }
                 Logger.Log(this, "Ending experimental timetable code...");
@@ -743,7 +747,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                
                 var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId && arrival1.order == departure.order);
 
-                if (arrival.Equals(default (Departure)))
+                if (arrival.arrivalTime < departure.departureTime || departure.departureTime == 0 || arrival.Equals(default (Departure)))
                 {
                     return default(TransportTimeSpan);
                 }
@@ -787,9 +791,11 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     @"
                             SELECT si.MetlinkStopID, si.GPSLat, si.GPSLong, si.StopModeID, sr.StopOrder FROM tblStopRoutes sr
                             INNER JOIN tblStopInformation si ON sr.MetlinkStopID=si.MetlinkStopID
-                            WHERE RouteID={0}
+                           
                     ",
                     routeId);
+
+            // WHERE RouteID={0}
             DataTable result = this.database.GetDataSet(query);
             List<NodeWrapper<INetworkNode>> nodes = (from DataRow row in result.Rows select new NodeWrapper<INetworkNode>(this.list[(int)row["MetlinkStopID"]][0])).ToList();
             double minDistance = double.MaxValue;
@@ -894,7 +900,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         {
             return
                 this.database.GetDataSet(
-                    string.Format("SELECT * FROM tblStopInformation WHERE MetlinkStopID = '{0}'", metlinkStopId));
+                    string.Format("SELECT * FROM tblStopInformation si INNER JOIN tblModes m on si.StopModeID = m.StopModeID WHERE MetlinkStopID = '{0}'", metlinkStopId));
         }
 
         /// <summary>
@@ -1045,8 +1051,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     throw new Exception("Invalid time");
 
                 }
-                int minutes = Convert.ToInt32(date.Substring(date.Length - 2, 2));
-                int hours = Convert.ToInt32(date.Substring(0, date.Length - 2));
+                int minutes = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(0, date.Length - 2));
+                int hours = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(0, date.Length - 2));
                 var dt = new DateTime();
                 int days = 0;
                 if (hours >= 24)

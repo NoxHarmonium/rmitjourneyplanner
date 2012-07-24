@@ -155,102 +155,116 @@ namespace Testing
 
             while (cont)
             {
-                foreach (bool bidir in new []{true,false})
+                foreach (SearchType searchType in Enum.GetValues(typeof(SearchType)))
                 {
-                for (int i = 0; i < testRoutes.GetLength(0); i++)
-                {
+                    if (searchType == SearchType.DFS_BiDir || searchType == SearchType.DFS_Standard)
+                        continue;
 
-                    try
+                    //foreach (bool bidir in new[] { true, false })
                     {
-                        testRoutes[i, 0].RetrieveData();
-                        testRoutes[i, 1].RetrieveData();
-
-                        EvolutionaryProperties properties = new EvolutionaryProperties();
-                        properties.PointDataProviders.Add(new WalkingDataProvider());
-                        properties.NetworkDataProviders.Add(metlinkProvider);
-                        properties.ProbMinDistance = 0.7;
-                        properties.ProbMinTransfers = 0.2;
-                        properties.MaximumWalkDistance = 1.5;
-                        properties.PopulationSize = 100;
-                        properties.MaxDistance = 0.5;
-                        properties.DepartureTime = time;
-                        properties.NumberToKeep = 25;
-                        properties.MutationRate = 0.1;
-                        properties.CrossoverRate = 0.7;
-                        properties.Bidirectional = bidir;
-                        //properties.RouteGenerator = new AlRouteGenerator(properties);
-                        properties.RouteGenerator = new DFSRoutePlanner(properties);
-                        properties.Mutator = new StandardMutator(properties);
-                        properties.Breeder = new StandardBreeder(properties);
-                        properties.FitnessFunction = new AlFitnessFunction(properties);
-                        properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-                        properties.Destination = testRoutes[i, 0];
-                        properties.Origin = testRoutes[i, 1];
-                        properties.Destination.RetrieveData();
-
-
-                        properties.Database.Open();
-                        //properties.DataStructures = new DataStructures(properties);
-
-                        EvolutionaryRoutePlanner planner = new EvolutionaryRoutePlanner(properties);
-                        Stopwatch sw = Stopwatch.StartNew();
-                        planner.Start();
-
-                        StreamWriter writer =
-                            new StreamWriter(
-                                "results/" + testRoutes[i, 0].Id + "-" + testRoutes[i, 1].Id + bidir.ToString(CultureInfo.InvariantCulture) +  ".csv", true);
-                        writer.WriteLine(
-                            "[New iteration {0}-{1} ({2}-{3}) {4} @ {5}]",
-                            testRoutes[i, 0].Id,
-                            testRoutes[i, 1].Id,
-                            testRoutes[i, 0].StopSpecName,
-                            testRoutes[i, 1].StopSpecName,
-                            bidir,
-                            DateTime.Now.ToString(CultureInfo.InvariantCulture));
-
-                        Console.WriteLine(
-                            "[New iteration {0}-{1} ({2}-{3}) {4} @ {5}]",
-                            testRoutes[i, 0].Id,
-                            testRoutes[i, 1].Id,
-                            testRoutes[i, 0].StopSpecName,
-                            testRoutes[i, 1].StopSpecName,
-                            bidir,
-                            DateTime.Now.ToString(CultureInfo.InvariantCulture));
-
-                        writer.WriteLine(
-                        "Average UnifiedFitnessScore, Minimum Fitenss, Diversity Metric, Total Time (Iteration), Total Time (Test),Iteration number");
-
-                        this.writeInfo(writer,planner,sw.Elapsed, 0);
-                        
-                        for (int j = 0; j < 99; j++)
+                        for (int i = 0; i < testRoutes.GetLength(0); i++)
                         {
-                            planner.SolveStep();
-                            this.writeInfo(writer, planner, sw.Elapsed, j+1);
-                        }
-                        writer.Close();
-                        properties.Database.Close();
-                    }
-                      
-                    catch(Exception e)
-                    {
-                        Console.WriteLine("Exception!: {0} ({1}). Writing to error log...",e,e.Message);
-                        StreamWriter writer = new StreamWriter("error.log",true);
-                        writer.WriteLine("[{0}] Exception!: {1} ({2}).\n{3}",DateTime.Now.ToString(CultureInfo.InvariantCulture),e,e.Message,e.StackTrace);
-                        writer.WriteLine(
-                           "[Last error thrown on: {0}-{1} ({2}-{3}) {4} @ {5}]",
-                           testRoutes[i, 0].Id,
-                           testRoutes[i, 1].Id,
-                           testRoutes[i, 0].StopSpecName,
-                           testRoutes[i, 1].StopSpecName,
-                           bidir,
-                           DateTime.Now.ToString(CultureInfo.InvariantCulture));
-                        writer.Close();
-                    }
-                      
-                    
-                }
-                }
 
+                            //try
+                            {
+                                testRoutes[i, 0].RetrieveData();
+                                testRoutes[i, 1].RetrieveData();
+
+                                EvolutionaryProperties properties = new EvolutionaryProperties();
+                                properties.PointDataProviders.Add(new WalkingDataProvider());
+                                properties.NetworkDataProviders.Add(metlinkProvider);
+                                properties.ProbMinDistance = 0.7;
+                                properties.ProbMinTransfers = 0.2;
+                                properties.MaximumWalkDistance = 1.5;
+                                properties.PopulationSize = 100;
+                                properties.MaxDistance = 0.5;
+                                properties.DepartureTime = time;
+                                properties.NumberToKeep = 25;
+                                properties.MutationRate = 0.1;
+                                properties.CrossoverRate = 0.7;
+                                //properties.Bidirectional = bidir;
+                                //properties.RouteGenerator = new AlRouteGenerator(properties);
+                                properties.RouteGenerator = new DFSRoutePlanner(properties, SearchType.Greedy_BiDir);
+                                properties.Mutator = new StandardMutator(properties);
+                                properties.Breeder = new StandardBreeder(properties);
+                                properties.FitnessFunction = new AlFitnessFunction(properties);
+                                properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
+                                properties.Destination = testRoutes[i, 0];
+                                properties.Origin = testRoutes[i, 1];
+                                properties.Destination.RetrieveData();
+
+
+                                properties.Database.Open();
+                                //properties.DataStructures = new DataStructures(properties);
+
+                                var planner = new EvolutionaryRoutePlanner(properties);
+                                Stopwatch sw = Stopwatch.StartNew();
+                                planner.Start();
+
+                                StreamWriter writer =
+                                    new StreamWriter(
+                                        "results/" + searchType + "-" + testRoutes[i, 0].Id + "-"  + testRoutes[i, 1].Id + ".csv",
+                                        true);
+                                writer.WriteLine(
+                                    "[New iteration {0}-{1} ({2}-{3}) {4} @ {5}]",
+                                    testRoutes[i, 0].Id,
+                                    testRoutes[i, 1].Id,
+                                    testRoutes[i, 0].StopSpecName,
+                                    testRoutes[i, 1].StopSpecName,
+                                    searchType,
+                                    DateTime.Now.ToString(CultureInfo.InvariantCulture));
+
+                                Console.WriteLine(
+                                    "[New iteration {0}-{1} ({2}-{3}) {4} @ {5}]",
+                                    testRoutes[i, 0].Id,
+                                    testRoutes[i, 1].Id,
+                                    testRoutes[i, 0].StopSpecName,
+                                    testRoutes[i, 1].StopSpecName,
+                                    searchType,
+                                    DateTime.Now.ToString(CultureInfo.InvariantCulture));
+
+                                writer.WriteLine(
+                                    "Average UnifiedFitnessScore, Minimum Fitenss, Diversity Metric, Total Time (Iteration), Total Time (Test),Iteration number");
+
+                                this.writeInfo(writer, planner, sw.Elapsed, 0);
+
+                                for (int j = 0; j < 99; j++)
+                                {
+                                    planner.SolveStep();
+                                    this.writeInfo(writer, planner, sw.Elapsed, j + 1);
+                                }
+                                writer.WriteLine("Path: " + String.Join(",",planner.Result.BestPath));
+                                writer.Close();
+                                properties.Database.Close();
+                            }
+                                /*
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Exception!: {0} ({1}). Writing to error log...", e, e.Message);
+                                StreamWriter writer = new StreamWriter("error.log", true);
+                                writer.WriteLine(
+                                    "[{0}] Exception!: {1} ({2}).\n{3}",
+                                    DateTime.Now.ToString(CultureInfo.InvariantCulture),
+                                    e,
+                                    e.Message,
+                                    e.StackTrace);
+                                writer.WriteLine(
+                                    "[Last error thrown on: {0}-{1} ({2}-{3}) {4} @ {5}]",
+                                    testRoutes[i, 0].Id,
+                                    testRoutes[i, 1].Id,
+                                    testRoutes[i, 0].StopSpecName,
+                                    testRoutes[i, 1].StopSpecName,
+                                    searchType,
+                                    DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                                writer.Close();
+                                throw;
+                            }
+                                 * */
+
+
+                        }
+                    }
+                }
                 var reader = new StreamReader("cont.txt");
                 string result = reader.ReadToEnd().Trim();
                 switch (result)
@@ -272,13 +286,13 @@ namespace Testing
             
         }
 
-        private void writeInfo(StreamWriter writer, EvolutionaryRoutePlanner planner,TimeSpan time, int iteration)
+        private void writeInfo(StreamWriter writer, EvolutionaryRoutePlanner planner, TimeSpan time, int iteration)
         {
             
             writer.WriteLine(
                 "{0},{1},{2},{3},{4},{5}",
-                planner.Result.AverageFitness,
-                planner.Result.MinimumFitness,
+                planner.Result.AverageFitness.TotalJourneyTime,
+                planner.Result.MinimumFitness.TotalJourneyTime,
                 planner.Result.DiversityMetric,
                 planner.Result.Totaltime,
                 time,iteration);

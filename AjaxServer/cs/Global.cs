@@ -1,8 +1,11 @@
 ﻿namespace AjaxServer.AspxComponents
 {
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+
     public static class Global
     {
-        public static RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.MoeaRoutePlanner Planner;
+        public static IRoutePlanner Planner;
 
         public static bool ready;
 

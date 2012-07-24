@@ -9,6 +9,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
     using System.Collections.Generic;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -24,6 +25,16 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         ///   Gets the population of the algorithm.
         /// </summary>
         List<Critter> Population { get; }
+
+        /// <summary>
+        /// Gets the data structure that holds all the properties related to route planning.
+        /// </summary>
+        EvolutionaryProperties Properties { get; }
+
+        /// <summary>
+        /// Gets the current iteration the route planner is on.
+        /// </summary>
+        int Iteration { get;}
 
         #endregion
 

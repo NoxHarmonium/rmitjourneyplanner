@@ -5,7 +5,7 @@ namespace RmitJourneyPlanner.CoreLibraries
 	/// <summary>
 	/// Wraps <see cref="System.Random"/> to be thread safe. Initializes one random object per thread.
 	/// </summary>
-    public class Random : System.Random
+    public class Random
 	{
 	    [ThreadStatic]
 	    private static System.Random random;
@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// <returns></returns>
 		public static System.Random GetInstance()
 		{
-		    return random ?? (random = new Random());
+		    return random ?? (random = new System.Random(0));
 		}
 	}
 }

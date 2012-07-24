@@ -18,6 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
     #endregion
 
+   
     /// <summary>
     ///   Finds the best route between nodes using evolutionary algorithms.
     /// </summary>
@@ -33,7 +34,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         ///   The random.
         /// </summary>
-        private readonly Random random = new Random();
+        private readonly Random random = CoreLibraries.Random.GetInstance();
 
         /// <summary>
         /// The result of each iteration.
@@ -216,7 +217,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="c1"></param>
         /// <param name="c2"></param>
         /// <returns></returns>
-        private bool IsDominated(Critter c1, Critter c2)
+        private bool Dominates(Critter c1, Critter c2)
         {
             var dominated = false;
             var flags = new []{false,false};
@@ -257,11 +258,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     if (p == q)
                         continue;
                     
-                    if (this.IsDominated(p,q))
+                    if (this.Dominates(p,q))
                     {
                         s[p].Add(q);
                     }
-                    else if (this.IsDominated(q,p))
+                    else if (this.Dominates(q,p))
                     {
                         p.N++;
                     }
@@ -346,6 +347,22 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             return -1;
         }
 
+        private Critter TournamentSelect()
+        {
+            var first = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
+            var second = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
+            if (CompareCritters(first,second) == 1)
+            {
+                return first;
+
+            }
+            
+            return second;
+            
+
+        }
+
+
         /// <summary>
         ///   Solve the next iteration of the algorithm.
         /// </summary>
@@ -365,17 +382,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 x.Clear();
             }
             f.Clear();
-            var matingPool = new List<Critter>();
+         
 
           
             
             for (int i = 0; i < this.Properties.PopulationSize/2; i ++)
             {
-                var first = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
-                var second = first;
+                var first = TournamentSelect();
+                var second = TournamentSelect();
                 while (second == first)
                 {
-                    second = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
+                    second = TournamentSelect();
                 }
                 
                 bool doCrossover = this.random.NextDouble() <= this.Properties.CrossoverRate;
@@ -472,14 +489,16 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
-            /*
+            
             foreach (var critter in this.Population)
             {
                 this.result.AverageFitness += critter.Fitness;
             }
             this.result.AverageFitness /= population.Count;
-            this.result.MinimumFitness = this.Population[0].Fitness;
-            */
+            var sorted = this.Population.OrderBy(z => z.Fitness.TotalJourneyTime);
+            this.result.MinimumFitness = sorted.FirstOrDefault().Fitness;
+            this.result.BestPath = sorted.FirstOrDefault().Route;
+            
 
             //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
 
@@ -556,7 +575,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             this.result.DiversityMetric = routesUsed.Keys.Count;
             this.result.AverageFitness /= this.Properties.PopulationSize;
             Console.WriteLine("---EVALULATING FITTEST MEMBER---");
-            this.result.MinimumFitness = this.Properties.FitnessFunction.GetFitness(this.population[0].Route);
+            this.result.MinimumFitness = this.Population.OrderBy(f => f.Fitness.TotalJourneyTime).FirstOrDefault().Fitness;
+            this.result.BestPath = this.Population.OrderBy(f => f.Fitness.TotalJourneyTime).FirstOrDefault().Route;
             this.result.Population = this.population;
             Console.WriteLine("------------------------");
             //Tools.SavePopulation(this.population, 0, this.properties);

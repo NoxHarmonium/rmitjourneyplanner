@@ -20,11 +20,11 @@ namespace RmitJourneyPlanner.CoreLibraries
     /// </summary>
     public static class Extensions
     {
-        private static readonly Random Rnd;
+        private static readonly System.Random Rnd;
 
         static Extensions()
         {
-            Rnd = new Random();
+            Rnd = CoreLibraries.Random.GetInstance();
         }
         
         /// <summary>

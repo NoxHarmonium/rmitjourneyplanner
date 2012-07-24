@@ -51,7 +51,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
         /// <returns> A mutated critter. </returns>
         public Critter Mutate(Critter child)
         {
-            var random = new Random();
+            var random = CoreLibraries.Random.GetInstance();
             List<NodeWrapper<INetworkNode>> nodes = child.Route;
             if (nodes.Count == 1) return child;
             int startIndex = random.Next(0, nodes.Count - 2);

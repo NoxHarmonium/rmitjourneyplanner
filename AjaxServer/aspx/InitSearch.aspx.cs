@@ -58,20 +58,25 @@ namespace AjaxServer.aspx
                 properties.MutationRate = 0.1;
                 properties.CrossoverRate = 0.7;
                 //properties.RouteGenerator = new AlRouteGenerator(properties);
-                properties.RouteGenerator = new DFSRoutePlanner(properties);
+                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.DFS_Standard);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);
                 properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-                properties.Destination = new TerminalNode(-1, destination);
-                properties.Origin = new TerminalNode(-1, origin);
+                properties.Destination = //new MetlinkNode(20039,metlinkProvider);//
+                    //new TerminalNode(-1, destination);
+                    metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
+                properties.Origin = //new MetlinkNode(19965, metlinkProvider);//
+                    metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
+                   
                 properties.Destination.RetrieveData();
+                properties.Origin.RetrieveData();
 
 
                 properties.Database.Open();
                 //properties.DataStructures = new DataStructures(properties);
 
-                Global.Planner = new MoeaRoutePlanner(properties);
+                Global.Planner = new EvolutionaryRoutePlanner(properties);
               
                 RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += this.Logger_LogEvent;
                 

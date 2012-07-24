@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+//#define moea
+
 namespace AjaxServer.aspx
 {
     using System.Threading;
@@ -32,9 +34,20 @@ namespace AjaxServer.aspx
                 }
                 if (components[0].Trim() != "undefined" && memberString.Trim() != String.Empty && memberString.Trim() != "undefined")
                 {
-                    Critter member = Global.Planner.Fronts[0].OrderBy(t => t.Fitness.NormalisedTravelTime).ToList()[int.Parse(components[0])];
-                    Global.Planner.Properties.FitnessFunction.GetFitness(member.Route);
+                    
+                    #if moea
+                    
+                        Critter member =
+                            Global.Planner.Fronts[0].OrderBy(t => t.Fitness.NormalisedTravelTime).GroupBy(
+                                t => t.Fitness).Select(g => g.First()).ToList()[int.Parse(components[0])];
+                        Global.Planner.Properties.FitnessFunction.GetFitness(member.Route);
+                    #else
+                    Critter member = Global.Planner.Population.OrderBy(t => t.Fitness.NormalisedTravelTime).ToList()[int.Parse(components[0])];//.GroupBy(t => t.Fitness).Select(g => g.First()).ToList()[int.Parse(components[0])];
+                        Global.Planner.Properties.FitnessFunction.GetFitness(member.Route);
+                    #endif
 
+                  
+                    
                     int i = 0;
                     foreach (var node in member.Route)
                     {

@@ -29,7 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         /// <summary>
         /// The walking speed used in estimating distance.
         /// </summary>
-        private double walkSpeed = 2; //KM/h
+        private double walkSpeed = 4; //KM/h
 
         #endregion
 

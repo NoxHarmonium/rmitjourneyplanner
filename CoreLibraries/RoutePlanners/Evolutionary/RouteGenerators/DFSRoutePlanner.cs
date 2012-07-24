@@ -15,6 +15,16 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
+    public enum SearchType
+    {
+        DFS_Standard,
+        DFS_BiDir,
+        Greedy_Standard,
+        Greedy_BiDir,
+        A_Star_Standard,
+        A_Star_BiDir
+    }
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -23,11 +33,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
 
         private readonly EvolutionaryProperties properties;
+
+        private readonly SearchType searchType;
   
 
-        public DFSRoutePlanner(EvolutionaryProperties properties)
+        public DFSRoutePlanner(EvolutionaryProperties properties,SearchType searchType)
         {
             this.properties = properties;
+            this.searchType = searchType;
         }
         
         public Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime)
@@ -41,7 +54,33 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 destination = properties.NetworkDataProviders[0].GetNodeClosestToPointWithinArea(destination, destination, 1.0, true);
             }
 
-            PTDepthFirstSearch searchAlgorithm = new PTGreedySearch(true, properties.NetworkDataProviders[0], source, destination);
+            PTDepthFirstSearch searchAlgorithm;
+            
+            switch (searchType)
+            {
+                case SearchType.DFS_Standard:
+                    searchAlgorithm = new PTDepthFirstSearch(false, properties.NetworkDataProviders[0], source, destination);
+                    break;
+                case SearchType.DFS_BiDir:
+                    searchAlgorithm = new PTDepthFirstSearch(true, properties.NetworkDataProviders[0], source, destination);
+                    break;
+                case SearchType.Greedy_Standard:
+                    searchAlgorithm = new PTGreedySearch(false, properties.NetworkDataProviders[0], source, destination);
+                    break;
+                case SearchType.Greedy_BiDir:
+                    searchAlgorithm = new PTGreedySearch(true, properties.NetworkDataProviders[0], source, destination);
+                    break;
+                case SearchType.A_Star_Standard:
+                    searchAlgorithm = new PTAStarSearch(false, properties.NetworkDataProviders[0], source, destination);
+                    break;
+                case SearchType.A_Star_BiDir:
+                    searchAlgorithm = new PTAStarSearch(true, properties.NetworkDataProviders[0], source, destination);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             //PTDepthFirstSearch searchAlgorithm = new PTDepthFirstSearch(properties.Bidirectional,properties.NetworkDataProviders[0],source,destination);
             INetworkNode[] nodes = searchAlgorithm.Run();
             //if (nodes.First() != destination || nodes.Last() != source)
@@ -50,11 +89,20 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
             //}
            // searchAlgorithm.Entropy = 0.0;
 
-         
 
+            switch (searchType)
+            {
+                case SearchType.DFS_Standard:
+                    nodes = nodes.Reverse().ToArray();
+                    break;
+                case SearchType.Greedy_Standard:
+                    nodes = nodes.Reverse().ToArray();
+                    break;
+                    
+            }
             //if (!properties.Bidirectional)
             //{
-                //nodes = nodes.Reverse().ToArray();
+                
             //}
 
           
