@@ -549,7 +549,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 
                 var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
-				critter.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 60.0)-30.0);
+                critter.departureTime = properties.DepartureTime;//.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 60.0)-30.0);
                 Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
                 this.result.AverageFitness += critter.Fitness;
                 var ff = (AlFitnessFunction)this.Properties.FitnessFunction;
