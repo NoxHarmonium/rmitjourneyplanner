@@ -211,7 +211,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                             //{
                             //    string test = "dffd";
                             //}
-                            if (closedRoute.end == route.Count - 1)
+                            if (closedRoute.end != route.Count - 1)
                             {
                                 time = provider.GetDistanceBetweenNodes(
                                route[closedRoute.start].Node, route[closedRoute.end].Node, currentTime, closedRoute.id);
@@ -344,7 +344,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     {
                         fitness.WalkingTime += minTime.TotalTime;
                     }
-                    /*
+                    
                     Console.WriteLine(
                         "[{0}] : [{1}] -> [{2}] (W: {3} T: {4})",
                         bestClosedRoute.id,
@@ -352,7 +352,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         bestClosedRoute.end,
                         minTime.WaitingTime,
                         minTime.TravelTime);
-                     * */
+                     
                 }
                 else
                 {
@@ -367,7 +367,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         throw new Exception("Negitive time encountered.");
                     }
                     currentTime += minTime.TotalTime;
-                    /*
+                    
                     Console.WriteLine(
                       "[{0}] : [{1}] -> [{2}] (W: {3} T: {4})",
                       "Walk",
@@ -375,7 +375,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                       bestClosedRoute.end,
                       minTime.WaitingTime,
                       minTime.TravelTime);
-                     */
+                     
                     fitness.WalkingTime += minTime.TotalTime;
                 }
 

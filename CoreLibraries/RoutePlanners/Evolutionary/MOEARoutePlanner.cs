@@ -411,8 +411,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 if (doCrossover || doMutation)
                 {
-                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route,children[0].departureTime);
-                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route,children[1].departureTime);
+                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route);
+                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route);
                 }
                 //var ff = (AlFitnessFunction)this.properties.FitnessFunction;
                 
