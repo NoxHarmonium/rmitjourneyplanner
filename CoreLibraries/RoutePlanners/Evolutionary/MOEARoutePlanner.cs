@@ -496,8 +496,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
             this.result.AverageFitness /= population.Count;
             var sorted = this.Population.OrderBy(z => z.Fitness.TotalJourneyTime);
-            this.result.MinimumFitness = sorted.FirstOrDefault().Fitness;
-            this.result.BestPath = sorted.FirstOrDefault().Route;
+            this.result.MinimumFitness = sorted.First().Fitness;
+            this.result.BestPath = sorted.First().Route;
             
 
             //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
