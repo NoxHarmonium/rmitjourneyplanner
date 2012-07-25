@@ -1051,8 +1051,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     throw new Exception("Invalid time");
 
                 }
-                int minutes = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(0, date.Length - 2));
-                int hours = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(0, date.Length - 2));
+                int minutes = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(2, 2));
+                int hours = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(0, 2));
                 var dt = new DateTime();
                 int days = 0;
                 if (hours >= 24)

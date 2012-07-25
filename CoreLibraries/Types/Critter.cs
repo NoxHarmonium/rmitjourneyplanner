@@ -26,6 +26,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         ///   The UnifiedFitnessScore.
         /// </summary>
         private double unifiedFitnessScore;
+		
+		/// <summary>
+		/// The departure time.
+		/// </summary>
+		public DateTime departureTime;
 
         #endregion
 

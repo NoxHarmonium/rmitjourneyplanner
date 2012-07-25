@@ -53,21 +53,21 @@ namespace AjaxServer.aspx
                 properties.MaximumWalkDistance = 1.5;
                 properties.PopulationSize = 100;
                 properties.MaxDistance = 0.5;
-                properties.DepartureTime = DateTime.Parse(date + " " + time);
+                properties.DepartureTime = DateTime.Parse("2012/7/24 6:00");
                 properties.NumberToKeep = 25;
                 properties.MutationRate = 0.1;
                 properties.CrossoverRate = 0.7;
                 //properties.RouteGenerator = new AlRouteGenerator(properties);
-                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.DFS_Standard);
+                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.Greedy_BiDir);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);
                 properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-                properties.Destination = //new MetlinkNode(20039,metlinkProvider);//
+                properties.Destination = new MetlinkNode(20039,metlinkProvider);//
                     //new TerminalNode(-1, destination);
-                    metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
-                properties.Origin = //new MetlinkNode(19965, metlinkProvider);//
-                    metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
+                    //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
+                properties.Origin = new MetlinkNode(19965, metlinkProvider);//
+                    //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
                    
                 properties.Destination.RetrieveData();
                 properties.Origin.RetrieveData();
@@ -76,12 +76,13 @@ namespace AjaxServer.aspx
                 properties.Database.Open();
                 //properties.DataStructures = new DataStructures(properties);
 
-                Global.Planner = new EvolutionaryRoutePlanner(properties);
+                Global.Planner = new MoeaRoutePlanner(properties);
               
                 RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += this.Logger_LogEvent;
                 
             }
-            catch (Exception ex)
+           
+			catch (Exception ex)
             {
                 Response.Write(ex.GetType() + "<br/>" + ex.Message);
                 if (ex.InnerException != null)
@@ -92,6 +93,7 @@ namespace AjaxServer.aspx
                         Response.Write("<br/>" + ex.InnerException.InnerException.Message);
                     }
                 }
+				//throw;
                
             }
            

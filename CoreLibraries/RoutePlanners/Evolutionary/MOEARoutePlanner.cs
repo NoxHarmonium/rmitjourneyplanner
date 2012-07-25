@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
-
+	//1/(e^x²)
    
     /// <summary>
     ///   Finds the best route between nodes using evolutionary algorithms.
@@ -411,8 +411,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 if (doCrossover || doMutation)
                 {
-                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route);
-                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route);
+                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route,children[0].departureTime);
+                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route,children[1].departureTime);
                 }
                 //var ff = (AlFitnessFunction)this.properties.FitnessFunction;
                 
@@ -549,6 +549,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 
                 var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
+				critter.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 60.0)-30.0);
                 Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
                 this.result.AverageFitness += critter.Fitness;
                 var ff = (AlFitnessFunction)this.Properties.FitnessFunction;

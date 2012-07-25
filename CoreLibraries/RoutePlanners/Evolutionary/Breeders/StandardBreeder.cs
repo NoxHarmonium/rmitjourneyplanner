@@ -87,7 +87,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
             secondChild.AddRange(secondNodes.GetRange(0, crossoverPoint.Value));
             secondChild.AddRange(firstNodes.GetRange(crossoverPoint.Key, firstNodes.Count - crossoverPoint.Key));
 
-          
+          	DateTime firstTime = first.departureTime;
+			
 
             
 
@@ -96,7 +97,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
                     new Critter((Route)firstChild.Clone(), new Fitness()),
                     new Critter((Route)secondChild.Clone(), new Fitness())
                 };
-
+			
+			output[0].departureTime = second.departureTime;
+			output[1].departureTime = first.departureTime;			
+			
             if (output == null || output[0] == null || output[1] == null)
             {
                 throw new Exception("StandardBreeder.cs: One or more decendants of crossover are null.");
