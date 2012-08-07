@@ -233,6 +233,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
             }
 
+           
+
             if (flags[0] && !flags[1]) 
             {
                 dominated = true;
@@ -411,8 +413,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 if (doCrossover || doMutation)
                 {
-                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route);
-                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route);
+                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route, children[0].departureTime);
+                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route, children[1].departureTime);
                 }
                 //var ff = (AlFitnessFunction)this.properties.FitnessFunction;
                 
@@ -431,6 +433,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             //r.AddRange(this.population);
             r.AddRange(q);
 
+           
+            
             
 
             double maxTime = r.Max(c => c.Fitness.TotalJourneyTime).TotalHours;
@@ -442,13 +446,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 c.Fitness.NormalisedTravelTime = c.Fitness.TotalJourneyTime.TotalHours / (maxTime - minTime);
                 c.Fitness.NormalisedChanges = (double) c.Fitness.Changes / (maxChanges - minChanges);
-                Console.WriteLine("Critter normalised values: tt: {0}, ch: {1}",c.Fitness.NormalisedTravelTime,c.Fitness.NormalisedChanges);
+                Console.WriteLine("{0}, {1},{2},{3}",c.Fitness.NormalisedTravelTime,c.Fitness.NormalisedChanges,c.Fitness.PercentBuses,c.Fitness.PercentTrains);
                 c.N = 0;
                 c.Rank = 0;
                 c.Distance = 0;
             }
 
-            
+
+            //this.crowdingDistanceAssignment(r);
 
             this.nonDominatedSort(r);
 
@@ -549,7 +554,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 
                 var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
-                critter.departureTime = properties.DepartureTime;//.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 60.0)-30.0);
+                critter.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 30.0)-15.0);
                 Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
                 this.result.AverageFitness += critter.Fitness;
                 var ff = (AlFitnessFunction)this.Properties.FitnessFunction;

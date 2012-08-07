@@ -15,7 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     public enum FitnessParameters 
     {
         TotalJourneyTime,
-        Changes,
+        //Changes,
         //WalkingTime,
         //PercentTrams,
         PercentBuses,
@@ -34,6 +34,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// </summary>
     public class Fitness : ICloneable, IEquatable<Fitness>, IEqualityComparer<Fitness>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Fitness()
+        {
+            JourneyLegs = new List<JourneyLeg>();
+        }
 
         /// <summary>
         /// Returns the amount of fitness parameters available.
@@ -73,31 +80,31 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                         //if (this.TotalJourneyTime.TotalSeconds <= 0) return double.MaxValue;
                         return NormalisedTravelTime;
                      
-                    case FitnessParameters.Changes:
-                        return this.NormalisedChanges;
+                    //case FitnessParameters.Changes:
+                    //    return this.NormalisedChanges;
 
                     // case FitnessParameters.WalkingTime:
                      //  return this.WalkingTime.TotalSeconds;
                     //case FitnessParameters.Co2Emmissions:
                     //    return this.Co2Emmissions;
-
+//
                     case FitnessParameters.PercentBuses:
-                        return (1 - this.PercentBuses);
+                       return (1 - this.PercentBuses);
 
                     //case FitnessParameters.PercentDisableFriendly:
                     //    return 1 - this.PercentDisableFriendly;
 
                    case FitnessParameters.PercentTrains:
-                        return 1 - this.PercentTrains;
+                      return 1 - this.PercentTrains;
 
-                    //case FitnessParameters.PercentTrams:
-                     //  return 1 - this.PercentTrams;
+                   // case FitnessParameters.PercentTrams:
+                    //   return 1 - this.PercentTrams;
 
-                   // case FitnessParameters.TotalTravelTime:
+                    //case FitnessParameters.TotalTravelTime:
                    //     return this.TotalTravelTime.TotalSeconds;
                         
-                   // case FitnessParameters.TotalWaitingTime:
-                   //     return this.TotalWaitingTime.TotalSeconds;
+                    //case FitnessParameters.TotalWaitingTime:
+                    //    return this.TotalWaitingTime.TotalSeconds;
                     default:
                         throw new ArgumentOutOfRangeException("i");
                 }
@@ -180,7 +187,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     PercentTrains = this.PercentTrains,
                     PercentTrams = this.PercentTrams,
                     TotalJourneyTime = this.TotalJourneyTime,
-                    TotalTravelTime = this.TotalTravelTime
+                    TotalTravelTime = this.TotalTravelTime,
+                    JourneyLegs =  this.JourneyLegs
                 };
         }
 
@@ -229,7 +237,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         public double PercentDisableFriendly { get; set; }
 
+        /// <summary>
+        /// The normalised journey time of the leg (0.0-1.0).
+        /// </summary>
         public double NormalisedTravelTime { get; set; }
+
+        /// <summary>
+        /// The list of legs that make up a journey.
+        /// </summary>
+        public List<JourneyLeg> JourneyLegs { get; set; } 
 
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.

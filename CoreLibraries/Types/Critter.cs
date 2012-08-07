@@ -99,7 +99,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns> A cloned critter. </returns>
         public object Clone()
         {
-            return new Critter((Route)this.Route.Clone(), (Fitness)this.Fitness.Clone());
+            return new Critter((Route)this.Route.Clone(), (Fitness)this.Fitness.Clone()) {departureTime = this.departureTime};
         }
 
         #endregion

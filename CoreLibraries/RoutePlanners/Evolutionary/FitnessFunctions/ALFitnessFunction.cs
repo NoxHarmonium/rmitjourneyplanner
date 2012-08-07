@@ -10,6 +10,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
     using System.Collections;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -77,10 +78,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         /// <exception cref="Exception"></exception>
         public Fitness GetFitness(Route route, DateTime initialDepart)
         {
-            //TODO: Route 1942: Has alternate route at different times. Check it out....
-           
-
             
+
+            //TODO: Remove this line
+            initialDepart = properties.DepartureTime;
+
+
             var fitness = new Fitness();
             
 
@@ -352,6 +355,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         bestClosedRoute.end,
                         minTime.WaitingTime,
                         minTime.TravelTime);
+
+                    
                      
                 }
                 else
@@ -379,6 +384,29 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     fitness.WalkingTime += minTime.TotalTime;
                 }
 
+
+                if (bestClosedRoute.id == -1 || bestClosedRoute.id == -2)
+                {
+                    fitness.JourneyLegs.Add(
+                       new JourneyLeg(
+                           "Walk",
+                           (MetlinkNode)route[bestClosedRoute.start].Node,
+                           (MetlinkNode)route[bestClosedRoute.end].Node, currentTime - minTime.TotalTime,
+                           minTime.TotalTime,
+                           bestClosedRoute.id.ToString(CultureInfo.InvariantCulture)));
+
+                }
+                else
+                {
+                    fitness.JourneyLegs.Add(
+                       new JourneyLeg(
+                           route[bestClosedRoute.start].Node.TransportType,
+                           (MetlinkNode)route[bestClosedRoute.start].Node,
+                           (MetlinkNode)route[bestClosedRoute.end].Node, currentTime - minTime.TotalTime,
+                           minTime.TotalTime,
+                           bestClosedRoute.id.ToString(CultureInfo.InvariantCulture)));
+                }
+               
                 //Console.WriteLine("[t] : [{1}] -> [{2}] (W: {3} T: {4})", bestClosedRoute.id, bestClosedRoute.end, bestClosedRoute.end+1, minTime.WaitingTime, minTime.TravelTime);
                 //initialDepart += minTime.TotalTime;
                 //if (bestClosedRoute.id != -1)

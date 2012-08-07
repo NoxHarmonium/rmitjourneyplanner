@@ -98,8 +98,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
                     new Critter((Route)secondChild.Clone(), new Fitness())
                 };
 			
-			//output[0].departureTime = second.departureTime;
-			//output[1].departureTime = first.departureTime;			
+			output[0].departureTime = second.departureTime;
+			output[1].departureTime = first.departureTime;			
 			
             if (output == null || output[0] == null || output[1] == null)
             {

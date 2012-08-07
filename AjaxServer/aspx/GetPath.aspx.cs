@@ -49,24 +49,15 @@ namespace AjaxServer.aspx
                   
                     
                     int i = 0;
-                    foreach (var node in member.Route)
+                    foreach (var leg in member.Fitness.JourneyLegs)
                     {
                         if (i++ >= limit)
                         {
                             break;
                         }
-                        MetlinkNode mn = node.Node as MetlinkNode;
-                        string name = "Terminal";
-                        if (mn != null)
-                        {
-                            while (Global.busy)
-                            {
-                                Thread.Sleep(50);
-                            }
-                            mn.RetrieveData();
-                            name = mn.StopSpecName;
-                        }
-                        Response.Write(node.Node.Latitude + "," + node.Node.Longitude + "," + node.TotalTime.TotalMinutes + "," +node.Node.TransportType + "," + name + "," + node.CurrentRoute + ";");
+                        MetlinkNode mn = leg.Origin;
+                        
+                        Response.Write(mn.Latitude + "," + mn.Longitude + "," + leg.TotalTime.TotalMinutes + "," + leg.TransportMode + "," + leg.Origin.StopSpecName + "<br>" + leg.Destination.StopSpecName + "," + leg.RouteId1 + ";");
                     }
                     Response.Write("#");
                 }
