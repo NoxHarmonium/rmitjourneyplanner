@@ -741,8 +741,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 //Departure departure = 
                 DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
 
-                 var arrivals = timetable.GetDepartures(
-                destination.Id, dowFilter, Convert.ToInt32(departTime.ToString("Hmm")));
+                 var arrivals = timetable.GetArrivals(
+                destination.Id,departure.order);
                 
                
                 var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId && arrival1.order == departure.order);

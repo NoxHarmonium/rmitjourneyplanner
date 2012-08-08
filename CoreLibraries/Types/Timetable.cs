@@ -277,7 +277,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 {
                     if((dow.Key & dayOfWeek) != 0 )
                     {
-                       int[] minTime = dow.Value.FirstOrDefault(timePair => timePair[0] > time);
+                        int[] minTime = dow.Value.FirstOrDefault(timePair => timePair[0] >= time || timePair[1] >= time);
                         if (minTime == null)
                         {
                             continue;
@@ -293,6 +293,71 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                         });
 
                     }
+
+
+                }
+
+
+            }
+            return departures.OrderBy(t => t.departureTime).ToArray();
+        }
+
+        /// <summary>
+        /// Gets a list of arrival times given a
+        /// stop identifier, a day of the week and a current time.
+        /// </summary>
+        /// <param name="stopId">The stop to query for.</param>
+        /// <param name="dayOfWeek">The binary representation of what day of the week it is.</param>
+        /// <param name="time">The minimum departure time.</param>
+        /// <returns></returns>
+        public Departure[] GetArrivals(int stopId, int serviceId)
+        {
+            Dictionary<int, Dictionary<int, List<int[]>>> routes;
+
+            if (dataStructure.ContainsKey(stopId))
+            {
+                routes = dataStructure[stopId];
+            }
+            else
+            {
+                return new Departure[0]; ;
+            }
+            /*
+            return (from route in routes 
+                    from dow in route.Value 
+                    where (dow.Key & dayOfWeek) != 0 
+                    let times = dow.Value 
+                    let minTime = times.First(timePair => timePair.Key > time) 
+                    select new Departure { arrivalTime = minTime.Key, 
+                        departureTime = minTime.Value, 
+                        routeId = route.Key, 
+                        stopId = stopId }
+                     ).ToArray();
+             * 
+             */
+            var departures = new List<Departure>();
+
+            foreach (var route in routes)
+            {
+                foreach (var dow in route.Value)
+                {
+                    
+                int[] minTime = dow.Value.FirstOrDefault(timePair => timePair[2] == serviceId);
+                if (minTime == null)
+                {
+                    continue;
+                }
+
+                departures.Add(new Departure
+                {
+                    arrivalTime = minTime[0],
+                    departureTime = minTime[1],
+                    routeId = route.Key,
+                    stopId = stopId,
+                    order = minTime[2]
+                });
+
+                    
 
 
                 }

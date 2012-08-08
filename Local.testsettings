@@ -1,13 +1,22 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-
-<TestSettings name="Local" id="d711132d-fedc-40a8-a11d-faeaa5e83435"
-              xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+<TestSettings name="Local" id="d711132d-fedc-40a8-a11d-faeaa5e83435" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>
     These are default test settings for a local test run.
   </Description>
-  <Deployment enabled="false" />
+  <Deployment>
+    <DeploymentItem filename="UnitTests\Settings.xml" />
+    <DeploymentItem filename="C:\Program Files (x86)\Common Files\microsoft shared\DevServer\10.0\TimetableCache.dat" />
+    <DeploymentItem filename="C:\Program Files (x86)\Common Files\microsoft shared\DevServer\10.0\AdjacencyCache.dat" />
+  </Deployment>
   <Execution>
-    <TestTypeSpecific />
-    <AgentRule name="Execution Agents"></AgentRule>
+    <TestTypeSpecific>
+      <UnitTestRunConfig testTypeId="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b">
+        <AssemblyResolution>
+          <TestDirectory useLoadContext="true" />
+        </AssemblyResolution>
+      </UnitTestRunConfig>
+    </TestTypeSpecific>
+    <AgentRule name="Execution Agents">
+    </AgentRule>
   </Execution>
 </TestSettings>

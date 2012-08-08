@@ -29,7 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         public static bool operator ==(TransportTimeSpan c1, TransportTimeSpan c2)
         {
-            return c1.TotalTime == c2.TotalTime;
+            return c1.TotalTime.Equals(c2.TotalTime);
         }
 
         public static bool operator !=(TransportTimeSpan c1, TransportTimeSpan c2)

@@ -80,7 +80,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             
 
             //TODO: Remove this line
-            initialDepart = properties.DepartureTime;
+            //initialDepart = properties.DepartureTime;
 
 
             var fitness = new Fitness();
