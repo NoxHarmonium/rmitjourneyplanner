@@ -85,7 +85,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         {
             try
             {
-                this.database.Open();
+               this.database.Open();
             }
             catch (Exception e)
             {

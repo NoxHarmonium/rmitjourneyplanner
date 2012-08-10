@@ -213,7 +213,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                             //{
                             //    string test = "dffd";
                             //}
-                            if (closedRoute.end != route.Count - 1)
+                            //if (closedRoute.end != route.Count - 1)
                             {
                                 time = provider.GetDistanceBetweenNodes(
                                route[closedRoute.start].Node, route[closedRoute.end].Node, currentTime, closedRoute.id);
@@ -222,7 +222,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                                     throw new Exception("Negitive time encountered.");
                                 }
                             }
-                            else
+                           /*
+							else
                             {
                                 time = provider.GetDistanceBetweenNodes(
                                route[closedRoute.start].Node, route[closedRoute.end - 1].Node, currentTime, closedRoute.id);
@@ -233,7 +234,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                                 }
                             }
                            
-
+							 */
 
                         }
                         if (time == default(TransportTimeSpan))

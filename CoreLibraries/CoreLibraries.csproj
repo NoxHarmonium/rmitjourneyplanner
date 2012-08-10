@@ -71,6 +71,12 @@
     <Reference Include="C5">
       <HintPath>Libraries\C5.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.core, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparers\CritterComparer.cs" />
@@ -142,9 +148,7 @@
     <Compile Include="Types\TransportMode.cs" />
     <Compile Include="Types\TransportTimeSpan.cs" />
     <Compile Include="Random.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="CoreLibrariesKey.snk" />
+    <Compile Include="Tests\TestFitnessFunction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\C5.dll" />
@@ -159,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="RoutePlanners\Traditional\" />
+    <Folder Include="Tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -168,4 +173,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <None Include="CoreLibrariesKey.snk" />
+  </ItemGroup>
 </Project>
