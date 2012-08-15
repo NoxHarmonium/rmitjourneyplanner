@@ -13,7 +13,7 @@ using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
 using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 
 
-namespace RmitJourneyPlanner.CoreLibraries
+namespace RmitJourneyPlanner.CoreLibraries.Tests
 {
 	[TestFixture]
 	public class TestFitnessFunction
@@ -24,10 +24,11 @@ namespace RmitJourneyPlanner.CoreLibraries
 		public TestFitnessFunction ()
 		{
 			provider = new MetlinkDataProvider();
+		    Logging.Logger.LogEvent += (sender, message) => { Console.WriteLine("[{0}]: {1}", sender, message); };
 		}
 		
 		[Test]
-		public void TestGetFitness()
+		public void TestSingleTramRoutes()
 		{
 		var tests = new List<KeyValuePair<Route, TransportTimeSpan>>();
 
@@ -226,11 +227,11 @@ namespace RmitJourneyPlanner.CoreLibraries
                     new MetlinkNode(18220, provider)
                 };
 			
-			var route1 = new Route(-1)
-			{
-				new MetlinkNode(0,provider)					
+			//var route1 = new Route(-1)
+			//{
+				//new MetlinkNode(0,provider)					
 				
-			};
+			//};
 			
 
             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
@@ -257,6 +258,54 @@ namespace RmitJourneyPlanner.CoreLibraries
                 Assert.AreEqual(keyValuePair.Value.TotalTime,actual.TotalJourneyTime);
             }		
 		}
+
+        [Test]
+        public void TestMultiModeRoutes()
+        {
+            var properties = new EvolutionaryProperties();
+            properties.NetworkDataProviders.Add(provider);
+            properties.PointDataProviders.Add(new WalkingDataProvider());
+            AlFitnessFunction target;
+            properties.FitnessFunction = target = new AlFitnessFunction(properties); 
+            
+            //LineID    LineMainID  LineDesc    DirectionDesc   LineFrom    LineTo  
+            //3984      1695        903i        To Altona       Mordialloc  Altona      
+            //3985      1695        903o        To Mordialloc   Altona      Mordialloc   
+
+            //Train: Coburg Station 19965 --> Walk
+            // Bus:Coburg Station -- 2262-->18773 Essendon Station
+            // Train 
+            var route1 = new Route(-1)
+            {
+                new MetlinkNode(19965,provider),
+
+                //new MetlinkNode(2262,provider), 
+                //new MetlinkNode(2263,provider), 
+                new MetlinkNode(2262,provider), 
+                new MetlinkNode(10037,provider), 
+                new MetlinkNode(10036,provider), 
+                new MetlinkNode(10035,provider), 
+                new MetlinkNode(10034,provider), 
+                new MetlinkNode(10033,provider), 
+                new MetlinkNode(10032,provider), 
+                new MetlinkNode(40895,provider), 
+                new MetlinkNode(40896,provider), 
+                new MetlinkNode(40897,provider), 
+                new MetlinkNode(40898,provider), 
+                new MetlinkNode(9089,provider), 
+                new MetlinkNode(9088,provider), 
+                new MetlinkNode(18773,provider), 
+
+                new MetlinkNode(20037,provider), 
+                new MetlinkNode(20038,provider), 
+                new MetlinkNode(20039,provider), 
+            };
+
+
+            DateTime initialDepart = DateTime.Parse("8/08/2012 6:00 PM");
+            var actual = target.GetFitness(route1, initialDepart);
+            Assert.AreEqual(new TimeSpan(0,41,0), actual.TotalJourneyTime);
+        }
 	}
 }
 

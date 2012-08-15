@@ -719,25 +719,47 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
             DataTable result = this.database.GetDataSet(query);
             */
-
+            int extraDay = 0;
             int dow = (int)departureTime.DayOfWeek;
+            
 
             if (dow < 1)
             {
                 dow = 7;
             }
             int dowFilter = 1 << 7 - dow;
-            var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
+            int flatDepartureTime = Convert.ToInt32(
+                departureTime.ToString("Hmm"));
+            var departures = timetable.GetDepartures(source.Id, dowFilter, flatDepartureTime);
             
             
             Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
+            
+            if (departure.Equals(default(Departure)))
+            {
+                Console.WriteLine("No departures for current day. Trying next day...");
+                dow = (int)departureTime.DayOfWeek+1;
+                if (dow > 7)
+                {
+                    dow = 1;
+                }
+                dowFilter = 1 << 7 - dow;
+
+                flatDepartureTime = 0;
+                departures = timetable.GetDepartures(source.Id, dowFilter, flatDepartureTime);
+                departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
+                extraDay = 1;
+
+            }
+            
+            Console.WriteLine("Chosen departure: {0}", departure);
            // Departure arrival = de
 
 
             if (!departure.Equals(default(Departure)))
             {
-              
-                
+
+                int actualDepature = departure.departureTime;
                 //Departure departure = 
                 DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
 
@@ -746,32 +768,55 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 
                
                 var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId && arrival1.order == departure.order);
+                if (arrival.arrivalTime == 0)
+                {
+                    arrival.arrivalTime = arrival.departureTime;
+                }
+                Console.WriteLine("Chosen arrival: {0}", arrival);
 
-                if (arrival.arrivalTime < departure.departureTime || departure.departureTime == 0 || arrival.Equals(default (Departure)))
+
+                if ((extraDay < 1 && arrival.arrivalTime < departure.departureTime) || arrival.Equals(default (Departure)))
                 {
                     return default(TransportTimeSpan);
                 }
 
-                DateTime arrivalTime = this.ParseDate(arrival.arrivalTime.ToString(CultureInfo.InvariantCulture));
+                DateTime arrivalTime = this.ParseDate(arrival.arrivalTime.ToString(CultureInfo.InvariantCulture)); ;
                 //Normalize dates
                 arrivalTime += departureTime.Date - default(DateTime).Date;
                 departTime += departureTime.Date - default(DateTime).Date;
 
+                if (arrival.arrivalTime < actualDepature)
+                {
+                    arrival.arrivalTime += 1200;
+                }
+
+                int waitingTime = actualDepature - flatDepartureTime;
+                int travelTime = arrival.arrivalTime - actualDepature;
+
                 TransportTimeSpan output = default(TransportTimeSpan);
-                output.WaitingTime = departTime - departureTime;
-                output.TravelTime = arrivalTime - departTime;
-                if (output.TotalTime.Ticks < 0)
+                output.WaitingTime = this.parseSpan(waitingTime) + TimeSpan.FromDays(extraDay);
+                output.TravelTime = this.parseSpan(travelTime) + TimeSpan.FromDays(extraDay);
+                if (output.TravelTime.Ticks < 0 || output.WaitingTime.Ticks < 0)
                 {
                     // throw new Exception("Negitive time span detected.");
-                    // Logger.Log(this,"WARNING: Negitive timespan between nodes detected!");
-                    return default(TransportTimeSpan);
+
+                    Logger.Log(this,"WARNING: Negitive timespan between nodes detected!");
+                    Logger.Log(this,"Total: {0}, Travel: {1}, Waiting: {2}",output.TotalTime,output.TravelTime,output.WaitingTime);
+                    Logger.Log(this,"departTime: {0}, departureTime: {1}, arrivalTime: {2}",departTime,departureTime,arrivalTime);
+                    //return default(TransportTimeSpan);
                 }
 
                 return output;
             }
-            // Logger.Log(this,"WARNING: Null timespan between nodes detected!");
+            Logger.Log(this,"WARNING: Null timespan between nodes detected!");
             return default(TransportTimeSpan);
         }
+
+        private DateTime RoundUp(DateTime dt, TimeSpan d)
+        {
+            return new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks);
+        }
+
 
         /// <summary>
         ///   Gets the network node that is closest to the specified point on the specified route.
@@ -1082,8 +1127,32 @@ ORDER BY sr.RouteID, sr.StopOrder;
             }
             catch (Exception)
             {
-                //Console.WriteLine("Warning, bogus depart/arrive time detected in parser.");
+                Console.WriteLine("Warning, bogus depart/arrive time detected in parser.");
                 return new DateTime().Add(new TimeSpan(10, 0, 0, 0));
+            }
+        }
+
+        /// <summary>
+        ///   The parse date.
+        /// </summary>
+        /// <param name="date"> The date. </param>
+        /// <returns> </returns>
+        private TimeSpan parseSpan (int timespan)
+        {
+
+            try
+            {
+
+                string date = timespan.ToString();
+              
+                int minutes = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(2, 2));
+                int hours = Convert.ToInt32(String.Format("{0:d4}", Convert.ToInt32(date)).Substring(0, 2));
+                return TimeSpan.FromHours(hours) + TimeSpan.FromMinutes(minutes);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Warning, bogus depart/arrive time detected in parser.");
+                return TimeSpan.MaxValue;
             }
         }
 

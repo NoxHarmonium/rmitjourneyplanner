@@ -219,7 +219,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                                route[closedRoute.start].Node, route[closedRoute.end].Node, currentTime, closedRoute.id);
                                 if (time.TravelTime < TimeSpan.Zero || time.WaitingTime < TimeSpan.Zero)
                                 {
-                                    throw new Exception("Negitive time encountered.");
+                                    throw new Exception(String.Format("Negitive time encountered. ({0}/{1}) between {2} and {3}.", time.TravelTime, time.WaitingTime, route[closedRoute.start].Node, route[closedRoute.end].Node));
                                 }
                             }
                            /*
@@ -318,7 +318,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         route[i].TotalTime = totalTime.TotalTime;
                         if (i > 0 && route[i].TotalTime < route[i - 1].TotalTime)
                         {
-                            throw new Exception("Negitive time encountered.");
+                            throw new Exception(String.Format("Negitive time encountered. ({0}/{1})", route[i].TotalTime, route[i - 1].TotalTime));
                         }
 
                     }
@@ -364,22 +364,22 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     pointer = bestClosedRoute.end;
                     if (minTime.TravelTime < TimeSpan.Zero || minTime.WaitingTime < TimeSpan.Zero)
                     {
-                        throw new Exception("Negitive time encountered.");
+                        throw new Exception(String.Format("Negitive time encountered. ({0}/{1})", minTime.TravelTime, minTime.WaitingTime));
                     }
                     totalTime += minTime;
                     if (totalTime.TravelTime < TimeSpan.Zero || totalTime.WaitingTime < TimeSpan.Zero)
                     {
-                        throw new Exception("Negitive time encountered.");
+                        throw new Exception(String.Format("Negitive time encountered. ({0}/{1})", minTime.TravelTime, minTime.WaitingTime));
                     }
                     currentTime += minTime.TotalTime;
                     
                     Console.WriteLine(
-                      "[{0}] : [{1}] -> [{2}] (W: {3} T: {4})",
+                      "[{0}] : [{1}] -> [{2}] (W: {3} T: {4}) ({5}M)",
                       "Walk",
                       bestClosedRoute.start,
                       bestClosedRoute.end,
                       minTime.WaitingTime,
-                      minTime.TravelTime);
+                      minTime.TravelTime, Math.Round(GeometryHelper.GetStraightLineDistance((Location)route[bestClosedRoute.start].Node,(Location)route[bestClosedRoute.end].Node)*1000.0,0));
                      
                     fitness.WalkingTime += minTime.TotalTime;
                 }

@@ -275,6 +275,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 foreach (var dow in route.Value)
                 {
+                    bool wrapped = false;
+
                     if((dow.Key & dayOfWeek) != 0 )
                     {
                         int[] minTime = dow.Value.FirstOrDefault(timePair => timePair[0] >= time || timePair[1] >= time);
