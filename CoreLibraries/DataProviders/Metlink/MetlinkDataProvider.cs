@@ -114,10 +114,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 							LIMIT {0}, {1};",i *1000, (i*1000) + 1000));\
 					*/
 					nodeData = this.database.GetDataSet(
-                        String.Format(@"SELECT RouteID, MetlinkStopID 
-                            FROM tblStopRoutes
-                            ORDER BY RouteID, StopOrder
-							LIMIT {0}, {1};",i * RecordChunk, RecordChunk));
+                        String.Format(@"SELECT LineID, MetlinkStopID 
+                            FROM tblLinesStops
+                            LIMIT {0}, {1};",i * RecordChunk, RecordChunk));
 					
 					if (nodeData != null)
 					{
@@ -129,7 +128,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 		                        this.routeMap[id] = new List<int>();
 		                    }
 		
-		                    var routeId = (int)row["RouteID"];
+		                    var routeId = (int)row["LineID"];
 		                    if (!this.routeMap[id].Contains(routeId))
 		                    {
 		                        this.routeMap[id].Add(routeId);
@@ -418,7 +417,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 					{
 	                    Logger.Log(this,"Adding rows {0} to {1} of {2}...",i*RecordChunk,RecordChunk,timetableData.Rows.Count);
 						timetableData = database.GetDataSet(
-	                            String.Format(@"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID  FROM tblServiceTimes  st
+	                            String.Format(@"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID,st.Sequence  FROM tblServiceTimes  st
 	                                        INNER JOIN tblServices s
 											ON s.ServiceID = st.ServiceID 
 											ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime 
@@ -429,7 +428,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 							foreach (DataRow row in timetableData.Rows)
 		                    {                        
 									
-								var serviceId = Convert.ToInt32(timetableData.Rows[0][5]);
+								var serviceId = Convert.ToInt32(timetableData.Rows[0][6]);
 		                        
 		                        timetable.AddTimetableEntry(
 		                            Convert.ToInt32(row[0]),
@@ -437,7 +436,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
 		                            Convert.ToInt32(row[2]),
 		                            Convert.ToInt32(row[3]),
 		                            Convert.ToInt32(row[4]),
-		                            Convert.ToInt32(row[5]));
+		                            Convert.ToInt32(row[5]),
+									Convert.ToInt32(row[6]));
 		
 		                    }
 						}
@@ -545,7 +545,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             {
                 if (adjacentNodes[i] == node)
                 {
-                    throw new Exception(":(");
+                    throw new Exception("The node is adjacent to itself!");
 
                 }
                 /*
@@ -625,8 +625,15 @@ ORDER BY sr.RouteID, sr.StopOrder;
         public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime departureTime)
         {
             var arcs = new List<Arc>();
+			int dow = (int)departureTime.DayOfWeek;
             
-            int dowFilter = 1 << 7 - (int)departureTime.DayOfWeek;
+            if (dow < 1)
+            {
+                dow = 7;
+            }
+            int dowFilter = 1 << 7 - dow;
+			
+			
             var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
             if (departures.Length == 0)
             {
@@ -643,11 +650,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
                 int routeId = departure.routeId;
 
-                var arrivals = timetable.GetDepartures(
-                    destination.Id, dowFilter, Convert.ToInt32(departTime.ToString("Hmm")));
+                var arrival = timetable.GetArrivals(destination.Id,departure.serviceId).First();
 
 
-                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId);
+             
 
                 if (arrival.Equals(default(Departure)))
                 {
@@ -764,10 +770,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
 
                  var arrivals = timetable.GetArrivals(
-                destination.Id,departure.order);
+                destination.Id,departure.serviceId);
                 
                
-                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId && arrival1.order == departure.order);
+                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId && arrival1.serviceId == departure.serviceId);
                 if (arrival.arrivalTime == 0)
                 {
                     arrival.arrivalTime = arrival.departureTime;
@@ -1040,7 +1046,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
             Logger.Log(this,"Warning: Node {0} has no associated routes.",node);
             return new List<int>();
-        }
+        }		
+		
 
         /// <summary>
         ///   Gets the stop mode string for the specified ID.

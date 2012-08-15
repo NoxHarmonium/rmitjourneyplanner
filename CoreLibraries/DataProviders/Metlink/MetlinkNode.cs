@@ -40,7 +40,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         ///   The user friendly name of this node.
         /// </summary>
         private string stopSpecName = string.Empty;
-
+		
+		/// <summary>
+		/// The line identifiers.
+		/// </summary>
+		private int[] lineIds = null;
         #endregion
 
         #region Constructors and Destructors
@@ -127,6 +131,20 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// </summary>
         [Obsolete]
         public int RouteId { get; set; }
+		
+		/// <summary>
+		/// Gets the line ids associated with this route.
+		/// </summary>
+		/// <value>
+		/// The line identifiers.
+		/// </value>
+		public int[] LineIds {
+			get
+			{
+				return this.lineIds;
+			}
+		}
+		
 
      
         /// <summary>
@@ -194,7 +212,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Latitude = this.Latitude,
                 Longitude = this.Longitude,
                 Parent = this.Parent, 
-                stopData = this.stopData
+                stopData = this.stopData,
+				lineIds = this.lineIds
             };
 
             newNode.LoadData(this.stopData);

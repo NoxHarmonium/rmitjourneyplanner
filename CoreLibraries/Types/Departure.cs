@@ -19,9 +19,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         public int departureTime;
 
-        public int order;
+        public int serviceId;
+		
+		public int order;
 
-        public bool wrapped;
+        
 
         /// <summary>
         /// Returns the fully qualified type name of this instance.
@@ -32,7 +34,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            return string.Format("StopId: {0}, RouteId: {1}, ArrivalTime: {2}, DepartureTime: {3}, Order: {4}, Wrapped: {5}", this.stopId, this.routeId, this.arrivalTime, this.departureTime, this.order,this.wrapped);
+            return string.Format("StopId: {0}, RouteId: {1}, ArrivalTime: {2}, DepartureTime: {3}, ServiceId: {4}, Order: {5}", this.stopId, this.routeId, this.arrivalTime, this.departureTime, this.serviceId,this.order);
         }
     }
 }

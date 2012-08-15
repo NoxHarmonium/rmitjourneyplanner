@@ -46,11 +46,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         [DataMember(Order = 5)]
         private const int departureTimeIndex = 4;
+		
+		/// <summary>
+        /// The index number of the serviceId in the entries list.
+        /// </summary>
+        [DataMember(Order = 6)]
+        private const int serviceIdIndex = 5;
 
         /// <summary>
         /// The index number of the order in the entries list.
         /// </summary>
-        [DataMember(Order = 6)]
+        [DataMember(Order = 7)]
         private const int orderIndex = 5;
 
         /// <summary>
@@ -95,9 +101,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="departureTime">The departure time from this stop.</param>
         /// <param name="routeId">The route associated with this stop.</param>
         /// <param name="dayOfWeek">The binary representation of which days the service runs on.</param>
-        public void AddTimetableEntry(int stopId, int routeId, int dayOfWeek, int arrivalTime, int departureTime,int order)
+        public void AddTimetableEntry(int stopId, int routeId, int dayOfWeek, int arrivalTime, int departureTime,int serviceId, int order)
         {
-            entries.Add(new[] {stopId,routeId,dayOfWeek,arrivalTime,departureTime,order} );
+            entries.Add(new[] {stopId,routeId,dayOfWeek,arrivalTime,departureTime,serviceId, order} );
         }
 
         /// <summary>
@@ -125,12 +131,6 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 				{
 					CoreLibraries.Logging.Logger.Log(this,"Optimising {0} of {1}",index,entries.Count);
 				}
-				//index++;
-                if (index == 102)
-                {
-                    string xx = "xx";
-
-                }
 				
 				var entry = entries[index];
 
