@@ -45,7 +45,7 @@ namespace AjaxServer.aspx
                 INetworkDataProvider metlinkProvider = new MetlinkDataProvider();
 
                 EvolutionaryProperties properties = new EvolutionaryProperties();
-                properties.Bidirectional = true;
+                properties.Bidirectional = false;
                 properties.PointDataProviders.Add(new WalkingDataProvider());
                 properties.NetworkDataProviders.Add(metlinkProvider);
                 properties.ProbMinDistance = 0.7;
@@ -58,7 +58,7 @@ namespace AjaxServer.aspx
                 properties.MutationRate = 0.1;
                 properties.CrossoverRate = 0.7;
                 //properties.RouteGenerator = new AlRouteGenerator(properties);
-                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.Greedy_BiDir);
+                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.Greedy_Standard);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);

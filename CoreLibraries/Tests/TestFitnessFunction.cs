@@ -304,7 +304,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 
             DateTime initialDepart = DateTime.Parse("8/08/2012 6:00 PM");
             var actual = target.GetFitness(route1, initialDepart);
-            Assert.AreEqual(new TimeSpan(0,41,0), actual.TotalJourneyTime);
+            Assert.AreEqual(41, actual.TotalJourneyTime.Minutes);
         }
 	}
 }

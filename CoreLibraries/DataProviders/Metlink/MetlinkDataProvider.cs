@@ -16,6 +16,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
 
+    using NUnit.Framework;
+
     using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.Logging;
@@ -56,7 +58,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         ///   The route map.
         /// </summary>
         private readonly Dictionary<int, List<int>> routeMap = new Dictionary<int, List<int>>();
-
+        
+        /// <summary>
+        /// The timetable
+        /// </summary>
         private readonly Timetable timetable = new Timetable();
 
         #endregion
@@ -532,6 +537,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
         }
         
+        
         /// <summary>
         ///   Gets the network nodes that are adjacent to the specified node.
         /// </summary>
@@ -632,9 +638,11 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 dow = 7;
             }
             int dowFilter = 1 << 7 - dow;
-			
-			
-            var departures = timetable.GetDepartures(source.Id, dowFilter, Convert.ToInt32(departureTime.ToString("Hmm")));
+
+            int flatDepartureTime = Convert.ToInt32(
+               departureTime.ToString("Hmm"));
+
+            var departures = timetable.GetDepartures(source.Id, dowFilter, flatDepartureTime);
             if (departures.Length == 0)
             {
                 return arcs;
@@ -647,39 +655,50 @@ ORDER BY sr.RouteID, sr.StopOrder;
             //Departure departure = 
             foreach (var departure in departures)
             {
-                DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
-                int routeId = departure.routeId;
 
-                var arrival = timetable.GetArrivals(destination.Id,departure.serviceId).First();
-
-
-             
+                var arrival = timetable.GetArrivals(destination.Id,departure.serviceId).FirstOrDefault();
 
                 if (arrival.Equals(default(Departure)))
                 {
                     continue;
                 }
 
-                DateTime arrivalTime = this.ParseDate(arrival.arrivalTime.ToString(CultureInfo.InvariantCulture));
-                //Normalize dates
-                arrivalTime += departureTime.Date - default(DateTime).Date;
-                departTime += departureTime.Date - default(DateTime).Date;
-
-                TransportTimeSpan output = default(TransportTimeSpan);
-                output.WaitingTime = departTime - departureTime;
-                output.TravelTime = arrivalTime - departTime;
-                if (output.TotalTime.Ticks < 0)
+                if (arrival.order <= departure.order)
                 {
-                    // throw new Exception("Negitive time span detected.");
-                    Logger.Log(this,"WARNING: Negitive timespan between nodes detected!");
-                    //return default(TransportTimeSpan);
+                    //Logger.Log(this,"Backwards service: No route");
                     continue;
                 }
-                arcs.Add(new Arc((Location)source,(Location)destination,output,GeometryHelper.GetStraightLineDistance((Location)source,(Location)destination),departTime,"Unknown",departure.routeId));
+
+                if (departure.departureTime == 0 && Math.Abs(departure.departureTime - arrival.arrivalTime) > 30.0)
+                {
+                    continue;
+                }
+                
+                if (arrival.arrivalTime < departure.departureTime)
+                {
+                    arrival.arrivalTime += 2400;
+                }
+
+                int waitingTime = departure.departureTime - flatDepartureTime;
+                int travelTime = arrival.arrivalTime - departure.departureTime;
+
+                TransportTimeSpan output = default(TransportTimeSpan);
+                output.WaitingTime = this.parseSpan(waitingTime);
+                output.TravelTime = this.parseSpan(travelTime);
+                if (output.TravelTime.Ticks < 0 || output.WaitingTime.Ticks < 0)
+                {
+                    // throw new Exception("Negitive time span detected.");
+                    Assert.Fail("Negitive time span");
+                    Logger.Log(this, "WARNING: Negitive timespan between nodes detected!");
+                    Logger.Log(this, "Total: {0}, Travel: {1}, Waiting: {2}", output.TotalTime, output.TravelTime, output.WaitingTime);
+                    Logger.Log(this, "departTime: {0}, departureTime: {1}, arrivalTime: {2}", departureTime, departure.departureTime, arrival.arrivalTime);
+                    //return default(TransportTimeSpan);
+                }
+                arcs.Add(new Arc((Location)source,(Location)destination,output,GeometryHelper.GetStraightLineDistance((Location)source,(Location)destination),departureTime,"Unknown",departure.routeId));
 
 
             }
-            return arcs;
+            return arcs.OrderBy(arc=>arc.Time.TotalTime).ToList();
 
 
         }
@@ -695,37 +714,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
         public TransportTimeSpan GetDistanceBetweenNodes(
             INetworkNode source, INetworkNode destination, DateTime departureTime, int routeId)
         {
-            /*
-            string dowFilter = string.Empty;
-            for (int j = 0; j < (int)departureTime.DayOfWeek; j++)
-            {
-                dowFilter = dowFilter.Insert(0, "_");
-            }
-
-            dowFilter += "0%";
             
-
-           
-
-
-            string query =
-                string.Format(
-                    @"select st1.ServiceID, 
-                    min(st1.DepartTime),st2.ArriveTime frOM tblSST st1
-                    INNER JOIN tblSST st2
-                    ON st1.ServiceID=st2.ServiceID
-                    WHERE st1.RouteID={3} AND st1.DepartTime>{2} AND st1.SourceID={0} AND st1.DOW LIKE '{4}' 
-                    AND st2.DestID={1}
-                        ",
-                    source.Id,
-                    destination.Id,
-                    departureTime.ToString("Hmm"),
-                    routeId,
-                    dowFilter);
-
-            DataTable result = this.database.GetDataSet(query);
-            */
-            int extraDay = 0;
+            
             int dow = (int)departureTime.DayOfWeek;
             
 
@@ -739,24 +729,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             var departures = timetable.GetDepartures(source.Id, dowFilter, flatDepartureTime);
             
             
-            Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
-            
-            if (departure.Equals(default(Departure)))
-            {
-                Console.WriteLine("No departures for current day. Trying next day...");
-                dow = (int)departureTime.DayOfWeek+1;
-                if (dow > 7)
-                {
-                    dow = 1;
-                }
-                dowFilter = 1 << 7 - dow;
-
-                flatDepartureTime = 0;
-                departures = timetable.GetDepartures(source.Id, dowFilter, flatDepartureTime);
-                departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId);
-                extraDay = 1;
-
-            }
+            Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId && !departure1.Equals(default(Departure)));
             
             Console.WriteLine("Chosen departure: {0}", departure);
            // Departure arrival = de
@@ -780,9 +753,15 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 }
                 Console.WriteLine("Chosen arrival: {0}", arrival);
 
+                 if (arrival.order <= departure.order)
+                 {
+                     Logger.Log(this,"Backwards service: Returning empty.");
+                     return default(TransportTimeSpan);
+                 }
 
-                if ((extraDay < 1 && arrival.arrivalTime < departure.departureTime) || arrival.Equals(default (Departure)))
+                if (arrival.Equals(default (Departure)))
                 {
+                    Logger.Log(this, "No arrival: Returning empty.");
                     return default(TransportTimeSpan);
                 }
 
@@ -800,8 +779,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 int travelTime = arrival.arrivalTime - actualDepature;
 
                 TransportTimeSpan output = default(TransportTimeSpan);
-                output.WaitingTime = this.parseSpan(waitingTime) + TimeSpan.FromDays(extraDay);
-                output.TravelTime = this.parseSpan(travelTime) + TimeSpan.FromDays(extraDay);
+                output.WaitingTime = this.parseSpan(waitingTime);
+                output.TravelTime = this.parseSpan(travelTime) ;
                 if (output.TravelTime.Ticks < 0 || output.WaitingTime.Ticks < 0)
                 {
                     // throw new Exception("Negitive time span detected.");

@@ -57,12 +57,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The index number of the order in the entries list.
         /// </summary>
         [DataMember(Order = 7)]
-        private const int orderIndex = 5;
+        private const int orderIndex = 6;
 
         /// <summary>
         /// The total number of parameters used in the timetable.
         /// </summary>
-        private const int paramCount = 6;
+        private const int paramCount = 7;
         
         /// <summary>
         /// Stores the raw timetable entries.
@@ -155,7 +155,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     routeToDOW = new Dictionary<int, Dictionary<int, List<int[]>>>();
                     currentStopId = entry[StopIdIndex];
                 }
-                times.Add(new[]{entry[arrivalTimeIndex], entry[departureTimeIndex],entry[orderIndex]});
+                times.Add(new[]{entry[arrivalTimeIndex], entry[departureTimeIndex],entry[serviceIdIndex],entry[orderIndex]});
 				
 				entries[index] = null;
             }
@@ -291,7 +291,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                             departureTime = minTime[1],
                             routeId = route.Key,
                             stopId = stopId,
-                            order = minTime[2]
+                            serviceId = minTime[2],
+                            order = minTime[3]
+
                         });
 
                     }
@@ -356,7 +358,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     departureTime = minTime[1],
                     routeId = route.Key,
                     stopId = stopId,
-                    order = minTime[2]
+                    serviceId = minTime[2],
+                    order = minTime[3]
                 });
 
                     

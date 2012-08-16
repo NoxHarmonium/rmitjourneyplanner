@@ -100,6 +100,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                    // case FitnessParameters.PercentTrams:
                     //   return 1 - this.PercentTrams;
 
+                   // case FitnessParameters.PercentTrams:
+                    //   return 1 - this.PercentTrams;
+
                     //case FitnessParameters.TotalTravelTime:
                    //     return this.TotalTravelTime.TotalSeconds;
                         

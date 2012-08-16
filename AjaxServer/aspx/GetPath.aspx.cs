@@ -43,7 +43,7 @@ namespace AjaxServer.aspx
                         Global.Planner.Properties.FitnessFunction.GetFitness(member.Route);
                     #else
                     Critter member = Global.Planner.Population.OrderBy(t => t.Fitness.NormalisedTravelTime).ToList()[int.Parse(components[0])];//.GroupBy(t => t.Fitness).Select(g => g.First()).ToList()[int.Parse(components[0])];
-                        Global.Planner.Properties.FitnessFunction.GetFitness(member.Route);
+                     member.Fitness = Global.Planner.Properties.FitnessFunction.GetFitness(member.Route);
                     #endif
 
                   

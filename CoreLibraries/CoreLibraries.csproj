@@ -151,7 +151,6 @@
     <Compile Include="Types\TransportTimeSpan.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Tests\TestFitnessFunction.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\FitnessFunctions\NewFitnessFunction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\C5.dll" />

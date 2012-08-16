@@ -11,6 +11,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
     using System.Linq;
     using System.Text;
 
+    using NUnit.Framework;
+
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -105,7 +107,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 
             //}
 
-          
+            foreach (var networkNode in nodes)
+            {
+                INetworkNode node = networkNode;
+                var instances = from n in nodes where n.Id == node.Id select n;
+                Assert.True(instances.Count() == 1);
+            }
 
                 return new Route(-1, nodes);
         }
