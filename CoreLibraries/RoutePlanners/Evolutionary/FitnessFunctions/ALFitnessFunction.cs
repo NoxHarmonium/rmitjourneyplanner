@@ -69,7 +69,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             return this.GetFitness(route,properties.DepartureTime);
         }
         
-        /// <summary>
+            /// <summary>
         ///   The get fitness.
         /// </summary>
         /// <param name="route"> The route. </param>
@@ -178,6 +178,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
             int totalBus = 0;
             int totalTrain = 0;
             int totalTram = 0;
+            bool firstService = true;
        
             //Console.WriteLine("-------UnifiedFitnessScore Evaluation-------");
             while (pointer < route.Count - 1)
@@ -245,12 +246,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                                     (Location)route[closedRoute.start].Node, (Location)route[closedRoute.end].Node).Time;
                             if (time == default(TransportTimeSpan))
                             {
+                                Logger.Log(this,"Loop detetected");
+                                
                                 //throw new Exception("Walking time is zero. An error must of occurred.");
                             }
                         }
 
                         if (first || (time.TotalTime < minTime.TotalTime || (closedRoute.Length >= maxLength && calced)))
                         {
+                            
                             first = false;
                             minTime = time;
                             bestClosedRoute = closedRoute;
@@ -281,6 +285,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                 if (bestClosedRoute.id != -2)
                 {
+                    if (firstService)
+                    {
+                        firstService = false;
+                        minTime.WaitingTime = TimeSpan.Zero;
+                    }
+                    
                     if (minTime.TravelTime < TimeSpan.Zero || minTime.WaitingTime < TimeSpan.Zero)
                     {
                         throw new Exception("Negitive time encountered.");
@@ -361,6 +371,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 }
                 else
                 {
+                    
+                    
                     pointer = bestClosedRoute.end;
                     if (minTime.TravelTime < TimeSpan.Zero || minTime.WaitingTime < TimeSpan.Zero)
                     {
