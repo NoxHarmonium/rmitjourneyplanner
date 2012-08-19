@@ -294,7 +294,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     if((dow.Key & dayOfWeek) != 0 )
                     {
                         //Disabled express services
-                        int[] minTime = dow.Value.FirstOrDefault(timePair => (timePair[0] >= time || timePair[1] >= time) && (timePair[0] != -1 && timePair[1] != -1));
+                        int[] minTime = dow.Value.FirstOrDefault(timePair => (timePair[0] >= time || timePair[1] >= time) && !(timePair[0] == -1 && timePair[1] == -1));
                         if (minTime == null)
                         {
                             continue;
