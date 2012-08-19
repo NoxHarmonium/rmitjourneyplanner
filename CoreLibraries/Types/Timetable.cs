@@ -81,6 +81,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         [DataMember(Order = 8)]
         private bool optimised = false;
+		
+		readonly private Dictionary<int, LinkedList<int[]>> serviceIndex = new Dictionary<int, LinkedList<int[]>>();
 
         /// <summary>
         /// A value representing if the timetable has been optimised or not.
@@ -157,7 +159,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 }
                 times.Add(new[]{entry[arrivalTimeIndex], entry[departureTimeIndex],entry[serviceIdIndex],entry[orderIndex]});
 				
+				int serviceId = entry[serviceIdIndex];
+				if (!serviceIndex.ContainsKey(serviceId))
+				{
+					serviceIndex.Add(serviceId,new LinkedList<int[]>());
+				}
+					
+				serviceIndex[serviceId].AddLast(entry);
+				
 				entries[index] = null;
+				
             }
             
           entries.Clear();
@@ -209,7 +220,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="filename"></param>
         public void Load(string filename)
         {
-            int count = 0;
+           	Logging.Logger.Log("Reading timetable data from '{0}'",
+			                   new FileInfo(filename).FullName);
+			
+			int count = 0;
             using (var reader = new BinaryReader(new FileStream(filename, FileMode.Open)))
             {
                 int length = reader.ReadInt32();
@@ -314,62 +328,35 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="dayOfWeek">The binary representation of what day of the week it is.</param>
         /// <param name="time">The minimum departure time.</param>
         /// <returns></returns>
-        public Departure[] GetArrivals(int stopId, int serviceId)
+        public Departure GetArrivals(int stopId, int serviceId)
         {
-            Dictionary<int, Dictionary<int, List<int[]>>> routes;
-
-            if (dataStructure.ContainsKey(stopId))
-            {
-                routes = dataStructure[stopId];
-            }
-            else
-            {
-                return new Departure[0]; ;
-            }
-            /*
-            return (from route in routes 
-                    from dow in route.Value 
-                    where (dow.Key & dayOfWeek) != 0 
-                    let times = dow.Value 
-                    let minTime = times.First(timePair => timePair.Key > time) 
-                    select new Departure { arrivalTime = minTime.Key, 
-                        departureTime = minTime.Value, 
-                        routeId = route.Key, 
-                        stopId = stopId }
-                     ).ToArray();
-             * 
-             */
-            var departures = new List<Departure>();
-
-            foreach (var route in routes)
-            {
-                foreach (var dow in route.Value)
+      
+            var service =  serviceIndex[serviceId];
+                
+			
+			int[] minTime = service.FirstOrDefault(timePair => timePair[StopIdIndex] == stopId);
+                
+                
+			if (minTime == null)
+			{
+				return default(Departure);	
+			}
+			
+			return new Departure
                 {
-                    
-                int[] minTime = dow.Value.FirstOrDefault(timePair => timePair[2] == serviceId);
-                if (minTime == null)
-                {
-                    continue;
-                }
-
-                departures.Add(new Departure
-                {
-                    arrivalTime = minTime[0],
-                    departureTime = minTime[1],
-                    routeId = route.Key,
+                    arrivalTime = minTime[arrivalTimeIndex],
+                    departureTime = minTime[departureTimeIndex],
+                    routeId = minTime[RouteIDIndex],
                     stopId = stopId,
-                    serviceId = minTime[2],
-                    order = minTime[3]
-                });
+                    serviceId = serviceId,
+                    order = minTime[orderIndex]
+                };
 
                     
 
 
-                }
-
-
-            }
-            return departures.OrderBy(t => t.departureTime).ToArray();
+              
+            //return departures.OrderBy(t => t.departureTime).ToArray();
         }
     }
 

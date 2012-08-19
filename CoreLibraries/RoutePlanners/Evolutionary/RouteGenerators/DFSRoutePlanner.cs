@@ -106,13 +106,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
             //{
                 
             //}
-
-            foreach (var networkNode in nodes)
-            {
-                INetworkNode node = networkNode;
-                var instances = from n in nodes where n.Id == node.Id select n;
-                Assert.True(instances.Count() == 1);
-            }
+			
+			
+			//Check for duplicate nodes
+            //foreach (var networkNode in nodes)
+            //{
+            //    INetworkNode node = networkNode;
+            //    var instances = from n in nodes where n.Id == node.Id select n;
+            //    Assert.True(instances.Count() == 1);
+            //}
 
                 return new Route(-1, nodes);
         }

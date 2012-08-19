@@ -10,6 +10,7 @@ namespace Testing
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
+	using RmitJourneyPlanner.CoreLibraries.Types;
 
     class Program
     {
@@ -22,13 +23,17 @@ namespace Testing
             //Console.WriteLine(~1);
             //TestDFS dfsTest = new TestDFS();
             //TestStoSort();
-            TestJP jp = new TestJP();
-            jp.Test();
+            //TestJP jp = new TestJP();
+            //jp.Test();
             //SpawnTravelPlanner sp = new SpawnTravelPlanner();
            // TestFitnessFunction f = new TestFitnessFunction();
             //Console.ReadLine();
 
-
+			var t = new RmitJourneyPlanner.CoreLibraries.Tests.TestFitnessFunction();
+			t.TestSingleTramRoutes();
+			t.TestMultiModeRoutes();
+			t.TestRouteGeneration();
+			
             //Console.ReadLine();
         }
 
@@ -39,7 +44,7 @@ namespace Testing
             var nodes = new List<NodeWrapper<INetworkNode>>();
             for (int i = 1; i < 11; i++)
             {
-                var node = new NodeWrapper<INetworkNode>(new MetlinkNode(i, "", "", 0, 0, null));
+                var node = new NodeWrapper<INetworkNode>(new MetlinkNode(i, TransportMode.Unknown, "", 0, 0, null));
                 node.EuclidianDistance = i;
                 node.TotalTime = TimeSpan.FromSeconds(i);
                 nodes.Add(node);

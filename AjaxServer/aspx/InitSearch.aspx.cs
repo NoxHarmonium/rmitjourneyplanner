@@ -58,7 +58,7 @@ namespace AjaxServer.aspx
                 properties.MutationRate = 0.1;
                 properties.CrossoverRate = 0.7;
                 //properties.RouteGenerator = new AlRouteGenerator(properties);
-                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.Greedy_Standard);
+                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.Greedy_BiDir);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);

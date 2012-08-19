@@ -9,6 +9,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System;
 
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+	using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
 
@@ -112,7 +113,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         ///   Gets or sets the type of transport this node services.
         /// </summary>
-        public string TransportType { get; set; }
+        public TransportMode TransportType { get; set; }
 
         #endregion
 

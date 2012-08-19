@@ -190,7 +190,7 @@ restart:
             while (pointer < route.Count - 1)
             {
                 var t = closedRoutesIndex[pointer];
-                string mode = "Unknown";
+                TransportMode mode = TransportMode.Unknown;
                 
                 var bestArcs = t.Select(cr => provider.GetDistanceBetweenNodes(route[cr.start].Node, route[cr.end].Node, departTime).FirstOrDefault()).ToList();
 
@@ -198,7 +198,7 @@ restart:
 
                 if (!bestArcs.Any())
                 {
-                    mode = "Walking";
+                    mode = TransportMode.Walking;
                     var longest = (from cr in t
                                   where cr.Length == t.Max(i => i.Length)
                                   select cr).FirstOrDefault();
@@ -234,18 +234,18 @@ restart:
                                   select a).First();
                 
 
-                if (mode == "Unknown")
+                if (mode == TransportMode.Unknown)
                 {
                     mode = route[pointer].Node.TransportType;
                     switch (route[pointer].Node.TransportType)
                     {
-                        case "Train":
+                        case TransportMode.Train:
                             totalTrain++;
                             break;
-                        case "Bus":
+                        case TransportMode.Bus:
                             totalBus++;
                             break;
-                        case "Tram":
+                        case TransportMode.Tram:
                             totalTram++;
                             break;
                         default:

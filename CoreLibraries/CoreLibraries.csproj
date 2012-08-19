@@ -21,6 +21,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\RmitJourneyPlanner.CoreLibraries.XML</DocumentationFile>
+    <EnvironmentVariables>
+      <EnvironmentVariables>
+        <Variable name="MONO_ENV_OPTIONS" value="--gc=sgen " />
+      </EnvironmentVariables>
+    </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

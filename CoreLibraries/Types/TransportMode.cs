@@ -22,6 +22,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The transport mode is cycling.
         /// </summary>
-        Bicycling = 2
+        Bicycling = 2,
+		
+		Train = 3,
+		
+		Bus = 4,
+		
+		Tram = 5,
+		
+		Unknown = 6
     }
 }

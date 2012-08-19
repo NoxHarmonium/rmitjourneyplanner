@@ -11,6 +11,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
     using System.Globalization;
 
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+	using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
 
@@ -89,7 +90,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <param name="longitude"> </param>
         /// <param name="provider"> The NetworkProvider that contains this tram stop. </param>
         public MetlinkNode(
-            int id, string transportType, double latitude, double longitude, INetworkDataProvider provider)
+            int id, TransportMode transportType, double latitude, double longitude, INetworkDataProvider provider)
             : base(latitude, longitude)
         {
             this.provider = provider;
@@ -110,7 +111,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <param name="longitude"> </param>
         /// <param name="provider"> The NetworkProvider that contains this tram stop. </param>
         public MetlinkNode(
-            int id, string transportType, string stopSpecName, double latitude, double longitude, INetworkDataProvider provider)
+            int id, TransportMode transportType, string stopSpecName, double latitude, double longitude, INetworkDataProvider provider)
             : base(latitude, longitude)
         {
             this.provider = provider;
@@ -189,7 +190,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <summary>
         ///   Gets or sets the type of transport this node services.
         /// </summary>
-        public string TransportType { get; set; }
+        public Types.TransportMode TransportType { get; set; }
 
         #endregion
 
@@ -267,7 +268,16 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 this.Latitude = Convert.ToDouble(data.Rows[0]["GPSLat"]);
                 this.Longitude = Convert.ToDouble(data.Rows[0]["GPSLong"]);
                 this.stopSpecName = data.Rows[0]["StopSpecName"].ToString();
-                this.TransportType = data.Rows[0]["StopModeName"].ToString();
+				TransportMode mode;
+                bool success = Enum.TryParse<TransportMode>(data.Rows[0]["StopModeName"].ToString(),out mode);
+				if (!success)
+				{
+					this.TransportType = RmitJourneyPlanner.CoreLibraries.Types.TransportMode.Unknown;
+				}
+				else
+				{
+					this.TransportType = mode;	
+				}
             }
         }
 

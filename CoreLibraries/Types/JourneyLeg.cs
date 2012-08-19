@@ -21,7 +21,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The transport mode of the leg.
         /// </summary>
-        private string transportMode;
+        private TransportMode transportMode;
 
         /// <summary>
         /// The node at the beginning of the leg.
@@ -51,7 +51,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Initializes a new instance of the <see cref="JourneyLeg"/> class.
         /// </summary>
-        public JourneyLeg(string transportMode, MetlinkNode origin, MetlinkNode destination, DateTime departureTime, TimeSpan totalTime, string routeId)
+        public JourneyLeg(TransportMode transportMode, MetlinkNode origin, MetlinkNode destination, DateTime departureTime, TimeSpan totalTime, string routeId)
         {
             this.transportMode = transportMode;
             this.origin = origin;
@@ -75,7 +75,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The transport mode of the leg.
         /// </summary>
-        public string TransportMode
+        public TransportMode TransportMode
         {
             get
             {

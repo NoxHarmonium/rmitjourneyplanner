@@ -42,7 +42,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 		/// <summary>
 		/// The ammount of records to read in at any given time.
 		/// </summary>
-		private const int RecordChunk = 100000000;
+		private const int RecordChunk = 10000;
 
         /// <summary>
         ///   The Metlink database object.
@@ -173,7 +173,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 FROM tblStopInformation si
                 INNER JOIN tblModes m
                 ON si.StopModeID=m.StopModeID");
-
+				int nodeCount = 0;
                 foreach (DataRow row in nodeData.Rows)
                 {
                     /*
@@ -186,19 +186,30 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     
                      * StopSpecName = row["StopSpecName"].ToString()
                     };*/
-
-                    var node = new MetlinkNode(
+					var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                   
+					TransportMode mode;
+					bool success = Enum.TryParse<TransportMode>(row["StopModeName"].ToString(), out mode);
+					if (!success)
+					{
+						mode = TransportMode.Unknown;
+					}
+					
+					
+					var node = new MetlinkNode(
                         (int)row["MetlinkStopID"],
-                        row["StopModeName"].ToString(),
+                        mode,
                         row["StopSpecName"].ToString(),
                         Convert.ToDouble(row["GPSLat"]),
                         Convert.ToDouble(row["GPSLong"]),
                         this);
+					//node.RetrieveData();
 
-                    // Logger.Log(this,"-->Adding node (id: {0})... [{1} s]", node.Id, stopwatch.ElapsedMilliseconds / 1000.0);
                     // Console.SetCursorPosition(0, Console.CursorTop);
                     // Console.Write("{0,10:f2}%", 100.0 * ((double)count++ / (Double)nodeData.Rows.Count));
                     this.list[node.Id] = new List<MetlinkNode> { node };
+                    Logger.Log(this,"-->Adding node (id: {0}) ({2}/{3})... [{1} s]", node.Id, stopwatch.ElapsedMilliseconds / 1000.0,nodeCount++,nodeData.Rows.Count);
+					
                 }
 
                 if (File.Exists("AdjacencyCache.dat"))
@@ -656,7 +667,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             foreach (var departure in departures)
             {
 
-                var arrival = timetable.GetArrivals(destination.Id,departure.serviceId).FirstOrDefault();
+                var arrival = timetable.GetArrivals(destination.Id,departure.serviceId);
 
                 if (arrival.Equals(default(Departure)))
                 {
@@ -714,8 +725,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
         public TransportTimeSpan GetDistanceBetweenNodes(
             INetworkNode source, INetworkNode destination, DateTime departureTime, int routeId)
         {
-            
-            
+            throw new System.NotImplementedException();
+            /*
             int dow = (int)departureTime.DayOfWeek;
             
 
@@ -795,6 +806,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             }
             Logger.Log(this,"WARNING: Null timespan between nodes detected!");
             return default(TransportTimeSpan);
+            */
         }
 
         private DateTime RoundUp(DateTime dt, TimeSpan d)

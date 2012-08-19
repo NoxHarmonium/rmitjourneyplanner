@@ -49,7 +49,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <summary>
         ///   Gets or sets the type of transport this node services.
         /// </summary>
-        string TransportType { get; set; }
+        TransportMode TransportType { get; set; }
 
         #endregion
 

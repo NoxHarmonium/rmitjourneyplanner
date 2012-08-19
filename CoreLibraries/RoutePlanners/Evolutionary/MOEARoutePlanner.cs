@@ -1,4 +1,4 @@
-﻿// RMIT Journey Planner
+// RMIT Journey Planner
 // Written by Sean Dawson 2011.
 // Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 

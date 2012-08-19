@@ -11,7 +11,15 @@ using RmitJourneyPlanner.CoreLibraries.DataProviders;
 using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
 using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
 using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
-
+using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
+using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
+using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
+using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
+using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
+using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
+using RmitJourneyPlanner.CoreLibraries.DataAccess;
+using RmitJourneyPlanner.CoreLibraries.Types;
 
 namespace RmitJourneyPlanner.CoreLibraries.Tests
 {
@@ -25,6 +33,51 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 		{
 			provider = new MetlinkDataProvider();
 		    Logging.Logger.LogEvent += (sender, message) => { Console.WriteLine("[{0}]: {1}", sender, message); };
+		}
+		
+		[Test]
+		public void TestRouteGeneration()
+		{
+			 EvolutionaryProperties properties = new EvolutionaryProperties();
+				properties.NetworkDataProviders.Add(provider);
+                properties.Bidirectional = false;
+                properties.PointDataProviders.Add(new WalkingDataProvider());
+                properties.ProbMinDistance = 0.7;
+                properties.ProbMinTransfers = 0.2;
+                properties.MaximumWalkDistance = 1.5;
+                properties.PopulationSize = 100;
+                properties.MaxDistance = 0.5;
+                properties.DepartureTime = DateTime.Parse("2012/7/24 6:00 PM");//DateTime.Parse(date + " "+ time);
+                properties.NumberToKeep = 25;
+                properties.MutationRate = 0.1;
+                properties.CrossoverRate = 0.7;
+                //properties.RouteGenerator = new AlRouteGenerator(properties);
+                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.Greedy_BiDir);
+                properties.Mutator = new StandardMutator(properties);
+                properties.Breeder = new StandardBreeder(properties);
+                properties.FitnessFunction = new AlFitnessFunction(properties);
+                properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
+                properties.Destination = new MetlinkNode(20039,provider);//
+                   // new TerminalNode(-1, destination);
+                   // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
+                properties.Origin = new MetlinkNode(19965, provider);//
+                    //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
+                   
+                properties.Destination.RetrieveData();
+                properties.Origin.RetrieveData();
+
+
+                properties.Database.Open();
+                //properties.DataStructures = new DataStructures(properties);
+			
+			
+                var planner = new MoeaRoutePlanner(properties);
+              
+				planner.Start();
+				for(int i = 0; i < 100; i++)
+				{
+					planner.SolveStep();	
+				}
 		}
 		
 		[Test]
