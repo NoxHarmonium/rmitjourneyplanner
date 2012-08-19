@@ -63,7 +63,8 @@ namespace AjaxServer.aspx
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);
                 properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-                properties.Destination = new MetlinkNode(20039,metlinkProvider);//
+                //properties.Destination = new MetlinkNode(20039,metlinkProvider);//
+                properties.Destination = new MetlinkNode(628,metlinkProvider);
                    // new TerminalNode(-1, destination);
                    // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
                 properties.Origin = new MetlinkNode(19965, metlinkProvider);//

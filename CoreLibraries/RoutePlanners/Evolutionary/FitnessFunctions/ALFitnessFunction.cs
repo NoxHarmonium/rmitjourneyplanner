@@ -88,7 +88,7 @@ restart:
 
 
             var fitness = new Fitness();
-            
+                var nodeDict = new Dictionary<int, int>();
 
             INetworkDataProvider provider = properties.NetworkDataProviders[0];
             
@@ -100,10 +100,21 @@ restart:
 
             for (int i = 0; i <= route.Count; i++)
             {
+               
                 var routes = new List<int>();
 
                 if (i < route.Count)
                 {
+                    if (nodeDict.ContainsKey(route[i].Node.Id))
+                    {
+                        Logger.Log(this, "Loop detected! Removing and restarting...");
+                        int index = nodeDict[route[i].Node.Id];
+                        route.RemoveRange(index, i - index);
+                        goto restart;
+                    }
+
+                    nodeDict.Add(route[i].Node.Id, i);
+                    
                     route[i].Node.RetrieveData();
                     //Console.Write("{0:00000}[{1}]: ", route[i].Id,((MetlinkNode)route[i]).StopSpecName);
                     closedRoutesIndex.Add(new List<ClosedRoute>());
@@ -132,13 +143,14 @@ restart:
                         
                         if (cr.Length >= 1)
                         {
-
+                            /*
                             if (route[cr.start].Node.Id == route[cr.end].Node.Id)
                             {
                                 Logger.Log(this, "Loop detected! Removing and restarting...");
                                 route.RemoveRange(cr.start, cr.end - cr.start);
                                 goto restart;
                             }
+                             * */
                             closedRoutesIndex[routeIndex[openRoute]].Add(cr);
                         }
 

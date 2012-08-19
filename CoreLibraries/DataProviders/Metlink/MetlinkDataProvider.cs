@@ -685,6 +685,12 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     continue;
                 }
                 
+                if (departure.departureTime == -1 && departure.arrivalTime == -1)
+                {
+                    //This station is expressed. Do something to select the next service.
+
+                }
+
                 if (arrival.arrivalTime < departure.departureTime)
                 {
                     arrival.arrivalTime += 2400;
