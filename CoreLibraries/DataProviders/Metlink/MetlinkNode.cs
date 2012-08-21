@@ -31,11 +31,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         ///   The provider that services this node.
         /// </summary>
         private readonly INetworkDataProvider provider;
+		
+		/// <summary>
+		/// Specifies if the data for this node has been loaded from the database.
+		/// </summary>
+		private bool dataLoaded = false;
 
         /// <summary>
         ///   Holds all the data associated with this stop.
         /// </summary>
-        private DataTable stopData;
+        //private DataTable stopData;
+		//Commented: Why persist the datatable???
 
         /// <summary>
         ///   The user friendly name of this node.
@@ -213,11 +219,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Latitude = this.Latitude,
                 Longitude = this.Longitude,
                 Parent = this.Parent, 
-                stopData = this.stopData,
+                //stopData = this.stopData,
 				lineIds = this.lineIds
             };
 
-            newNode.LoadData(this.stopData);
+            //SnewNode.LoadData(this.stopData);
 
             return newNode;
         }
@@ -264,7 +270,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         {
             if (data != null)
             {
-                this.stopData = data;
+                //this.stopData = data;
                 this.Latitude = Convert.ToDouble(data.Rows[0]["GPSLat"]);
                 this.Longitude = Convert.ToDouble(data.Rows[0]["GPSLong"]);
                 this.stopSpecName = data.Rows[0]["StopSpecName"].ToString();
@@ -286,12 +292,18 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// </summary>
         public void RetrieveData()
         {
-            if (this.stopData != null)
-            {
-                return;
-            }
-
+            //if (this.stopData != null)
+            //{
+            //    return;
+            //}
+			
+			if (this.dataLoaded)
+			{
+				return;
+			}
+			
             this.LoadData(this.provider.GetNodeData(this.id));
+			this.dataLoaded = true;
         }
 
         /// <summary>
