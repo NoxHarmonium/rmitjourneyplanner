@@ -653,7 +653,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             int flatDepartureTime = Convert.ToInt32(
                departureTime.ToString("Hmm"));
 
-            var departures = timetable.GetDepartures(source.Id, dowFilter, flatDepartureTime);
+            var departures = timetable.GetDepartures(source.Id,destination.Id, dowFilter, flatDepartureTime);
             if (departures.Length == 0)
             {
                 return arcs;
@@ -696,8 +696,14 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     arrival.arrivalTime += 2400;
                 }
 
-                int waitingTime = departure.departureTime - flatDepartureTime;
-                int travelTime = arrival.arrivalTime - departure.departureTime;
+                //
+                //int waitingTime = departure.departureTime - flatDepartureTime;
+                //int travelTime = arrival.arrivalTime - departure.departureTime;
+
+
+                int waitingTime = SubtractTimes(departure.departureTime, flatDepartureTime);
+                int travelTime = SubtractTimes(arrival.arrivalTime, departure.departureTime);
+
 
                 TransportTimeSpan output = default(TransportTimeSpan);
                 output.WaitingTime = this.parseSpan(waitingTime);
@@ -717,6 +723,21 @@ ORDER BY sr.RouteID, sr.StopOrder;
             }
             return arcs.OrderBy(arc=>arc.Time.TotalTime).ToList();
 
+
+        }
+
+        private int SubtractTimes(int a, int b)
+        {
+            int ha = a / 100;
+            int hb = b / 100;
+            int ma = a - (ha * 100);
+            int mb = b - (hb * 100);
+
+
+            int md = ma - mb;
+            int hd = ha - hb;
+
+            return (hd * 60) + md;
 
         }
 

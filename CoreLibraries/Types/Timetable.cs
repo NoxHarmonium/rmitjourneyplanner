@@ -258,7 +258,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <param name="dayOfWeek">The binary representation of what day of the week it is.</param>
         /// <param name="time">The minimum departure time.</param>
         /// <returns></returns>
-        public Departure[] GetDepartures(int stopId, int dayOfWeek, int time)
+        public Departure[] GetDepartures(int stopId, int destID, int dayOfWeek, int time)
         {
             Dictionary<int, Dictionary<int, List<int[]>>> routes;
             

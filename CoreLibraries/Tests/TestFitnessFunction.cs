@@ -285,6 +285,20 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 				//new MetlinkNode(0,provider)					
 				
 			//};
+
+		    var expressTest = new Route(-1)
+		        {
+		            
+                     new MetlinkNode(19975 ,provider),
+                     new MetlinkNode(19974 ,provider),
+                     new MetlinkNode(20019 ,provider),
+                     new MetlinkNode(20017 ,provider),
+                     new MetlinkNode(20016 ,provider),
+                     new MetlinkNode(20015 ,provider),
+                     new MetlinkNode(20014 ,provider),
+                     new MetlinkNode(20013 ,provider)
+
+		        };
 			
 
             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
@@ -295,7 +309,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 tram55down, new TransportTimeSpan { WaitingTime = new TimeSpan(0, 3, 0), TravelTime = new TimeSpan(0, 48-3, 0) }));
             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
                tram55up, new TransportTimeSpan { WaitingTime = new TimeSpan(0, 10, 0), TravelTime = new TimeSpan(0, 45, 0) }));
-			
+            
             
             var properties = new EvolutionaryProperties();
             properties.NetworkDataProviders.Add(provider);
@@ -310,6 +324,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 				var actual = target.GetFitness(keyValuePair.Key, initialDepart);
                 Assert.AreEqual(keyValuePair.Value.TotalTime,actual.TotalJourneyTime);
             }		
+
+            for (int i = 0; i < 24; i++)
+            {
+                DateTime newDepart = initialDepart - TimeSpan.FromHours(i / 2f);
+                var actual = target.GetFitness(expressTest, newDepart);
+                Assert.That(actual.TotalTravelTime == TimeSpan.FromMinutes(13));
+                Assert.That(actual.TotalWaitingTime < TimeSpan.FromMinutes(30));
+
+            }
 		}
 
         [Test]

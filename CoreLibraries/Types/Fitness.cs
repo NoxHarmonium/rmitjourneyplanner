@@ -14,11 +14,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// </summary>
     public enum FitnessParameters 
     {
-        TotalJourneyTime,
-        //Changes,
+        //TotalJourneyTime,
+        Changes,
         //WalkingTime,
-        //PercentTrams,
-        PercentBuses,
+        PercentTrams,
+        //PercentBuses,
         PercentTrains,
         //PercentTrams,
        // Co2Emmissions,
@@ -76,20 +76,20 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 switch ((FitnessParameters)i)
                 {
-                    case FitnessParameters.TotalJourneyTime:
+                    //case FitnessParameters.TotalJourneyTime:
                         //if (this.TotalJourneyTime.TotalSeconds <= 0) return double.MaxValue;
-                        return NormalisedTravelTime;
+                    //    return NormalisedTravelTime;
                      
-                    //case FitnessParameters.Changes:
-                    //    return this.NormalisedChanges;
+                    case FitnessParameters.Changes:
+                        return this.NormalisedChanges;
 
                     // case FitnessParameters.WalkingTime:
                      //  return this.WalkingTime.TotalSeconds;
                     //case FitnessParameters.Co2Emmissions:
                     //    return this.Co2Emmissions;
 //
-                    case FitnessParameters.PercentBuses:
-                       return (1 - this.PercentBuses);
+                   // case FitnessParameters.PercentBuses:
+                  //     return (1 - this.PercentBuses);
 
                     //case FitnessParameters.PercentDisableFriendly:
                     //    return 1 - this.PercentDisableFriendly;
@@ -97,8 +97,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                    case FitnessParameters.PercentTrains:
                       return 1 - this.PercentTrains;
 
-                   // case FitnessParameters.PercentTrams:
-                    //   return 1 - this.PercentTrams;
+                    case FitnessParameters.PercentTrams:
+                       return 1 - this.PercentTrams;
 
                    // case FitnessParameters.PercentTrams:
                     //   return 1 - this.PercentTrams;
