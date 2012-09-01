@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
@@ -6,318 +6,226 @@
 <html class="no-js" lang="en">
 <!--<![endif]-->
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>RMIT Journey Planner :: Search</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <style>
+<meta charset="utf-8"/>
+<!--TODO: Fix this: -->
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+<title>RMIT Journey Planner :: Search</title>
+<meta name="description" content=""/>
+<meta name="author" content="Sean Dawson" />
+<meta name="viewport" content="width=device-width"/>
+<link rel="stylesheet" href="css/bootstrap.css"/>
+<style>
         body
         {
             padding-top: 60px;
             padding-bottom: 40px;
         }
-    </style>
-    <link rel="stylesheet" href="css/bootstrap-responsive.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/datepicker.css">
-    <link rel="stylesheet" href="css/timepicker.css">
-    <link rel="stylesheet" type="text/css" href="js/geo-autocomplete/lib/jquery.autocomplete.css" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-     <script src="js/libs/jquery.json-2.3.min.js"></script>
-    <script>        window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&location=-37.809784,144.972839&radius=25000"></script>
-    <script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
-    <script type="text/javascript" src="js/geo-autocomplete/lib/jquery.autocomplete_geomod.js"></script>
-    <script type="text/javascript" src="js/geo-autocomplete/geo_autocomplete.js"></script>
-    <script type="text/javascript">
-		$().ready(function() {
-				
-			/*
-			var latlng = new google.maps.LatLng(-34.397, 150.644);
-			var myOptions = {
-			  zoom: 8,
-			  center: latlng,
-			  mapTypeId: google.maps.MapTypeId.ROADMAP
-			};
-			var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-			// use all the autocomplete options as documented at http://docs.jquery.com/Plugins/Autocomplete
-			/* additional geo_autocomplete options:
-				mapkey : 'ABQ...' (required for Static Maps thumbnails, obtain a key for your site from http://code.google.com/apis/maps/signup.html)
-				mapwidth : 100
-				mapheight : 100
-				maptype : 'terrain' (see http://code.google.com/apis/maps/documentation/staticmaps/#MapTypes)
-				mapsensor : true or false
-			*/
-			/*
-			$('#txtOrigin').geo_autocomplete(new google.maps.Geocoder, {
-				mapkey: 'ABQIAAAAbnvDoAoYOSW2iqoXiGTpYBTIx7cuHpcaq3fYV4NM0BaZl8OxDxS9pQpgJkMv0RxjVl6cDGhDNERjaQ', 
-				selectFirst: false,
-				minChars: 3,
-				cacheLength: 50,
-				width: 300,
-				scroll: true,
-				scrollHeight: 330,			
-			})
-			
-			*/
-			
-	
-                        
-			var defaultBounds = new google.maps.LatLngBounds(
-			  new google.maps.LatLng(-36.536123,143.074951),
-			  new google.maps.LatLng(-39.019184,147.304688));
-			
-			var options = {
-			  bounds: defaultBounds,
-			  types: []
-			};
-			//var txtOrigin = document.getElementById('txtOrigin');
-			//var txtDestination = document.getElementById('txtDestination');
-			
-			//autocomplete = new google.maps.places.Autocomplete(txtOrigin, options);
-			//autocomplete = new google.maps.places.Autocomplete(txtDestination, options);
-			/*
-			google.maps.event.addDomListener(txtOrigin, 'keydown', function(e) { 
-                                if (e.keyCode == 13) 
-                                { 
-                                        if (e.preventDefault) 
-                                        { 
-                                                e.preventDefault(); 
-                                        } 
-                                        else 
-                                        { 
-                                                // Since the google event handler framework does not handle early IE versions, we have to do it by our self. :-( 
-                                                e.cancelBubble = true; 
-                                                e.returnValue = false; 
-                                        } 
-                                } 
-                        }); 
-			
-		
-		
-		google.maps.event.addDomListener(txtDestination, 'keydown', function(e) { 
-                                if (e.keyCode == 13) 
-                                { 
-                                        if (e.preventDefault) 
-                                        { 
-                                                e.preventDefault(); 
-                                        } 
-                                        else 
-                                        { 
-                                                // Since the google event handler framework does not handle early IE versions, we have to do it by our self. :-( 
-                                                e.cancelBubble = true; 
-                                                e.returnValue = false; 
-                                        } 
-                                } 
-                        }); */
-			
-		});
-        
-    </script>
+</style>
+<link rel="stylesheet" href="css/bootstrap-responsive.css"/>
+<link rel="stylesheet" href="css/style.css"/>
+<link rel="stylesheet" href="css/datepicker.css"/>
+<link rel="stylesheet" href="css/timepicker.css"/>
+<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.23.custom.css"/>
+<link rel="stylesheet" type="text/css" href="js/geo-autocomplete/lib/jquery.autocomplete.css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+<script src="js/libs/jquery.json-2.3.min.js"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false&amp;location=-37.809784,144.972839&amp;radius=25000"></script>
+<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+<!--<script type="text/javascript" src="js/geo-autocomplete/lib/jquery.autocomplete_geomod.js"></script>-->
+<!--<script type="text/javascript" src="js/geo-autocomplete/geo_autocomplete.js"></script>-->
 </head>
 <body>
-    <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
-                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                </a><a class="brand" href="#">RMIT Journey Planner</a>
-                <div class="nav-collapse">
-                    <ul class="nav">
-                        <li class="active"><a href="#">Search</a></li>
-                        <li><a href="#contact">Docs</a></li>
-                    </ul>
-                </div>
-                <!--/.nav-collapse -->
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <!-- Main hero unit for a primary marketing message or call to action -->
-        <div class="hero-unit">
-            <!--<img src="img/rmitLogo.gif"/>-->
-            <span style="display: inline;">
-                <h1>
-                    RMIT Journey Planner</h1>
-            </span>
-            <p>
-                Public transport trip planner based on genetic algorithms.</p>
-        </div>
-        <!-- Example row of columns -
-      <div class="row">
-        <div class="span4">
-          <h2>Heading</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Heading</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
--->
-        <!--
-            <form class="form-horizontal">
-			
-                <fieldset>
-                    <legend>Search parameters</legend>
-		
-                    <div class="control-group">
-                        <ul class="nav nav-tabs">
-                            <li id="firstTab" class="active" title="#tabBasic">
-                                <a href="#" >Basic</a>
-                            </li>
-                            <li title="#tabUserPrefs"> 
-                                <a href="#" >User Preferences</a>
-                            </li>
-                            <li title="#tabEngine"> 
-                                <a href="#"  >Engine Selection</a>
-                            </li>			
-                        </ul>
-                      </div>
-                     <div id="txtError" class="alert alert-error">
-                    
-                    </div>
-                    <div id="tabBasic">
-                        <div class="control-group">
-                            <label class="control-label" for="txtOrigin">Origin:</label>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+			</a><a class="brand" href="#">RMIT Journey Planner</a>
+			<div class="nav-collapse">
+				<ul class="nav">
+					<li><a href="#" page="#divJSelector">Manage</a></li>
+					<li><a href="#" page="#divJEditor">Edit</a></li>
+					<li><a href="#" page="#divJOptimiser" >Optimise</a></li>
+					<li><a href="#" page="#divJViewer">View</a></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+</div>
+<div class="container">
+	<!-- Main hero unit for a primary marketing message or call to action -->
+	<div class="hero-unit">
+		<!--<img src="img/rmitLogo.gif"/>-->
+		<h1>
+		RMIT Journey Planner</h1>
+		<p>
+			 Public transport route planner based on genetic algorithms.
+		</p>
+	</div>
+	<div id="divMessageBars" >
+		<div id="divError" class="alert alert-error" style="display:none;">
+		</div>
+		<div class="alert alert-info" id="divInfo" style="display:none;">
+			<strong>Loading...</strong><br/>Please wait.....
+		</div>
+		<div class="alert alert-warning" id="divWarning" style="display: none;">
+		</div>
+	</div>
+		<div id="divJSelector" class='section'>	
+		<h3>Journey Browser</h3>	
+		<div class="row">
+			<div class="span12">
+								
+				<form id="frmJourneySelect" class="form-horizontal">
+							
+					<div class="span5">
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="selJourneyList">Journeys:</label>
+								<div class="controls">
+									<select id="selJourneyList" multiple="multiple">
+										<option>Loading...</option>
+									</select>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="span5">
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" for="txtUuid">Journey UUID:</label>
+								<div class="controls">
+									<input id="txtUuid" type="text" disabled>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="txtJourneyName">Journey Name:</label>
+								<div class="controls">
+									<input id="txtJourneyName" type="text" placeholder="Type a short name to identify the journey.">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="txtDescription">Journey Description:</label>
+								<div class="controls">
+									<input id="txtDescription" type="type" placeholder="Type a short description of the journey.">
+								</div>
+							</div>
+							<div class="control-group">
+								<!--<label class="control-label" for="btnSaveJourneyName">Journey Description:</label>-->
+								<div class="controls">
+									<button id="btnSaveJourneyName" class="btn" type="button">Save</button>
+								</div>
+							</div>
+						</fieldset>
 				
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="txtOrigin" value="Coburg, Victoria, Australia"/>						
-                            </div>
 				
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="txtDestination">Destination:</label>
-				
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="txtDestination" value="Ascot Vale, Victoria, Australia" />
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="txtDate">Date:</label>			
-                            <div class="controls input-append date" id="dp3" data-date="20-03-2012" data-date-format="dd-mm-yyyy">
-                                <input id="txtDate" class="span2 input-xlarge" type="text" value="12-02-2012" readonly>
-                                <span class="add-on"><i class="icon-th"></i></span>
-                            </div>						
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="txtTime">Time:</label>
-				
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="txtTime" value=""/>
-                            </div>
-                        </div>
-                    </div>
-		
-                    <div id="tabUserPrefs">
-		
-                        <div class="control-group">
-                            <label class="control-label" for="txtMaxWalkDistance">Maximum walking distance:</label>
-				
-                            <div class="controls">
-                                <div class="input-append">
-                                    <input type="text" class="span2" id="txtMaxWalkDistance" size="5" value="0.5"/>		
-                                    <span class="add-on">KM</span>
-                                </div>					
-                            </div>				
-                        </div>
-			
-                        <div class="control-group">
-                            <label class="control-label" for="optionsCheckboxList">Allowed Transport Methods:</label>
-				
-                            <div class="controls">
-                                <label class="checkbox">
-                                    <input type="checkbox" name="chkTrain" value="train" checked="checked" >
-                                    Train
-                                </label>
-                                <label class="checkbox">
-                                    <input type="checkbox" name="chkTram" value="tram" checked="checked"  >
-                                    Tram
-                                </label>
-                                <label class="checkbox">
-                                    <input type="checkbox" name="chkBus" value="bus"checked="checked" >
-                                    Bus
-                                </label>
+					</div>
+					<div class="span12">
+						<div class="form-actions">
+							<button id="btnNewJourney" class="btn" type="button">New Journey</button>
+							<button id="btnDelJourney" class="btn" type="button">Delete Journey</button>							
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		</div>
+		<div id="divJEditor" class='section'><h3>Journey Editor </h3>
+		<div class="row">
+			<!--<div class="span12"> -->
+				<form id="frmParameters" class="form-horizontal" style="display:none;">
 					
-                            </div>		
-                             <div class="control-group">
-                            <label class="control-label" for="optionsCheckboxList">Search Options:</label>
+					<div id="cg-left" class="span6">
+					</div>
+					<div id="cg-right" class="span6">
+					</div>
+					<div class="span12">
+						<div class="form-actions">
+							<button id="btnSaveProperties" type="button" class="btn">
+							Save Changes </button>
+						</div>
+					</div>
+				</form>
+			<!--</div> -->
+		</div>
+		</div>
+		
+		<div id="divJOptimiser" class="section">
+			<h3>
+				Optimiser			
+			</h3>
+			<p>
 				
-                            <div class="controls">
-                                <label class="checkbox">
-                                    <input type="checkbox" id="chkBiDir" >
-                                   Bi-directional
-                                </label>
-                                
-					
-                            </div>			
-                        </div>
-                    </div>
-		
-                    <div id="tabEngine">
-                       			
-                        </div>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt dictum arcu ullamcorper accumsan.
 
-                    </div>
+			</p>
 		
-                    <div class="form-actions"><button type="button" id="btnStartSearch"  data-loading-text="Loading..." class="btn btn-primary">Search</button></div>
-                </fieldset>
+		</div>
+		<div id="divJViewer" class='section'>
+						
+			<div id="divJViewerL" class="mapDiv">
+						<h1>Journey Viewer</h1>	
+						<p>
+						
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt dictum arcu ullamcorper accumsan.
+
+Mauris facilisis commodo est nec porttitor. Morbi quis urna id ante viverra tempus. Vivamus quis neque magna, nec eleifend lorem. Nunc molestie metus et arcu ornare vulputate. Nullam massa velit, congue vel auctor non, malesuada quis diam. Nullam porttitor mollis facilisis. Integer nec condimentum felis. Vestibulum porta condimentum orci, sed viverra nulla lacinia quis. Fusce pharetra tincidunt magna, et feugiat mi fringilla eu. Quisque et magna ac risus suscipit interdum. Proin tempor ligula sit amet neque convallis dictum.
+
+Donec vitae dui odio. Integer consequat mauris et ligula pellentesque luctus. Donec feugiat ipsum et ligula dictum congue. Cras et dolor tincidunt eros elementum dapibus. Ut vel dolor mi, eget vulputate elit. Duis dignissim tellus sagittis arcu convallis non sollicitudin justo aliquet. Vivamus elementum consectetur condimentum. Morbi leo orci, faucibus et mattis pharetra, congue vestibulum nisl.
+
+Vestibulum et justo nulla. Donec sit amet tortor nisi, et sodales justo. Proin accumsan eros sed mauris lobortis blandit. Phasellus quis risus sagittis ante malesuada sagittis et quis ligula. Suspendisse eget massa urna. Vestibulum in mauris sit amet nisi suscipit condimentum. Ut eros urna, condimentum sit amet gravida ac, gravida in metus. Praesent ut metus et magna fringilla tincidunt sit amet nec dolor. Pellentesque justo erat, adipiscing vulputate pretium sit amet, tristique a velit. Integer id molestie quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras sed pharetra lectus. Sed porta commodo augue, eget convallis dui semper a. Maecenas eleifend, neque dignissim placerat faucibus, eros elit vestibulum neque, vitae dictum lacus nisl sed lorem.
+
+Nunc tincidunt fermentum eleifend. Maecenas sit amet eros turpis, imperdiet egestas leo. Phasellus lectus erat, auctor ac volutpat vitae, dapibus vitae sapien. Morbi in venenatis tellus. Pellentesque in fringilla lectus. Pellentesque vulputate scelerisque posuere. Curabitur euismod bibendum vehicula. Nunc malesuada sem vel sem rutrum vulputate. Aliquam elementum adipiscing tincidunt. Duis quis lorem lectus, nec euismod nunc. Aliquam ut ligula sem. 						
+						
+						</p>
+			</div>
+			<div id="divJViewerR" class="mapDiv">
+					<div id="map_canvas" style="width:69%; height:100%;"></div>
+			</div>
 			
-            </form>
-       -->
-        <form class="form-horizontal">
-        <fieldset>
-            <legend>Search parameters</legend>
-            <div id="divAutoForm">
-            
-            
-            </div>
+			<div id="divJViewerB" class="mapDiv">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt dictum arcu ullamcorper accumsan.			
+			
+			
+			</div>
+		</div>
 
-        </fieldset>
-        </form>
-        <hr>
-        <footer>
-        <p>&copy; RMIT University 2012</p>
-      </footer>
-    </div>
-    <!-- /container -->
-    <script src="js/jquery.dateFormat-1.0.js"></script>
-    <script src="js/libs/bootstrap/transition.js"></script>
-    <script src="js/libs/bootstrap/collapse.js"></script>
-    <script src="js/plugins.js"></script>
+	
+	<hr/>
+	<footer>
+	<p>
+		 &copy; RMIT University 2012
+	</p>
+	</footer>
+</div>
+<!-- /container -->
+<script src="js/jquery.dateFormat-1.0.js"></script>
+<script src="js/libs/bootstrap/transition.js"></script>
+<script src="js/libs/bootstrap/collapse.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="js/bootstrap-timepicker.js"></script>
+<script src="js/bootstrap-button.js"></script>
+<script src="js/global.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/jSelector.js"></script>				
+<script src="js/jEditor.js"></script>
+<script src="js/jViewer.js"></script>
 
-    <script src="js/bootstrap-datepicker.js"></script>
-    <script src="js/bootstrap-timepicker.js"></script>
-    <script src="js/bootstrap-button.js"></script>
-        <script src="js/scrIndex.js"></script>
-    <script>
-
-
+<script>
         $(function () {
             //$('#dp3').attr('data-date', $.format.date(new Date(), "dd-MM-yyyy"));
            // $('#dp3').datepicker();
-
             //$('#txtTime').val($.format.date(new Date(), "hh:mm a"));
-
            // $('#tabUserPrefs').hide();
            // $('#Engine').hide();
         });
-		
     </script>
-    <!--
+<!--
 <script>
 	var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
 	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

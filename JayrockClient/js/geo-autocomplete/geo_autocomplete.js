@@ -23,6 +23,9 @@ $.fn.extend({
 			mapkey: 'ABQIAAAAbnvDoAoYOSW2iqoXiGTpYBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQNumU68AwGqjbSNF9YO8NokKst8w', // localhost
 			mapsensor: false,
 			parse: function(_results, _status, _query) {
+				
+				
+				
 				var _parsed = [];
 				if (_results && _status && _status == 'OK') {
 					$.each(_results, function(_key, _result) {
@@ -47,9 +50,11 @@ $.fn.extend({
 				return _parsed;
 			},
 			formatItem: function(_data, _i, _n, _value) {
-				var _src = 'http://maps.google.com/maps/api/staticmap?visible=' + _data.geometry.viewport.getSouthWest().toUrlValue() + '|' + _data.geometry.viewport.getNorthEast().toUrlValue() + '&size=' + options.mapwidth + 'x' + options.mapheight + '&maptype=' + options.maptype + '&key=' + options.mapkey + '&sensor=' + (options.mapsensor ? 'true' : 'false');
-				var _place = _data.formatted_address.replace(/,/gi, ',<br/>');
-				return '<img src="' + _src + '" width="' + options.mapwidth + '" height="' + options.mapheight + '" /> ' + _place + '<br clear="both"/>';
+				//var _src = 'http://maps.google.com/maps/api/staticmap?visible=' + _data.geometry.viewport.getSouthWest().toUrlValue() + '|' + _data.geometry.viewport.getNorthEast().toUrlValue() + '&size=' + options.mapwidth + 'x' + options.mapheight + '&maptype=' + options.maptype + '&key=' + options.mapkey + '&sensor=' + (options.mapsensor ? 'true' : 'false');
+				//var _src = 
+				//var _place = _data.formatted_address.replace(/,/gi, ',<br/>');
+				//return '<img src="' + _src + '" width="' + options.mapwidth + '" height="' + options.mapheight + '" /> ' + _place + '<br clear="both"/>';
+				return '<i class="icon-map-marker"></i>' + _data.formatted_address + '<br clear="both"/>';
 			}
 		}, _options);
 		

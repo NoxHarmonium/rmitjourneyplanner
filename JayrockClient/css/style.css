@@ -10,17 +10,90 @@
 }
 
 .imgTransportIcon {
-    vertical-align: middle;
+    
     width: 24px;
     height: 27.75px;
+    vertical-align:middle;
+    padding-right: 6px;
 }
 
 
+.autoCompleteLabel
+{
+	float: right;
+}
+
+.inline-div
+{
+	line-height: 1;
+
+	
+}
+#selJourneyList
+{
+	height: 400 px;
+
+}
+
+#divJViewerL
+{
+	border-top-style:solid;
+	border-left-style:solid;
+	height: 700 px !important;
+	overflow-y:scroll;
+	/*margin-right: -30px;*/
+	max-height: 700px !important;
+	width: 30.975%;
+	
+	
+	float: left;
+	
+	
+	
+}
+#divJViewerB
+{
+	height: 200 px;
+	border-style:solid;
+	width: 100%;
+	
+}
+#divJViewerR
+{
+	border-top-style:solid;
+	border-right-style:solid;
+	height: 700px;
+	
+	
+	
+	
+}
+
+#map_canvas img {  max-width: none; width: auto; display:inline; }
+
+#map_canvas label { 
+  width: auto; display:inline; 
+} 
 
 
 
 
+.mapDiv
+{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border-width:0.5px;
 
+}
 
+H3
+{
+ 
+  margin-bottom: 27px;
+  font-size: 19.5px;
+  line-height: 36px;
+  color: #333333;
+  border-bottom: 1px solid #eee;
 
-
+}

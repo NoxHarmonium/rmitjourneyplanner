@@ -29,13 +29,13 @@ $.widget( "ui.geo_autocomplete", {
 		geocoder_types: 'locality,political,sublocality,neighborhood,country', // array of acceptable location types, see http://code.google.com/apis/maps/documentation/javascript/services.html#GeocodingAddressTypes
 		geocoder_address: false, // true = use the full formatted address, false = use only the segment that matches the search term
 
-		mapwidth: 100, // width of static map thumbnail
-		mapheight: 100, // height of static map thumbnail
-		maptype: 'terrain', // see http://code.google.com/apis/maps/documentation/staticmaps/#MapTypes
+		mapwidth: 25, // width of static map thumbnail
+		mapheight: 25, // height of static map thumbnail
+		maptype: 'roadmap', // see http://code.google.com/apis/maps/documentation/staticmaps/#MapTypes
 		mapsensor: false, // see http://code.google.com/apis/maps/documentation/staticmaps/#Sensor
 
 		minLength: 3, // see http://jqueryui.com/demos/autocomplete/#option-minLength
-		delay: 300, // see http://jqueryui.com/demos/autocomplete/#option-delay
+		delay: 100, // see http://jqueryui.com/demos/autocomplete/#option-delay
 		// callback function to get autocomplete results
 		source: function(_request, _response) {
 			if (_request.term in this.options._cache) {

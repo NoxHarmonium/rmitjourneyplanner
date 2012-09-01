@@ -171,8 +171,8 @@ namespace Testing
                                 testRoutes[i, 1].RetrieveData();
 
                                 EvolutionaryProperties properties = new EvolutionaryProperties();
-                                properties.PointDataProviders.Add(new WalkingDataProvider());
-                                properties.NetworkDataProviders.Add(metlinkProvider);
+                                properties.NetworkDataProviders = new [] {metlinkProvider};
+           						 properties.PointDataProviders = new [] {new WalkingDataProvider()};
                                 properties.ProbMinDistance = 0.7;
                                 properties.ProbMinTransfers = 0.2;
                                 properties.MaximumWalkDistance = 1.5;
@@ -184,7 +184,8 @@ namespace Testing
                                 properties.CrossoverRate = 0.7;
                                 //properties.Bidirectional = bidir;
                                 //properties.RouteGenerator = new AlRouteGenerator(properties);
-                                properties.RouteGenerator = new DFSRoutePlanner(properties, SearchType.Greedy_BiDir);
+								properties.SearchType = SearchType.Greedy_BiDir;
+                                properties.RouteGenerator = new DFSRoutePlanner(properties);
                                 properties.Mutator = new StandardMutator(properties);
                                 properties.Breeder = new StandardBreeder(properties);
                                 properties.FitnessFunction = new AlFitnessFunction(properties);

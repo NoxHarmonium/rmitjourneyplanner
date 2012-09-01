@@ -39,8 +39,8 @@ namespace Testing
 
 
             properties.DepartureTime = DateTime.Parse("27/06/2012 10:15 AM");
-            properties.PointDataProviders.Add(new WalkingDataProvider());
-            properties.NetworkDataProviders.Add(provider);
+    		properties.NetworkDataProviders = new [] {provider};
+            properties.PointDataProviders = new [] {new WalkingDataProvider()};
             properties.FitnessFunction = new AlFitnessFunction(properties);
             properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
 

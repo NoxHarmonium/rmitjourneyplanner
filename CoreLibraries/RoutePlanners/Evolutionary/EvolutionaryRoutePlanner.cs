@@ -142,7 +142,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="provider"> The network provider to register. </param>
         public void RegisterNetworkDataProvider(INetworkDataProvider provider)
         {
-            this.Properties.NetworkDataProviders.Add(provider);
+            this.Properties.NetworkDataProviders = new [] {provider};
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="provider"> The point to point data provider to register. </param>
         public void RegisterPointDataProvider(IPointDataProvider provider)
         {
-            this.Properties.PointDataProviders.Add(provider);
+            this.Properties.PointDataProviders = new IPointDataProvider[] {provider};
         }
 
         /// <summary>

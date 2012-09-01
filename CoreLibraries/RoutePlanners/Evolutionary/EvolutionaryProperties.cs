@@ -26,8 +26,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </summary>
         public EvolutionaryProperties()
         {
-            this.NetworkDataProviders = new List<INetworkDataProvider>();
-            this.PointDataProviders = new List<IPointDataProvider>();
+            this.NetworkDataProviders = new INetworkDataProvider[0];//new List<INetworkDataProvider>();
+            this.PointDataProviders = new IPointDataProvider[0];
         }
 
         #endregion
@@ -92,7 +92,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         ///   Gets or sets a list of network data providers used to solve the route.
         /// </summary>
-        public List<INetworkDataProvider> NetworkDataProviders { get; set; }
+        public INetworkDataProvider[] NetworkDataProviders { get; set; }
 
         /// <summary>
         ///   Gets or sets number of the population to keep and use in the breeding process.
@@ -107,7 +107,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         ///   Gets or sets a list of point to point data providers used to solve the route.
         /// </summary>
-        public List<IPointDataProvider> PointDataProviders { get; set; }
+        public IPointDataProvider[] PointDataProviders { get; set; }
 
         /// <summary>
         ///   Gets or sets the population size of the route planner.
@@ -128,6 +128,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         ///   Gets or sets the object used to build routes between 2 nodes.
         /// </summary>
         public IRouteGenerator RouteGenerator { get; set; }
+		
+		/// <summary>
+		/// Gets or sets the type of the search.
+		/// </summary>
+		/// <value>
+		/// The type of the search.
+		/// </value>
+		public RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators.SearchType SearchType {get;set;}
 
         #endregion
     }

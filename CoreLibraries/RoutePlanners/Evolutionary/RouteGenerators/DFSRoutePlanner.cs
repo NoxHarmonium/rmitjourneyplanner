@@ -39,10 +39,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         private readonly SearchType searchType;
   
 
-        public DFSRoutePlanner(EvolutionaryProperties properties,SearchType searchType)
+        public DFSRoutePlanner(EvolutionaryProperties properties)
         {
             this.properties = properties;
-            this.searchType = searchType;
+            this.searchType = properties.SearchType;
         }
         
         public Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime)

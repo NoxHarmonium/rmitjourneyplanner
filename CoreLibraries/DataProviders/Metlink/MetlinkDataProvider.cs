@@ -208,7 +208,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                     // Console.SetCursorPosition(0, Console.CursorTop);
                     // Console.Write("{0,10:f2}%", 100.0 * ((double)count++ / (Double)nodeData.Rows.Count));
                     this.list[node.Id] = new List<MetlinkNode> { node };
-                    Logger.Log(this,"-->Adding node (id: {0}) ({2}/{3})... [{1} s]", node.Id, stopwatch.ElapsedMilliseconds / 1000.0,nodeCount++,nodeData.Rows.Count);
+                    //Logger.Log(this,"-->Adding node (id: {0}) ({2}/{3})... [{1} s]", node.Id, stopwatch.ElapsedMilliseconds / 1000.0,nodeCount++,nodeData.Rows.Count);
 					
                 }
 
@@ -1099,7 +1099,50 @@ ORDER BY sr.RouteID, sr.StopOrder;
             return (int)this.database.GetDataSet(query).Rows[0][0];
 
         }
-
+		
+		/// <summary>
+		/// Returns a list of stops that match the query. Currently the query is just a simple
+		/// match string with wildcard.
+		/// </summary>
+		/// <returns>
+		/// The stops that match the query.
+		/// </returns>
+		/// <param name='query'>
+		/// The query. i.e. 'Cob' -> Coburg Station
+		/// </param>
+		public object[] QueryStops(string query)
+		{
+			//List<MetlinkNode> stops = new List<MetlinkNode>();
+			string sqlQuery = string.Format(@"SELECT StopSpecName,CONCAT(TravelSTName,' ',TravelSTType,'/',COALESCE(CrossSTName,''),' ',COALESCE(CrossSTType,'')), 
+											StopModeName, MetlinkStopID FROM tblStopInformation si INNER JOIN tblModes sm ON sm.StopModeId=si.StopModeID 
+											WHERE StopSpecName LIKE '%{0}%' ORDER BY sm.StopModeID DESC", query);
+			var data = this.database.GetDataSet(sqlQuery);
+			object[] stops = new object[data.Rows.Count];
+			
+			for (int i = 0; i < data.Rows.Count; i++)
+			{
+				stops[i] = new {label = data.Rows[i].ItemArray[0],
+								stopSpecName = data.Rows[i].ItemArray[1] + " (" + data.Rows[i].ItemArray[3] + ")",
+								stopMode =  data.Rows[i].ItemArray[2],
+								value = data.Rows[i].ItemArray[3]};
+			}
+			return stops;
+			
+		}
+		
+		public MetlinkNode GetNodeFromName(string stopSpecName)
+		{
+			string query = string.Format(@"SELECT MetlinkStopID FROM tblStopInformation WHERE StopSpecName='{0}';",stopSpecName);
+			var data = this.database.GetDataSet(query);
+			Assert.That(data.Rows.Count < 2,"StopSpecName should be unique.");
+			if (data.Rows.Count == 1)
+			{
+				return this.list[(int)data.Rows[0][0]][0];
+			}
+			return null;
+			
+		}
+		
         #endregion
 
         #region Methods
@@ -1153,7 +1196,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
             catch (Exception)
             {
                 Console.WriteLine("Warning, bogus depart/arrive time detected in parser.");
-                return new DateTime().Add(new TimeSpan(10, 0, 0, 0));
+				throw;
+                //return new DateTime().Add(new TimeSpan(10, 0, 0, 0));
             }
         }
 
@@ -1177,7 +1221,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
             catch (Exception)
             {
                 Console.WriteLine("Warning, bogus depart/arrive time detected in parser.");
-                return TimeSpan.MaxValue;
+                throw;
+				//return TimeSpan.MaxValue;
             }
         }
 

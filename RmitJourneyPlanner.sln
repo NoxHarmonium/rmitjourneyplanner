@@ -101,7 +101,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = AjaxServer\AjaxServer.csproj
+		StartupItem = JayrockClient\JayrockClient.csproj
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

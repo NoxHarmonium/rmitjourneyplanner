@@ -152,7 +152,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="provider"> The network provider to register. </param>
         public void RegisterNetworkDataProvider(INetworkDataProvider provider)
         {
-            this.Properties.NetworkDataProviders.Add(provider);
+            //this.Properties.NetworkDataProviders.Add(provider);
+			this.Properties.NetworkDataProviders = new[] {provider};
         }
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="provider"> The point to point data provider to register. </param>
         public void RegisterPointDataProvider(IPointDataProvider provider)
         {
-            this.Properties.PointDataProviders.Add(provider);
+            this.Properties.PointDataProviders = new[] {provider};
         }
         
         /// <summary>
@@ -374,6 +375,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             this.iteration = this.Iteration + 1;
             
             Console.WriteLine("Solving step {0}...", this.Iteration);
+			if (this.iteration == 55)
+			{
+				int a= 3;
+			}
+			
+			
             this.progress = 0;
             
             var sw = Stopwatch.StartNew();

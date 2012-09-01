@@ -18,10 +18,14 @@ namespace JayrockClient
         /// </summary>
         public string Type;
 
-
         /// <summary>
         /// The value of the property.
         /// </summary>
         public string Value;
+		
+		/// <summary>
+		/// Specified if the property is editable as a value type or not.
+		/// </summary>
+		public bool Editable;
     }
 }

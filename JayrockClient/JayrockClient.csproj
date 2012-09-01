@@ -32,18 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Jayrock">
-      <HintPath>..\..\..\..\Code\JayRock\bin\net-4.0\debug\Jayrock.dll</HintPath>
-    </Reference>
-    <Reference Include="Jayrock.Json">
-      <HintPath>..\..\..\..\Code\JayRock\bin\net-4.0\debug\Jayrock.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Jayrock.Sandbox">
-      <HintPath>..\..\..\..\Code\JayRock\bin\net-4.0\debug\Jayrock.Sandbox.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -57,6 +47,21 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Jayrock">
+      <HintPath>..\..\..\jayrock\bin\mono\debug\Jayrock.dll</HintPath>
+    </Reference>
+    <Reference Include="Jayrock.Json">
+      <HintPath>..\..\..\jayrock\bin\mono\debug\Jayrock.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Jayrock.Sandbox">
+      <HintPath>..\..\..\jayrock\bin\mono\debug\Jayrock.Sandbox.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="404.html" />
@@ -126,7 +131,6 @@
     <Content Include="js\libs\jquery.json-2.3.min.js" />
     <Content Include="js\libs\modernizr-2.5.3-respond-1.1.0.min.js" />
     <Content Include="js\plugins.js" />
-    <Content Include="js\scrIndex.js" />
     <Content Include="robots.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -135,12 +139,49 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <None Include="jsonws.ashx" />
     <None Include="less\datepicker.less" />
+    <None Include="jsonws.ashx" />
+    <Content Include="js\jquery-ui-1.8.23.custom.min.js" />
+    <Content Include="css\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_222222_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="css\ui-lightness\jquery-ui-1.8.23.custom.css" />
+    <Content Include="js\global.js" />
+    <Content Include="js\jEditor.js" />
+    <Content Include="js\navbar.js" />
+    <None Include="js\jViewer.js" />
+    <Content Include="js\jSelector.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ObjectProperty.cs" />
+    <Compile Include="JSONObjects\ObjectProperty.cs" />
+    <Compile Include="JSONObjects\ValidationError.cs" />
+    <Compile Include="JSONObjects\PropertyValue.cs" />
+    <Compile Include="Strings.cs" />
+    <Compile Include="jsonws.cs" />
+    <Compile Include="JSONObjects\PropertyValues.cs" />
+    <Compile Include="JSONObjects\StopInfo.cs" />
+    <Compile Include="cs\JourneyManager.cs" />
+    <Compile Include="cs\Journey.cs" />
+    <Compile Include="cs\Run.cs" />
+    <Compile Include="cs\Iteration.cs" />
+    <Compile Include="cs\ObjectTools.cs" />
+    <Compile Include="testing\TestJourneyManager.cs" />
+    <Compile Include="cs\CustomImporter.cs" />
+    <Compile Include="cs\PropertiesImporter.cs" />
+    <Compile Include="cs\PropertiesExporter.cs" />
+    <Compile Include="cs\ObjectCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreLibraries\CoreLibraries.csproj">
@@ -174,6 +215,7 @@
         <Policies>
           <TextStylePolicy FileWidth="120" TabWidth="4" EolMarker="Windows" inheritsSet="Mono" inheritsScope="text/plain" scope="text/x-csharp" />
           <CSharpFormattingPolicy inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <TextStylePolicy FileWidth="120" TabWidth="4" EolMarker="Windows" inheritsSet="Mono" inheritsScope="text/plain" scope="text/html" />
         </Policies>
         <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
       </Properties>
@@ -186,4 +228,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="JSONObjects\" />
+    <Folder Include="cs\" />
+    <Folder Include="testing\" />
+  </ItemGroup>
 </Project>

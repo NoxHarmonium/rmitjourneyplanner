@@ -20,7 +20,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The route.
         /// </summary>
-        private readonly Route route;
+        private Route route;
 
         /// <summary>
         ///   The UnifiedFitnessScore.
@@ -50,16 +50,45 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #endregion
 
         #region Public Properties
-
+		
+		/// <summary>
+		/// Gets or sets the age of this critter.
+		/// </summary>
+		/// <value>
+		/// The age of this critter.
+		/// </value>
+		public int Age {get; set;}
+		
+		/// <summary>
+		/// Gets or sets the N value of this critter.
+		/// </summary>
+		/// <value>
+		/// The N value of this critter.
+		/// </value>
         public int N { get; set; }
-
+		
+		/// <summary>
+		/// Gets or sets the rank of this critter.
+		/// </summary>
+		/// <value>
+		/// The rank of this critter.
+		/// </value>
         public int Rank { get; set; }
-
+		
+		/// <summary>
+		/// Gets or sets the distance value of this critter.
+		/// </summary>
+		/// <value>
+		/// The distance value of this critter.
+		/// </value>
         public double Distance { get; set; }
 
-        /// <summary>
-        ///   Gets or sets UnifiedFitnessScore.
-        /// </summary>
+      	/// <summary>
+      	/// Gets or sets the unified fitness score of this critter.
+      	/// </summary>
+      	/// <value>
+      	/// The unified fitness score of this critter.
+      	/// </value>
         public double UnifiedFitnessScore
         {
             get
@@ -76,10 +105,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Gets or sets the fitness object for this critter.
         /// </summary>
+        /// <value>
+        /// The fitness object for this critter.
+        /// </value>
         public Fitness Fitness { get; set; }
 
         /// <summary>
-        ///   Gets Route.
+        ///   Gets or sets the route associated with this critter.
         /// </summary>
         public Route Route
         {
@@ -87,6 +119,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 return this.route;
             }
+			set
+			{
+				this.route = value;	
+			}
         }
 
         #endregion

@@ -1,0 +1,56 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="JayrockClient/js/jSelector.js">
+    <Files>
+      <File FileName="JayrockClient/js/jSelector.js" Line="119" Column="53" />
+      <File FileName="JayrockClient/index.html" Line="119" Column="72" />
+      <File FileName="JayrockClient/js/global.js" Line="28" Column="67" />
+      <File FileName="JayrockClient/jsonws.cs" Line="86" Column="4" />
+      <File FileName="JayrockClient/js/jEditor.js" Line="343" Column="24" />
+      <File FileName="JayrockClient/js/jViewer.js" Line="1" Column="11" />
+      <File FileName="JayrockClient/cs/JourneyManager.cs" Line="81" Column="49" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="AjaxServer" expanded="True">
+            <Node name="aspx" expanded="True">
+              <Node name="InitSearch.aspx" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="JayrockClient" expanded="True">
+            <Node name="cs" expanded="True" />
+            <Node name="js" expanded="True">
+              <Node name="jSelector.js" selected="True" />
+            </Node>
+          </Node>
+          <Node name="Testing" expanded="True" />
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True">
+          <Node name="JayrockClient" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/sean/Code/rmitjourneyplanner/trunk/CoreLibraries/RoutePlanners/Evolutionary/MOEARoutePlanner.cs" line="1150" />
+      <Breakpoint file="/home/sean/Code/rmitjourneyplanner/trunk/CoreLibraries/RoutePlanners/Evolutionary/FitnessFunctions/ALFitnessFunction.cs" line="204" />
+      <Breakpoint file="/home/sean/Code/rmitjourneyplanner/trunk/CoreLibraries/DataProviders/Metlink/MetlinkDataProvider.cs" line="644" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="CoreLibraries/Types/Timetable.cs" line="334" offsetX="982" offsetY="3655" expression="serviceIndex" liveUpdate="False" />
+    <Watch file="JayrockClient/jsonws.cs" line="216" offsetX="995" offsetY="2921" expression="pType" liveUpdate="False" />
+    <Watch file="JayrockClient/jsonws.cs" line="223" offsetX="996" offsetY="2946" expression="types" liveUpdate="False" />
+    <Watch file="JayrockClient/cs/CustomImporter.cs" line="11" offsetX="506" offsetY="150" expression="Token" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>

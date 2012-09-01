@@ -46,8 +46,8 @@ namespace AjaxServer.aspx
 
                 EvolutionaryProperties properties = new EvolutionaryProperties();
                 properties.Bidirectional = false;
-                properties.PointDataProviders.Add(new WalkingDataProvider());
-                properties.NetworkDataProviders.Add(metlinkProvider);
+                properties.NetworkDataProviders = new [] {metlinkProvider};
+           	properties.PointDataProviders = new [] {new WalkingDataProvider()};
                 properties.ProbMinDistance = 0.7;
                 properties.ProbMinTransfers = 0.2;
                 properties.MaximumWalkDistance = 1.5;
@@ -58,14 +58,14 @@ namespace AjaxServer.aspx
                 properties.MutationRate = 0.3;
                 properties.CrossoverRate = 0.7;
                 //properties.RouteGenerator = new AlRouteGenerator(properties);
-                properties.RouteGenerator = new DFSRoutePlanner(properties,SearchType.Greedy_BiDir);
+		properties.SearchType = SearchType.Greedy_BiDir;
+                properties.RouteGenerator = new DFSRoutePlanner(properties);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);
                 properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-                //properties.Destination = new MetlinkNode(20039,metlinkProvider);//
+                properties.Destination = new MetlinkNode(20039,metlinkProvider);//
                 //properties.Destination = new MetlinkNode(628,metlinkProvider);
-                properties.Destination = new MetlinkNode(19843,metlinkProvider);
                    // new TerminalNode(-1, destination);
                    // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
                 //properties.Origin = new MetlinkNode(19965, metlinkProvider);//
