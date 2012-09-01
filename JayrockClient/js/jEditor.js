@@ -97,10 +97,17 @@ function loadProperties(data)
            		var subsplit = split[0].split(",");
            		for (var o in subsplit)
            		{
-           			input.append("<option>" + subsplit[o] + "</option>");
+           		    var opt = jQuery(document.createElement('option'));
+           		    opt.text(subsplit[o]);
+           		    //input.append("<option>" + subsplit[o] + "</option>");
+           		    if ($.trim(subsplit[o]) == $.trim(split[1])) {
+           		        opt.attr('selected', 'selected');
+           		    }
+           		    input.append(opt);
            			
            		}
-           		input.find("option[text=\"" + split[1] + "\"]").attr("selected", "selected");//.siblings("option").attr("selected","");
+          //input.find("option[text=\"" + split[1] + "\"]").attr("selected", "selected");//.siblings("option").attr("selected","");
+           	   // $(input). option:contains(" + inputText + ")"
            		//input.append("<option>" + split[1] + "</option>");
            		
            		
@@ -414,9 +421,9 @@ function saveProperties()
     	
     		
 	});
-	
-	
-	RPCCall('SetProperties', {"propVals": propVals} , function (data) {
+
+
+RPCCall('SetProperties', { "journeyUuid": selectedJourneyUuid, "propVals": propVals }, function (data) {
 	    if (CheckForError(data))
 		{
 			return;
@@ -429,7 +436,25 @@ function saveProperties()
 
 }
 
+function GetProperties(uuid) {
+    RPCCall('GetProperties', { "journeyUuid": uuid }, function (data) {
+        if (CheckForError(data)) {
+            return;
+        }
 
+        //Show form / hide loading message.
+        $('#frmParameters').show();
+        $('#divInfo').hide();
+
+        $("#cg-left").empty();
+        $("#cg-right").empty();
+
+        loadProperties(data);
+        attachInputValidation();
+        attachGeoAutoComplete();
+        updateNavBar();
+    });
+}
 
 ///
 /// Events
@@ -446,33 +471,10 @@ $('#btnSaveProperties').click(function(){
 
 //Data load events
 $('#divInfo').show();
-RPCCall('LoadProviders', { /* void */ } , function (data) {
-    if (CheckForError(data))
-	{
-		return;
-	}
-    
-    RPCCall('GetProperties', {}, function (data) {
-		if (CheckForError(data))
-		{
-			return;
-		}
-		
-		//Show form / hide loading message.
-		$('#frmParameters').show();
-		$('#divInfo').hide();
-		
-        loadProperties(data);
-        attachInputValidation();
-        attachGeoAutoComplete();
-        updateNavBar();
-
-        
 
 
-    });
-});
 
+   
 
 
 

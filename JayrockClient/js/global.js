@@ -11,6 +11,7 @@ var error_scroll_time = 500;
 /// Fields
 ///
 var googleEnabled = true;
+var serverReady = false;
 
 ///
 /// Global functions
@@ -21,11 +22,11 @@ String.prototype.bool = function () {
     return (/^True$/i).test(this);
 };
 
-jQuery.fn.exists = function(){return this.length>0;}
+jQuery.fn.exists = function() { return this.length > 0; };
 
-jQuery.fn.disable = function(){return $(this).attr('disabled','disabled');}
+jQuery.fn.disable = function() { return $(this).attr('disabled', 'disabled'); };
 
-jQuery.fn.enable = function(){return $(this).removeAttr('disabled');}
+jQuery.fn.enable = function() { return $(this).removeAttr('disabled'); };
 
 
 function showWarning(message)
@@ -133,3 +134,14 @@ if (!window.google)
 	showWarning("<strong>Warning:</strong> Unable to load Google Maps scripts. Google Maps functionality will be disabled.");
 	googleEnabled = false;
 }
+
+///
+/// Initalisation Code
+///
+RPCCall('LoadProviders', { /* void */
+}, function (data) {
+    if (CheckForError(data)) {
+        return;
+    }
+    serverReady = true;
+});

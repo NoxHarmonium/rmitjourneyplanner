@@ -13,6 +13,8 @@ namespace JayrockClient
     using System.Web.SessionState;
     using System.Web.UI;
     using System.Web.UI.WebControls;
+
+    using Jayrock.Json;
     using Jayrock.JsonRpc;
     using Jayrock.JsonRpc.Web;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
@@ -24,10 +26,10 @@ namespace JayrockClient
 
     #endregion
 
-    [JsonRpcHelp("This is a JSON-RPC service that demonstrates the basic features of the Jayrock library.")]
+    [JsonRpcHelp("This is a JSON-RPC service that exposes functionality related to the RMIT Journey Planner.")]
     public class Jsonws : JsonRpcHandler, IRequiresSessionState
     {
- 	    private static bool LogEventCreated = false;
+        private static bool LogEventCreated;
 		
 		
 		
@@ -108,11 +110,22 @@ namespace JayrockClient
 
         [JsonRpcMethod("GetProperties", Idempotent = true)]
         [JsonRpcHelp("Gets all the properties accessable for the journey planner run.")]
-        public ObjectProperty[] GetProperties()
+        public ObjectProperty[] GetProperties(string journeyUuid)
         {
             PropertyInfo[] propertyInfos = typeof(EvolutionaryProperties).GetProperties();
             var objectProperties = new ObjectProperty[propertyInfos.Length];
-            EvolutionaryProperties properties = ObjectCache.GetObjects<EvolutionaryProperties>().First();
+            //EvolutionaryProperties properties = ObjectCache.GetObjects<EvolutionaryProperties>().First();
+            var jp = ObjectCache.GetObject<JourneyManager>();
+            EvolutionaryProperties properties;
+            try
+            {
+                properties = journeyUuid == null ? new EvolutionaryProperties() : jp.GetJourney(journeyUuid).Properties;
+            }
+            catch (Exception)
+            {
+                throw new JsonException("The supplied journey Uuid was incorrect.");
+            }
+
 			string delimeter = ", ";
             for (int i = 0; i < propertyInfos.Length; i++) 
             {
@@ -153,7 +166,25 @@ namespace JayrockClient
 						var candidates = types.Where(t => (t == pType && !t.IsInterface) ||
 						                             	t.GetInterfaces().Contains(pType));
 						var val = propertyInfos[i].GetValue(properties, null);
-						string valstring = (val != null ? val.ToString() : " ");
+					    string valstring = " ";
+                        if (val != null)
+                        {
+                            var type = val.GetType();
+                            if (type.IsArray)
+                            {
+                                valstring = type.GetElementType().Name;
+
+                            }
+                            else
+                            {
+                                valstring = type.Name;
+                            }
+
+                        }
+					   
+
+
+						//string valstring = (val != null ? val.GetType().Name : " ");
 						value = String.Join(delimeter,candidates.Select(c => c.Name)) + "@" + valstring;
 					}
 					
@@ -190,7 +221,7 @@ namespace JayrockClient
 		
 		[JsonRpcMethod("SetProperties", Idempotent = true)]
 		[JsonRpcHelp("Accepts an array of property names and values and attempts to modify the property object. Returns an array of validation errors.")]
-		public ValidationError[] SetProperties(PropertyValue[] propVals)
+		public ValidationError[] SetProperties(string journeyUuid, PropertyValue[] propVals)
 		{
 			/*
 			 FORMAT:
@@ -201,7 +232,7 @@ namespace JayrockClient
 			List<ValidationError> valErrors = new List<ValidationError>();
 			foreach (var propVal in propVals)
 			{
-				var valError = SetProperty(propVal);
+				var valError = SetProperty(journeyUuid,propVal);
 				if (valError != null)
 				{
 					valErrors.Add(valError);	
@@ -212,28 +243,45 @@ namespace JayrockClient
 		
 		[JsonRpcMethod("SetProperty", Idempotent = true)]
 		[JsonRpcHelp("Accepts a property name and value and attempts to modify the property object. Returns a validation error.")]
-		public ValidationError SetProperty(PropertyValue propVal)
+		public ValidationError SetProperty(string journeyUuid, PropertyValue propVal)
     	{
-    		return SetProperty(propVal,false);
+    		return SetProperty(journeyUuid, propVal,false);
 			
     	}
 		
-		private ValidationError SetProperty(PropertyValue propVal, bool testOnly)
+		private ValidationError SetProperty(string journeyUuid, PropertyValue propVal, bool testOnly)
 		{
 			if (propVal.Name == null)
 			{
 				throw new Exception("Property value name is null. Cannot proceed with validation. Please check your JSON syntax.");
 				
 			}
-			
-    		//var valErrors = new List<ValidationError>();
-			
+            if (journeyUuid == null  && !testOnly)
+            {
+                throw new JsonException("The journey UUID can only be null if the testOnly attribute is true.");
+
+            }
+
+
+		    //var valErrors = new List<ValidationError>();
+		    var jp = ObjectCache.GetObject<JourneyManager>();
+           
     		PropertyInfo[] propertyInfos = typeof(EvolutionaryProperties).GetProperties();
-    		EvolutionaryProperties properties = ObjectCache.GetObjects<EvolutionaryProperties>().First();
+		    EvolutionaryProperties properties;
+		    try
+		    {
+                
+                properties = journeyUuid == null ? new EvolutionaryProperties() : jp.GetJourney(journeyUuid).Properties;
+		    }
+		    catch (Exception)
+		    {
+		        throw new JsonException("The supplied journey Uuid was incorrect.");
+		    }
+		    
     		
     		//foreach (var propVal in propVals)
     		{
-    			var propertyInfo =  propertyInfos.Where(s => s.Name == propVal.Name).FirstOrDefault();
+    			var propertyInfo =  propertyInfos.FirstOrDefault(s => s.Name == propVal.Name);
     			
     			if (propertyInfo == null)
     			{
@@ -392,7 +440,7 @@ namespace JayrockClient
 		[JsonRpcMethod("ValidateField", Idempotent = true)]
 		public ValidationError ValidateField(PropertyValue propVal)
 		{
-			return SetProperty(propVal,true);
+			return SetProperty(null,propVal,true);
 			
 		}
        

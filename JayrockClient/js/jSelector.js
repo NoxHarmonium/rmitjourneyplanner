@@ -3,6 +3,7 @@
 ///
 var currentOption;
 var pendingChanges = false;
+var selectedJourneyUuid;
 
 ///
 /// Functions
@@ -89,21 +90,21 @@ $('#btnDelJourney').click(function() {
 
 });
 
-$('#selJourneyList').change(function(){
-	var selected = $('#selJourneyList>option:selected');
-	if (selected.exists())
-	{
-		$('#txtJourneyName').enable();
-		$('#txtDescription').enable();
-		$('#txtUuid').attr('value',selected.attr('value'));
-		$('#txtJourneyName').attr('value',selected.text());
-		$('#txtDescription').attr('value',selected.attr('description'));
-		currentOption = selected;
-	}
-	else
-	{
-		disableControls();
-	}
+$('#selJourneyList').change(function () {
+    var selected = $('#selJourneyList>option:selected');
+    if (selected.exists()) {
+        $('#txtJourneyName').enable();
+        $('#txtDescription').enable();
+        $('#txtUuid').attr('value', selected.attr('value'));
+        $('#txtJourneyName').attr('value', selected.text());
+        $('#txtDescription').attr('value', selected.attr('description'));
+        currentOption = selected;
+        selectedJourneyUuid = selected.attr('value');
+        GetProperties(selected.attr('value'));
+    }
+    else {
+        disableControls();
+    }
 
 });
 
