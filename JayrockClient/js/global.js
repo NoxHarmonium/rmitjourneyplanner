@@ -135,13 +135,23 @@ if (!window.google)
 	googleEnabled = false;
 }
 
+
+
 ///
 /// Initalisation Code
 ///
-RPCCall('LoadProviders', { /* void */
-}, function (data) {
-    if (CheckForError(data)) {
-        return;
-    }
-    serverReady = true;
+$(document).ready(function () {
+    RPCCall('LoadProviders', {
+        /* void */
+    }, function (data) {
+        if (CheckForError(data)) {
+            return;
+        }
+        serverReady = true;
+        window.refresh();
+        $('#divInfo').hide();
+    });
+
 });
+
+

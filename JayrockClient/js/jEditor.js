@@ -444,7 +444,7 @@ function GetProperties(uuid) {
 
         //Show form / hide loading message.
         $('#frmParameters').show();
-        $('#divInfo').hide();
+        
 
         $("#cg-left").empty();
         $("#cg-right").empty();

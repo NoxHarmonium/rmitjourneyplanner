@@ -134,5 +134,5 @@ $('#btnSaveJourneyName').click(function () {
 ///
 /// Main Code
 ///
-refresh();
+//refresh();
 disableControls();
