@@ -36,17 +36,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
         private readonly EvolutionaryProperties properties;
 
-        private readonly SearchType searchType;
+        private SearchType searchType;
   
 
         public DFSRoutePlanner(EvolutionaryProperties properties)
         {
             this.properties = properties;
-            this.searchType = properties.SearchType;
+            
         }
         
         public Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime)
         {
+            this.searchType = properties.SearchType;
             if (source.Id == -1)
             {
                 source = properties.NetworkDataProviders[0].GetNodeClosestToPointWithinArea(source, source, 1.0, true);
