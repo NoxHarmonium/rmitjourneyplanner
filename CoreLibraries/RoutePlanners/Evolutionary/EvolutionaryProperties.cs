@@ -133,6 +133,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// Gets or sets the route planner used to optimise the journey.
         /// </summary>
         public IRoutePlanner Planner { get; set; }
+
+        /// <summary>
+        /// Gets or sers the maximum number of iterations that the journey optimisation can run for.
+        /// </summary>
+        public int MaxIterations { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the type of the search.
