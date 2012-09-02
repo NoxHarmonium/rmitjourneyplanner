@@ -459,5 +459,34 @@ namespace JayrockClient
 			
 			
 		}
+
+
+
+
+        [JsonRpcMethod("GetOptimisationState", Idempotent = true)]
+        [JsonRpcHelp("Returns the state and queue of the optimisation mananger.")]
+        public object GetOptimisationState()
+        {
+            var jo = ObjectCache.GetObject<JourneyOptimiser>();
+            return new { state = jo.State, queue = jo.GetQueue() };
+        }
+
+
+        [JsonRpcMethod("EnqueueJourney", Idempotent = false)]
+        [JsonRpcHelp("Enqueues the journey specified by its UUID in the optimisation queue the number of times specified by runs.")]
+        public void EnqueueJourney(string uuid, int runs)
+        {
+            if (runs == default(int))
+            {
+                runs = 1;
+            }
+            var jo = ObjectCache.GetObject<JourneyOptimiser>();
+            //var jm = ObjectCache.GetObject<JourneyManager>();
+            jo.EnqueueJourney(uuid,runs);
+
+        }
+
+
+        
     }
 }

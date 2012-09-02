@@ -180,6 +180,7 @@
     <Compile Include="cs\PropertiesImporter.cs" />
     <Compile Include="cs\PropertiesExporter.cs" />
     <Compile Include="cs\ObjectCache.cs" />
+    <Compile Include="testing\TestOptimisationManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreLibraries\CoreLibraries.csproj">
