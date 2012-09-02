@@ -8,6 +8,10 @@ namespace JayrockClient
 		public const string ERR_INVALID_CAST = "The property value you supplied cannot be cast to the property type.";
 		public const string ERR_UNSUPP_REFTYPE = "The property is a reference type that the parser cannot handle.";
 		public const string VALIDATION_SUCCESS = "Success";
+	    public const string ERR_JM_NULL =
+	        "The JourneyManager parameter can not be null. It is required for this class to operate.";
+
+	    public const string ERR_JM_NOTFOUND = "There is no JourneyManager object registered with the ObjectCache.";
 	}
 }
 
