@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace JayrockClient.cs
+namespace JayrockClient
 {
     using System.Collections.Concurrent;
     using System.Threading;
+
+    using RmitJourneyPlanner.CoreLibraries.Types;
 
     /// <summary>
     /// Optimises journeys in a first in first out manner.
@@ -82,6 +84,15 @@ namespace JayrockClient.cs
         }
 
         /// <summary>
+        /// Saves the changes to a file.
+        /// </summary>
+        private void Save(IEnumerable<Result> results)
+        {
+            
+
+        }
+
+        /// <summary>
         /// Called internally to process the journey optimisation queue.
         /// </summary>
         private void OptimisationLoop()
@@ -90,6 +101,23 @@ namespace JayrockClient.cs
             {
                 var jUuid = bc.Take(cToken);
                 var journey = journeyManager.GetJourney(jUuid);
+                var planner = journey.Properties.Planner;
+                planner.Start();
+                var results = new List<Result>(journey.Properties.MaxIterations);
+                for (int i = 0; i < journey.Properties.MaxIterations; i++)
+                {
+                    planner.SolveStep();
+                    //results.Add(planner.re);
+                    if (cToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                }
+                
+                if (!cToken.IsCancellationRequested)
+                {
+                    Save(results);
+                }
 
             }
         }
