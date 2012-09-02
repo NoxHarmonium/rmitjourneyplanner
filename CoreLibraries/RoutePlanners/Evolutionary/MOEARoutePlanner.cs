@@ -123,6 +123,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
         }
 
+        /// <summary>
+        /// Gets the result of the last iteration.
+        /// </summary>
+        public Result IterationResult
+        {
+            get
+            {
+                return result;
+            }
+        }
+
         public List<List<Critter>> Fronts
         {
             get

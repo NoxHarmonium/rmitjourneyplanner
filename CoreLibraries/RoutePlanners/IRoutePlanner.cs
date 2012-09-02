@@ -36,6 +36,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         /// </summary>
         int Iteration { get;}
 
+        /// <summary>
+        /// Gets the result of the last iteration.
+        /// </summary>
+        Result IterationResult { get; }
         #endregion
 
         #region Public Methods
