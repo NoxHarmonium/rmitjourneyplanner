@@ -42,18 +42,6 @@ namespace JayrockClient
 				LogEventCreated = true;
 			}
 			
-			if (!ObjectCache.GetObjects<MetlinkDataProvider>().Any())
-			{
-				ObjectCache.RegisterObject(new MetlinkDataProvider());				
-			}
-			if (!ObjectCache.GetObjects<EvolutionaryProperties>().Any())
-			{
-				ObjectCache.RegisterObject(new EvolutionaryProperties());
-			}
-			if (!ObjectCache.GetObjects<JourneyManager>().Any())
-			{
-				ObjectCache.RegisterObject(new JourneyManager());
-			}
 		}
 		
 		[JsonRpcMethod("NewJourney", Idempotent = true)]
@@ -105,14 +93,27 @@ namespace JayrockClient
             ObjectCache.DeregisterObjects(typeof(IPointDataProvider));
             //this.DeregisterObjects(typeof(INetworkDataProvider));
             IPointDataProvider provider = new WalkingDataProvider();
-           ObjectCache.RegisterObject(provider);            
+            ObjectCache.RegisterObject(provider);
+
+           if (!ObjectCache.GetObjects<MetlinkDataProvider>().Any())
+           {
+               ObjectCache.RegisterObject(new MetlinkDataProvider());
+           }
+           if (!ObjectCache.GetObjects<EvolutionaryProperties>().Any())
+           {
+               ObjectCache.RegisterObject(new EvolutionaryProperties());
+           }
+           if (!ObjectCache.GetObjects<JourneyManager>().Any())
+           {
+               ObjectCache.RegisterObject(new JourneyManager());
+           }
         }
 
         [JsonRpcMethod("GetProperties", Idempotent = true)]
         [JsonRpcHelp("Gets all the properties accessable for the journey planner run.")]
         public ObjectProperty[] GetProperties(string journeyUuid)
         {
-            PropertyInfo[] propertyInfos = typeof(EvolutionaryProperties).GetProperties();
+            PropertyInfo[] propertyInfos = typeof(EvolutionaryProperties).GetProperties().OrderBy(p => p.PropertyType.Name).ToArray();
             var objectProperties = new ObjectProperty[propertyInfos.Length];
             //EvolutionaryProperties properties = ObjectCache.GetObjects<EvolutionaryProperties>().First();
             var jp = ObjectCache.GetObject<JourneyManager>();
