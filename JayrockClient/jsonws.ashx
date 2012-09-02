@@ -1,2 +1,2 @@
-﻿<%@ WebHandler Class="JayrockClient.Jsonws" Language="C#" CodeBehind="jsonws.cs" %>
+﻿<%@ WebHandler Class="JayrockClient.Jsonws" Language="C#" CodeBehind="cs/jsonws.cs" %>
 
