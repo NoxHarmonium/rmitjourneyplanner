@@ -128,6 +128,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         ///   Gets or sets the object used to build routes between 2 nodes.
         /// </summary>
         public IRouteGenerator RouteGenerator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the route planner used to optimise the journey.
+        /// </summary>
+        public IRoutePlanner Planner { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the type of the search.
