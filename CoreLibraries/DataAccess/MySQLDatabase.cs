@@ -54,6 +54,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         ///   Initializes a new instance of the <see cref="MySqlDatabase" /> class with a specified database name.
         /// </summary>
         /// <param name="database"> The database. </param>
+        [Obsolete]
         public MySqlDatabase(string database)
         {
             this.connectionString = Settings.Entries["ConnectionString"];
