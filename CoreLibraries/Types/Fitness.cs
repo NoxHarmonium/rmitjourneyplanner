@@ -63,6 +63,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 return Enum.GetValues(typeof(FitnessParameters)).Length;
             }
         }
+
+       
         
         /// <summary>
         /// References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).

@@ -6,7 +6,11 @@ using System.Web;
 namespace JayrockClient
 {
     using System.Collections.Concurrent;
+    using System.IO;
     using System.Threading;
+
+    using Jayrock.Json;
+    using Jayrock.Json.Conversion;
 
     using RmitJourneyPlanner.CoreLibraries.Types;
 
@@ -75,6 +79,16 @@ namespace JayrockClient
         /// Stores an exception thrown by the optimisation thread;
         /// </summary>
         private Exception thrownException = null;
+
+        /// <summary>
+        /// The list of directories used by the journey optimiser.
+        /// </summary>
+        //TODO: Make a better way to handle directories.
+        private readonly string[] directories = 
+		{
+			"JSONStore",	
+			"JSONStore/Journeys"	
+		};
 
         /// <summary>
         /// Initialises a new instance of the <see cref="JourneyOptimiser"/> class with the specified <see cref="JourneyManager"/> instance.
@@ -224,6 +238,9 @@ namespace JayrockClient
         private void OptimisationLoop()
         {
 
+            var exportContext = JsonConvert.CreateExportContext();
+            exportContext.Register(new CritterExporter());
+
             try
             {
                 while (!cTokenSource.IsCancellationRequested)
@@ -237,6 +254,7 @@ namespace JayrockClient
                     }
                     var jUuid = bc.Take(cTokenSource.Token);
                     this.state = OptimiserState.Optimising;
+                    var runUuid = Guid.NewGuid().ToString();
                     var journey = journeyManager.GetJourney(jUuid);
                     var planner = journey.Properties.Planner;
                     planner.Start();
@@ -247,12 +265,33 @@ namespace JayrockClient
                     {
                         currentIteration++;
                         planner.SolveStep();
+                        results.Add(planner.IterationResult);
+                       
                         //results.Add(planner.re);
                         if (cTokenSource.IsCancellationRequested)
                         {
                             break;
                         }
                     }
+
+                    lock (journey.RunUuids)
+                    {
+                        //TODO: Make this more efficient/better coded
+                        var newList = new List<string>(journey.RunUuids);
+                        journey.RunUuids = newList.ToArray();
+
+
+                        string dir = directories[1] + "/" + journey.Uuid + "/";
+                        
+                        Directory.CreateDirectory(dir);
+                        using (var writer = new StreamWriter(dir +  runUuid + ".json"))
+                        {
+
+                            exportContext.Export(results, new JsonTextWriter(writer));
+                        }
+                    }
+
+                    journeyManager.Save();
 
                     if (!cTokenSource.IsCancellationRequested)
                     {
@@ -264,8 +303,8 @@ namespace JayrockClient
             }
             catch (Exception e)
             {
-                this.thrownException = e;
-                //throw;
+                //this.thrownException = e;
+                throw;
             }
             finally
             {

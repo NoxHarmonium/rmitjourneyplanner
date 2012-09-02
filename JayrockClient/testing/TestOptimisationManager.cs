@@ -58,6 +58,7 @@ namespace JayrockClient
             properties.MaxIterations = 25;
 
             JourneyManager jm = new JourneyManager();
+            jm.Clean();
             jm.Add(j);
             JourneyOptimiser jo = new JourneyOptimiser(jm);
             jo.EnqueueJourney(j.Uuid,2);

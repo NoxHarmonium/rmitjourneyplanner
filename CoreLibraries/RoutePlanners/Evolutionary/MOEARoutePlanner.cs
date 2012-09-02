@@ -512,15 +512,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
-            
-            foreach (var critter in this.Population)
-            {
-                this.result.AverageFitness += critter.Fitness;
-            }
-            this.result.AverageFitness /= population.Count;
-            var sorted = this.Population.OrderBy(z => z.Fitness.TotalJourneyTime);
-            this.result.MinimumFitness = sorted.First().Fitness;
-            this.result.BestPath = sorted.First().Route;
+
+      
+            this.result.Population = this.population;
+
+            //foreach (var critter in this.Population)
+            //{
+                //this.result.AverageFitness += critter.Fitness;
+            //}
+            //this.result.AverageFitness /= population.Count;
+            //var sorted = this.Population.OrderBy(z => z.Fitness.TotalJourneyTime);
+            ///this.result.MinimumFitness = sorted.First().Fitness;
+            //this.result.BestPath = sorted.First().Route;
             
 
             //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
@@ -574,7 +577,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
                 critter.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 30.0)-15.0);
                 Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
-                this.result.AverageFitness += critter.Fitness;
+                //this.result.AverageFitness += critter.Fitness;
                 var ff = (AlFitnessFunction)this.Properties.FitnessFunction;
                 foreach (int routeUsed in ff.RoutesUsed)
                 {
@@ -596,12 +599,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
-            this.result.DiversityMetric = routesUsed.Keys.Count;
-            this.result.AverageFitness /= this.Properties.PopulationSize;
-            Console.WriteLine("---EVALULATING FITTEST MEMBER---");
-            this.result.MinimumFitness = this.Population.OrderBy(f => f.Fitness.TotalJourneyTime).FirstOrDefault().Fitness;
-            this.result.BestPath = this.Population.OrderBy(f => f.Fitness.TotalJourneyTime).FirstOrDefault().Route;
             this.result.Population = this.population;
+            //this.result.DiversityMetric = routesUsed.Keys.Count;
+            //this.result.AverageFitness /= this.Properties.PopulationSize;
+            //Console.WriteLine("---EVALULATING FITTEST MEMBER---");
+            //this.result.MinimumFitness = this.Population.OrderBy(f => f.Fitness.TotalJourneyTime).FirstOrDefault().Fitness;
+            //this.result.BestPath = this.Population.OrderBy(f => f.Fitness.TotalJourneyTime).FirstOrDefault().Route;
+           
+            //this.IterationResult
             Console.WriteLine("------------------------");
             //Tools.SavePopulation(this.population, 0, this.properties);
             //this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);

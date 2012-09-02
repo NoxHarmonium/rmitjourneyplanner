@@ -410,21 +410,21 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             SanityCheck("Post Sort", this.Population);
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
-            this.result.DiversityMetric = routesUsed.Keys.Count;
-            foreach (var critter in this.Population)
-            {
-                this.result.AverageFitness += critter.Fitness;
-            }
-            this.result.AverageFitness /= population.Count;
-            this.result.MinimumFitness = this.Population[0].Fitness;
-            this.result.BestPath = this.Population[0].Route;
+            //this.result.DiversityMetric = routesUsed.Keys.Count;
+            //foreach (var critter in this.Population)
+            //{
+            //    this.result.AverageFitness += critter.Fitness;
+            //}
+            //this.result.AverageFitness /= population.Count;
+            //this.result.MinimumFitness = this.Population[0].Fitness;
+           // this.result.BestPath = this.Population[0].Route;
 
 
             //Tools.SavePopulation(this.population.GetRange(0, 25), ++this.generation, this.properties);
 
             //this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
 
-            Console.WriteLine("Average fitness: {0}", this.result.MinimumFitness);
+            //Console.WriteLine("Average fitness: {0}", this.result.MinimumFitness);
             SanityCheck("Post Solve Step", this.Population);
             return false;
         }
@@ -476,7 +476,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
 
                 Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
-                this.result.AverageFitness += critter.Fitness;
+                //this.result.AverageFitness += critter.Fitness;
                 var ff = (AlFitnessFunction)this.Properties.FitnessFunction;
                 foreach (int routeUsed in ff.RoutesUsed)
                 {
@@ -500,11 +500,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
-            this.result.DiversityMetric = routesUsed.Keys.Count;
-            this.result.AverageFitness /= this.Properties.PopulationSize;
+            //this.result.DiversityMetric = routesUsed.Keys.Count;
+            //this.result.AverageFitness /= this.Properties.PopulationSize;
             Console.WriteLine("---EVALULATING FITTEST MEMBER---");
-            this.result.MinimumFitness = this.Properties.FitnessFunction.GetFitness(this.population[0].Route);
-            this.result.BestPath = this.population[0].Route;
+            //this.result.MinimumFitness = this.Properties.FitnessFunction.GetFitness(this.population[0].Route);
+            //this.result.BestPath = this.population[0].Route;
             this.result.Population = this.population;
             Console.WriteLine("------------------------");
             //Tools.SavePopulation(this.population, 0, this.properties);

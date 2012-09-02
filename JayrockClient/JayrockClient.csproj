@@ -159,6 +159,7 @@
     <Content Include="js\jSelector.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cs\CritterExporter.cs" />
     <Compile Include="cs\JourneyOptimiser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JSONObjects\ObjectProperty.cs" />

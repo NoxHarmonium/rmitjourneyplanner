@@ -112,6 +112,18 @@ namespace JayrockClient
 			
 		}
 		
+        /// <summary>
+        /// Deletes all saved journeys and associated runs. Also clears the internal dictionary.
+        /// </summary>
+        public void Clean()
+        {
+            this.journeyMap.Clear();
+            new DirectoryInfo(directories[1]).Delete(true);
+            this.CreateDirectoryStructure();
+
+        }
+
+
 		/// <summary>
 		/// Saves the current journeys to disk overwriting all existing files.
 		/// </summary>
