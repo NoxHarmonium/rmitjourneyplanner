@@ -164,8 +164,8 @@
     <Compile Include="JSONObjects\ObjectProperty.cs" />
     <Compile Include="JSONObjects\ValidationError.cs" />
     <Compile Include="JSONObjects\PropertyValue.cs" />
-    <Compile Include="Strings.cs" />
-    <Compile Include="jsonws.cs">
+    <Compile Include="cs\Strings.cs" />
+    <Compile Include="cs\jsonws.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="JSONObjects\PropertyValues.cs" />
