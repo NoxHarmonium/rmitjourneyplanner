@@ -167,35 +167,74 @@
                 Optimiser
             </h3>
             <div class="row">
-                <div class="span12">
-                    <form id="frmJourneyOptimiser" class="form-horizontal" style="display: none;">
-                        <div class="span6">
-                            <fieldset>
-                                <div class="control-group">
-                                    <label class="control-label" for="txtOptStatus">    
-                                        Optimiser Status:</label>
-                                    <div class="controls">
-                                        <input id="txtOptStatus" type="text" disabled="disabled"/> 
-                                    </div>
+                <!--<div class="span12">-->
+                <form id="frmJourneyOptimiser" class="form-horizontal" style="display: none;">
+                    <div class="span6">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="txtOptStatus">    
+                                    Optimiser Status:</label>
+                                <div class="controls">
+                                    <input id="txtOptStatus" type="text" disabled="disabled"/> 
                                 </div>
-                            </fieldset>
-                        </div>
-                        <div class="span6">
-                            <fieldset>
-                                <div class="control-group">
-                                    <label class="control-label" for="selOptimiserQueue">
-                                        Optimiser Queue:</label>
-                                    <div class="controls">
-                                        <select id="selOptimiserQueue" multiple="multiple" disabled="disabled">
-                                            <option>Loading...</option>
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="selOptimiserQueue">
+                                    Optimiser Queue:</label>
+                                <div class="controls">
+                                    <select id="selOptimiserQueue" multiple="multiple" disabled="disabled">
+                                        <option>Loading...</option>
+                                    </select>
                                 </div>
-                            </fieldset>
-                        </div>
-                    </form>
-                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="span6">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="txtJOCurrentJourney">    
+                                    Current Journey:</label>
+                                <div class="controls">
+                                    <input id="txtJOCurrentJourney" type="text" disabled="disabled"/> 
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label formLabel">    
+                                    Progress:</div>
+                                <div class="controls">
+                                         <input id="txtJPCurrentIter" type="text" disabled="disabled" class="input-mini"/> out of <input id="txtJOTotalIters" type="text" disabled="disabled" class="input-mini"/> 
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="control-label formLabel">    
+                                    </div>
+                                <div class="controls">
+                                        <div id="prgJO" class="progress progress-striped active" style="width: 210px;">
+                                            <div class="bar" style="width: 0%;"></div>
+                                        </div>  
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </form>
             </div>
+            <div class="span12">
+                    <div class="form-actions">
+                        <button id="btnJOPause" type="button" class="btn">
+                            Pause
+                        </button>
+                        <button id="btnJOResume" type="button" class="btn">
+                            Resume
+                        </button>
+                        <button id="btnJOEnqueue" type="button" class="btn">
+                            Enqueue Selected Journey
+                        </button>
+                         <button id="btnJORefresh" type="button" class="btn">
+                           Refresh
+                        </button>
+                    </div>
+                </div>
+            <!--</div>-->
         </div>
      
         <div id="divJViewer" class='section'>
