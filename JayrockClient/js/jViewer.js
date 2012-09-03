@@ -151,6 +151,46 @@ if (googleEnabled)
 
    });
 
+   $('#selGraphObjectives').change(function () {
+       var members = $(this).find(':selected');
+       if (members.length > 1) {
+
+           $('divGraph').empty();
+           var dataSet = new Array();
+
+           var labelA = $(members[0]).text();
+           var labelB = $(members[1]).text();
+
+           dataSet.push([labelA, labelB]);
+           var _currentData = window.mapManager.getData();
+
+           for (var i in _currentData.population) {
+               dataSet.push([_currentData.population[i].Critter.Fitness[labelA],
+                            _currentData.population[i].Critter.Fitness[labelB]]);
+
+
+               opt = jQuery(document.createElement('option'));
+               opt.text(i);
+               $('#selPopulation').append(opt);
+           }
+
+
+           var data = google.visualization.arrayToDataTable(dataSet);
+
+           var options = {
+               title: 'Population Analysis',
+               hAxis: { title: labelA, minValue: 0, maxValue: 1 },
+               vAxis: { title: labelB , minValue: 0, maxValue: 1 },
+               legend: 'none'
+           };
+
+           var chart = new google.visualization.ScatterChart(document.getElementById('divGraph'));
+           chart.draw(data, options);
+
+       }
+
+   });
+
    ///
    /// Helper functions
    ///
@@ -285,7 +325,10 @@ if (googleEnabled)
         var _currentData;
         var _currentMember;
 
+        this.getData = function() {
+            return _currentData;
 
+        };
         this.generateLegDiv = function (leg, index) {
 
             //"Legs":[{"Start":19965,"End":19842,"Mode":"Train","TotalTime":"00:45:00","Route":"111","DepartTime":"2012-09-03T14:00:50.5030000+10:00"}]
@@ -460,8 +503,8 @@ if (googleEnabled)
         
         //Load a specific iteration from the loaded run file.
         this.loadIteration = function (iterationNum) {
-          
-            
+
+
             _iteration = iterationNum;
 
             RPCCall("GetIteration", { "journeyUuid": _journeyUuid, "runUuid": _runUuid, "iteration": _iteration }, function (data) {
@@ -471,17 +514,26 @@ if (googleEnabled)
                 _currentData = eval('(' + data.result + ')');
 
                 $('#selPopulation').empty();
-                
+
                 // Empty element for ease of use.
                 var opt = jQuery(document.createElement('option'));
                 $('#selPopulation').append(opt);
 
-                for (var i in _currentData.population) {
 
+
+                $('#selGraphObjectives').empty();
+                for (var i in _currentData.population[0].Critter.Fitness) {
                     opt = jQuery(document.createElement('option'));
+                    var keys = Object.keys(_currentData.population[0].Critter.Fitness);
+                    
                     opt.text(i);
-                    $('#selPopulation').append(opt);
+                    $('#selGraphObjectives').append(opt);
                 }
+
+
+
+
+
 
 
             });

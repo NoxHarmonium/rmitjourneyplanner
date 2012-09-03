@@ -34,7 +34,9 @@
     <script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <script src="js/jquery-ui-1.8.23.custom.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
+    <script type="text/javascript">
+        google.load("visualization", "1", { packages: ["corechart"] });
+    </script>
     <!--<script type="text/javascript" src="js/geo-autocomplete/lib/jquery.autocomplete_geomod.js"></script>-->
     <!--<script type="text/javascript" src="js/geo-autocomplete/geo_autocomplete.js"></script>-->
 </head>
@@ -247,42 +249,52 @@
             <h3>
                 Journey Viewer
             </h3>
-            <div class="span12">
-                <form id="Form1" class="form-horizontal">
-                <fieldset>
-                    <div class="control-group">
-                        <label class="control-label" for="lstRuns">
-                            Run selection:</label>
-                        <div class="controls">
-                            <select id="selJourneyRuns" type="text" disabled="disabled">
-                            </select>
+            <div class="row">
+                <div class="span6">
+                    <form id="Form1" class="form-horizontal">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="lstRuns">
+                                Run selection:</label>
+                            <div class="controls">
+                                <select id="selJourneyRuns" type="text" disabled="disabled">
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label class="control-label" for="selIterations">
-                            Iteration:</label>
-                        <div class="controls">
-                            <select id="selIterations" type="text">
-                            </select>
+                        <div class="control-group">
+                            <label class="control-label" for="selIterations">
+                                Iteration:</label>
+                            <div class="controls">
+                                <select id="selIterations" type="text">
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label class="control-label" for="selPopulation">
-                            Candidate Solution:</label>
-                        <div class="controls">
-                            <select id="selPopulation" type="text" disabled="disabled">
-                            </select>
+                        <div class="control-group">
+                            <label class="control-label" for="selPopulation">
+                                Candidate Solution:</label>
+                            <div class="controls">
+                                <select id="selPopulation" type="text" disabled="disabled">
+                                </select>
+                            </div>
                         </div>
+                        <div class="control-group">
+                            <label class="control-label" for="selGraphObjectives">
+                                Graph Objectives:</label>
+                            <div class="controls">
+                                <select id="selGraphObjectives" type="text" multiple="multiple">
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    </form>
+                </div>
+                <div class="span6">
+                    <div id="divGraph" style="width: 400px; height: 400px;">
                     </div>
-                </fieldset>
-                </form>
+                </div>
             </div>
             <div class="span12">
                 <div id="divJViewerL" class="mapDiv">
-                   
-                  
                     <!---
                     <div id="divJViewerL" class="mapDiv">
                   
@@ -330,7 +342,8 @@
                     </div>
                 </div>
                 <div id="divJViewerB" class="mapDiv">
-                    <div id="divSlider"></div>
+                    <!--<div id="divSlider"></div>-->
+                    <!--<div class="span8"></div>-->
                 </div>
             </div>
         </div>

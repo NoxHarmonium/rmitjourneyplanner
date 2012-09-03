@@ -141,12 +141,15 @@ if (!window.google)
 /// Initalisation Code
 ///
 $(document).ready(function () {
+    //
+
     RPCCall('LoadProviders', {
         /* void */
     }, function (data) {
         if (CheckForError(data)) {
             return;
         }
+        google.load("visualization", "1", { packages: ["corechart"] });
         serverReady = true;
         window.refresh();
         window.OptimiserRefresh();
