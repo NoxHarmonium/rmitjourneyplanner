@@ -107,6 +107,7 @@
     <Content Include="js\geo-autocomplete\lib\jquery.autocomplete.css" />
     <Content Include="js\geo-autocomplete\lib\jquery.autocomplete_geomod.js" />
     <Content Include="js\geo-autocomplete\ui.geo_autocomplete.js" />
+    <Content Include="js\jOptimiser.js" />
     <Content Include="js\jquery.dateFormat-1.0.js" />
     <Content Include="js\libs\bootstrap\alert.js" />
     <Content Include="js\libs\bootstrap\bootstrap.js" />

@@ -6,226 +6,259 @@
 <html class="no-js" lang="en">
 <!--<![endif]-->
 <head>
-<meta charset="utf-8"/>
-<!--TODO: Fix this: -->
-<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-<title>RMIT Journey Planner :: Search</title>
-<meta name="description" content=""/>
-<meta name="author" content="Sean Dawson" />
-<meta name="viewport" content="width=device-width"/>
-<link rel="stylesheet" href="css/bootstrap.css"/>
-<style>
+    <meta charset="utf-8" />
+    <!--TODO: Fix this: -->
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+    <title>RMIT Journey Planner :: Search</title>
+    <meta name="description" content="" />
+    <meta name="author" content="Sean Dawson" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <style>
         body
         {
             padding-top: 60px;
             padding-bottom: 40px;
         }
-</style>
-<link rel="stylesheet" href="css/bootstrap-responsive.css"/>
-<link rel="stylesheet" href="css/style.css"/>
-<link rel="stylesheet" href="css/datepicker.css"/>
-<link rel="stylesheet" href="css/timepicker.css"/>
-<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.23.custom.css"/>
-<link rel="stylesheet" type="text/css" href="js/geo-autocomplete/lib/jquery.autocomplete.css"/>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script> window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
-<script src="js/libs/jquery.json-2.3.min.js"></script>
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false&amp;location=-37.809784,144.972839&amp;radius=25000"></script>
-<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
-<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
-<!--<script type="text/javascript" src="js/geo-autocomplete/lib/jquery.autocomplete_geomod.js"></script>-->
-<!--<script type="text/javascript" src="js/geo-autocomplete/geo_autocomplete.js"></script>-->
+    </style>
+    <link rel="stylesheet" href="css/bootstrap-responsive.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/datepicker.css" />
+    <link rel="stylesheet" href="css/timepicker.css" />
+    <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" />
+    <link rel="stylesheet" type="text/css" href="js/geo-autocomplete/lib/jquery.autocomplete.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script>        window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+    <script src="js/libs/jquery.json-2.3.min.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false&amp;location=-37.809784,144.972839&amp;radius=25000"></script>
+    <script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+    <!--<script type="text/javascript" src="js/geo-autocomplete/lib/jquery.autocomplete_geomod.js"></script>-->
+    <!--<script type="text/javascript" src="js/geo-autocomplete/geo_autocomplete.js"></script>-->
 </head>
 <body>
-<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-			</a><a class="brand" href="#">RMIT Journey Planner</a>
-			<div class="nav-collapse">
-				<ul class="nav">
-					<li><a href="#" page="#divJSelector">Manage</a></li>
-					<li><a href="#" page="#divJEditor">Edit</a></li>
-					<li><a href="#" page="#divJOptimiser" >Optimise</a></li>
-					<li><a href="#" page="#divJViewer">View</a></li>
-				</ul>
-			</div>
-			<!--/.nav-collapse -->
-		</div>
-	</div>
-</div>
-<div class="container">
-	<!-- Main hero unit for a primary marketing message or call to action -->
-	<div class="hero-unit">
-		<!--<img src="img/rmitLogo.gif"/>-->
-		<h1>
-		RMIT Journey Planner</h1>
-		<p>
-			 Public transport route planner based on genetic algorithms.
-		</p>
-	</div>
-	<div id="divMessageBars" >
-		<div id="divError" class="alert alert-error" style="display:none;">
-		</div>
-		<div class="alert alert-info" id="divInfo" style="display:none;">
-			<strong>Loading...</strong><br/>Please wait.....
-		</div>
-		<div class="alert alert-warning" id="divWarning" style="display: none;">
-		</div>
-	</div>
-		<div id="divJSelector" class='section'>	
-		<h3>Journey Browser</h3>	
-		<div class="row">
-			<div class="span12">
-								
-				<form id="frmJourneySelect" class="form-horizontal">
-							
-					<div class="span5">
-						<fieldset>
-							<div class="control-group">
-								<label class="control-label" for="selJourneyList">Journeys:</label>
-								<div class="controls">
-									<select id="selJourneyList" multiple="multiple">
-										<option>Loading...</option>
-									</select>
-								</div>
-							</div>
-						</fieldset>
-					</div>
-					<div class="span5">
-						<fieldset>
-							<div class="control-group">
-								<label class="control-label" for="txtUuid">Journey UUID:</label>
-								<div class="controls">
-									<input id="txtUuid" type="text" disabled>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="txtJourneyName">Journey Name:</label>
-								<div class="controls">
-									<input id="txtJourneyName" type="text" placeholder="Type a short name to identify the journey.">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="txtDescription">Journey Description:</label>
-								<div class="controls">
-									<input id="txtDescription" type="type" placeholder="Type a short description of the journey.">
-								</div>
-							</div>
-							<div class="control-group">
-								<!--<label class="control-label" for="btnSaveJourneyName">Journey Description:</label>-->
-								<div class="controls">
-									<button id="btnSaveJourneyName" class="btn" type="button">Save</button>
-								</div>
-							</div>
-						</fieldset>
-				
-				
-					</div>
-					<div class="span12">
-						<div class="form-actions">
-							<button id="btnNewJourney" class="btn" type="button">New Journey</button>
-							<button id="btnDelJourney" class="btn" type="button">Delete Journey</button>							
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		</div>
-		<div id="divJEditor" class='section'><h3>Journey Editor </h3>
-		<div class="row">
-			<!--<div class="span12"> -->
-				<form id="frmParameters" class="form-horizontal" style="display:none;">
-					
-					<div id="cg-left" class="span6">
-					</div>
-					<div id="cg-right" class="span6">
-					</div>
-					<div class="span12">
-						<div class="form-actions">
-							<button id="btnSaveProperties" type="button" class="btn">
-							Save Changes </button>
-						</div>
-					</div>
-				</form>
-			<!--</div> -->
-		</div>
-		</div>
-		
-		<div id="divJOptimiser" class="section">
-			<h3>
-				Optimiser			
-			</h3>
-			<p>
-				
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt dictum arcu ullamcorper accumsan.
-
-			</p>
-		
-		</div>
-		<div id="divJViewer" class='section'>
-						
-			<div id="divJViewerL" class="mapDiv">
-						<h1>Journey Viewer</h1>	
-						<p>
-						
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt dictum arcu ullamcorper accumsan.
-
-Mauris facilisis commodo est nec porttitor. Morbi quis urna id ante viverra tempus. Vivamus quis neque magna, nec eleifend lorem. Nunc molestie metus et arcu ornare vulputate. Nullam massa velit, congue vel auctor non, malesuada quis diam. Nullam porttitor mollis facilisis. Integer nec condimentum felis. Vestibulum porta condimentum orci, sed viverra nulla lacinia quis. Fusce pharetra tincidunt magna, et feugiat mi fringilla eu. Quisque et magna ac risus suscipit interdum. Proin tempor ligula sit amet neque convallis dictum.
-
-Donec vitae dui odio. Integer consequat mauris et ligula pellentesque luctus. Donec feugiat ipsum et ligula dictum congue. Cras et dolor tincidunt eros elementum dapibus. Ut vel dolor mi, eget vulputate elit. Duis dignissim tellus sagittis arcu convallis non sollicitudin justo aliquet. Vivamus elementum consectetur condimentum. Morbi leo orci, faucibus et mattis pharetra, congue vestibulum nisl.
-
-Vestibulum et justo nulla. Donec sit amet tortor nisi, et sodales justo. Proin accumsan eros sed mauris lobortis blandit. Phasellus quis risus sagittis ante malesuada sagittis et quis ligula. Suspendisse eget massa urna. Vestibulum in mauris sit amet nisi suscipit condimentum. Ut eros urna, condimentum sit amet gravida ac, gravida in metus. Praesent ut metus et magna fringilla tincidunt sit amet nec dolor. Pellentesque justo erat, adipiscing vulputate pretium sit amet, tristique a velit. Integer id molestie quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras sed pharetra lectus. Sed porta commodo augue, eget convallis dui semper a. Maecenas eleifend, neque dignissim placerat faucibus, eros elit vestibulum neque, vitae dictum lacus nisl sed lorem.
-
-Nunc tincidunt fermentum eleifend. Maecenas sit amet eros turpis, imperdiet egestas leo. Phasellus lectus erat, auctor ac volutpat vitae, dapibus vitae sapien. Morbi in venenatis tellus. Pellentesque in fringilla lectus. Pellentesque vulputate scelerisque posuere. Curabitur euismod bibendum vehicula. Nunc malesuada sem vel sem rutrum vulputate. Aliquam elementum adipiscing tincidunt. Duis quis lorem lectus, nec euismod nunc. Aliquam ut ligula sem. 						
-						
-						</p>
-			</div>
-			<div id="divJViewerR" class="mapDiv">
-					<div id="map_canvas" style="width:69%; height:100%;"></div>
-			</div>
-			
-			<div id="divJViewerB" class="mapDiv">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt dictum arcu ullamcorper accumsan.			
-			
-			
-			</div>
-		</div>
-
-	
-	<hr/>
-	<footer>
+    <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </a><a class="brand" href="#">RMIT Journey Planner</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="#" data-page="#divJSelector">Manage</a></li>
+                        <li><a href="#" data-page="#divJEditor">Edit</a></li>
+                        <li><a href="#" data-page="#divJOptimiser">Optimise</a></li>
+                        <li><a href="#" data-page="#divJViewer">View</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Main hero unit for a primary marketing message or call to action -->
+        <div class="hero-unit">
+            <!--<img src="img/rmitLogo.gif"/>-->
+            <h1>
+                RMIT Journey Planner</h1>
+            <p>
+                Public transport route planner based on genetic algorithms.
+            </p>
+        </div>
+        <div id="divMessageBars">
+            <div id="divError" class="alert alert-error" style="display: none;">
+            </div>
+            <div class="alert alert-info" id="divInfo" style="display: none;">
+                <strong>Loading...</strong><br />
+                Please wait.....
+            </div>
+            <div class="alert alert-warning" id="divWarning" style="display: none;">
+            </div>
+        </div>
+        <div id="divJSelector" class='section'>
+            <h3>
+                Journey Browser</h3>
+            <div class="row">
+                <div class="span12">
+                    <form id="frmJourneySelect" class="form-horizontal">
+                    <div class="span5">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="selJourneyList">
+                                    Journeys:</label>
+                                <div class="controls">
+                                    <select id="selJourneyList" multiple="multiple">
+                                        <option>Loading...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="span5">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="txtUuid">
+                                    Journey UUID:</label>
+                                <div class="controls">
+                                    <input id="txtUuid" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="txtJourneyName">
+                                    Journey Name:</label>
+                                <div class="controls">
+                                    <input id="txtJourneyName" type="text" placeholder="Type a short name to identify the journey.">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="txtDescription">
+                                    Journey Description:</label>
+                                <div class="controls">
+                                    <input id="txtDescription" type="text" placeholder="Type a short description of the journey.">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <!--<label class="control-label" for="btnSaveJourneyName">Journey Description:</label>-->
+                                <div class="controls">
+                                    <button id="btnSaveJourneyName" class="btn" type="button">
+                                        Save</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="span12">
+                        <div class="form-actions">
+                            <button id="btnNewJourney" class="btn" type="button">
+                                New Journey</button>
+                            <button id="btnDelJourney" class="btn" type="button">
+                                Delete Journey</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="divJEditor" class='section'>
+            <h3>
+                Journey Editor
+            </h3>
+            <div class="row">
+                <!--<div class="span12"> -->
+                <form id="frmParameters" class="form-horizontal" style="display: none;">
+                <div id="cg-left" class="span6">
+                </div>
+                <div id="cg-right" class="span6">
+                </div>
+                <div class="span12">
+                    <div class="form-actions">
+                        <button id="btnSaveProperties" type="button" class="btn">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+                </form>
+                <!--</div> -->
+            </div>
+        </div>
+    
+        <div id="divJOptimiser" class="section">
+            <h3>
+                Optimiser
+            </h3>
+            <div class="row">
+                <div class="span12">
+                    <form id="frmJourneyOptimiser" class="form-horizontal" style="display: none;">
+                        <div class="span6">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="txtOptStatus">    
+                                        Optimiser Status:</label>
+                                    <div class="controls">
+                                        <input id="txtOptStatus" type="text" disabled="disabled"/> 
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="span6">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="selOptimiserQueue">
+                                        Optimiser Queue:</label>
+                                    <div class="controls">
+                                        <select id="selOptimiserQueue" multiple="multiple" disabled="disabled">
+                                            <option>Loading...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+     
+        <div id="divJViewer" class='section'>
+            <h3>
+                Journey Viewer
+            </h3>
+            <div id="divJViewerL" class="mapDiv">
+                
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed
+                    elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam
+                    vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit
+                    non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat
+                    pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus
+                    quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla
+                    dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt
+                    dictum arcu ullamcorper accumsan.</p>
+            </div>
+            <div id="divJViewerR" class="mapDiv">
+                <div id="map_canvas" style="width: 69%; height: 100%;">
+                </div>
+            </div>
+            <div id="divJViewerB" class="mapDiv">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed
+                    elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam
+                    vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit
+                    non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat
+                    pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus
+                    quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla
+                    dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt
+                    dictum arcu ullamcorper accumsan.</p> 
+            </div>
+        </div>
+        <hr />
+        <footer>
 	<p>
 		 &copy; RMIT University 2012
 	</p>
 	</footer>
-</div>
-<!-- /container -->
-<script src="js/jquery.dateFormat-1.0.js"></script>
-<script src="js/libs/bootstrap/transition.js"></script>
-<script src="js/libs/bootstrap/collapse.js"></script>
-<script src="js/plugins.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="js/bootstrap-timepicker.js"></script>
-<script src="js/bootstrap-button.js"></script>
-<script src="js/global.js"></script>
-<script src="js/navbar.js"></script>
-<script src="js/jSelector.js"></script>				
-<script src="js/jEditor.js"></script>
-<script src="js/jViewer.js"></script>
-
-<script>
+    </div>
+    <!-- /container -->
+    <script src="js/jquery.dateFormat-1.0.js"></script>
+    <script src="js/libs/bootstrap/transition.js"></script>
+    <script src="js/libs/bootstrap/collapse.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-timepicker.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/jSelector.js"></script>
+    <script src="js/jEditor.js"></script>
+    <script src="js/jOptimiser.js"></script>
+    <script src="js/jViewer.js"></script>
+    <script>
         $(function () {
             //$('#dp3').attr('data-date', $.format.date(new Date(), "dd-MM-yyyy"));
-           // $('#dp3').datepicker();
+            // $('#dp3').datepicker();
             //$('#txtTime').val($.format.date(new Date(), "hh:mm a"));
-           // $('#tabUserPrefs').hide();
-           // $('#Engine').hide();
+            // $('#tabUserPrefs').hide();
+            // $('#Engine').hide();
         });
     </script>
-<!--
+    <!--
 <script>
 	var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
 	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

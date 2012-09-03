@@ -108,6 +108,10 @@ namespace JayrockClient
            {
                ObjectCache.RegisterObject(new JourneyManager());
            }
+           if (!ObjectCache.GetObjects<JourneyOptimiser>().Any())
+           {
+               ObjectCache.RegisterObject(new JourneyOptimiser());
+           }
         }
 
         [JsonRpcMethod("GetProperties", Idempotent = true)]

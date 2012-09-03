@@ -66,7 +66,7 @@ $(document).scroll(function(e) {
 
 $('.nav a').click(function(){
 	
-	var targetPage = $($(this).attr('page'));
+	var targetPage = $($(this).attr('data-page'));
 	var targetDiv = $(targetPage);
 	//$(currentTab).parent().removeClass('active');
 	currentTab = $(this);
@@ -74,7 +74,7 @@ $('.nav a').click(function(){
 	
 	if (mode == "fade")
 	{
-		var prevPage = $($(currentTab).attr('page'));
+		var prevPage = $($(currentTab).attr('data-page'));
 		var prevDiv = $(prevPage);
 		
 		

@@ -28,6 +28,8 @@ namespace JayrockClient
         {
            
             writer.WriteStartObject();
+            writer.WriteMember("Critter");
+            writer.WriteStartObject();
             var critter = (Critter)value;
             writer.WriteMember("Age");
             writer.WriteNumber(critter.Age);
@@ -59,6 +61,7 @@ namespace JayrockClient
                 writer.WriteNumber(node.Node.Id);
             }
             writer.WriteEndArray();
+            writer.WriteEndObject();
             writer.WriteEndObject();
 
             

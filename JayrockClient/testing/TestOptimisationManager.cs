@@ -56,6 +56,8 @@ namespace JayrockClient
             properties.Origin = new MetlinkNode(19843, provider);
             properties.Planner = new MoeaRoutePlanner(properties);
             properties.MaxIterations = 25;
+            properties.Objectives = new[]
+                { FitnessParameters.Changes, FitnessParameters.PercentTrains, FitnessParameters.PercentBuses };
 
             JourneyManager jm = new JourneyManager();
             jm.Clean();

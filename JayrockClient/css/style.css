@@ -37,13 +37,21 @@
 
 #divJViewerL
 {
+	display: block;
+    
+
 	border-top-style:solid;
 	border-left-style:solid;
-	height: 700 px !important;
-	overflow-y:scroll;
+    min-height: 700px; /* !important;*/
+    height:auto !important; 
+    height: 100px; 
+    
+	overflow-y: scroll;
 	/*margin-right: -30px;*/
 	max-height: 700px !important;
 	width: 30.975%;
+	
+	
 	
 	
 	float: left;
@@ -60,6 +68,7 @@
 }
 #divJViewerR
 {
+	display: block;
 	border-top-style:solid;
 	border-right-style:solid;
 	height: 700px;

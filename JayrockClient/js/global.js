@@ -149,6 +149,8 @@ $(document).ready(function () {
         }
         serverReady = true;
         window.refresh();
+        window.OptimiserRefresh();
+        window.refreshMap();
         $('#divInfo').hide();
     });
 
