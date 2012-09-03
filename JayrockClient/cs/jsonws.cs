@@ -21,6 +21,7 @@ namespace JayrockClient
 	using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
     using System.Linq;
+    using RmitJourneyPlanner.CoreLibraries.Types;
 
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 
@@ -132,8 +133,12 @@ namespace JayrockClient
             {
                 bool editable = true;
 				object value = null;
+                bool isArray = false;
+             
+
 				Type pType = propertyInfos[i].PropertyType;
-				
+//TODO: Really fix this!
+            restart:
 				if (!pType.IsValueType)
 				{
 					if (pType.IsGenericType)
@@ -147,6 +152,9 @@ namespace JayrockClient
 					if (pType.IsArray)
 					{
 						pType = pType.GetElementType();
+					    isArray = true;
+                        goto restart;
+					    
 					}
 					
 					if (pType.Name == "INetworkNode")
@@ -196,10 +204,25 @@ namespace JayrockClient
 					if (pType.IsEnum)
 					{
 						var val = propertyInfos[i].GetValue(properties, null);
-						string valstring = (val != null ? val.ToString() : " ");
+					    string valstring;
+					    string seperator = "@";
+
+                        if (isArray)
+                        {
+                            //TODO: Make this generic
+                            valstring = String.Join(",", ((RmitJourneyPlanner.CoreLibraries.Types.FitnessParameters[])val));
+                            seperator = "|";
+                        }
+                        else
+                        {
+                            valstring = (val != null ? val.ToString() : " ");
+                            
+                        }
+
+                        value = string.Join(delimeter, Enum.GetNames(pType)) + seperator + valstring;
+                        editable = false;
 						
-						value = string.Join (delimeter,Enum.GetNames(pType)) + "@" + valstring;
-						editable = false;
+                       
 					}
 					else
 					{
@@ -323,7 +346,7 @@ namespace JayrockClient
 						
 						switch (pType.Name)
 						{
-						case "INetworkNode":
+						    case "INetworkNode":
 								MetlinkDataProvider provider = ObjectCache.GetObjects<MetlinkDataProvider>()[0];
 								MetlinkNode node = (MetlinkNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value));//provider.GetNodeFromName(propVal.Value);
 								if (node == null)
@@ -333,67 +356,89 @@ namespace JayrockClient
 								castVal = node;
 							break;
 							
+                            case "FitnessParameters[]":
+
+						        var objs = propVal.Value.Split(new[]
+						        {
+						            ','
+						        });
+                                var objectives = new FitnessParameters[objs.Length];
+						        int i = 0;
+                                foreach (var obj in objs)
+                                {
+                                    FitnessParameters e;
+                                    if (!Enum.TryParse(obj, out e))
+                                    {
+                                        throw new Exception("Cannot parse string into enum.");
+                                    }
+                                    objectives[i++] = e;
+                                }
+
+
+						        castVal = objectives;
+                                
+
+						        break;
+						    default:
+							    //var pType = new;
 							
-						default:
-							//var pType = new;
-							
-							if (pType.IsGenericType)
-							{
-								if (pType.Name.Contains("List"))
-								{
-									pType = pType.GetGenericArguments()[0];
-									isList = true;
-								}
-							}	
-							if (pType.IsArray)
-							{
-								pType = pType.GetElementType();	
-								isArray = true;
+							    if (pType.IsGenericType)
+							    {
+								    if (pType.Name.Contains("List"))
+								    {
+									    pType = pType.GetGenericArguments()[0];
+									    isList = true;
+								    }
+							    }	
+							    if (pType.IsArray)
+							    {
+								    pType = pType.GetElementType();	
+								    isArray = true;
 								
 								
-							}
+							    }
 							
-							try{
-								var types = Assembly.GetAssembly (pType).GetTypes();
-								pType = types.Where(t=> t.Name == propVal.Value).First();
-							}
-							catch(Exception e)
-							{
-									throw new Exception("Cannot find type in assembly. (" + propVal.Value + ")");
-							}
+							    try{
+								    var types = Assembly.GetAssembly (pType).GetTypes();
+								    pType = types.Where(t=> t.Name == propVal.Value).First();
+							    }
+							    catch(Exception e)
+							    {
+									    throw new Exception("Cannot find type in assembly. (" + propVal.Value + ")");
+							    }
 							                                                                        
-							//var pType = Assembly.GetAssembly (propertyInfo.PropertyType).GetType(propVal.Value,true,true);
+							    //var pType = Assembly.GetAssembly (propertyInfo.PropertyType).GetType(propVal.Value,true,true);
 							
 							
-							var objects = ObjectCache.GetObjects(pType);
-							if (objects.Length == 0)
-							{
-								object newObj = null;
-								try {
-									//newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,new[] {properties});
-									newObj = Activator.CreateInstance(pType,new[] {properties});
-								}
-								catch (Exception e)
-								{
-									//newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,null);
-									newObj = Activator.CreateInstance(pType);
-								}
-								ObjectCache.RegisterObject(newObj);
-								castVal = newObj;
-							}
-							else
-							{
-								castVal = objects.First();	
-							}
+							    var objects = ObjectCache.GetObjects(pType);
+							    if (objects.Length == 0)
+							    {
+								    object newObj = null;
+								    try {
+									    //newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,new[] {properties});
+									    newObj = Activator.CreateInstance(pType,new[] {properties});
+								    }
+								    catch (Exception e)
+								    {
+									    //newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,null);
+									    newObj = Activator.CreateInstance(pType);
+								    }
+								    ObjectCache.RegisterObject(newObj);
+								    castVal = newObj;
+							    }
+							    else
+							    {
+								    castVal = objects.First();	
+							    }
 							
-							if (isArray)
-							{
-								var array =  Array.CreateInstance(pType,1);
-								array.SetValue(castVal,0);
-								castVal = array;
+							    if (isArray)
+							    {
+								    var array =  Array.CreateInstance(pType,1);
+								    array.SetValue(castVal,0);
+								    castVal = array;
 								
 								
-							}
+							    }
 							
 							break;
 							//throw new Exception("No handler for type: " + pType.Name);

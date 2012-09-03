@@ -90,21 +90,36 @@ function loadProperties(data)
            	}
            	else
            	{
-           		
-           		
-           		input = jQuery(document.createElement('select'));
+
+
+           	    input = jQuery(document.createElement('select'));
+           	    var multiLine = false;
            		var split = propertyInfo.value.split("@");
+           		if (split.length == 1) {
+           		    split = propertyInfo.value.split("|");
+           		    multiLine = true;
+           		}
            		var subsplit = split[0].split(",");
+           	    var selSplit = split[1].split(",");
            		for (var o in subsplit)
            		{
            		    var opt = jQuery(document.createElement('option'));
            		    opt.text(subsplit[o]);
-           		    //input.append("<option>" + subsplit[o] + "</option>");
-           		    if ($.trim(subsplit[o]) == $.trim(split[1])) {
-           		        opt.attr('selected', 'selected');
+           		    if (multiLine) {
+           		        input.attr('multiple', 'multiple');
+
+           		    }
+           		    
+                    for (var p in selSplit) {
+           		       
+           		        //input.append("<option>" + subsplit[o] + "</option>");
+           		        if ($.trim(subsplit[o]) == $.trim(selSplit[p])) {
+           		            opt.attr('selected', 'selected');
+           		        }
+
            		    }
            		    input.append(opt);
-           			
+
            		}
           //input.find("option[text=\"" + split[1] + "\"]").attr("selected", "selected");//.siblings("option").attr("selected","");
            	   // $(input). option:contains(" + inputText + ")"
@@ -237,13 +252,13 @@ function displayValidationError(value)
 		
 		if (value.message == validation_success)
 		{
-			helpSpan.text('')
-			controlGroup.removeClass('error');
+			helpSpan.text('');
+		    controlGroup.removeClass('error');
 		}
 		else
 		{
-			helpSpan.text(value.message)
-			controlGroup.addClass('error');
+			helpSpan.text(value.message);
+		    controlGroup.addClass('error');
 		}
 	
 	}
@@ -385,41 +400,48 @@ function saveProperties()
 {
 	var propVals = new Array();
 	$('.propertyField').each(function (index) {
-		//alert(index + ': ' + $(this).val());	
-		
-		var value;
-		//if ($(this).prop('disabled') == false)
-		if (!$(this).is("select"))
-		{
-			var value;
-			if ($(this).hasClass('locationInput'))
-			{
-				value = $(this).attr('nodeid');
-			}
-			else
-			{
-				value = $(this).val();
-			}
-			/*
-			 FORMAT:
-			 { "propVals" : [{ "propVal" : {"name":"CrossoverRate","value":"0.7"} }] }
-			 */
-		}
-		else
-		{
-			value = $(this).find('option').filter(":selected").val();
-		}
-		
-		
-		var propVal =   {
-			name  : $(this).attr('propName'),
-			value : value
-		}
-		propVals.push(propVal);
-    	
-    	
-    	
-    		
+	    //alert(index + ': ' + $(this).val());	
+
+	    var value;
+	    //if ($(this).prop('disabled') == false)
+	    if (!$(this).is("select")) {
+	        var value;
+	        if ($(this).hasClass('locationInput')) {
+	            value = $(this).attr('nodeid');
+	        }
+	        else {
+	            value = $(this).val();
+	        }
+	        /*
+	        FORMAT:
+	        { "propVals" : [{ "propVal" : {"name":"CrossoverRate","value":"0.7"} }] }
+	        */
+	    }
+	    else {
+	        var selected = $(this).find('option').filter(":selected");
+	        if (selected.length > 1) {
+	            value = "";
+	            for (var i = 0; i < selected.length; i++ ) {
+	                value += $(selected[i]).val() + ",";
+
+	            }
+	            value = value.substring(0, value.length - 1);
+
+	        } else {
+	            value = selected.val();
+	        }
+	    }
+
+
+	    var propVal = {
+	        name: $(this).attr('propName'),
+	        value: value
+	    };
+	    propVals.push(propVal);
+
+
+
+
 	});
 
 
@@ -431,9 +453,7 @@ RPCCall('SetProperties', { "journeyUuid": selectedJourneyUuid, "propVals": propV
 				
 		checkValidation(data);
 		
-	})
-
-
+	});
 }
 
 function GetProperties(uuid) {
