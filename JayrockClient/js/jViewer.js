@@ -4,11 +4,18 @@ if (googleEnabled)
     ///
     /// Fields
     ///
+    var defaultBounds = new google.maps.LatLngBounds(
+			  new google.maps.LatLng(-36.536123, 143.074951),
+			  new google.maps.LatLng(-39.019184, 147.304688));
+
     var mapOptions = {
-          center: new google.maps.LatLng(-34.397, 150.644),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
+        bounds: defaultBounds,
+        types: [],
+        center: new google.maps.LatLng(-37.810191, 144.962511),
+        zoom: 11,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    
     
     var map;
 

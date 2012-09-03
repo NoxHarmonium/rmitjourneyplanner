@@ -61,8 +61,35 @@ namespace JayrockClient
                 writer.WriteNumber(node.Node.Id);
             }
             writer.WriteEndArray();
+
+            writer.WriteMember("Legs");
+            writer.WriteStartArray();
+            foreach (var leg in critter.Fitness.JourneyLegs)
+            {
+                writer.WriteStartObject();
+                writer.WriteMember("Start");
+                writer.WriteNumber(leg.Origin.Id);
+                writer.WriteMember("End");
+                writer.WriteNumber(leg.Destination.Id);
+                writer.WriteMember("Mode");
+                writer.WriteString(leg.TransportMode.ToString());
+                writer.WriteMember("TotalTime");
+                writer.WriteString(leg.TotalTime.ToString());
+                writer.WriteMember("Route");
+                writer.WriteString(leg.RouteId1);
+
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+
             writer.WriteEndObject();
             writer.WriteEndObject();
+
+            
+            
+            
+            
+
 
             
         }

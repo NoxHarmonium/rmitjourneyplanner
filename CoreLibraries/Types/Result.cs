@@ -13,7 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// Represents a set of results from a journey planning operation.
     /// </summary>
-    public class Result
+    public class Result : ICloneable
     {
         /// <summary>
         /// The total time to execute the iteration.
@@ -24,6 +24,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The population of the previous iteration.
         /// </summary>
         public List<Critter> Population = new List<Critter>();
-        
+
+        /// <summary>
+        /// Returns a new result that is a clone this instance.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            return new Result
+                { Totaltime = this.Totaltime, Population = this.Population.ConvertAll(t => (Critter)t.Clone()) };
+        }
     }
 }

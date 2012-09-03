@@ -301,9 +301,12 @@ namespace JayrockClient
                     }
                     var jUuid = bc.Take(cTokenSource.Token);
                     this.state = OptimiserState.Optimising;
-                    var runUuid = Guid.NewGuid().ToString();
+                    Run run = new Run();
+                    
                     var journey = journeyManager.GetJourney(jUuid);
                     currentJourney = journey;
+                    run.JourneyUuid = journey.Uuid;
+                    run.TimeStarted = DateTime.Now;
                     var planner = journey.Properties.Planner;
                     planner.Start();
                     var results = new List<Result>(journey.Properties.MaxIterations);
@@ -313,7 +316,7 @@ namespace JayrockClient
                     {
                         currentIteration++;
                         planner.SolveStep();
-                        results.Add(planner.IterationResult);
+                        results.Add((Result)planner.IterationResult.Clone());
                         while (paused)
                         {
                             Thread.Sleep(100);
@@ -325,22 +328,33 @@ namespace JayrockClient
                         }
 
                     }
+                    run.TimeFinished = DateTime.Now;
 
                     lock (journey.RunUuids)
                     {
                         //TODO: Make this more efficient/better coded
                         var newList = new List<string>(journey.RunUuids);
+                        newList.Add(run.Uuid);
                         journey.RunUuids = newList.ToArray();
 
 
                         string dir = directories[1] + "/" + journey.Uuid + "/";
                         
-                        Directory.CreateDirectory(dir);
-                        using (var writer = new StreamWriter(dir +  runUuid + ".json"))
+                        Directory.CreateDirectory(dir + run.Uuid);
+                        for (int i = 0; i < results.Count; i++)
                         {
-
-                            exportContext.Export(results, new JsonTextWriter(writer));
+                            using (
+                                var writer =
+                                    new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
+                            {
+                                exportContext.Export(results[i], new JsonTextWriter(writer));
+                            }
                         }
+                        using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
+                        {
+                            exportContext.Export(run,new JsonTextWriter(writer));
+                        }
+                        results.Clear();
                     }
                     journeyManager.Save();
 

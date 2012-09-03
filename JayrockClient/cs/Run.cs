@@ -83,15 +83,16 @@ namespace JayrockClient
 		}
 		
 		/// <summary>
-		/// Gets the UUID of the associated journey.
+		/// Gets or sets the UUID of the associated journey.
 		/// </summary>
-		/// <value>
-		/// The UUID of the associated journey.
-		/// </value>
 		public string JourneyUuid {
 			get {
 				return this.journeyUuid;
 			}
+            set
+            {
+                this.journeyUuid = value;
+            }
 		}
 		/// <summary>
 		/// Gets or sets the time the run started.
