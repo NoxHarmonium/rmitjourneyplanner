@@ -151,6 +151,7 @@ $(document).ready(function () {
         window.refresh();
         window.OptimiserRefresh();
         window.refreshMap();
+        window.loadJourneyRuns();
         $('#divInfo').hide();
     });
 

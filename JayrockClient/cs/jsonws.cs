@@ -586,6 +586,35 @@ namespace JayrockClient
            throw new NotImplementedException();
         }
 
+        [JsonRpcMethod("GetRuns", Idempotent = true)]
+        [JsonRpcHelp("Gets a list of runs associated with the specified journey UUID.")]
+        public string[] GetRuns(string uuid)
+        {
+            var jm = ObjectCache.GetObject<JourneyManager>();
+            return jm.GetJourney(uuid).RunUuids;
+
+        }
+        [JsonRpcMethod("GetIteration", Idempotent = true)]
+        [JsonRpcHelp("Returns a snapshot of the specified iteration, run and journey.")]
+        public string GetIteration(string journeyUuid, string runUuid, int iteration)
+        {
+            if (journeyUuid == null || runUuid == null)
+            {
+                throw new Exception(Strings.ERR_ANY_NULL);
+            }
+
+            var jm = ObjectCache.GetObject<JourneyManager>();
+            var j = jm.GetJourney(journeyUuid);
+
+            if (!j.RunUuids.Contains(runUuid))
+            {
+                throw new Exception(Strings.ERR_INVALID_RUNID);
+            }
+
+            return jm.GetIterationSnapShot(journeyUuid, runUuid, iteration);
+
+        }
+
 
     }
 }

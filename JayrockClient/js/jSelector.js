@@ -107,6 +107,7 @@ $('#selJourneyList').change(function () {
         disableControls();
     }
     OptimiserRefresh();
+    loadJourneyRuns();
 
 });
 
@@ -130,6 +131,7 @@ $('#btnSaveJourneyName').click(function () {
 		
 		pendingChanges = false;
 		refresh();
+	    
 	});
 });
 

@@ -161,7 +161,6 @@
                 <!--</div> -->
             </div>
         </div>
-    
         <div id="divJOptimiser" class="section">
             <h3>
                 Optimiser
@@ -169,109 +168,188 @@
             <div class="row">
                 <!--<div class="span12">-->
                 <form id="frmJourneyOptimiser" class="form-horizontal" style="display: none;">
-                    <div class="span6">
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="txtOptStatus">    
-                                    Optimiser Status:</label>
-                                <div class="controls">
-                                    <input id="txtOptStatus" type="text" disabled="disabled"/> 
-                                </div>
+                <div class="span6">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="txtOptStatus">
+                                Optimiser Status:</label>
+                            <div class="controls">
+                                <input id="txtOptStatus" type="text" disabled="disabled" />
                             </div>
-                            <div class="control-group">
-                                <label class="control-label" for="selOptimiserQueue">
-                                    Optimiser Queue:</label>
-                                <div class="controls">
-                                    <select id="selOptimiserQueue" multiple="multiple" disabled="disabled">
-                                        <option>Loading...</option>
-                                    </select>
-                                </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="selOptimiserQueue">
+                                Optimiser Queue:</label>
+                            <div class="controls">
+                                <select id="selOptimiserQueue" multiple="multiple" disabled="disabled">
+                                    <option>Loading...</option>
+                                </select>
                             </div>
-                        </fieldset>
-                    </div>
-                    <div class="span6">
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="txtJOCurrentJourney">    
-                                    Current Journey:</label>
-                                <div class="controls">
-                                    <input id="txtJOCurrentJourney" type="text" disabled="disabled"/> 
-                                </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="span6">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="txtJOCurrentJourney">
+                                Current Journey:</label>
+                            <div class="controls">
+                                <input id="txtJOCurrentJourney" type="text" disabled="disabled" />
                             </div>
-                            <div class="control-group">
-                                <div class="control-label formLabel">    
-                                    Progress:</div>
-                                <div class="controls">
-                                         <input id="txtJPCurrentIter" type="text" disabled="disabled" class="input-mini"/> out of <input id="txtJOTotalIters" type="text" disabled="disabled" class="input-mini"/> 
-                                </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label formLabel">
+                                Progress:</div>
+                            <div class="controls">
+                                <input id="txtJPCurrentIter" type="text" disabled="disabled" class="input-mini" />
+                                out of
+                                <input id="txtJOTotalIters" type="text" disabled="disabled" class="input-mini" />
                             </div>
-                            <div class="control-group">
-                                <div class="control-label formLabel">    
+                        </div>
+                        <div class="control-group">
+                            <div class="control-label formLabel">
+                            </div>
+                            <div class="controls">
+                                <div id="prgJO" class="progress progress-striped active" style="width: 210px;">
+                                    <div class="bar" style="width: 0%;">
                                     </div>
-                                <div class="controls">
-                                        <div id="prgJO" class="progress progress-striped active" style="width: 210px;">
-                                            <div class="bar" style="width: 0%;"></div>
-                                        </div>  
                                 </div>
                             </div>
-                        </fieldset>
-                    </div>
+                        </div>
+                    </fieldset>
+                </div>
                 </form>
             </div>
             <div class="span12">
-                    <div class="form-actions">
-                        <button id="btnJOPause" type="button" class="btn">
-                            Pause
-                        </button>
-                        <button id="btnJOResume" type="button" class="btn">
-                            Resume
-                        </button>
-                        <button id="btnJOStop" type="button" class="btn">
-                            Stop
-                        </button>
-                        <button id="btnJOEnqueue" type="button" class="btn">
-                            Enqueue Selected Journey
-                        </button>
-                         <button id="btnJORefresh" type="button" class="btn">
-                           Refresh
-                        </button>
-                    </div>
+                <div class="form-actions">
+                    <button id="btnJOPause" type="button" class="btn">
+                        Pause
+                    </button>
+                    <button id="btnJOResume" type="button" class="btn">
+                        Resume
+                    </button>
+                    <button id="btnJOStop" type="button" class="btn">
+                        Stop
+                    </button>
+                    <button id="btnJOEnqueue" type="button" class="btn">
+                        Enqueue Selected Journey
+                    </button>
+                    <button id="btnJORefresh" type="button" class="btn">
+                        Refresh
+                    </button>
                 </div>
+            </div>
             <!--</div>-->
         </div>
-     
         <div id="divJViewer" class='section'>
             <h3>
                 Journey Viewer
             </h3>
-            <div id="divJViewerL" class="mapDiv">
-                
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed
-                    elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam
-                    vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit
-                    non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat
-                    pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus
-                    quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla
-                    dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt
-                    dictum arcu ullamcorper accumsan.</p>
+            <div class="span12">
+                <form id="Form1" class="form-horizontal">
+                <fieldset>
+                    <div class="control-group">
+                        <label class="control-label" for="lstRuns">
+                            Run selection:</label>
+                        <div class="controls">
+                            <select id="selJourneyRuns" type="text" disabled="disabled">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="selPopulation">
+                            Candidate Solution</label>
+                        <div class="controls">
+                            <select id="selPopulation" type="text" disabled="disabled">
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                </form>
             </div>
-            <div id="divJViewerR" class="mapDiv">
-                <div id="map_canvas" style="width: 69%; height: 100%;">
+            <div class="span12">
+                <div id="divJViewerL" class="mapDiv">
+                    <div class="well well-small">
+                        <li>
+                            <address>
+                                <img class="imgTransportIcon" src="img/transportIcons/Tram.png">
+                                <strong>Melbourne Aquatic Centre - Stop 131</strong>
+                                <br>
+                                Albert Rd/Aughtie Dr (4334)
+                            </address>
+                        </li>
+                        Walk
+                        <li>
+                            <address>
+                                <img class="imgTransportIcon" src="img/transportIcons/Train.png">
+                                <strong>Melbourne Central</strong>
+                                <br>
+                                La Trobe St/ (19842)
+                            </address>
+                        </li>
+                    </div>
+                    <!---
+                    <div id="divJViewerL" class="mapDiv">
+                  
+                       
+                    <div class="well well-small">
+                        <div style="float: left;">
+                                
+
+                        </div>
+                            
+                        <div>
+                            <img src="img/../img/transportIcons/Train.png"/>  <span style="color:blue;">Melbourne Central </span>
+
+                        </div> 
+                        <div >
+                            Walk
+
+                        </div>
+                            
+                        <div>
+                            <img src="img/../img/transportIcons/Tram.png"/>  <span style="color:green">Swanston St Stop 123</span>
+
+                        </div>
+                            
+                    </div> 
+                    
+
+                
+                    -->
+                    <!--
+                    <div id="divJourneyLegs"style="float: left;">
+                        <div><span style="color:blue;">Melbourne Central </span></div>
+                        <div id="divJLImage" style="float: left;">
+                            <img src="img/../img/transportIcons/Walking.png"/>
+                        </div>
+                        <div style="float: left;">
+                            <span style="color:green">Swanston St Stop 123</span>
+                        </div>
+
+                    </div>
+                    -->
+                </div>
+                <div id="divJViewerR" class="mapDiv">
+                    <div id="map_canvas" style="width: 69%; height: 100%;">
+                    </div>
+                </div>
+                <div id="divJViewerB" class="mapDiv">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed
+                        elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam
+                        vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit
+                        non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat
+                        pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus
+                        quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla
+                        dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt
+                        dictum arcu ullamcorper accumsan.</p>
                 </div>
             </div>
-            <div id="divJViewerB" class="mapDiv">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed
-                    elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam
-                    vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit
-                    non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat
-                    pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus
-                    quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla
-                    dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt
-                    dictum arcu ullamcorper accumsan.</p> 
-            </div>
         </div>
-        <hr />
-        <footer>
+    </div>
+    <hr />
+    <footer>
 	<p>
 		 &copy; RMIT University 2012
 	</p>

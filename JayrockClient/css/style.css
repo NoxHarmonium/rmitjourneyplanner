@@ -44,21 +44,27 @@
 	border-left-style:solid;
     min-height: 700px; /* !important;*/
     height:auto !important; 
-    height: 100px; 
+    height: 700px; 
     
 	overflow-y: scroll;
 	/*margin-right: -30px;*/
 	max-height: 700px !important;
 	width: 30.975%;
-	
-	
-	
+
+
+    /* padding: 30px; /*Subtract padding*2 from height   */
 	
 	float: left;
 	
 	
 	
 }
+
+#divJViewerL>ul,li {
+  
+    list-style-type: none;    
+}
+
 .formLabel {
      float: left;
     padding-top: 5px;
@@ -113,4 +119,15 @@ H3
   color: #333333;
   border-bottom: 1px solid #eee;
 
+}
+
+
+#divJLImage {
+    
+    
+}
+
+#divJourneyLegs {
+    display: inline;
+    
 }

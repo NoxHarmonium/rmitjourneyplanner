@@ -87,12 +87,14 @@ function OptimiserRefresh() {
 
 
         if (selectedJourneyUuid == undefined
-            || selectedJourneyUuid == "" 
+            || selectedJourneyUuid == ""
                 || selectedJourneyUuid == null) {
 
             $('#btnJOEnqueue').attr('disabled', 'disabled');
+           
         } else {
             $('#btnJOEnqueue').removeAttr('disabled');
+         
         }
 
 
@@ -134,7 +136,7 @@ function OptimiserRefresh() {
         $('#prgJO>.bar').css('width', String(Math.round((data.result.currentIteration / data.result.totalIterations) * 100.0)) + "%");
         $('#txtJOCurrentJourney').val(data.result.currentJourney);
 
-
+        
 
     });
 
