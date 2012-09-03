@@ -11,6 +11,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
 
@@ -28,6 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         {
             this.NetworkDataProviders = new INetworkDataProvider[0];//new List<INetworkDataProvider>();
             this.PointDataProviders = new IPointDataProvider[0];
+            this.Objectives = new FitnessParameters[0];
         }
 
         #endregion
@@ -138,6 +140,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// Gets or sers the maximum number of iterations that the journey optimisation can run for.
         /// </summary>
         public int MaxIterations { get; set; }
+
+        /// <summary>
+        /// Gets or sets the objectives used in the optimisation.
+        /// </summary>
+        public Types.FitnessParameters[] Objectives { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the type of the search.

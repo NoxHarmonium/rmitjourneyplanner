@@ -233,20 +233,19 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         {
             var dominated = false;
             var flags = new []{false,false};
-            for (int i = 0; i < c1.Fitness.Length; i++)
+            for (int i = 0; i < properties.Objectives.Length; i++)
             {
-                if (c1.Fitness[i] < c2.Fitness[i] )
+
+                if (c1.Fitness[(int)properties.Objectives[i]] < c2.Fitness[(int)properties.Objectives[i]])
                 {
                     flags[0] = true;
                 }
-                else if (c1.Fitness[i] > c2.Fitness[i])
+                else if (c1.Fitness[(int)properties.Objectives[i]] > c2.Fitness[(int)properties.Objectives[i]])
                 {
                     flags[1] = true;
                 }
             }
-
-           
-
+            
             if (flags[0] && !flags[1]) 
             {
                 dominated = true;
@@ -322,14 +321,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 x.Distance = 0;
             }
-            for (int i = 0 ; i < Fitness.ParameterCount; i++)
+            for (int i = 0 ; i < this.properties.Objectives.Length; i++)
             {
-                X.Sort((x, y) => x.Fitness[i].CompareTo(y.Fitness[i]));
+                X.Sort((x, y) => x.Fitness[(int)properties.Objectives[i]].CompareTo(y.Fitness[(int)properties.Objectives[i]]));
                 X[0].Distance = Double.PositiveInfinity;
                 X[l - 1].Distance = Double.PositiveInfinity;
                 for (int j = 1; j < l-1; j++)
                 {
-                    X[j].Distance += (X[j + 1].Fitness[i] - X[j - 1].Fitness[i]);
+                    X[j].Distance += (X[j + 1].Fitness[(int)properties.Objectives[i]] - X[j - 1].Fitness[(int)properties.Objectives[i]]);
                 }
 
             }
@@ -383,6 +382,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <returns> The solve step. </returns>
         public bool SolveStep()
         {
+            if (this.properties.Objectives.Length < 1)
+            {
+                throw new Exception("You cannot optimise with 0 objectives.");
+            }
+
             this.iteration = this.Iteration + 1;
             
             Console.WriteLine("Solving step {0}...", this.Iteration);
