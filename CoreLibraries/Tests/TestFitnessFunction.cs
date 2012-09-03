@@ -69,18 +69,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                    
                 properties.Destination.RetrieveData();
                 properties.Origin.RetrieveData();
+                properties.Objectives = new [] {FitnessParameters.Changes, FitnessParameters.PercentTrains, FitnessParameters.PercentTrams};
 
 
                 properties.Database.Open();
                 //properties.DataStructures = new DataStructures(properties);
-			
-			
-                var planner = new MoeaRoutePlanner(properties);
-              
-				planner.Start();
+
+
+                properties.Planner = new MoeaRoutePlanner(properties);
+
+                properties.Planner.Start();
 				for(int i = 0; i < 100; i++)
 				{
-					planner.SolveStep();	
+                    properties.Planner.SolveStep();	
 				}
 		}
 		
