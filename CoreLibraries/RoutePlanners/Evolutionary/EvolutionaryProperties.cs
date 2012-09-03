@@ -145,7 +145,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 		/// <value>
 		/// The type of the search.
 		/// </value>
-		public RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators.SearchType SearchType {get;set;}
+		public RouteGenerators.SearchType SearchType {get;set;}
 
         #endregion
     }
