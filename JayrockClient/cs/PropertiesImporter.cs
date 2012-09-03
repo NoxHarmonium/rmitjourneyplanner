@@ -20,7 +20,9 @@
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 namespace JayrockClient
 {
-	public class PropertiesImporter : IImporter
+    using RmitJourneyPlanner.CoreLibraries.Types;
+
+    public class PropertiesImporter : IImporter
 	{
 		private EvolutionaryProperties properties = new EvolutionaryProperties();
 		
@@ -133,8 +135,33 @@ namespace JayrockClient
 								}
 								castVal = node;
 							break;
-							
-							
+
+                        case "FitnessParameters[]":
+
+                            var objs = propVal.Value.Split(new[]
+						        {
+						            '|'
+						        })[1].Split(new[]
+						        {
+						            ','
+						        });
+                            var objectives = new FitnessParameters[objs.Length];
+                            int i = 0;
+                            foreach (var obj in objs)
+                            {
+                                FitnessParameters e;
+                                if (!Enum.TryParse(obj, out e))
+                                {
+                                    throw new Exception("Cannot parse string into enum.");
+                                }
+                                objectives[i++] = e;
+                            }
+
+
+                            castVal = objectives;
+
+
+                            break;
 						default:
 							//var pType = new;
 							

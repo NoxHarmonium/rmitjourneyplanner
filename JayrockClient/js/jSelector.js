@@ -10,26 +10,27 @@ var selectedJourneyUuid;
 ///
 function refresh()
 {
-	RPCCall("GetJourneys",{},function (data)
-	{
-		if (CheckForError(data))
-		{
-			return;
-		}
-		
-		var journeys = $(data.result);
-		var sel = $('#selJourneyList');
-		sel.html('');
-		
-		$.each(journeys, function (index){ 
-			var newOpt = jQuery(document.createElement('option'));
-			newOpt.attr('value',this.uuid);
-			newOpt.attr('description',this.description);		
-			newOpt.text(this.shortName);
-			sel.append(newOpt);
-		
-		});
-	});
+    RPCCall("GetJourneys", {}, function (data) {
+        if (CheckForError(data)) {
+            return;
+        }
+
+        var journeys = $(data.result);
+        var sel = $('#selJourneyList');
+        sel.html('');
+
+        $.each(journeys, function (index) {
+            var newOpt = jQuery(document.createElement('option'));
+            newOpt.attr('value', this.uuid);
+            if (this.description == null) {
+                this.decription = "";
+            }
+            newOpt.attr('description', this.description);
+            newOpt.text(this.shortName);
+            sel.append(newOpt);
+
+        });
+    });
 }
 
 function disableControls()

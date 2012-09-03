@@ -24,120 +24,127 @@ namespace JayrockClient
 	{
 		public void Export (ExportContext context, object value, JsonWriter writer)
 		{
-			PropertyInfo[] propertyInfos = typeof(EvolutionaryProperties).GetProperties();
+		    var properties = (EvolutionaryProperties)value;
+            PropertyInfo[] propertyInfos = typeof(EvolutionaryProperties).GetProperties().OrderBy(p => p.PropertyType.Name).ToArray();
             var objectProperties = new ObjectProperty[propertyInfos.Length];
-            EvolutionaryProperties properties = (EvolutionaryProperties) value;
-		
-			string delimeter = ", ";
-            for (int i = 0; i < propertyInfos.Length; i++) 
+            //EvolutionaryProperties properties = ObjectCache.GetObjects<EvolutionaryProperties>().First();
+            var jp = ObjectCache.GetObject<JourneyManager>();
+      
+            
+
+            string delimeter = ", ";
+            for (int i = 0; i < propertyInfos.Length; i++)
             {
                 bool editable = true;
-				bool isArray = false;
-				object v = null;
-				Type pType = propertyInfos[i].PropertyType;
-				
-				if (!pType.IsValueType)
-				{
-					if (pType.IsGenericType)
-					{
-						if (pType.Name.Contains("List"))
-						{
-							pType = pType.GetGenericArguments()[0];
-						}
-					}	
-					
-					if (pType.IsArray)
-					{
-						pType = pType.GetElementType();
-						isArray = true;
-						
-					}
-					
-					if (pType.Name == "INetworkNode")
-					{
-						
-						v = "";
-						MetlinkNode node = (MetlinkNode) propertyInfos[i].GetValue(properties, null) ?? null;
-						if (node != null)
-						{
-							v = node.StopSpecName + delimeter + node.Id;
-						}
-						
-					}
-					else
-					{
-						editable = false;
-						//var types = Assembly.GetAssembly(pType).GetTypes();
-						//var candidates = types.Where(t => (t == pType && !t.IsInterface) ||
-						//                             	t.GetInterfaces().Contains(pType));
-						
-						if (isArray)
-						{
-							object o = propertyInfos[i].GetValue(properties, null);
-							IEnumerable arr = 	(IEnumerable) o;
-							foreach (var a in arr)
-							{
-								v = (a != null ? a.GetType().FullName : " ");
-								break;
-							}
-							
-							
-							
-							
-						}
-						else
-						{
-							var val = propertyInfos[i].GetValue(properties, null);
-							v = (val != null ? val.ToString() : " ");
-							
-						}
-						
-					}
-					
-					
-				}
-				else
-				{
-					if (pType.IsEnum)
-					{
-						var val = propertyInfos[i].GetValue(properties, null);
-						string valstring = (val != null ? val.ToString() : " ");
-						
-						v = valstring;
-						editable = false;
-					}
-					else
-					{
-						v = propertyInfos[i].GetValue(properties, null) ?? "null";				
-					}
-				}
-				
-				
-                objectProperties[i] = new ObjectProperty
+                object v = null;
+                bool isArray = false;
+
+
+                Type pType = propertyInfos[i].PropertyType;
+            //TODO: Really fix this!
+            restart:
+                if (!pType.IsValueType)
+                {
+                    if (pType.IsGenericType)
                     {
-						Name = propertyInfos[i].Name,
-						Type = propertyInfos[i].PropertyType.Name, 
-						Value = v.ToString(), 
-						Editable = editable
-					};
+                        if (pType.Name.Contains("List"))
+                        {
+                            pType = pType.GetGenericArguments()[0];
+                        }
+                    }
+
+                    if (pType.IsArray)
+                    {
+                        pType = pType.GetElementType();
+                        isArray = true;
+                        goto restart;
+
+                    }
+
+                    if (pType.Name == "INetworkNode")
+                    {
+
+                        v = "";
+                        MetlinkNode node = (MetlinkNode)propertyInfos[i].GetValue(properties, null) ?? null;
+                        if (node != null)
+                        {
+                            v= node.StopSpecName + delimeter + node.Id;
+                        }
+
+                    }
+                    else
+                    {
+                        editable = false;
+                        var types = Assembly.GetAssembly(pType).GetTypes();
+                        var candidates = types.Where(t => (t == pType && !t.IsInterface) ||
+                                                        t.GetInterfaces().Contains(pType));
+                        var val = propertyInfos[i].GetValue(properties, null);
+                        string valstring = " ";
+                        if (val != null)
+                        {
+                            var type = val.GetType();
+                            if (type.IsArray)
+                            {
+                                valstring = type.GetElementType().Name;
+
+                            }
+                            else
+                            {
+                                valstring = type.Name;
+                            }
+
+                        }
+
+
+
+                        //string valstring = (val != null ? val.GetType().Name : " ");
+                        v= String.Join(delimeter, candidates.Select(c => c.Name)) + "@" + valstring;
+                    }
+
+
+                }
+                else
+                {
+                    if (pType.IsEnum)
+                    {
+                        var val = propertyInfos[i].GetValue(properties, null);
+                        string valstring;
+                        string seperator = "@";
+
+                        if (isArray)
+                        {
+                            //TODO: Make this generic
+                            valstring = String.Join(",", ((RmitJourneyPlanner.CoreLibraries.Types.FitnessParameters[])val));
+                            seperator = "|";
+                        }
+                        else
+                        {
+                            valstring = (val != null ? val.ToString() : " ");
+
+                        }
+
+                        v = string.Join(delimeter, Enum.GetNames(pType)) + seperator + valstring;
+                        editable = false;
+
+
+                    }
+                    else
+                    {
+                        v = propertyInfos[i].GetValue(properties, null) ?? "null";
+                    }
+                }
+
+
+                objectProperties[i] = new ObjectProperty
+                {
+                    Name = propertyInfos[i].Name,
+                    Type = propertyInfos[i].PropertyType.Name,
+                    Value = v.ToString(),
+                    Editable = editable
+                };
             }
-			/*
-			writer.WriteStartArray();
-			foreach (var o in objectProperties)
-			{
-				writer.WriteStartObject();
-				writer.WriteMember("Name");
-				writer.WriteString(o.Name);
-				writer.WriteMember("Type");
-				writer.WriteString(o.Type);
-				writer.WriteMember("Value");
-				writer.WriteString(o.Value);
-				writer.WriteMember("Editable");
-				writer.WriteBoolean(o.Editable);				
-				
-			}
-			writer.WriteEndArray();
-			*/
+
+            //return objectProperties;
 			var exporter = context.FindExporter(objectProperties.GetType());
 			exporter.Export(context,objectProperties,writer);
 			

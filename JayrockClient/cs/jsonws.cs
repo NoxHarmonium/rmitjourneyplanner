@@ -32,8 +32,6 @@ namespace JayrockClient
     {
         private static bool LogEventCreated;
 		
-		
-		
 		public Jsonws ()
 		{
 			if (!LogEventCreated)
@@ -266,7 +264,10 @@ namespace JayrockClient
 					valErrors.Add(valError);	
 				}
 			}
+
+		    SaveJourneys();
 			return valErrors.ToArray();
+           
 		}
 		
 		[JsonRpcMethod("SetProperty", Idempotent = true)]
@@ -274,7 +275,6 @@ namespace JayrockClient
 		public ValidationError SetProperty(string journeyUuid, PropertyValue propVal)
     	{
     		return SetProperty(journeyUuid, propVal,false);
-			
     	}
 		
 		private ValidationError SetProperty(string journeyUuid, PropertyValue propVal, bool testOnly)
@@ -303,7 +303,7 @@ namespace JayrockClient
 		    }
 		    catch (Exception)
 		    {
-		        throw new JsonException("The supplied journey Uuid was incorrect.");
+		        throw new JsonException("The supplied journey UUID was incorrect.");
 		    }
 		    
     		
@@ -509,17 +509,50 @@ namespace JayrockClient
 			
 		}
 
-
-
+        [JsonRpcMethod("SaveJourneys", Idempotent = true)]
+        [JsonRpcHelp("Saves the current journeys to disk so they can be persistant.")]
+        public void SaveJourneys()
+        {
+            var jp = ObjectCache.GetObject<JourneyManager>();
+            jp.Save();
+        }
 
         [JsonRpcMethod("GetOptimisationState", Idempotent = true)]
         [JsonRpcHelp("Returns the state and queue of the optimisation mananger.")]
         public object GetOptimisationState()
         {
             var jo = ObjectCache.GetObject<JourneyOptimiser>();
-            return new { state = jo.State, queue = jo.GetQueue() };
+            return new { state = jo.State, 
+                queue = jo.GetQueue(), 
+                currentIteration = jo.CurrentIteration, 
+                totalIterations = jo.MaxIterations,
+                         currentJourney = jo.CurrentJourney == null ? null : jo.CurrentJourney.Uuid
+            };
         }
 
+        [JsonRpcMethod("PauseJourneyOptimiser", Idempotent = true)]
+        [JsonRpcHelp("Pauses the journey optimiser at the next available oportunity.")]
+        public void PauseJourneyOptimiser()
+        {
+            var jo = ObjectCache.GetObject<JourneyOptimiser>();
+            jo.Pause();
+        }
+
+        [JsonRpcMethod("ResumeJourneyOptimiser", Idempotent = true)]
+        [JsonRpcHelp("Resumes the journey optimiser if paused.")]
+        public void ResumeJourneyOptimiser()
+        {
+            var jo = ObjectCache.GetObject<JourneyOptimiser>();
+            jo.Resume();
+        }
+
+        [JsonRpcMethod("StopJourneyOptimiser", Idempotent = true)]
+        [JsonRpcHelp("Stops the journey optimiser.")]
+        public void StopJourneyOptimiser()
+        {
+            var jo = ObjectCache.GetObject<JourneyOptimiser>();
+            jo.Cancel();
+        }
 
         [JsonRpcMethod("EnqueueJourney", Idempotent = false)]
         [JsonRpcHelp("Enqueues the journey specified by its UUID in the optimisation queue the number of times specified by runs.")]
@@ -535,7 +568,13 @@ namespace JayrockClient
 
         }
 
+        [JsonRpcMethod("DequeueJourney", Idempotent = false)]
+        [JsonRpcHelp("Removes the journey specified by its UUID.")]
+        public void DequeueJourney(string uuid)
+        {
+           throw new NotImplementedException();
+        }
 
-        
+
     }
 }

@@ -20,7 +20,8 @@ namespace JayrockClient
         Optimising,
         Saving,
         Cancelling,
-        Idle
+        Idle,
+        Paused
 
     }
 
@@ -79,6 +80,16 @@ namespace JayrockClient
         /// Stores an exception thrown by the optimisation thread;
         /// </summary>
         private Exception thrownException = null;
+
+        /// <summary>
+        /// Stores the current journey that is being optimised.
+        /// </summary>
+        private Journey currentJourney;
+
+        /// <summary>
+        /// Determines whether the optimiser is paused or not.
+        /// </summary>
+        private bool paused;
 
         /// <summary>
         /// The list of directories used by the journey optimiser.
@@ -168,6 +179,17 @@ namespace JayrockClient
         }
 
         /// <summary>
+        /// Stores the current journey that is being optimised.
+        /// </summary>
+        public Journey CurrentJourney
+        {
+            get
+            {
+                return this.currentJourney;
+            }
+        }
+
+        /// <summary>
         /// Enqueues the journey in the optimisation queue.
         /// </summary>
         /// <param name="journey">The journey you wish to enqueue.</param>
@@ -196,9 +218,34 @@ namespace JayrockClient
         /// </summary>
         public void Cancel()
         {
+            paused = false;
             cTokenSource.Cancel();
             this.state = OptimiserState.Cancelling;
             
+        }
+
+        /// <summary>
+        /// Pauses the current optimisation run at the next available oportunity.
+        /// </summary>
+        public void Pause()
+        {
+            if (state == OptimiserState.Optimising)
+            {
+                paused = true;
+                state = OptimiserState.Paused;
+            }
+        }
+
+        /// <summary>
+        /// Resumes the current optimisation run.
+        /// </summary>
+        public void Resume()
+        {
+            if (state == OptimiserState.Paused)
+            {
+                paused = false;
+                state = OptimiserState.Optimising;
+            }
         }
 
         /// <summary>
@@ -241,7 +288,7 @@ namespace JayrockClient
             var exportContext = JsonConvert.CreateExportContext();
             exportContext.Register(new CritterExporter());
 
-            try
+            //try
             {
                 while (!cTokenSource.IsCancellationRequested)
                 {
@@ -256,6 +303,7 @@ namespace JayrockClient
                     this.state = OptimiserState.Optimising;
                     var runUuid = Guid.NewGuid().ToString();
                     var journey = journeyManager.GetJourney(jUuid);
+                    currentJourney = journey;
                     var planner = journey.Properties.Planner;
                     planner.Start();
                     var results = new List<Result>(journey.Properties.MaxIterations);
@@ -266,12 +314,16 @@ namespace JayrockClient
                         currentIteration++;
                         planner.SolveStep();
                         results.Add(planner.IterationResult);
-                       
+                        while (paused)
+                        {
+                            Thread.Sleep(100);
+                        }
                         //results.Add(planner.re);
                         if (cTokenSource.IsCancellationRequested)
                         {
                             break;
                         }
+
                     }
 
                     lock (journey.RunUuids)
@@ -301,6 +353,7 @@ namespace JayrockClient
                 }
                 
             }
+            /*
             catch (Exception e)
             {
                 //this.thrownException = e;
@@ -310,6 +363,7 @@ namespace JayrockClient
             {
                 this.state = OptimiserState.Idle;
             }
+             * */
           
         }
 
