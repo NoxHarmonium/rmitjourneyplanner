@@ -342,8 +342,11 @@ namespace JayrockClient
                             exportContext.Export(results, new JsonTextWriter(writer));
                         }
                     }
-
                     journeyManager.Save();
+
+                    currentJourney = null;
+                    currentIteration = 0;
+                    maxIterations = 0;
 
                     if (!cTokenSource.IsCancellationRequested)
                     {

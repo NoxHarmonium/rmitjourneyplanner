@@ -522,11 +522,17 @@ namespace JayrockClient
         public object GetOptimisationState()
         {
             var jo = ObjectCache.GetObject<JourneyOptimiser>();
+            if (jo == null)
+            {
+                return new { state = "Not instantiated" };
+
+
+            }
             return new { state = jo.State, 
                 queue = jo.GetQueue(), 
                 currentIteration = jo.CurrentIteration, 
                 totalIterations = jo.MaxIterations,
-                         currentJourney = jo.CurrentJourney == null ? null : jo.CurrentJourney.Uuid
+                         currentJourney = jo.CurrentJourney == null ? "None" : jo.CurrentJourney.Uuid
             };
         }
 
@@ -556,16 +562,21 @@ namespace JayrockClient
 
         [JsonRpcMethod("EnqueueJourney", Idempotent = false)]
         [JsonRpcHelp("Enqueues the journey specified by its UUID in the optimisation queue the number of times specified by runs.")]
-        public void EnqueueJourney(string uuid, int runs)
+        public object EnqueueJourney(string uuid, int runs)
         {
             if (runs == default(int))
             {
                 runs = 1;
             }
+            if(uuid == null)
+            {
+                throw new JsonException(Strings.ERR_J_NULL);    
+            }
+
             var jo = ObjectCache.GetObject<JourneyOptimiser>();
             //var jm = ObjectCache.GetObject<JourneyManager>();
             jo.EnqueueJourney(uuid,runs);
-
+            return null;
         }
 
         [JsonRpcMethod("DequeueJourney", Idempotent = false)]

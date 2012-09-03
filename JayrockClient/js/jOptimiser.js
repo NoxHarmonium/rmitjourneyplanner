@@ -1,6 +1,7 @@
 ﻿///
 /// Fields
 ///
+var oRefreshInterval = 200; //ms
 
 ///
 /// Events
@@ -15,6 +16,7 @@ $('#btnDelJourney').click(function ()
         if (CheckForError(data)) {
             return;
         }
+        setTimeout(OptimiserRefresh, oRefreshInterval);
     });
 });
 
@@ -23,6 +25,7 @@ $('#btnJOEnqueue').click(function () {
         if (CheckForError(data)) {
             return;
         }
+        setTimeout(OptimiserRefresh, oRefreshInterval);
     });
 });
 
@@ -32,6 +35,7 @@ $('#btnJOPause').click(function () {
         if (CheckForError(data)) {
             return;
         }
+        setTimeout(OptimiserRefresh, oRefreshInterval);
     });
 });
 
@@ -41,6 +45,7 @@ $('#btnJOResume').click(function () {
         if (CheckForError(data)) {
             return;
         }
+        setTimeout(OptimiserRefresh, oRefreshInterval);
     });
 });
 
@@ -80,7 +85,16 @@ function OptimiserRefresh() {
         $('#btnJOPause').attr('disabled', 'disabled');
         $('#btnJOResume').attr('disabled', 'disabled');
 
-      
+
+        if (selectedJourneyUuid == undefined
+            || selectedJourneyUuid == "" 
+                || selectedJourneyUuid == null) {
+
+            $('#btnJOEnqueue').attr('disabled', 'disabled');
+        } else {
+            $('#btnJOEnqueue').removeAttr('disabled');
+        }
+
 
         switch (state) {
             case "Waiting":
@@ -88,9 +102,13 @@ function OptimiserRefresh() {
                 break;
             case "Optimising":
                 $('#btnJOPause').removeAttr('disabled');
+                setTimeout(OptimiserRefresh, oRefreshInterval);
                 break;
             case "Saving":
                 //Nothing
+                break;
+            case "Paused":
+                $('#btnJOResume').removeAttr('disabled');
                 break;
             case "Cancelling":
                 //Nothing
@@ -98,23 +116,23 @@ function OptimiserRefresh() {
             case "Idle":
                 //Nothing
                 break;
-        
-        default:
+
+            default:
         }
-       
+
 
         $('#selOptimiserQueue').empty();
         for (var i in data.result.queue) {
             var queuedJourney = data.result.queue[i];
             var opt = jQuery(document.createElement('option'));
-            opt.val(queuedJourney);
+            opt.text(queuedJourney);
             $('#selOptimiserQueue').append(opt);
 
         }
         $('#txtJPCurrentIter').val(data.result.currentIteration);
         $('#txtJOTotalIters').val(data.result.totalIterations);
-        $('#prgJO').css('width', String(Math.round((data.result.currentIteration / data.result.totalIterations) * 100.0)) + "%");
-
+        $('#prgJO>.bar').css('width', String(Math.round((data.result.currentIteration / data.result.totalIterations) * 100.0)) + "%");
+        $('#txtJOCurrentJourney').val(data.result.currentJourney);
 
 
 

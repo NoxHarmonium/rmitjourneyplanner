@@ -106,6 +106,7 @@ $('#selJourneyList').change(function () {
     else {
         disableControls();
     }
+    OptimiserRefresh();
 
 });
 

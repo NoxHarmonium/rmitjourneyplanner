@@ -106,7 +106,7 @@ namespace JayrockClient
 					{
 						if (propertyInfo.PropertyType.IsEnum)
 						{
-							castVal = Enum.Parse(propertyInfo.PropertyType,propVal.Value);
+							castVal = Enum.Parse(propertyInfo.PropertyType,propVal.Value.Split(new []{'@'})[1]);
 						}
 						else
 						{
@@ -183,7 +183,8 @@ namespace JayrockClient
 							
 							try{
 								var types = Assembly.GetAssembly (pType).GetTypes();
-								pType = types.Where(t => t.FullName == propVal.Value).First();
+							    var strType = propVal.Value.Split(new[] { '@' })[1];
+                                pType = types.First(t => t.Name == strType);
 							}
 							catch(Exception e)
 							{

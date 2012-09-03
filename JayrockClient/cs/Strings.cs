@@ -12,6 +12,8 @@ namespace JayrockClient
 	        "The JourneyManager parameter can not be null. It is required for this class to operate.";
 
 	    public const string ERR_JM_NOTFOUND = "There is no JourneyManager object registered with the ObjectCache.";
+
+	    public const string ERR_J_NULL = "The journey UUID parameter cannot be null.";
 	}
 }
 

@@ -29,7 +29,7 @@ namespace JayrockClient
 		/// <summary>
 		/// The UUIDs of associated runs.
 		/// </summary>
-		private string[] runUuids;
+		private string[] runUuids = new string[0];
 		
 		/// <summary>
 		/// Gets or sets the unique identifier of the journey.
