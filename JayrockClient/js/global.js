@@ -76,7 +76,7 @@ function nl2br (str, is_xhtml) {
 //Send JSON post request.
 function JSONPost(url, data, callback)
 {
-	$.ajax({
+	return $.ajax({
 	  url:url,
 	  type:"POST",
 	  data:data,
@@ -103,7 +103,7 @@ function RPCCall(method,params,callback) {
 
     //
     //$.post(url_service , $.toJSON(request), callback, "json");
-    JSONPost(url_service, $.toJSON(request), callback)
+    return JSONPost(url_service, $.toJSON(request), callback)
 }
 
 // Returns true if there is a JSON error object in the data object. Also displays the error

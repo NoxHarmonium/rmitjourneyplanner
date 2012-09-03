@@ -615,6 +615,53 @@ namespace JayrockClient
 
         }
 
+        [JsonRpcMethod("GetNodeData", Idempotent = true)]
+        [JsonRpcHelp("Returns basic information pertaining to the specified stop ID.")]
+        public object GetNodeData(int id)
+        {
+            var provider = ObjectCache.GetObject<MetlinkDataProvider>();
+            var data = provider.GetNodeData(id);
+            string mode = data.Rows[0]["StopModeName"].ToString();
+            if (mode != "Bus" &&
+                mode != "Tram" &&
+                mode != "Train" 
+              )
+            {
+                mode = "Unknown";
+            }
+            return new
+                {
+                    id = id, 
+                    name = data.Rows[0]["StopSpecName"].ToString(),
+                    mode = mode,
+                    travelSt = data.Rows[0]["TravelStName"].ToString() + " " + data.Rows[0]["TravelStType"].ToString(),
+                    crossSt = data.Rows[0]["CrossStName"].ToString() + " " + data.Rows[0]["CrossStType"].ToString(),
+                    latitude = data.Rows[0]["GPSLat"].ToString(),
+                    longitude = data.Rows[0]["GPSLong"].ToString(),
+                    
+
+                };
+
+
+        }
+
+        [JsonRpcMethod("GetTotalIterations", Idempotent = true)]
+        [JsonRpcHelp("Returns the max number of iterations for a journey.")]
+        public int GetTotalIterations(string journeyUuid)
+        {
+            if (journeyUuid == null )
+            {
+                throw new Exception(Strings.ERR_ANY_NULL);
+            }
+
+            var jm = ObjectCache.GetObject<JourneyManager>();
+            var j = jm.GetJourney(journeyUuid);
+            return j.Properties.MaxIterations;
+
+
+        }
+
+        
 
     }
 }

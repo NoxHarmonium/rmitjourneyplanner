@@ -33,6 +33,8 @@
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false&amp;location=-37.809784,144.972839&amp;radius=25000"></script>
     <script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
     <!--<script type="text/javascript" src="js/geo-autocomplete/lib/jquery.autocomplete_geomod.js"></script>-->
     <!--<script type="text/javascript" src="js/geo-autocomplete/geo_autocomplete.js"></script>-->
 </head>
@@ -256,9 +258,19 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label" for="selIterations">
+                            Iteration:</label>
+                        <div class="controls">
+                            <select id="selIterations" type="text">
+                            </select>
+                        </div>
+                    </div>
+                    
                     <div class="control-group">
                         <label class="control-label" for="selPopulation">
-                            Candidate Solution</label>
+                            Candidate Solution:</label>
                         <div class="controls">
                             <select id="selPopulation" type="text" disabled="disabled">
                             </select>
@@ -269,38 +281,8 @@
             </div>
             <div class="span12">
                 <div id="divJViewerL" class="mapDiv">
-                    <div class="well well-small">
-                        <ul>
-                            <li>
-                                <address>
-                                    <img class="imgTransportIcon" src="img/transportIcons/Tram.png">
-                                    <strong>Melbourne Aquatic Centre - Stop 131</strong>
-                                    <br>
-                                    Albert Rd/Aughtie Dr (4334)
-                                </address>
-                            </li>
-                        </ul>
-                        <ul >
-                            <li><img src="img/downArrow.png"/></li>
-                            <li>
-                                <strong>Mode:</strong> Walk (20 minutes)
-                            </li>
-                            <li><img src="img/downArrow.png"/></li>
-
-                        </ul>
-                      
-                        <ul>
-                            <li>
-                                <address>
-                                    <img class="imgTransportIcon" src="img/transportIcons/Train.png">
-                                    <strong>Melbourne Central</strong>
-                                    <br>
-                                    La Trobe St/ (19842)
-                                </address>
-                            </li>
-                        </ul>
-
-                    </div>
+                   
+                  
                     <!---
                     <div id="divJViewerL" class="mapDiv">
                   
@@ -344,19 +326,11 @@
                     -->
                 </div>
                 <div id="divJViewerR" class="mapDiv">
-                    <div id="map_canvas" style="width: 69%; height: 100%;">
+                    <div id="map_canvas">
                     </div>
                 </div>
                 <div id="divJViewerB" class="mapDiv">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet, odio sed
-                        elementum aliquet, dolor est fringilla dui, ut fringilla risus mauris sed mi. Etiam
-                        vitae nisl purus, mollis tempus eros. Fusce augue nisi, tincidunt sit amet blandit
-                        non, hendrerit eu nulla. Ut elementum dictum porta. Maecenas eget quam eget erat
-                        pharetra laoreet sed ut orci. Curabitur suscipit velit et mauris dapibus ac rhoncus
-                        quam aliquet. Nam interdum lobortis sodales. Nam interdum hendrerit sapien, et fringilla
-                        dolor ultrices ut. Vivamus dapibus condimentum ipsum eget dignissim. Maecenas tincidunt
-                        dictum arcu ullamcorper accumsan.</p>
+                    <div id="divSlider"></div>
                 </div>
             </div>
         </div>

@@ -102,12 +102,14 @@ $('#selJourneyList').change(function () {
         currentOption = selected;
         selectedJourneyUuid = selected.attr('value');
         GetProperties(selected.attr('value'));
+
     }
     else {
         disableControls();
     }
     OptimiserRefresh();
     loadJourneyRuns();
+    refreshViewerSlider();
 
 });
 

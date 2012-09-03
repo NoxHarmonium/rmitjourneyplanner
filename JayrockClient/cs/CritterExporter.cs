@@ -74,9 +74,12 @@ namespace JayrockClient
                 writer.WriteMember("Mode");
                 writer.WriteString(leg.TransportMode.ToString());
                 writer.WriteMember("TotalTime");
-                writer.WriteString(leg.TotalTime.ToString());
+                context.Export(leg.TotalTime, writer);
+                //writer.WriteString(leg.TotalTime.ToString());
                 writer.WriteMember("Route");
                 writer.WriteString(leg.RouteId1);
+                writer.WriteMember("DepartTime");
+                context.Export(leg.DepartureTime,writer);
 
                 writer.WriteEndObject();
             }

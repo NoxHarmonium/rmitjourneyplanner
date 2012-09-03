@@ -42,27 +42,82 @@
 
 	border-top-style:solid;
 	border-left-style:solid;
-    min-height: 700px; /* !important;*/
+    min-height: 697px; /* !important;*/
     height:auto !important; 
-    height: 700px; 
+    height: 697px; 
     
 	overflow-y: scroll;
 	/*margin-right: -30px;*/
-	max-height: 700px !important;
-	width: 30.975%;
+	max-height: 697px !important;
+	width: 35.975%;
 
 
     /* padding: 30px; /*Subtract padding*2 from height   */
 	
 	float: left;
+}
+
+#divJViewerR
+{
+	display: block;
+	border-top-style:solid;
+	border-right-style:solid;
+	height: 700px;
+}
+
+#divJViewerB
+{
+	min-height: 200px;
+	height:auto !important; 
+	height: 200px; 
 	
+	border-style:solid;
+	width: 100%;
 	
-	
+}
+
+
+.tram {
+    color: green;
+}
+
+.train {
+    color: blue;    
+}
+
+.bus {
+    color: orange;
+}
+
+.well-jl {
+    padding: 6px;
+    padding-top: 10px;
+    margin: 20px;
+    
 }
 
 #divJViewerL>ul,li {
   
     list-style-type: none;    
+    
+}
+.divJLTime {
+    /*display: inline;*/
+    padding-top: 4px;
+    min-width: 60px;
+    width:auto !important; 
+    width: 60px;
+    float: left;
+    vertical-align: middle;
+    white-space:pre-wrap;
+}
+
+.liJLMiddle {
+    
+    padding: 3px;
+}
+.liJLMiddle>img {
+    vertical-align: middle; padding-right: 9px;    
 }
 
 .formLabel {
@@ -73,24 +128,9 @@
     
 }
 
-#divJViewerB
-{
-	height: 200 px;
-	border-style:solid;
-	width: 100%;
-	
-}
-#divJViewerR
-{
-	display: block;
-	border-top-style:solid;
-	border-right-style:solid;
-	height: 700px;
-	
-	
-	
-	
-}
+
+
+#map_canvas {width: 63%; height: 100%;}
 
 #map_canvas img {  max-width: none; width: auto; display:inline; }
 
