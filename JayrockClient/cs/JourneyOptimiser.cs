@@ -330,6 +330,20 @@ namespace JayrockClient
                     }
                     run.TimeFinished = DateTime.Now;
 
+                    var maxJT = results.Max(r => r.Population.Max(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
+                    var minJT = results.Min(r => r.Population.Min(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
+                    var maxCh = results.Max(r => r.Population.Max(p => p.Fitness.Changes));
+                    var minCh = results.Min(r => r.Population.Min(p => p.Fitness.Changes));
+
+                    foreach (var result in results)
+                    {
+                        foreach (var p in result.Population)
+                        {
+                            p.Fitness.NormalisedChanges = ((double)p.Fitness.Changes) / (maxCh - minCh);
+                            p.Fitness.NormalisedTravelTime = p.Fitness.TotalJourneyTime.TotalSeconds / (maxJT - minJT);
+                        }
+                    }
+
                     lock (journey.RunUuids)
                     {
                         //TODO: Make this more efficient/better coded

@@ -15,6 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
     using RmitJourneyPlanner.CoreLibraries.Types;
+    using NUnit.Framework;
 
     #endregion
 	//1/(e^x²)
@@ -418,7 +419,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 {
                     second = TournamentSelect();
                 }
-                
+
+                Assert.That(first.departureTime != default(DateTime) && second.departureTime != default(DateTime));
+
                 bool doCrossover = this.random.NextDouble() <= this.Properties.CrossoverRate;
                 bool doMutation = this.random.NextDouble() <= this.Properties.MutationRate;
                 Critter[] children = doCrossover
@@ -432,6 +435,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     children[1] = this.Properties.Mutator.Mutate(children[1]);
                 }
 
+                Assert.That(children[0].departureTime != default(DateTime) && children[1].departureTime != default(DateTime));
 
                 if (doCrossover || doMutation)
                 {
@@ -439,7 +443,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route, children[1].departureTime);
                 }
                 //var ff = (AlFitnessFunction)this.properties.FitnessFunction;
-                
+
+                Assert.That(children[0].departureTime != default(DateTime) && children[1].departureTime != default(DateTime));
 
                 q.AddRange(children);
 
@@ -580,6 +585,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 
                 var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
                 critter.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 30.0)-15.0);
+                Assert.That(critter.departureTime != default(DateTime));
+
                 Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
                 //this.result.AverageFitness += critter.Fitness;
                 var ff = (AlFitnessFunction)this.Properties.FitnessFunction;

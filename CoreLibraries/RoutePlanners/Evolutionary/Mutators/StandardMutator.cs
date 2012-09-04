@@ -9,6 +9,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
     using System;
     using System.Collections.Generic;
 
+    using NUnit.Framework;
+
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -52,6 +54,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
         public Critter Mutate(Critter child)
         {
             child.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 5.0)-2.5);
+            Assert.That(child.departureTime != default(DateTime));
+
+
 			var random = CoreLibraries.Random.GetInstance();
             List<NodeWrapper<INetworkNode>> nodes = child.Route;
             if (nodes.Count == 1) return child;
@@ -66,7 +71,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
             newRoute.AddRange(newSegment);
             newRoute.AddRange(nodes.GetRange(endIndex + 1, nodes.Count - 1 - endIndex));
 
-            return new Critter((Route)newRoute.Clone(),new Fitness());
+            return new Critter((Route)newRoute.Clone(),new Fitness()) {departureTime = child.departureTime};
 
             // return child;
         }

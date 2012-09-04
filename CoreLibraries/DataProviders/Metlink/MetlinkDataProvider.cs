@@ -641,6 +641,15 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// <returns> A list of <see cref="Arc" /> objects that represent the multiple ways to get between the 2 points. </returns>
         public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime departureTime)
         {
+
+            Assert.That(!departureTime.Equals(default(DateTime)), "Departure time is default. Something is wrong.");
+
+            if (source.Id == 19842 && destination.Id ==19842)
+            {
+                string breakhere = "gfggf";
+
+            }
+
             var arcs = new List<Arc>();
 			int dow = (int)departureTime.DayOfWeek;
             

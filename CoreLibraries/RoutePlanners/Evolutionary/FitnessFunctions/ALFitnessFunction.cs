@@ -274,6 +274,8 @@ restart:
                 legs++;
                 totalTime += bestArc.Time;
                 departTime += bestArc.Time.TotalTime;
+                Assert.That(totalTime.TotalTime != TimeSpan.Zero, "Last arc was zero time.");
+                Assert.That(departTime != default(DateTime), "DepartTime is zero.");
 
                 Assert.IsFalse(route[pointer].Node.Id == ((INetworkNode)bestArc.Destination).Id,
                     "Destination is source. There must be a loop.");

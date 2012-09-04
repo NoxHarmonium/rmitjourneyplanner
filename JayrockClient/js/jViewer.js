@@ -19,6 +19,7 @@ if (googleEnabled)
 
     var map;
     var mapPath;
+    var chart;
     var nodeCache = new Array();
     var points;
     var pointsLoaded;
@@ -143,11 +144,18 @@ if (googleEnabled)
 
    $('#selIterations').change(function () {
         window.mapManager.loadIteration(parseInt($(this).find(':selected').text()));
-   });
+    });
+
+    $('#txtMaxRank').change(function () {
+        window.mapManager.loadIteration();
+    });
 
    $('#selPopulation').change(function () {
        var member = $(this).find(':selected').text();
        window.mapManager.loadMember(member);
+       if(chart) {
+           chart.setSelection([{ row: member + 1, column: 1 }]);
+       }
 
    });
 
@@ -165,31 +173,93 @@ if (googleEnabled)
            var _currentData = window.mapManager.getData();
 
            for (var i in _currentData.population) {
-               dataSet.push([_currentData.population[i].Critter.Fitness[labelA],
-                            _currentData.population[i].Critter.Fitness[labelB]]);
+               if (_currentData.population[i].Critter.Rank <= $("#txtMaxRank").val()) {
+                   dataSet.push([_currentData.population[i].Critter.Fitness[labelA],
+                           _currentData.population[i].Critter.Fitness[labelB]]);
+               }
 
 
-               opt = jQuery(document.createElement('option'));
-               opt.text(i);
-               $('#selPopulation').append(opt);
+
            }
 
 
            var data = google.visualization.arrayToDataTable(dataSet);
 
+
+
+
            var options = {
                title: 'Population Analysis',
                hAxis: { title: labelA, minValue: 0, maxValue: 1 },
-               vAxis: { title: labelB , minValue: 0, maxValue: 1 },
+               vAxis: { title: labelB, minValue: 0, maxValue: 1 },
                legend: 'none'
            };
 
-           var chart = new google.visualization.ScatterChart(document.getElementById('divGraph'));
+           chart = new google.visualization.ScatterChart(document.getElementById('divGraph'));
+           google.visualization.events.addListener(chart, 'ready', function () {
+
+               var iFrame = $('[id^=Drawing_Frame]');
+               var contents = iFrame.contents();
+               var canvas = contents.find('svg');
+               var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+               g.setAttribute("transform", "");
+
+               function scaleSize(n) {
+                   return (n * 247);
+               }
+               function scalePos(n) {
+                   return (n + 77);
+               }
+
+               /*
+               for (var i in dataSet) {
+               if (i == 0)
+               continue;
+
+               var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
+               //rect.attr('x', dataSet[i][0]);
+               //rect.attr('y', dataSet[i][1]);
+               // rect.attr('x2', 0);
+               //rect.attr('y2', 0);
+
+               rect.setAttribute("stroke", "#000000");
+               rect.setAttribute("stroke-width", "1");
+               //rect.setAttribute('x', 77);
+               //rect.setAttribute('y', 77);
+               //rect.setAttribute('width', 247);
+               //rect.setAttribute('height', 247);
+
+               var x = scalePos(scaleSize(dataSet[i][0]));
+               var y = scalePos(scaleSize(0));
+
+               rect.setAttribute('x', x);
+               rect.setAttribute('y', y);
+               rect.setAttribute('width', scaleSize(1-(dataSet[i][0])));
+               rect.setAttribute('height', scaleSize(1-(dataSet[i][1])));
+               rect.setAttribute('fill', "none");
+               //g.append(rect);
+               g.appendChild(rect);
+               }
+               canvas.append(g);
+               */
+           });
+
+           google.visualization.events.addListener(chart, 'select', function () {
+               var sel = chart.getSelection()[0];
+               $('#selPopulation').val(String(sel.row - 1));
+               window.mapManager.loadMember(sel.row - 1);
+           });
+
            chart.draw(data, options);
+
 
        }
 
    });
+
+
+   
 
    ///
    /// Helper functions
@@ -504,8 +574,8 @@ if (googleEnabled)
         //Load a specific iteration from the loaded run file.
         this.loadIteration = function (iterationNum) {
 
-
-            _iteration = iterationNum;
+            if (iterationNum)
+                _iteration = iterationNum;
 
             RPCCall("GetIteration", { "journeyUuid": _journeyUuid, "runUuid": _runUuid, "iteration": _iteration }, function (data) {
                 if (CheckForError(data)) {
@@ -518,14 +588,18 @@ if (googleEnabled)
                 // Empty element for ease of use.
                 var opt = jQuery(document.createElement('option'));
                 $('#selPopulation').append(opt);
-
-
+                for (var i in _currentData.population) {
+                    opt = jQuery(document.createElement('option'));
+                    opt.text(i);
+                    opt.val(i);
+                    $('#selPopulation').append(opt);
+                }
 
                 $('#selGraphObjectives').empty();
                 for (var i in _currentData.population[0].Critter.Fitness) {
                     opt = jQuery(document.createElement('option'));
                     var keys = Object.keys(_currentData.population[0].Critter.Fitness);
-                    
+
                     opt.text(i);
                     $('#selGraphObjectives').append(opt);
                 }

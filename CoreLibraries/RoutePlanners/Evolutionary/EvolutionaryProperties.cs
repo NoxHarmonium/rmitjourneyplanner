@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     /// <summary>
     ///   Contains the properties related to one instance of an <see cref="EvolutionaryRoutePlanner" /> .
     /// </summary>
-    public class EvolutionaryProperties
+    public class EvolutionaryProperties : ICloneable
     {
         #region Constructors and Destructors
 
@@ -155,5 +155,39 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 		public RouteGenerators.SearchType SearchType {get;set;}
 
         #endregion
+
+        /// <summary>
+        /// Returns a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            return new EvolutionaryProperties
+                {
+                    Bidirectional = this.Bidirectional,
+                    Breeder = this.Breeder,
+                    CrossoverRate = this.CrossoverRate,
+                    Database = this.Database,
+                    DepartureTime = this.DepartureTime,
+                    Destination = this.Destination,
+                    FitnessFunction = this.FitnessFunction,
+                    MaxDistance = this.MaxDistance,
+                    MaximumWalkDistance = this.MaximumWalkDistance,
+                    MutationRate = this.MutationRate,
+                    Mutator = this.Mutator,
+                    NetworkDataProviders = this.NetworkDataProviders,
+                    NumberToKeep = this.NumberToKeep,
+                    Objectives = this.Objectives,
+                    Origin = this.Origin,
+                    Planner = this.Planner,
+                    PointDataProviders = this.PointDataProviders,
+                    PopulationSize = this.PopulationSize,
+                    ProbMinDistance = this.ProbMinDistance,
+                    ProbMinTransfers = this.ProbMinTransfers,
+                    RouteGenerator = this.RouteGenerator,
+                    SearchType = this.SearchType
+                };
+         
+        }
     }
 }

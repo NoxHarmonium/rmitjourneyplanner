@@ -70,6 +70,22 @@ $('#btnNewJourney').click(function() {
 
 });
 
+$('#btnCloneJourney').click(function () {
+    var selected = $('#selJourneyList>option:selected');
+
+    if (selected.exists()) {
+
+        RPCCall("CloneJourney", { "journeyUuid": selected.attr('value') }, function (data) {
+            if (CheckForError(data)) {
+                return;
+            }
+            //alert("New journey created with UUID: " + data.result);
+            refresh();
+        });
+    }
+
+});
+
 $('#btnDelJourney').click(function() {
 	
 	var selected = $('#selJourneyList>option:selected');

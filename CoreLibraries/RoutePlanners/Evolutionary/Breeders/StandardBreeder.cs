@@ -9,6 +9,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
     using System;
     using System.Collections.Generic;
 
+    using NUnit.Framework;
+
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -87,11 +89,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
             secondChild.AddRange(secondNodes.GetRange(0, crossoverPoint.Value));
             secondChild.AddRange(firstNodes.GetRange(crossoverPoint.Key, firstNodes.Count - crossoverPoint.Key));
 
-          	DateTime firstTime = first.departureTime;
-			
-
-            
-
+          	
             var output = new[]
                 {
                     new Critter((Route)firstChild.Clone(), new Fitness()),
@@ -99,7 +97,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
                 };
 			
 			output[0].departureTime = second.departureTime;
-			output[1].departureTime = first.departureTime;			
+			output[1].departureTime = first.departureTime;
+
+            Assert.That(output[0].departureTime != default(DateTime));
+            Assert.That(output[1].departureTime != default(DateTime));
 			
             if (output == null || output[0] == null || output[1] == null)
             {

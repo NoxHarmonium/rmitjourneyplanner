@@ -135,6 +135,8 @@
                         <div class="form-actions">
                             <button id="btnNewJourney" class="btn" type="button">
                                 New Journey</button>
+                             <button id="btnCloneJourney" class="btn" type="button">
+                                Clone Journey</button>
                             <button id="btnDelJourney" class="btn" type="button">
                                 Delete Journey</button>
                         </div>
@@ -238,6 +240,7 @@
                     <button id="btnJOEnqueue" type="button" class="btn">
                         Enqueue Selected Journey
                     </button>
+                    <input id="txtEnqRuns" value="1" type="text" style="width: 15px;"/>
                     <button id="btnJORefresh" type="button" class="btn">
                         Refresh
                     </button>
@@ -285,11 +288,19 @@
                                 </select>
                             </div>
                         </div>
+                         <div class="control-group">
+                            <label class="control-label" for="txtMaxRank">
+                                Maximum Rank:</label>
+                            <div class="controls">
+                              <input class="input-mini" id="txtMaxRank" type="text" value="1"/>
+                            </div>
+                        </div>
+
                     </fieldset>
                     </form>
                 </div>
                 <div class="span6">
-                    <div id="divGraph" style="width: 400px; height: 400px;">
+                    <div id="divGraph" style="width: 400px; height: 400px; margin-top: -27px;">
                     </div>
                 </div>
             </div>

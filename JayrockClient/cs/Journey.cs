@@ -4,7 +4,7 @@ using Jayrock.Json.Conversion;
 
 namespace JayrockClient
 {
-	public class Journey 
+	public class Journey : ICloneable
 	{
 		/// <summary>
 		/// The UUID of this journey.
@@ -157,12 +157,19 @@ namespace JayrockClient
 			this.description = description;
 		}
 
-		
-		
-		
-		
-		
-		
+        /// <summary>
+        /// Returns a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+	    public object Clone()
+        {
+            return new Journey
+                {
+                    ShortName = this.shortName + " (Clone)",
+                    description = this.description,
+                    properties = (EvolutionaryProperties)this.properties.Clone()
+                };
+        }
 	}
 }
 

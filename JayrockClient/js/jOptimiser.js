@@ -1,7 +1,7 @@
 ﻿///
 /// Fields
 ///
-var oRefreshInterval = 200; //ms
+var oRefreshInterval = 1000; //ms
 
 ///
 /// Events
@@ -21,7 +21,7 @@ $('#btnDelJourney').click(function ()
 });
 
 $('#btnJOEnqueue').click(function () {
-    RPCCall('EnqueueJourney', { uuid: selectedJourneyUuid, runs: 1 }, function (data) {
+    RPCCall('EnqueueJourney', { uuid: selectedJourneyUuid, runs: $('#txtEnqRuns').val() }, function (data) {
         if (CheckForError(data)) {
             return;
         }

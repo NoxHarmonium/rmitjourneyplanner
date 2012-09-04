@@ -645,6 +645,22 @@ namespace JayrockClient
 
         }
 
+        [JsonRpcMethod("CloneJourney", Idempotent = true)]
+        [JsonRpcHelp("Creates a clone of the specified journey.")]
+        public void CloneJourney(string journeyUuid)
+        {
+            if (journeyUuid == null)
+            {
+                throw new Exception(Strings.ERR_ANY_NULL);
+            }
+
+            var jm = ObjectCache.GetObject<JourneyManager>();
+            var j = jm.GetJourney(journeyUuid);
+            jm.Add((Journey)j.Clone());
+           
+
+        }
+
         [JsonRpcMethod("GetTotalIterations", Idempotent = true)]
         [JsonRpcHelp("Returns the max number of iterations for a journey.")]
         public int GetTotalIterations(string journeyUuid)

@@ -8,6 +8,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
     using System;
 
+    using NUnit.Framework;
+
     #endregion
 
     /// <summary>
@@ -135,7 +137,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <returns> A cloned critter. </returns>
         public object Clone()
         {
-            return new Critter((Route)this.Route.Clone(), (Fitness)this.Fitness.Clone()) {departureTime = this.departureTime};
+            Assert.That(this.departureTime != default(DateTime));
+            var cloned = new Critter((Route)this.Route.Clone(), (Fitness)this.Fitness.Clone()) { departureTime = this.departureTime, Age = this.Age, N = this.N, Rank = this.Rank };
+            Assert.That(cloned.departureTime != default(DateTime));
+            return cloned;
         }
 
         #endregion
