@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Local.testsettings = Local.testsettings
 		RmitJourneyPlanner1.vsmdi = RmitJourneyPlanner1.vsmdi
+		TestMatrix.txt = TestMatrix.txt
 		TODO.txt = TODO.txt
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
@@ -16,6 +17,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JayrockClient", "JayrockClient\JayrockClient.csproj", "{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}"
 EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = RmitJourneyPlanner1.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -71,19 +79,10 @@ Global
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = JayrockClient\JayrockClient.csproj
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = RmitJourneyPlanner1.vsmdi
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
