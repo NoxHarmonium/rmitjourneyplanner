@@ -416,7 +416,7 @@ if (googleEnabled)
                         '<span class="divJLTime midSpan">   </span> ' +
                         '<img src="img/downArrow.png"  /> <span class="divTotTime">Walk (20 Mins)</span> ' +
                     '</li> ' +
-                    '<li class="liJLBottom botSpan"> ' +
+                    '<li class="liJLBottom"> ' +
                         '<span class="divJLTime botSpan">7:05 AM</span> ' +
                         '<img class="imgTransportIcon botSpan" src="img/transportIcons/Train.png"> ' +
                         '<span class="divStationName botSpan">Melbourne Central </span> ' +

@@ -110,6 +110,7 @@
     float: left;
     vertical-align: middle;
     white-space:pre-wrap;
+    text-align: left;
 }
 
 .liJLMiddle {
@@ -168,6 +169,6 @@ H3
 }
 
 #divJourneyLegs {
-    display: inline;
+    /*display: inline;*/
     
 }

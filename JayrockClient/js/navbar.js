@@ -6,11 +6,12 @@
 var pages = new Array(
 	"#divJSelector", 
 	"#divJEditor",
+	"#divJOptimiser",
 	"#divJViewer"
 	);
 	
 var currentTab = "";
-var mode="scroll";
+var mode="fade";
 var updateScroll = true;
 
 ///
@@ -51,17 +52,20 @@ function updateNavBar()
    // on scroll,  call the getCurrent() function above, and see if we are in the
    //    current displayed section. If not, add the "selected" class to the
    //    current nav, and remove it from the previous "selected" nav
-$(document).scroll(function(e) {
-    if (updateScroll)
-    {
-	    var scrollTop = $(this).scrollTop();
-	    var checkIndex = getCurrent( scrollTop );
-	    if( checkIndex !== currentIndex ) {
-	        currentIndex = checkIndex;
-	        $navs.eq( currentIndex ).addClass("active").siblings(".active").removeClass("active");
+if(mode=="scroll")
+{
+	$(document).scroll(function(e) {
+	    if (updateScroll)
+	    {
+		    var scrollTop = $(this).scrollTop();
+		    var checkIndex = getCurrent( scrollTop );
+		    if( checkIndex !== currentIndex ) {
+		        currentIndex = checkIndex;
+		        $navs.eq( currentIndex ).addClass("active").siblings(".active").removeClass("active");
+		    }
 	    }
-    }
-});
+		});
+}
 
 
 $('.nav a').click(function(){
@@ -69,8 +73,7 @@ $('.nav a').click(function(){
 	var targetPage = $($(this).attr('data-page'));
 	var targetDiv = $(targetPage);
 	//$(currentTab).parent().removeClass('active');
-	currentTab = $(this);
-	$(this).parent().addClass('active').siblings(".active").removeClass("active");;
+	
 	
 	if (mode == "fade")
 	{
@@ -83,7 +86,7 @@ $('.nav a').click(function(){
 		{
 			prevDiv.fadeOut('fast',function() {
 				targetDiv.fadeIn('fast',function() {
-					targetDiv.refresh();
+					//targetDiv.refresh();
 				
 				});	
 			});
@@ -91,7 +94,7 @@ $('.nav a').click(function(){
 		else
 		{
 			targetDiv.fadeIn('fast',function() {
-					targetDiv.refresh();
+					//targetDiv.refresh();
 				
 				});
 		}	
@@ -107,7 +110,8 @@ $('.nav a').click(function(){
      	});
 	
 	}
-	
+	currentTab = $(this);
+	$(this).parent().addClass('active').siblings(".active").removeClass("active");;
 	
 
 });

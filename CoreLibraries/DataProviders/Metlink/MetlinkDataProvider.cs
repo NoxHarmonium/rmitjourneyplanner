@@ -643,13 +643,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         {
 
             Assert.That(!departureTime.Equals(default(DateTime)), "Departure time is default. Something is wrong.");
-
-            if (source.Id == 19842 && destination.Id ==19842)
-            {
-                string breakhere = "gfggf";
-
-            }
-
+     
             var arcs = new List<Arc>();
 			int dow = (int)departureTime.DayOfWeek;
             
