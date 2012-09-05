@@ -185,7 +185,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     ProbMinDistance = this.ProbMinDistance,
                     ProbMinTransfers = this.ProbMinTransfers,
                     RouteGenerator = this.RouteGenerator,
-                    SearchType = this.SearchType
+                    SearchType = this.SearchType,
+                    MaxIterations = this.MaxIterations
+
                 };
          
         }
