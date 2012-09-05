@@ -91,6 +91,8 @@ namespace JayrockClient
         /// </summary>
         private bool paused;
 
+        private const string queueFile = "optimisationQueue.json";
+
         /// <summary>
         /// The list of directories used by the journey optimiser.
         /// </summary>
@@ -114,6 +116,9 @@ namespace JayrockClient
             cTokenSource = new CancellationTokenSource();
             this.journeyManager = journeyManager;
             bc = new BlockingCollection<string>(optimiseQueue);
+
+            Load();
+
             optimisationThread = new Thread(this.OptimisationLoop);
             optimisationThread.Start();
         }
@@ -211,6 +216,7 @@ namespace JayrockClient
                 //optimiseQueue.Enqueue(journey.Uuid);
                 bc.Add(journeyUuid);
             }
+            this.Save();
         }
 
         /// <summary>
@@ -249,13 +255,36 @@ namespace JayrockClient
         }
 
         /// <summary>
-        /// Saves the changes to a file.
+        /// Saves the optimisation queue to a file.
         /// </summary>
-        private void Save(IEnumerable<Result> results)
+        private void Save()
         {
-            
+            string dir = directories[0] + "/";
+            using (var writer = new StreamWriter(dir + queueFile))
+            {
+                JsonConvert.Export(bc.ToArray(),new JsonTextWriter(writer));
+            }
+        }
+
+        private void Load()
+        {
+            string dir = directories[0] + "/";
+            if (File.Exists(dir + queueFile))
+            {
+                string[] values;
+                using (var reader = new StreamReader(dir + queueFile))
+                {
+                    values = JsonConvert.Import<string[]>(reader);
+                }
+               
+                foreach (var value in values)
+                {
+                    bc.Add(value);
+                }
+            }
 
         }
+
 
         /// <summary>
         /// Gets the current optimiser queue.
@@ -264,6 +293,9 @@ namespace JayrockClient
         public string[] GetQueue()
         {
             return bc.ToArray();
+
+      
+            
         }
         
         /// <summary>
@@ -299,6 +331,9 @@ namespace JayrockClient
                     {
                         return;
                     }
+
+                    this.Save();
+                        
                     var jUuid = bc.Take(cTokenSource.Token);
                     this.state = OptimiserState.Optimising;
                     Run run = new Run();
@@ -344,42 +379,44 @@ namespace JayrockClient
                         }
                     }
 
-                    lock (journey.RunUuids)
+                    if (!cTokenSource.IsCancellationRequested)
                     {
-                        //TODO: Make this more efficient/better coded
-                        var newList = new List<string>(journey.RunUuids);
-                        newList.Add(run.Uuid);
-                        journey.RunUuids = newList.ToArray();
+                        lock (journey.RunUuids)
+                        {
+                            //TODO: Make this more efficient/better coded
+                            var newList = new List<string>(journey.RunUuids);
+                            newList.Add(run.Uuid);
+                            journey.RunUuids = newList.ToArray();
 
 
-                        string dir = directories[1] + "/" + journey.Uuid + "/";
+                            string dir = directories[1] + "/" + journey.Uuid + "/";
                         
-                        Directory.CreateDirectory(dir + run.Uuid);
-                        for (int i = 0; i < results.Count; i++)
-                        {
-                            using (
-                                var writer =
-                                    new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
+                            Directory.CreateDirectory(dir + run.Uuid);
+                            for (int i = 0; i < results.Count; i++)
                             {
-                                exportContext.Export(results[i], new JsonTextWriter(writer));
+                                using (
+                                    var writer =
+                                        new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
+                                {
+                                    exportContext.Export(results[i], new JsonTextWriter(writer));
+                                }
                             }
+                            using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
+                            {
+                                exportContext.Export(run,new JsonTextWriter(writer));
+                            }
+                            results.Clear();
                         }
-                        using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
-                        {
-                            exportContext.Export(run,new JsonTextWriter(writer));
-                        }
-                        results.Clear();
+                        journeyManager.Save();
                     }
-                    journeyManager.Save();
+                    
 
                     currentJourney = null;
                     currentIteration = 0;
                     maxIterations = 0;
 
-                    if (!cTokenSource.IsCancellationRequested)
-                    {
-                        Save(results);
-                    }
+                    
+                   
 
                 }
                 
