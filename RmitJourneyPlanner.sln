@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "Provider\MySq
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JayrockClient", "JayrockClient\JayrockClient.csproj", "{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jmetal", "jmetal\jmetal.csproj", "{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -78,6 +80,21 @@ Global
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Default|x86.ActiveCfg = Debug|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FA0C47F7-BF79-4618-9294-CBF6005AE2EE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

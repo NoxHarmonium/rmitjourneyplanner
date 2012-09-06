@@ -212,7 +212,7 @@ namespace JayrockClient
                         if (isArray)
                         {
                             //TODO: Make this generic
-                            valstring = String.Join(",", ((RmitJourneyPlanner.CoreLibraries.Types.FitnessParameters[])val));
+                            valstring = String.Join(",", ((RmitJourneyPlanner.CoreLibraries.Types.FitnessParameter[])val));
                             seperator = "|";
                         }
                         else
@@ -360,17 +360,17 @@ namespace JayrockClient
 								castVal = node;
 							break;
 							
-                            case "FitnessParameters[]":
+                            case "FitnessParameter[]":
 
 						        var objs = propVal.Value.Split(new[]
 						        {
 						            ','
 						        });
-                                var objectives = new FitnessParameters[objs.Length];
+                                var objectives = new FitnessParameter[objs.Length];
 						        int i = 0;
                                 foreach (var obj in objs)
                                 {
-                                    FitnessParameters e;
+                                    FitnessParameter e;
                                     if (!Enum.TryParse(obj, out e))
                                     {
                                         throw new Exception("Cannot parse string into enum.");

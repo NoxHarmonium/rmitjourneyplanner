@@ -29,7 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         {
             this.NetworkDataProviders = new INetworkDataProvider[0];//new List<INetworkDataProvider>();
             this.PointDataProviders = new IPointDataProvider[0];
-            this.Objectives = new FitnessParameters[0];
+            this.Objectives = new FitnessParameter[0];
         }
 
         #endregion
@@ -144,7 +144,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         /// Gets or sets the objectives used in the optimisation.
         /// </summary>
-        public Types.FitnessParameters[] Objectives { get; set; }
+        public Types.FitnessParameter[] Objectives { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the type of the search.

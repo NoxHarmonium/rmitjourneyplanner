@@ -173,7 +173,8 @@ if (googleEnabled)
            var _currentData = window.mapManager.getData();
 
            for (var i in _currentData.population) {
-               if (_currentData.population[i].Critter.Rank <= $("#txtMaxRank").val()) {
+               var maxRank = parseInt($("#txtMaxRank").val());
+               if (_currentData.population[i].Critter.Rank <= maxRank) {
                    dataSet.push([_currentData.population[i].Critter.Fitness[labelA],
                            _currentData.population[i].Critter.Fitness[labelB]]);
                }
@@ -247,8 +248,8 @@ if (googleEnabled)
 
            google.visualization.events.addListener(chart, 'select', function () {
                var sel = chart.getSelection()[0];
-               $('#selPopulation').val(String(sel.row - 1));
-               window.mapManager.loadMember(sel.row - 1);
+               $('#selPopulation').val(String(sel.row));
+               window.mapManager.loadMember(sel.row);
            });
 
            chart.draw(data, options);

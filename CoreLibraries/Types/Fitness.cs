@@ -15,15 +15,26 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// <summary>
     /// A list of the parameters provided by the fitness class.
     /// </summary>
-    public enum FitnessParameters
+    public enum FitnessParameter
     {
+        
+        /// <summary>
+        /// Gets the non-normalised journey time in fractional minutes.
+        /// </summary>
+        TotalJourneyMinutes,
+
+        /// <summary>
+        /// Gets the normalised changes value.
+        /// </summary>
+        NormalisedChanges ,
+        
         /// <summary>
         /// The total journey time.
         /// </summary>
         TotalJourneyTime, 
 
         /// <summary>
-        /// The changes.
+        /// The non normalise changes.
         /// </summary>
         Changes, 
 
@@ -95,7 +106,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             get
             {
-                return Enum.GetValues(typeof(FitnessParameters)).Length;
+                return Enum.GetValues(typeof(FitnessParameter)).Length;
             }
         }
 
@@ -121,7 +132,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             get
             {
-                return Enum.GetValues(typeof(FitnessParameters)).Length;
+                return Enum.GetValues(typeof(FitnessParameter)).Length;
             }
         }
 
@@ -182,15 +193,28 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
         /// </summary>
-        /// <param name="i">The index of the parameter. <see cref="FitnessParameters"/></param>
+        /// <param name="i">The index of the parameter. <see cref="FitnessParameter"/></param>
+        public double this[FitnessParameter fitnessParameter]
+        {
+            get
+            {
+                return this[(int)fitnessParameter];
+            }
+
+        }
+        
+        /// <summary>
+        /// References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
+        /// </summary>
+        /// <param name="i">The index of the parameter. <see cref="FitnessParameter"/></param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if a index is refereced that is out of range.</exception>
         public double this[int i]
         {
             get
             {
-                switch ((FitnessParameters)i)
+                switch ((FitnessParameter)i)
                 {
-                    case FitnessParameters.TotalJourneyTime:
+                    case FitnessParameter.TotalJourneyTime:
                         if (this.TotalJourneyTime.TotalSeconds <= 0)
                         {
                             return double.MaxValue;
@@ -198,30 +222,36 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
                         return this.NormalisedTravelTime;
 
-                    case FitnessParameters.Changes:
+                    case FitnessParameter.NormalisedChanges:
                         return this.NormalisedChanges;
 
-                    case FitnessParameters.WalkingTime:
+                    case FitnessParameter.Changes:
+                        return this.Changes;
+
+                    case FitnessParameter.TotalJourneyMinutes:
+                        return this.TotalJourneyTime.TotalMinutes;
+
+                    case FitnessParameter.WalkingTime:
                         return this.WalkingTime.TotalSeconds;
 
-                    case FitnessParameters.Co2Emmissions:
+                    case FitnessParameter.Co2Emmissions:
                         return this.Co2Emmissions;
-                    case FitnessParameters.PercentBuses:
+                    case FitnessParameter.PercentBuses:
                         return 1 - this.PercentBuses;
 
-                    case FitnessParameters.PercentDisableFriendly:
+                    case FitnessParameter.PercentDisableFriendly:
                         return 1 - this.PercentDisableFriendly;
 
-                    case FitnessParameters.PercentTrains:
+                    case FitnessParameter.PercentTrains:
                         return 1 - this.PercentTrains;
 
-                    case FitnessParameters.PercentTrams:
+                    case FitnessParameter.PercentTrams:
                         return 1 - this.PercentTrams;
 
-                    case FitnessParameters.TotalTravelTime:
+                    case FitnessParameter.TotalTravelTime:
                         return this.TotalTravelTime.TotalSeconds;
 
-                    case FitnessParameters.TotalWaitingTime:
+                    case FitnessParameter.TotalWaitingTime:
                         return this.TotalWaitingTime.TotalSeconds;
                     default:
                         throw new ArgumentOutOfRangeException("i");

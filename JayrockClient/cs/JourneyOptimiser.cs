@@ -398,6 +398,11 @@ namespace JayrockClient
                                     var writer =
                                         new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
                                 {
+
+                                    results[i].Hypervolume =
+                                        results[i].Population.CalculateHyperVolume(
+                                            journey.Properties.Objectives,
+                                            new double[journey.Properties.Objectives.Length]);
                                     exportContext.Export(results[i], new JsonTextWriter(writer));
                                 }
                             }

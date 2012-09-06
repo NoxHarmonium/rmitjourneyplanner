@@ -148,6 +148,7 @@
     <Compile Include="Types\INode.cs" />
     <Compile Include="Types\JourneyLeg.cs" />
     <Compile Include="Types\NetworkArc.cs" />
+    <Compile Include="Types\Population.cs" />
     <Compile Include="Types\Result.cs" />
     <Compile Include="Types\Route.cs" />
     <Compile Include="Types\Timetable.cs" />

@@ -24,7 +24,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         /// <summary>
         ///   Gets the population of the algorithm.
         /// </summary>
-        List<Critter> Population { get; }
+        Population Population { get; }
 
         /// <summary>
         /// Gets the data structure that holds all the properties related to route planning.

@@ -1,5 +1,5 @@
-
-﻿using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
+﻿
+ using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
 using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 using RmitJourneyPlanner.CoreLibraries.Types;
 using System;
@@ -69,7 +69,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                    
                 properties.Destination.RetrieveData();
                 properties.Origin.RetrieveData();
-                properties.Objectives = new [] {FitnessParameters.Changes, FitnessParameters.PercentTrains, FitnessParameters.PercentTrams};
+                properties.Objectives = new [] {FitnessParameter.Changes, FitnessParameter.PercentTrains, FitnessParameter.PercentTrams};
 
 
                 properties.Database.Open();

@@ -37,11 +37,12 @@ namespace JayrockClient
             writer.WriteNumber(critter.N);
             writer.WriteMember("Rank");
             writer.WriteNumber(critter.Rank);
+
             
             writer.WriteMember("Fitness");
             writer.WriteStartObject();
             int i = 0;
-            foreach (var n in Enum.GetNames(typeof(FitnessParameters)))
+            foreach (var n in Enum.GetNames(typeof(FitnessParameter)))
             {
                 
                 writer.WriteMember(n);

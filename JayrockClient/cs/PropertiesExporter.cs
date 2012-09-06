@@ -114,7 +114,7 @@ namespace JayrockClient
                         if (isArray)
                         {
                             //TODO: Make this generic
-                            valstring = String.Join(",", ((RmitJourneyPlanner.CoreLibraries.Types.FitnessParameters[])val));
+                            valstring = String.Join(",", ((RmitJourneyPlanner.CoreLibraries.Types.FitnessParameter[])val));
                             seperator = "|";
                         }
                         else

@@ -136,7 +136,7 @@ namespace JayrockClient
 								castVal = node;
 							break;
 
-                        case "FitnessParameters[]":
+                        case "FitnessParameter[]":
 
                             var objs = propVal.Value.Split(new[]
 						        {
@@ -145,11 +145,11 @@ namespace JayrockClient
 						        {
 						            ','
 						        });
-                            var objectives = new FitnessParameters[objs.Length];
+                            var objectives = new FitnessParameter[objs.Length];
                             int i = 0;
                             foreach (var obj in objs)
                             {
-                                FitnessParameters e;
+                                FitnessParameter e;
                                 if (!Enum.TryParse(obj, out e))
                                 {
                                     throw new Exception("Cannot parse string into enum.");

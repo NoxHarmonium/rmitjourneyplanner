@@ -44,7 +44,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         ///   The population of the evolutionary algorithm.
         /// </summary>
-        private List<Critter> population;
+        private Population population;
 
         private int progress;
 
@@ -75,7 +75,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         ///   The population of the evolutionary algorithm.
         /// </summary>
-        public List<Critter> Population
+        public Population Population
         {
             get
             {
@@ -434,7 +434,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </summary>
         public void Start()
         {
-            this.population = new List<Critter>();
+            this.population = new Population();
             this.InitPopulation();
             this.iteration = 0;
         }

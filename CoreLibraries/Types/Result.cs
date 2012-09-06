@@ -23,7 +23,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The population of the previous iteration.
         /// </summary>
-        public List<Critter> Population = new List<Critter>();
+        public Population Population = new Population();
+
+        /// <summary>
+        /// The hypervolume of the iteration.
+        /// </summary>
+        public double Hypervolume = Double.NaN;
 
         /// <summary>
         /// Returns a new result that is a clone this instance.
@@ -32,7 +37,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public object Clone()
         {
             return new Result
-                { Totaltime = this.Totaltime, Population = this.Population.ConvertAll(t => (Critter)t.Clone()) };
+                { Totaltime = this.Totaltime, Population = (Population) this.Population.Clone() };
         }
     }
 }
