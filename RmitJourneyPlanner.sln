@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "Provider\MySq
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JayrockClient", "JayrockClient\JayrockClient.csproj", "{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRPCServer", "JRPCServer\JRPCServer.csproj", "{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}"
-EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = RmitJourneyPlanner1.vsmdi
@@ -76,21 +74,6 @@ Global
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|x86.ActiveCfg = Release|Any CPU
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Debug|x86.ActiveCfg = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Debug|x86.Build.0 = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Default|Any CPU.ActiveCfg = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Default|Mixed Platforms.ActiveCfg = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Default|Mixed Platforms.Build.0 = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Default|x86.ActiveCfg = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Default|x86.Build.0 = Debug|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Release|Any CPU.ActiveCfg = Release|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Release|Mixed Platforms.Build.0 = Release|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Release|x86.ActiveCfg = Release|x86
-		{CD8E191E-DDA0-4881-AB48-0E4A63C2E9B3}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

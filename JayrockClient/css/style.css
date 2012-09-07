@@ -1,0 +1,174 @@
+
+
+/* ===== Primary Styles ========================================================
+   Author:
+   ========================================================================== */
+@media (min-width: 768px) { 
+  .sb-fixed{
+    position: fixed;
+  } 
+}
+
+.imgTransportIcon {
+    
+    width: 24px;
+    height: 27.75px;
+    vertical-align:middle;
+    padding-right: 6px;
+}
+
+
+.autoCompleteLabel
+{
+	float: right;
+}
+
+.inline-div
+{
+	line-height: 1;
+
+	
+}
+#selJourneyList
+{
+	height: 400 px;
+
+}
+
+#divJViewerL
+{
+	display: block;
+    
+
+	border-top-style:solid;
+	border-left-style:solid;
+    min-height: 697px; /* !important;*/
+    height:auto !important; 
+    height: 697px; 
+    
+	overflow-y: scroll;
+	/*margin-right: -30px;*/
+	max-height: 697px !important;
+	width: 35.975%;
+
+
+    /* padding: 30px; /*Subtract padding*2 from height   */
+	
+	float: left;
+}
+
+#divJViewerR
+{
+	display: block;
+	border-top-style:solid;
+	border-right-style:solid;
+	height: 700px;
+}
+
+#divJViewerB
+{
+	min-height: 200px;
+	height:auto !important; 
+	height: 200px; 
+	
+	border-style:solid;
+	width: 100%;
+	
+}
+
+
+.tram {
+    color: green;
+}
+
+.train {
+    color: blue;    
+}
+
+.bus {
+    color: orange;
+}
+
+.well-jl {
+    padding: 6px;
+    padding-top: 10px;
+    margin: 20px;
+    
+}
+
+#divJViewerL>ul,li {
+  
+    list-style-type: none;    
+    
+}
+.divJLTime {
+    /*display: inline;*/
+    padding-top: 4px;
+    min-width: 60px;
+    width:auto !important; 
+    width: 60px;
+    float: left;
+    vertical-align: middle;
+    white-space:pre-wrap;
+    text-align: left;
+}
+
+.liJLMiddle {
+    
+    padding: 3px;
+}
+.liJLMiddle>img {
+    vertical-align: middle; padding-right: 9px;    
+}
+
+.formLabel {
+     float: left;
+    padding-top: 5px;
+    text-align: right;
+    width: 140px;
+    
+}
+
+
+
+#map_canvas {width: 63%; height: 100%;}
+
+#map_canvas img {  max-width: none; width: auto; display:inline; }
+
+#map_canvas label { 
+  width: auto; display:inline; 
+} 
+
+
+
+
+.mapDiv
+{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border-width:0.5px;
+
+}
+
+H3
+{
+ 
+  margin-bottom: 27px;
+  font-size: 19.5px;
+  line-height: 36px;
+  color: #333333;
+  border-bottom: 1px solid #eee;
+
+}
+
+
+#divJLImage {
+    
+    
+}
+
+#divJourneyLegs {
+    /*display: inline;*/
+    
+}
