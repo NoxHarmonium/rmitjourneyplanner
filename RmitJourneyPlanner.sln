@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "Provider\MySql.Data.csproj", "{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JayrockClient", "JayrockClient\JayrockClient.csproj", "{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRPCServer", "JRPCServer\JRPCServer.csproj", "{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}"
 EndProject
 Global
@@ -67,19 +65,6 @@ Global
 		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|x86.ActiveCfg = Release|x86
 		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|x86.Build.0 = Release|x86
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Default|Any CPU.ActiveCfg = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Default|x86.ActiveCfg = Debug|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{F90C9A13-A6A4-49BA-AFA6-95FC2DECFFFA}.Release|x86.ActiveCfg = Release|Any CPU
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Debug|Mixed Platforms.Build.0 = Debug|x86
