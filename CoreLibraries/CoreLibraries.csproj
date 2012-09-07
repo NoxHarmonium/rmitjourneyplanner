@@ -20,7 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\RmitJourneyPlanner.CoreLibraries.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <EnvironmentVariables>
       <EnvironmentVariables>
         <Variable name="MONO_ENV_OPTIONS" value="--gc=sgen " />
@@ -64,10 +65,11 @@
     <AssemblyOriginatorKeyFile>CoreLibrariesKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.1.12217, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="nunit.mocks, Version=2.6.1.12217, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="protobuf-net">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\protobuf-net\protobuf-net-VS9\protobuf-net.dll</HintPath>
+    <Reference Include="C5">
+      <HintPath>..\Libraries\C5.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,15 +77,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <Reference Include="C5">
-      <HintPath>Libraries\C5.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.core, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparers\CritterComparer.cs" />
@@ -159,8 +152,6 @@
     <Compile Include="Tests\TestFitnessFunction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Libraries\C5.dll" />
-    <Content Include="Libraries\C5.pdb" />
     <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup>

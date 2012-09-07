@@ -32,8 +32,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jayrock">
+      <HintPath>..\Libraries\Jayrock.dll</HintPath>
+    </Reference>
+    <Reference Include="Jayrock.Json">
+      <HintPath>..\Libraries\Jayrock.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Jayrock.Sandbox">
+      <HintPath>..\Libraries\Jayrock.Sandbox.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="nunit.framework, Version=2.6.1.12217, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\Libraries\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System" />
@@ -48,15 +59,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Jayrock">
-      <HintPath>..\..\..\jayrock\bin\mono\debug\Jayrock.dll</HintPath>
-    </Reference>
-    <Reference Include="Jayrock.Json">
-      <HintPath>..\..\..\jayrock\bin\mono\debug\Jayrock.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Jayrock.Sandbox">
-      <HintPath>..\..\..\jayrock\bin\mono\debug\Jayrock.Sandbox.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="404.html" />
