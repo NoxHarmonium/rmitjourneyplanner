@@ -2,7 +2,7 @@ using System;
 using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 using Jayrock.Json.Conversion;
 
-namespace JayrockClient
+namespace JRPCServer
 {
 	public class Journey : ICloneable
 	{
@@ -124,7 +124,7 @@ namespace JayrockClient
 		
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JayrockClient.Journey"/> class.
+		/// Initializes a new instance of the <see cref="Journey"/> class.
 		/// </summary>
 		public Journey ()
 		{
@@ -135,7 +135,7 @@ namespace JayrockClient
 		}
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JayrockClient.Journey"/> class.
+		/// Initializes a new instance of the <see cref="Journey"/> class.
 		/// </summary>
 		/// <param name='uuid'>
 		/// The UUID of the journey.

@@ -1,5 +1,5 @@
 
-namespace JayrockClient
+namespace JRPCServer
 {
     #region Imports
 

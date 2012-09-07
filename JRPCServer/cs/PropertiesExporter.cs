@@ -18,7 +18,7 @@
 	using Jayrock.Json.Conversion;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 
-namespace JayrockClient
+namespace JRPCServer
 {
 	public class PropertiesExporter : IExporter
 	{

@@ -67,6 +67,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             var firstFront = firstFrontRaw.Distinct().ToList();
 
             var points = new double[firstFront.Count][];
+
             var bounds = new double[objectives.Length];
 
             

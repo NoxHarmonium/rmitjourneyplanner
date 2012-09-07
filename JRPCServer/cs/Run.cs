@@ -1,6 +1,6 @@
 using System;
 
-namespace JayrockClient
+namespace JRPCServer
 {
 	public class Run
 	{
@@ -32,7 +32,7 @@ namespace JayrockClient
 		
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JayrockClient.Run"/> class.
+		/// Initializes a new instance of the <see cref="Run"/> class.
 		/// </summary>
 		/// <param name='uuid'>
 		/// The UUID of the run.
@@ -59,7 +59,7 @@ namespace JayrockClient
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="JayrockClient.Run"/> class.
+		/// Initializes a new instance of the <see cref="Run"/> class.
 		/// </summary>
 		public Run ()
 		{

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 
-namespace JayrockClient
+namespace JRPCServer
 {
 	public static class ObjectCache
 	{

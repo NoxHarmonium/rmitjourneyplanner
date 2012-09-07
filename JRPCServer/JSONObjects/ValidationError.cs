@@ -1,6 +1,6 @@
 using System;
 
-namespace JayrockClient
+namespace JRPCServer
 {
 	public class ValidationError
 	{

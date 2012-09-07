@@ -7,7 +7,7 @@ using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
 using System.Linq;
 
-namespace JayrockClient
+namespace JRPCServer
 {
     public class JourneyManager
     {
@@ -24,7 +24,7 @@ namespace JayrockClient
         private readonly string[] directories = { "JSONStore", "JSONStore/Journeys" };
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JayrockClient.JourneyManager"/> class.
+        /// Initializes a new instance of the <see cref="JourneyManager"/> class.
         /// </summary>
         public JourneyManager()
         {

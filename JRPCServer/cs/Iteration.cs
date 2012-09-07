@@ -1,7 +1,7 @@
 using System;
 using RmitJourneyPlanner.CoreLibraries.Types;
 
-namespace JayrockClient
+namespace JRPCServer
 {
 	public class Iteration
 	{

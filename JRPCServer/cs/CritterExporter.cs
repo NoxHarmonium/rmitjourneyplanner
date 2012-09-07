@@ -18,7 +18,7 @@ using Jayrock.Json;
 using Jayrock.Json.Conversion;
 using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 
-namespace JayrockClient
+namespace JRPCServer
 {
     using RmitJourneyPlanner.CoreLibraries.Types;
 

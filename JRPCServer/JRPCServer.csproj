@@ -36,7 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,6 +75,7 @@
       <HintPath>..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -213,11 +214,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="jsonws.ashx" />
+    <None Include="jsonws.ashx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="less\datepicker.less" />
     <None Include="Web.config" />
-    <None Include="Web.Debug.config" />
-    <None Include="Web.Release.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreLibraries\CoreLibraries.csproj">

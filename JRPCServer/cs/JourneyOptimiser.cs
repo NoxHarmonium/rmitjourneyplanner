@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace JayrockClient
+namespace JRPCServer
 {
     using System.Collections.Concurrent;
     using System.IO;
