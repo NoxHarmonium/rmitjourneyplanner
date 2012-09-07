@@ -4,6 +4,7 @@ namespace JRPCServer
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
 
     /// <summary>
@@ -13,8 +14,10 @@ namespace JRPCServer
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Test");
-            Console.ReadLine();
+            Console.WriteLine("RMIT Journey Planner Server");
+            Console.WriteLine("Starting...");
+
+
 
 
         }
