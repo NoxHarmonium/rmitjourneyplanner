@@ -8,6 +8,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
 
@@ -43,7 +44,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 double[] nextPoint = new double[dims];
                 for (k = 0; k < dims; k++)
                 {
-                    nextPoint[k] = Math.Min(bounds[k], points[n][k]);
+                    nextPoint[k] = Math.Max(bounds[k], points[n][k]);
                 }
                 res += this.RecurseCalcHyperVolume(points, n - 1, dims, -sign, took + 1, nextPoint);
                 return res;
@@ -52,6 +53,34 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         }
         
+        private bool Dominates(FitnessParameter[] objectives, Critter c1, Critter c2)
+        {
+            var dominated = false;
+            var flags = new []{false,false};
+            for (int i = 0; i < objectives.Length; i++)
+            {
+
+                if (c1.Fitness[(int)objectives[i]] < c2.Fitness[(int)objectives[i]])
+                {
+                    flags[0] = true;
+                }
+                else if (c1.Fitness[(int)objectives[i]] > c2.Fitness[(int)objectives[i]])
+                {
+                    flags[1] = true;
+                }
+            }
+            
+            if (flags[0] && !flags[1]) 
+            {
+                dominated = true;
+            }
+
+            return dominated;
+
+
+        }
+
+
         /// <summary>
         /// Returns the hypervolume of the specified objectives.
         /// </summary>
@@ -65,6 +94,40 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
             var firstFrontRaw = this.Where(c => c.Rank == 1);
             var firstFront = firstFrontRaw.Distinct().ToList();
+
+
+            /*using (var streamWriter = new StreamWriter("Frontdump.json"))
+            {
+                streamWriter.WriteLine("--------------------------------------------------------------------------");
+                for (int i = 0; i < firstFront.Count; i++)
+                {
+                    for (int j = 0; j < firstFront.Count; j++)
+                    {
+                        streamWriter.Write("|{0,2}", this.Dominates(objectives,firstFront[i], firstFront[j]) ? 1 : 0);
+                    }
+                    streamWriter.WriteLine("\n--------------------------------------------------------------------------");
+               }
+
+
+                streamWriter.WriteLine("\n\n");
+
+                var values = Enum.GetValues(typeof(FitnessParameter));
+                for (int i = 0; i < values.Length; i++)
+                {
+                    Console.Write("{0},",values.GetValue(i));
+                }
+                foreach (var critter in firstFront)
+                {
+                    for (int i = 0; i < critter.Fitness.Length; i++)
+                    {
+                        streamWriter.Write("{0},",critter.Fitness[i]);
+                    }
+                    streamWriter.WriteLine();
+                }
+
+            }
+
+                */
 
             var points = new double[firstFront.Count][];
 
@@ -82,7 +145,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
                     //Set bounds to greatest value found.
                     points[i][j] = fp;
-                    if (fp > bounds[j])
+                    if (fp < bounds[j])
                     {
                         bounds[j] = fp;
                     }

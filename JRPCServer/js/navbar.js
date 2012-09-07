@@ -68,51 +68,47 @@ if(mode=="scroll")
 }
 
 
-$('.nav a').click(function(){
-	
-	var targetPage = $($(this).attr('data-page'));
-	var targetDiv = $(targetPage);
-	//$(currentTab).parent().removeClass('active');
-	
-	
-	if (mode == "fade")
-	{
-		var prevPage = $($(currentTab).attr('data-page'));
-		var prevDiv = $(prevPage);
-		
-		
-		
-		if (currentTab != "" && prevDiv.exists())
-		{
-			prevDiv.fadeOut('fast',function() {
-				targetDiv.fadeIn('fast',function() {
-					//targetDiv.refresh();
-				
-				});	
-			});
-		}
-		else
-		{
-			targetDiv.fadeIn('fast',function() {
-					//targetDiv.refresh();
-				
-				});
-		}	
-	}
-	else
-	{
-		updateScroll = false;
-		$('html, body').animate({
-                    scrollTop: targetDiv.offset().top + error_scroll_offset
-     	}, error_scroll_time,function ()
-     	{
-     		updateScroll = true;
-     	});
-	
-	}
-	currentTab = $(this);
-	$(this).parent().addClass('active').siblings(".active").removeClass("active");;
-	
+$('.nav a').click(function () {
+
+    var targetPage = $($(this).attr('data-page'));
+
+    var targetDiv = $(targetPage);
+    //$(currentTab).parent().removeClass('active');
+
+
+    if (mode == "fade") {
+        var prevPage = $($(currentTab).attr('data-page'));
+        var prevDiv = $(prevPage);
+
+
+
+        if (currentTab != "" && prevDiv.exists()) {
+            prevDiv.fadeOut('fast', function () {
+                targetDiv.fadeIn('fast', function () {
+                    //targetDiv.refresh();
+
+                });
+            });
+        }
+        else {
+            targetDiv.fadeIn('fast', function () {
+                //targetDiv.refresh();
+                
+            });
+        }
+    }
+    else {
+        updateScroll = false;
+        $('html, body').animate({
+            scrollTop: targetDiv.offset().top + error_scroll_offset
+        }, error_scroll_time, function () {
+            updateScroll = true;
+        });
+
+    }
+    currentTab = $(this);
+    $(this).parent().addClass('active').siblings(".active").removeClass("active"); ;
+
 
 });
 

@@ -131,6 +131,8 @@ if (googleEnabled)
        window.mapManager = new MapManager();
    });
 
+
+
    $('#selJourneyRuns').change(function () {
        if (!$(this).attr('disabled') && $(this).text() != "") {
            $('#selPopulation').removeAttr('disabled');
@@ -138,6 +140,7 @@ if (googleEnabled)
        } else {
            $('#selPopulation').attr('disabled', 'disabled');
        }
+       refreshMap();
 
 
    });

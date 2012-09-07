@@ -198,6 +198,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             get
             {
+             
                 return this[(int)fitnessParameter];
             }
 
@@ -361,7 +362,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     PercentTrams = this.PercentTrams, 
                     TotalJourneyTime = this.TotalJourneyTime, 
                     TotalTravelTime = this.TotalTravelTime, 
-                    JourneyLegs = this.JourneyLegs
+                    JourneyLegs = this.JourneyLegs,
+                   WalkingTime = this.WalkingTime,
+                   TotalWaitingTime = this.TotalWaitingTime
                 };
         }
 
@@ -494,18 +497,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            return
-                string.Format(
-                    "TotalWaitingTime: {0}, TotalTravelTime: {1}, TotalJourneyTime: {2}, Changes: {3}, Co2Emmissions: {4}, PercentTrains: {5}, PercentBuses: {6}, PercentTrams: {7}, PercentDisableFriendly: {8}", 
-                    this.TotalWaitingTime, 
-                    this.TotalTravelTime, 
-                    this.TotalJourneyTime, 
-                    this.Changes, 
-                    this.Co2Emmissions, 
-                    this.PercentTrains, 
-                    this.PercentBuses, 
-                    this.PercentTrams, 
-                    this.PercentDisableFriendly);
+            return string.Format("Changes: {0}, Co2Emmissions: {1}, JourneyLegs: {2}, NormalisedChanges: {3}, NormalisedTravelTime: {4}, PercentBuses: {5}, PercentDisableFriendly: {6}, PercentTrains: {7}, PercentTrams: {8}, TotalJourneyTime: {9}, TotalTravelTime: {10}, TotalWaitingTime: {11}, WalkingTime: {12}", this.Changes, this.Co2Emmissions, this.JourneyLegs, this.NormalisedChanges, this.NormalisedTravelTime, this.PercentBuses, this.PercentDisableFriendly, this.PercentTrains, this.PercentTrams, this.TotalJourneyTime, this.TotalTravelTime, this.TotalWaitingTime, this.WalkingTime);
         }
 
         #endregion

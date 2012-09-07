@@ -374,8 +374,8 @@ namespace JRPCServer
                     {
                         foreach (var p in result.Population)
                         {
-                            p.Fitness.NormalisedChanges = ((double)p.Fitness.Changes) / (maxCh - minCh);
-                            p.Fitness.NormalisedTravelTime = p.Fitness.TotalJourneyTime.TotalSeconds / (maxJT - minJT);
+                            p.Fitness.NormalisedChanges = Math.Min(1.0f, (p.Fitness.Changes) / 10.0);
+                            p.Fitness.NormalisedTravelTime = Math.Max(1.0f,p.Fitness.TotalJourneyTime.TotalSeconds / 7200.0f);
                         }
                     }
 

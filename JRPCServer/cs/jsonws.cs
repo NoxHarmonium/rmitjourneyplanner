@@ -36,8 +36,8 @@ namespace JRPCServer
 		{
 			if (!LogEventCreated)
 			{
-				RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += 
-				(sender, message) => {Console.WriteLine("[{0}]: {1}",sender,message);};
+				//RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += 
+				//(sender, message) => {Console.WriteLine("[{0}]: {1}",sender,message);};
 				LogEventCreated = true;
 			}
 			
