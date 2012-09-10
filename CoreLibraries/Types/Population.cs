@@ -12,11 +12,30 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     using System.Linq;
     using System.Text;
 
+    using NUnit.Framework;
+
     /// <summary>
     /// A collection that holds an array of critters with helper functions.
     /// </summary>
     public class Population : List<Critter>, ICloneable
     {
+        private const double Epsilon = double.Epsilon;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1"/> class that contains elements copied from the specified collection and has sufficient capacity to accommodate the number of elements copied.
+        /// </summary>
+        /// <param name="collection">The collection whose elements are copied to the new list.</param><exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        public Population(IEnumerable<Critter> collection)
+            : base(collection)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1"/> class that is empty and has the default initial capacity.
+        /// </summary>
+        public Population()
+        {
+        }
 
         private double RecurseCalcHyperVolume(double[][] points, int n, int dims, int sign, int took,double[] bounds)
         {
@@ -44,7 +63,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 double[] nextPoint = new double[dims];
                 for (k = 0; k < dims; k++)
                 {
-                    nextPoint[k] = Math.Max(bounds[k], points[n][k]);
+                    nextPoint[k] = Math.Min(bounds[k], points[n][k]);
                 }
                 res += this.RecurseCalcHyperVolume(points, n - 1, dims, -sign, took + 1, nextPoint);
                 return res;
@@ -79,7 +98,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
 
         }
-
+        
 
         /// <summary>
         /// Returns the hypervolume of the specified objectives.
@@ -93,10 +112,37 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             double volume = 0.0;
 
             var firstFrontRaw = this.Where(c => c.Rank == 1);
-            var firstFront = firstFrontRaw.Distinct().ToList();
+            //var firstFront = firstFrontRaw.Distinct().ToList();
+            var firstFront = new List<Critter>();
 
+            foreach (var c in firstFrontRaw)
+            {
+                bool same = false;
+                foreach (var fitnessParameter in objectives)
+                {
+                    if (firstFront.Any(c2 => Math.Abs(c2.Fitness[fitnessParameter] - c.Fitness[fitnessParameter]) < Epsilon))
+                    {
+                        same = true;
+                    }
 
-            /*using (var streamWriter = new StreamWriter("Frontdump.json"))
+                }
+                if (!same)
+                {
+                    firstFront.Add(c);
+                }
+
+            }
+
+            foreach (var critter in firstFront)
+            {
+                foreach (var critter1 in firstFront)
+                {
+                    Assert.That(!this.Dominates(objectives,critter,critter1));
+                    Assert.That(!this.Dominates(objectives,critter1, critter));
+                }
+            }
+
+            using (var streamWriter = new StreamWriter("Frontdump.json",false))
             {
                 streamWriter.WriteLine("--------------------------------------------------------------------------");
                 for (int i = 0; i < firstFront.Count; i++)
@@ -127,7 +173,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
             }
 
-                */
+                
 
             var points = new double[firstFront.Count][];
 
@@ -145,7 +191,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
                     //Set bounds to greatest value found.
                     points[i][j] = fp;
-                    if (fp < bounds[j])
+                    if (fp > bounds[j])
                     {
                         bounds[j] = fp;
                     }

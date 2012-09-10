@@ -31,13 +31,18 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public double Hypervolume = Double.NaN;
 
         /// <summary>
+        /// The amount of unique journeys in the iteration.
+        /// </summary>
+        public int Cardinality;
+
+        /// <summary>
         /// Returns a new result that is a clone this instance.
         /// </summary>
         /// <returns></returns>
         public object Clone()
         {
             return new Result
-                { Totaltime = this.Totaltime, Population = (Population) this.Population.Clone() };
+                { Totaltime = this.Totaltime, Population = (Population) this.Population.Clone(), Cardinality = Cardinality, Hypervolume = Hypervolume};
         }
     }
 }

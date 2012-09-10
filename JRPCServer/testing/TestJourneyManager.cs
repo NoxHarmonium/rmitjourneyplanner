@@ -16,7 +16,7 @@ using RmitJourneyPlanner.CoreLibraries.DataAccess;
 using RmitJourneyPlanner.CoreLibraries.Types;
 
 
-namespace JayrockClient
+namespace JRPCServer
 {
 	[TestFixture]
 	public class TestJourneyManager

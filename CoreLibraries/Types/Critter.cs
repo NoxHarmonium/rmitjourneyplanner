@@ -7,7 +7,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     #region
 
     using System;
-
+    using System.Linq;
     using NUnit.Framework;
 
     #endregion
@@ -160,7 +160,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 return true;
             }
-            return Equals(other.Fitness, this.Fitness) && other.departureTime.Equals(this.departureTime);
+            return other.route.Intersect(this.route).Count() == this.route.Count && other.departureTime.Equals(this.departureTime);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             unchecked
             {
-                return ((this.Fitness != null ? this.Fitness.GetHashCode() : 0) * 397) ^ this.departureTime.GetHashCode();
+                return ((this.route != null ? this.route.GetHashCode() : 0) * 397) ^ this.departureTime.GetHashCode();
             }
         }
 

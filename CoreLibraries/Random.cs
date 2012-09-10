@@ -2,22 +2,24 @@ using System;
 
 namespace RmitJourneyPlanner.CoreLibraries
 {
-	/// <summary>
+    using NPack;
+
+    /// <summary>
 	/// Wraps <see cref="System.Random"/> to be thread safe. Initializes one random object per thread.
 	/// </summary>
     public class Random
 	{
 	    [ThreadStatic]
-	    private static System.Random random;
+        private static MersenneTwister random;
 
 	
         /// <summary>
         /// Returns a thread safe version of the <see cref="System.Random"/> class.
         /// </summary>
         /// <returns></returns>
-		public static System.Random GetInstance()
+		public static MersenneTwister GetInstance()
 		{
-		    return random ?? (random = new System.Random(0));
+            return random ?? (random = new MersenneTwister());
 		}
 	}
 }

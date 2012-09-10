@@ -304,7 +304,32 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                      new MetlinkNode(20013 ,provider)
 
 		        };
-			
+
+		    var bigTest = new Route(-1)
+		        {
+		            new MetlinkNode(19965, provider),
+		            new MetlinkNode(19966, provider),
+		            new MetlinkNode(19967, provider),
+		            new MetlinkNode(19968, provider),
+		            new MetlinkNode(19969, provider),
+		            new MetlinkNode(19970, provider),
+		            new MetlinkNode(45656, provider),
+		            new MetlinkNode(45657, provider),
+		            new MetlinkNode(45658, provider),
+		            new MetlinkNode(45659, provider),
+		            new MetlinkNode(45660, provider),
+		            new MetlinkNode(45661, provider),
+		            new MetlinkNode(4531, provider),
+		            new MetlinkNode(4530, provider),
+		            new MetlinkNode(20391, provider),
+		            new MetlinkNode(4529, provider),
+		            new MetlinkNode(20390, provider),
+		            new MetlinkNode(4528, provider),
+		            new MetlinkNode(18778, provider),
+		            new MetlinkNode(7961, provider),
+		            new MetlinkNode(3218, provider),
+		            new MetlinkNode(20039, provider)
+		        };
 
             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
                 tram19Route, new TransportTimeSpan { WaitingTime = new TimeSpan(0, 0, 0), TravelTime = new TimeSpan(0, 40, 0) }));
@@ -314,6 +339,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 tram55down, new TransportTimeSpan { WaitingTime = new TimeSpan(0, 3, 0), TravelTime = new TimeSpan(0, 48-3, 0) }));
             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
                tram55up, new TransportTimeSpan { WaitingTime = new TimeSpan(0, 10, 0), TravelTime = new TimeSpan(0, 45, 0) }));
+             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
+                bigTest , new TransportTimeSpan { WaitingTime = new TimeSpan(0, 10, 0), TravelTime = new TimeSpan(0, 45, 0) }));
             
             
             var properties = new EvolutionaryProperties();

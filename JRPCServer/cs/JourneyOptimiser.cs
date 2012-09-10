@@ -390,27 +390,40 @@ namespace JRPCServer
 
 
                             string dir = directories[1] + "/" + journey.Uuid + "/";
-                        
-                            Directory.CreateDirectory(dir + run.Uuid);
-                            for (int i = 0; i < results.Count; i++)
-                            {
-                                using (
-                                    var writer =
-                                        new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
-                                {
 
-                                    results[i].Hypervolume =
-                                        results[i].Population.CalculateHyperVolume(
-                                            journey.Properties.Objectives,
-                                            new double[journey.Properties.Objectives.Length]);
-                                    exportContext.Export(results[i], new JsonTextWriter(writer));
-                                }
-                            }
-                            using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
+                            using (var resultWriter = new StreamWriter(dir + "/results.csv", false))
                             {
-                                exportContext.Export(run,new JsonTextWriter(writer));
+                                resultWriter.Write("Iteration,Hypervolume,Cardinality,");
+                                foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
+                                {
+                                    resultWriter.Write("{0}, ", p.ToString());
+                                }
+                                resultWriter.WriteLine();
+                                Directory.CreateDirectory(dir + run.Uuid);
+                                for (int i = 0; i < results.Count; i++)
+                                {
+                                    using (var writer = new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
+                                    {
+
+                                        results[i].Hypervolume =
+                                            results[i].Population.CalculateHyperVolume(
+                                                journey.Properties.Objectives,
+                                                new double[journey.Properties.Objectives.Length]);
+                                        exportContext.Export(results[i], new JsonTextWriter(writer));
+                                        resultWriter.Write("{0}, {1}, {2}, ", i, results[i].Hypervolume,results[i].Cardinality);
+                                        foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
+                                        {
+                                            resultWriter.Write("{0},",results[i].Population.Average(c => c.Fitness[(FitnessParameter)p]));
+                                        }
+                                       resultWriter.WriteLine();
+                                    }
+                                }
+                                using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
+                                {
+                                    exportContext.Export(run, new JsonTextWriter(writer));
+                                }
+                                results.Clear();
                             }
-                            results.Clear();
                         }
                         journeyManager.Save();
                     }

@@ -27,6 +27,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     {
         #region Constants and Fields
 
+        private const double Epsilon = double.Epsilon;
+
         /// <summary>
         ///   Contains the state of the evolutionary route planner.
         /// </summary>
@@ -45,7 +47,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         ///   The population of the evolutionary algorithm.
         /// </summary>
-        private Population population;
+        private Population[] population;
 
         private int progress;
 
@@ -82,7 +84,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         {
             get
             {
-                return this.population;
+                return this.population[0];
             }
         }
 
@@ -260,8 +262,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         private void nonDominatedSort(List<Critter> r)
         {
             var s = new Dictionary<Critter, List<Critter>>();
-            f = new List<List<Critter>>();
-           
+            f = new List<List<Critter>> { new List<Critter>(), new List<Critter>() };
+
             foreach (var p in r)
             {
                 s[p] = new List<Critter>();
@@ -288,14 +290,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     continue;
                 }
                 p.Rank = 1;
-                if (this.f.Count == 0)
-                {
-                    this.f.Add(new List<Critter>());
-                }
-                this.f[0].Add(p);
+               
+                this.f[1].Add(p);
             }
 
-            int i = 0;
+            int i = 1;
+           
             while (f[i].Any())
             {
                 var Q = new List<Critter>();
@@ -317,7 +317,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 f[i] = Q;
             }
 
-           
+            f.RemoveAt(0);
+
+
         }
 
         private void crowdingDistanceAssignment(List<Critter> X)
@@ -368,8 +370,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
         private Critter TournamentSelect()
         {
-            var first = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
-            var second = (Critter)this.population[this.random.Next(this.population.Count - 1)].Clone();
+            var first = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
+            var second = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
             if (CompareCritters(first,second) == 1)
             {
                 return first;
@@ -402,15 +404,110 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             this.iteration = this.Iteration + 1;
             
             Console.WriteLine("Solving step {0}...", this.Iteration);
-			if (this.iteration == 55)
-			{
-				int a= 3;
-			}
-			
+		
 			
             this.progress = 0;
             
             var sw = Stopwatch.StartNew();
+
+
+
+            var r = new Population(population[0].Union(population[1]));
+
+            
+
+            double maxTime = r.Max(c => c.Fitness.TotalJourneyTime).TotalHours;
+            double minTime = r.Min(c => c.Fitness.TotalJourneyTime).TotalHours;
+            int maxChanges = r.Max(c => c.Fitness.Changes);
+            int minChanges = r.Min(c => c.Fitness.Changes);
+
+            foreach (var c in r)
+            {
+                c.Fitness.NormalisedTravelTime = c.Fitness.TotalJourneyTime.TotalHours / (maxTime - minTime);
+                c.Fitness.NormalisedChanges = (double)c.Fitness.Changes / (maxChanges - minChanges);
+                Console.WriteLine("{0}, {1},{2},{3}", c.Fitness.NormalisedTravelTime, c.Fitness.NormalisedChanges, c.Fitness.PercentBuses, c.Fitness.PercentTrains);
+                c.N = 0;
+                c.Rank = 0;
+                c.Distance = 0;
+            }
+
+
+            this.nonDominatedSort(r);
+
+            var ranks = r.GroupBy(g => g.Rank);
+            foreach (var rank in ranks)
+            {
+                foreach (var c1 in rank)
+                {
+                    foreach (var c2 in rank)
+                    {
+                        Assert.That(!this.Dominates(c1, c2), "Members of a front should be non dominate to each other.");
+
+                    }
+                }
+
+            }
+
+            population[0] = new Population();
+
+            int j = 0;
+
+
+            while (this.population[0].Count + this.Fronts[j].Count <= this.Properties.PopulationSize)
+            {
+                var front = this.Fronts[j];
+                this.crowdingDistanceAssignment(front);
+                this.population[0].AddRange(front);
+
+                j++;
+            }
+
+            this.Fronts[j].Sort(CompareCritters);
+            this.population[0].AddRange(this.Fronts[j].GetRange(0, this.Properties.PopulationSize - this.population[0].Count));
+
+
+            population[1] = new Population();
+
+            for (int i = 0; i < this.Properties.PopulationSize/2; i++)
+            {
+                var first = TournamentSelect();
+                var second = TournamentSelect();
+
+
+
+                Assert.That(first.departureTime != default(DateTime) && second.departureTime != default(DateTime));
+
+                bool doCrossover = this.random.NextDouble() <= this.Properties.CrossoverRate;
+                bool doMutation = this.random.NextDouble() <= this.Properties.MutationRate;
+                Critter[] children = doCrossover
+                                         ? this.Properties.Breeder.Crossover(first, second)
+                                         : new[] { first, second };
+
+
+                if (doMutation)
+                {
+                    children[0] = this.Properties.Mutator.Mutate(children[0]);
+                    children[1] = this.Properties.Mutator.Mutate(children[1]);
+                }
+
+                Assert.That(children[0].departureTime != default(DateTime) && children[1].departureTime != default(DateTime));
+
+                if (doCrossover || doMutation)
+                {
+                    children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route, children[0].departureTime);
+                    children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route, children[1].departureTime);
+                }
+                //var ff = (AlFitnessFunction)this.properties.FitnessFunction;
+
+                Assert.That(children[0].departureTime != default(DateTime) && children[1].departureTime != default(DateTime));
+
+                population[1].AddRange(children);
+
+                progress++;
+            }
+
+            /*
+
            
             var q = new List<Critter>(this.Properties.PopulationSize);
             foreach (var x in f)
@@ -511,15 +608,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             this.population.Clear();
             int j = 0;
 
-            for (int i = 0; i < this.Fronts.Count; i++ )
-            {
-                var front = this.Fronts[i];
-                foreach (var critter in front)
-                {
-                    critter.Rank = i + 1;
-                }
-            }
-
+           
             while (this.population.Count + this.Fronts[j].Count <= this.Properties.PopulationSize)
             {
                 var front = this.Fronts[j];
@@ -528,6 +617,27 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 j++;
             }
+
+
+            for (int i = 0; i < this.Fronts.Count; i++)
+            {
+                var front = this.Fronts[i];
+                foreach (var critter in front)
+                {
+                    Assert.That(critter.Rank == i + 1);
+                        
+                }
+            }
+            /*
+            for (int i = 0; i < this.Fronts.Count; i++)
+            {
+                var front = this.Fronts[i];
+                foreach (var critter in front)
+                {
+                    critter.Rank = i + 1;
+                }
+            }
+            
 
             var ranks = this.population.GroupBy(g => g.Rank);
             foreach (var rank in ranks)
@@ -559,7 +669,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     }
                     return -1;
                 });
-            */
+            
   
             this.population.AddRange(this.Fronts[j].GetRange(0, this.Properties.PopulationSize-this.population.Count));
 
@@ -573,7 +683,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 Tools.ToLinkedNodes(eliteCritter.Route.GetNodes(true));
             }
-            */
+            
 
             /*
             this.nonDominatedSort(this.population);
@@ -591,7 +701,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
 
             }
-            */
+            
 
             sw.Stop();
 
@@ -610,8 +720,44 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
 
             }
+            */
 
-            this.result.Population = (Population) this.population.Clone();
+            var distinct = new Population();
+
+            foreach (var c in this.population[0])
+            {
+                bool same = false;
+                foreach (var fitnessParameter in this.properties.Objectives)
+                {
+                    if (distinct.Any(c2 => Math.Abs(c2.Fitness[fitnessParameter] - c.Fitness[fitnessParameter]) < Epsilon))
+                    {
+                        same = true;
+                    }
+
+                }
+                if (!same)
+                {
+                    distinct.Add(c);
+                }
+
+            }
+            this.result.Cardinality = distinct.Count;
+
+             ranks = distinct.GroupBy(g => g.Rank);
+            foreach (var rank in ranks)
+            {
+                foreach (var c1 in rank)
+                {
+                    foreach (var c2 in rank)
+                    {
+                        Assert.That(!this.Dominates(c1, c2), "Members of a front should be non dominate to each other.");
+
+                    }
+                }
+
+            }
+
+            this.result.Population = (Population) this.population[0].Clone();
 
 
             //foreach (var critter in this.Population)
@@ -637,7 +783,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </summary>
         public void Start()
         {
-            this.population = new Population();
+           
+            this.population = new [] { new Population(), new Population() };
+       
             this.InitPopulation();
             this.iteration = 0;
         }
@@ -648,16 +796,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
         private void checkPopDupes()
         {
-            for (int i = 0; i < this.population.Count; i++)
+            for (int p = 0; p < 2; p++)
             {
-                for (int j = 0; j < this.population.Count; j++)
+                for (int i = 0; i < this.population[p].Count; i++)
                 {
-                    if (i==j)
-                        continue;
-                    
-                    Assert.That(!ReferenceEquals(this.population[i], this.population[j]));
-                }
+                    for (int j = 0; j < this.population[p].Count; j++)
+                    {
+                        if (i == j) continue;
 
+                        Assert.That(!ReferenceEquals(this.population[p][i], this.population[p][j]));
+                    }
+
+                }
             }
 
         }
@@ -667,50 +817,60 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </summary>
         private void InitPopulation()
         {
-            
-            this.population.Clear();
+
+            this.population = new[] { new Population(), new Population() };
             var sw = Stopwatch.StartNew();
             var routesUsed = new Dictionary<int, int>();
 
             targetProgress = this.Properties.PopulationSize * 2;
-            
 
-            for (int i = 0; i < this.Properties.PopulationSize * 2; i++)
+            for (int p = 0; p < 2; p++)
             {
-                progress = i + 1;
-                Route route = null;
-                while (route == null)
+                for (int i = 0; i < this.Properties.PopulationSize; i++)
                 {
-                    route = (Route)this.Properties.RouteGenerator.Generate(
-                        (INetworkNode)this.Properties.Origin.Clone(),
-                        (INetworkNode)this.Properties.Destination.Clone(),
-                        this.Properties.DepartureTime).Clone();
-                }
-
-                
-                var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
-                critter.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 30.0)-15.0);
-                Assert.That(critter.departureTime != default(DateTime));
-
-                Logging.Logger.Log(this, "Member {0}, fitness {1}, total nodes {2}", i,critter.UnifiedFitnessScore,critter.Route.Count);
-                //this.result.AverageFitness += critter.Fitness;
-                var ff = (AlFitnessFunction)this.Properties.FitnessFunction;
-                foreach (int routeUsed in ff.RoutesUsed)
-                {
-                    if (!routesUsed.ContainsKey(routeUsed))
+                    progress = i + 1;
+                    Route route = null;
+                    while (route == null)
                     {
-                        routesUsed.Add(routeUsed,1);
-                    }
-                    else
-                    {
-                        routesUsed[routeUsed]++;
+                        route =
+                            (Route)
+                            this.Properties.RouteGenerator.Generate(
+                                (INetworkNode)this.Properties.Origin.Clone(),
+                                (INetworkNode)this.Properties.Destination.Clone(),
+                                this.Properties.DepartureTime).Clone();
                     }
 
-                }
 
-                this.Population.Add(critter);
+                    var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
+                    critter.departureTime =
+                        properties.DepartureTime.AddMinutes(
+                            (CoreLibraries.Random.GetInstance().NextDouble() * 30.0) - 15.0);
+                    Assert.That(critter.departureTime != default(DateTime));
+
+                    Logging.Logger.Log(
+                        this,
+                        "Member {0}, fitness {1}, total nodes {2}",
+                        i,
+                        critter.UnifiedFitnessScore,
+                        critter.Route.Count);
+                    //this.result.AverageFitness += critter.Fitness;
+                    var ff = (AlFitnessFunction)this.Properties.FitnessFunction;
+                    foreach (int routeUsed in ff.RoutesUsed)
+                    {
+                        if (!routesUsed.ContainsKey(routeUsed))
+                        {
+                            routesUsed.Add(routeUsed, 1);
+                        }
+                        else
+                        {
+                            routesUsed[routeUsed]++;
+                        }
+
+                    }
+
+                    this.population[p].Add(critter);
+                }
             }
-
             checkPopDupes();
             
            // this.Population.Sort(new CritterComparer());
@@ -719,7 +879,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
-            this.result.Population = this.population;
+            this.result.Population = this.population[0];
             //this.result.DiversityMetric = routesUsed.Keys.Count;
             //this.result.AverageFitness /= this.Properties.PopulationSize;
             //Console.WriteLine("---EVALULATING FITTEST MEMBER---");
