@@ -25,9 +25,9 @@ namespace JRPCServer
            
             var parameters = new [] {Directory.GetCurrentDirectory() + "\\..\\"};
             parameters[0] = parameters[0].Replace("\\", "/");
-            System.Configuration.ConfigurationManager.AppSettings["MonoServerRootDir"] = parameters[0];
+            //System.Configuration.ConfigurationManager.AppSettings["MonoServerRootDir"] = parameters[0];
              
-            server.RealMain(new string[] {"--verbose"}, true, null, false);
+            server.RealMain(new [] {String.Format("--verbose --root {0}",parameters[0])}, true, null, false);
 
 
 
