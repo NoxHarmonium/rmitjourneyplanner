@@ -15,3 +15,12 @@ Random Walk			21		22		23		24		25
 DFS					26		27		28		29		30
 Greedy				31		32		33		34		35
 Improved Greedy		36		37		38		39		40
+
+
+1: Coburg - Ascot Vale
+2: Reynard / Jamieson St - Grandview Tce/Willsmere Rd 
+3: South Morang - Frankston
+4: Barkers Rd/Glenferrie Rd - Parliament
+5: Flinders/Swanston St - Bourke/Swan st
+
+30 
