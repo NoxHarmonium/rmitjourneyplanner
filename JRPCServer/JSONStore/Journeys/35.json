@@ -5,7 +5,7 @@
       {
          "name":"SearchType",
          "type":"SearchType",
-         "value":"RW_Standard, RW_BiDir, DFS_Standard, DFS_BiDir, Greedy_Standard, Greedy_BiDir, A_Star_Standard, A_Star_BiDir@Greedy_BiDir
+         "value":"RW_Standard, RW_BiDir, DFS_Standard, DFS_BiDir, Greedy_Standard, Greedy_BiDir, A_Star_Standard, A_Star_BiDir@Greedy_BiDir",
          "editable":false
       },
 	  {

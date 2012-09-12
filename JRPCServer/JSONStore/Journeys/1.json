@@ -1,6 +1,6 @@
 {
-   "uuid":"2",
-   "shortName":"2",
+   "uuid":"1",
+   "shortName":"1",
    "properties":[
       {
          "name":"Bidirectional",
@@ -83,13 +83,13 @@
       {
          "name":"Destination",
          "type":"INetworkNode",
-         "value":"Grandview Terrace, 628",
+         "value":"Ascot Vale, 20039",
          "editable":true
       },
       {
          "name":"Origin",
          "type":"INetworkNode",
-         "value":"Reynard Street, 9601",
+         "value":"Coburg, 19965",
          "editable":true
       },
       {
