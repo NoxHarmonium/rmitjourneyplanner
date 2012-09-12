@@ -324,6 +324,12 @@ namespace JRPCServer
             {
                 while (!cTokenSource.IsCancellationRequested)
                 {
+                    string jUuid = String.Empty;
+                    Run run = null;
+                    try
+                    {
+
+                    
                     currentIteration = 0;
 
                     this.state = OptimiserState.Waiting;
@@ -334,9 +340,9 @@ namespace JRPCServer
 
                     this.Save();
                         
-                    var jUuid = bc.Take(cTokenSource.Token);
+                    jUuid = bc.Take(cTokenSource.Token);
                     this.state = OptimiserState.Optimising;
-                    Run run = new Run();
+                    run = new Run();
                     
                     var journey = journeyManager.GetJourney(jUuid);
                     currentJourney = journey;
@@ -390,8 +396,8 @@ namespace JRPCServer
 
 
                             string dir = directories[1] + "/" + journey.Uuid + "/";
-
-                            using (var resultWriter = new StreamWriter(dir + "/results.csv", false))
+                            Directory.CreateDirectory(dir + run.Uuid);
+                            using (var resultWriter = new StreamWriter(dir + run.Uuid + "/results.csv", false))
                             {
                                 resultWriter.Write("Iteration,Hypervolume,Cardinality,");
                                 foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
@@ -399,7 +405,7 @@ namespace JRPCServer
                                     resultWriter.Write("{0}, ", p.ToString());
                                 }
                                 resultWriter.WriteLine();
-                                Directory.CreateDirectory(dir + run.Uuid);
+                               
                                 for (int i = 0; i < results.Count; i++)
                                 {
                                     using (var writer = new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
@@ -433,10 +439,19 @@ namespace JRPCServer
                     currentIteration = 0;
                     maxIterations = 0;
 
-                    
+                    }
+                    catch (Exception e)
+                    {
+
+                        StreamWriter logWriter = new StreamWriter("Log.txt");
+                        logWriter.WriteLine("Exception: {0} jUUID: {1}, rUUID{2}, ST {3}\n\n",e.Message,jUuid,(run ?? new Run{ErrorCode = -1,JourneyUuid = jUuid}).Uuid,e.StackTrace);
+                        logWriter.Close();
+                        //throw;
+                    }
                    
 
                 }
+
                 
             }
             /*

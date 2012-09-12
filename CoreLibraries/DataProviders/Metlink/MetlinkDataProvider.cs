@@ -601,7 +601,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             return valid;
         }
 
-        private bool InSameLine(MetlinkNode node1, MetlinkNode node2)
+        public bool InSameLine(MetlinkNode node1, MetlinkNode node2)
         {
             string query = String.Format(
                 @"SELECT l1.LineMainID, l2.LineMainID FROM tblLinesStops ls1

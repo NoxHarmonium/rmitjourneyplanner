@@ -425,6 +425,16 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 c.Fitness.NormalisedTravelTime = c.Fitness.TotalJourneyTime.TotalHours / (maxTime - minTime);
                 c.Fitness.NormalisedChanges = (double)c.Fitness.Changes / (maxChanges - minChanges);
+                
+                if (double.IsInfinity(c.Fitness.NormalisedChanges))
+                {
+                    c.Fitness.NormalisedChanges = 1;
+                }
+                if ((double.IsInfinity(c.Fitness.NormalisedTravelTime)))
+                {
+                    c.Fitness.NormalisedTravelTime = 1;
+                }
+                 
                 Console.WriteLine("{0}, {1},{2},{3}", c.Fitness.NormalisedTravelTime, c.Fitness.NormalisedChanges, c.Fitness.PercentBuses, c.Fitness.PercentTrains);
                 c.N = 0;
                 c.Rank = 0;

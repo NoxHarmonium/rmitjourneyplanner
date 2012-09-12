@@ -37,6 +37,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
         private bool bidirectional;
 
+        private bool useVisited = true;
+
 
 
         protected NodeWrapper<T>[] current = new NodeWrapper<T>[2];
@@ -139,6 +141,21 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             }
         }
 
+        /// <summary>
+        /// Determines if the algorithm keeps track of visited nodes.
+        /// </summary>
+        public bool UseVisited
+        {
+            get
+            {
+                return this.useVisited;
+            }
+            set
+            {
+                this.useVisited = value;
+            }
+        }
+
         public T[] Run()
         {
            
@@ -211,13 +228,15 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                        current[i] = stack[i].Pop();
                    }
                    while (Visited[i].Contains(current[i].Node));
-                   
-                
 
 
-                   
-                    Visited[i].Add(current[i].Node);
-                    NodeWrapper<T>[] children = this.OrderChildren(GetChildren(current[i].Node));
+
+
+                   if (this.useVisited)
+                   {
+                       Visited[i].Add(current[i].Node);
+                   }
+                   NodeWrapper<T>[] children = this.OrderChildren(GetChildren(current[i].Node));
                     
 
                     foreach (NodeWrapper<T> child in children)

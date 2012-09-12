@@ -13,6 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
     using RmitJourneyPlanner.CoreLibraries.Comparers;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -78,9 +79,9 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                    
                 }
 
-                if (!provider.GetRoutesForNode(current[CurrentIndex].Node).Intersect(provider.GetRoutesForNode(wrapper.Node)).Any())
+                if (((MetlinkDataProvider)provider).InSameLine((MetlinkNode)wrapper.Node, (MetlinkNode)this.Destination))
                 {
-                    wrapper.Cost += 10;
+                    wrapper.EuclidianDistance /= 4.0;
                 }
                 
 

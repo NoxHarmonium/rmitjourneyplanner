@@ -19,6 +19,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
     public enum SearchType
     {
+        RW_Standard,
+        RW_BiDir,
         DFS_Standard,
         DFS_BiDir,
         Greedy_Standard,
@@ -78,6 +80,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                     break;
                 case SearchType.A_Star_BiDir:
                     searchAlgorithm = new PTAStarSearch(true, properties.NetworkDataProviders[0], source, destination);
+                    break;
+                case SearchType.RW_Standard:
+                    searchAlgorithm = new PTDepthFirstSearch(
+                        false, properties.NetworkDataProviders[0], source, destination) { UseVisited = false };
+                    break;
+                case SearchType.RW_BiDir:
+                    searchAlgorithm = new PTDepthFirstSearch(
+                        true, properties.NetworkDataProviders[0], source, destination) { UseVisited = false };
                     break;
 
                 default:
