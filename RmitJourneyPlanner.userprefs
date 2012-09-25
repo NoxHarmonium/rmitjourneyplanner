@@ -1,24 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="JayrockClient/cs/JourneyOptimiser.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="JRPCServer/cs/Program.cs">
     <Files>
-      <File FileName="JayrockClient/testing/TestJourneyManager.cs" Line="2" Column="7" />
       <File FileName="CoreLibraries/RoutePlanners/Evolutionary/FitnessFunctions/ALFitnessFunction.cs" Line="204" Column="1" />
       <File FileName="CoreLibraries/DataProviders/Metlink/MetlinkDataProvider.cs" Line="656" Column="40" />
-      <File FileName="JayrockClient/css/style.css" Line="172" Column="25" />
-      <File FileName="JayrockClient/js/jViewer.js" Line="429" Column="40" />
-      <File FileName="JayrockClient/js/navbar.js" Line="114" Column="81" />
-      <File FileName="JayrockClient/cs/JourneyOptimiser.cs" Line="333" Column="1" />
+      <File FileName="CoreLibraries/Tests/TestFitnessFunction.cs" Line="17" Column="3" />
+      <File FileName="JRPCServer/cs/Program.cs" Line="37" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="JayrockClient" expanded="True">
-            <Node name="cs" expanded="True">
-              <Node name="JourneyOptimiser.cs" selected="True" />
-            </Node>
-            <Node name="css" expanded="True" />
-            <Node name="js" expanded="True" />
+          <Node name="JRPCServer" expanded="True" selected="True">
+            <Node name="cs" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -27,9 +20,6 @@
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State />
-      </Pad>
-      <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

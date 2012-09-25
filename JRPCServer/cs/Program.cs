@@ -31,10 +31,11 @@ namespace JRPCServer
 
                 var parameters = new[] { Directory.GetCurrentDirectory() + "\\..\\" };
                 parameters[0] = parameters[0].Replace("\\", "/");
-                System.Configuration.ConfigurationManager.AppSettings["MonoServerRootDir"] = parameters[0];
-                System.Configuration.ConfigurationManager.AppSettings["MonoServerPort"] = "8081";
-
-                server.RealMain(new string[] { "--verbose" }, true, null, false);
+                //System.Configuration.ConfigurationManager.AppSettings["MonoServerRootDir"] = parameters[0];
+               // System.Configuration.ConfigurationManager.AppSettings["MonoServerPort"] = "8081";
+				System.Diagnostics.Process p = System.Diagnostics.Process.Start("./test.sh");// + String.Join(" ", new string[] { "--verbose", "--root", parameters[0] }));
+				p.WaitForExit();
+                //server.RealMain(new string[] { "--verbose", "--root", parameters[0] }, true, null, false);
 
                 
             }

@@ -12,14 +12,14 @@ using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
 using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
 using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+//using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
+//using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
 using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
 using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
-using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
+//using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 using RmitJourneyPlanner.CoreLibraries.DataAccess;
-using RmitJourneyPlanner.CoreLibraries.Types;
+//using RmitJourneyPlanner.CoreLibraries.Types;
 
 namespace RmitJourneyPlanner.CoreLibraries.Tests
 {

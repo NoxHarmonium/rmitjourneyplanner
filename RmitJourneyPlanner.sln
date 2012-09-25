@@ -18,13 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRPCServer", "JRPCServer\JRPCServer.csproj", "{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = RmitJourneyPlanner1.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -51,21 +44,6 @@ Global
 		{46404ACC-A772-4C69-9957-07D1F5D392AD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{46404ACC-A772-4C69-9957-07D1F5D392AD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{46404ACC-A772-4C69-9957-07D1F5D392AD}.Release|x86.ActiveCfg = Release|Any CPU
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|x86.ActiveCfg = Debug|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|x86.Build.0 = Debug|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Default|Any CPU.ActiveCfg = Debug|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Default|Mixed Platforms.ActiveCfg = Debug|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Default|x86.ActiveCfg = Debug|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Mixed Platforms.Build.0 = Release|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|x86.ActiveCfg = Release|x86
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|x86.Build.0 = Release|x86
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
@@ -82,11 +60,35 @@ Global
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Release|x86.ActiveCfg = Release|x86
 		{A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D}.Release|x86.Build.0 = Release|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|x86.ActiveCfg = Debug|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Debug|x86.Build.0 = Debug|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Default|Any CPU.ActiveCfg = Debug|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Default|Mixed Platforms.ActiveCfg = Debug|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Default|x86.ActiveCfg = Debug|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|Mixed Platforms.Build.0 = Release|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|x86.ActiveCfg = Release|x86
+		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = JRPCServer\JRPCServer.csproj
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = RmitJourneyPlanner1.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = JayrockClient\JayrockClient.csproj
 	EndGlobalSection
 EndGlobal
