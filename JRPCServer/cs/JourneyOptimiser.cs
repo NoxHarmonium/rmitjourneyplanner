@@ -375,13 +375,16 @@ namespace JRPCServer
                     var minJT = results.Min(r => r.Population.Min(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
                     var maxCh = results.Max(r => r.Population.Max(p => p.Fitness.Changes));
                     var minCh = results.Min(r => r.Population.Min(p => p.Fitness.Changes));
+                    var maxTT = results.Max(r => r.Population.Max(p => p.Fitness.TotalTravelTime)).TotalSeconds;
+                    var minTT = results.Min(r => r.Population.Min(p => p.Fitness.TotalTravelTime)).TotalSeconds;
 
                     foreach (var result in results)
                     {
                         foreach (var p in result.Population)
                         {
                             p.Fitness.NormalisedChanges = Math.Min(1.0f, (p.Fitness.Changes) / 10.0);
-                            p.Fitness.NormalisedTravelTime = Math.Max(1.0f,p.Fitness.TotalJourneyTime.TotalSeconds / 7200.0f);
+                            p.Fitness.NormalisedJourneyTime = Math.Max(1.0f,p.Fitness.TotalJourneyTime.TotalSeconds / 7200.0f);
+                            p.Fitness.NormalisedTravelTime = Math.Max(1.0f,p.Fitness.TotalTravelTime.TotalSeconds / 7200.0f);
                         }
                     }
 
