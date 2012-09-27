@@ -37,6 +37,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
+        /// Gets or sets the infection rate.
+        /// </summary>
+        public double InfectionRate { get; set; }   
+    
+        /// <summary>
         /// Gets or sets whether route generation should be bi-directional or not.
         /// </summary>
         public bool Bidirectional { get; set; }
@@ -186,7 +191,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     ProbMinTransfers = this.ProbMinTransfers,
                     RouteGenerator = this.RouteGenerator,
                     SearchType = this.SearchType,
-                    MaxIterations = this.MaxIterations
+                    MaxIterations = this.MaxIterations,
+                    InfectionRate =  this.InfectionRate
 
                 };
          

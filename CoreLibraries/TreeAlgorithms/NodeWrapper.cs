@@ -76,7 +76,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         /// <summary>
         /// Gets or sets the cost associated with this wrapper.
         /// </summary>
-        public double Cost { get; set; }		public override string ToString ()
+        public double Cost { get; set; }
+		public override string ToString ()
 		{
 			return string.Format ("[NodeWrapper: node={0}]", node);
 		}

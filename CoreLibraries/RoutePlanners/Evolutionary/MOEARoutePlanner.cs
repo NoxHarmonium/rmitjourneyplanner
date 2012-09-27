@@ -2,6 +2,10 @@
 // Written by Sean Dawson 2011.
 // Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
 
+using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+using RmitJourneyPlanner.CoreLibraries.Positioning;
+using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
+
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
     #region
@@ -48,6 +52,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         ///   The population of the evolutionary algorithm.
         /// </summary>
         private Population[] population;
+        
+        /// <summary>
+        /// The population of viruses.
+        /// </summary>
+        private List<List<INetworkNode>> virusPopulation;
 
         private int progress;
 
@@ -496,9 +505,90 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 bool doCrossover = this.random.NextDouble() <= this.Properties.CrossoverRate;
                 bool doMutation = this.random.NextDouble() <= this.Properties.MutationRate;
+                bool doInfect = this.random.NextDouble() <= this.Properties.InfectionRate;
+
+               
+
                 Critter[] children = doCrossover
                                          ? this.Properties.Breeder.Crossover(first, second)
                                          : new[] { first, second };
+
+                if (doInfect)
+                {
+                    /*
+                    foreach (var child in children)
+                    {
+                        var virus = virusPopulation[random.Next(virusPopulation.Count - 1)];
+                        var vRoute = new Route(-1, virus);
+                        var nodesInCommon = child.Route.Intersect(vRoute).ToList();
+                        var linkedNodes = new Dictionary<INetworkNode, INetworkNode>();
+                        foreach (var node in vRoute)
+                        {
+                            foreach (var node2 in child.Route)
+                            {
+                                if (GeometryHelper.GetStraightLineDistance((Location)node.Node,(Location)node2.Node) < 0.3)
+                                {
+                                    if (!linkedNodes.ContainsKey(node.Node))
+                                    {
+                                        linkedNodes.Add(node.Node, node2.Node);
+                                        nodesInCommon.Add(node);
+                                    }
+                                }
+                            }
+                        }
+                        var intersectionNodes = new NodeWrapper<INetworkNode>[2];
+
+                      
+                        if (nodesInCommon.Count > 1)
+                        {
+                            nodesInCommon.Shuffle();
+                            intersectionNodes[0] = nodesInCommon[0];
+                            intersectionNodes[1] = nodesInCommon[1];
+
+
+
+                            int vIntersection1 = vRoute.IndexOf(intersectionNodes[0]);
+                            int vIntersection2 = vRoute.IndexOf(intersectionNodes[1]);
+                            var childNodes = child.Route.ConvertAll(n => n.Node);
+
+
+                            int nIntersection = childNodes.IndexOf(intersectionNodes[0].Node);
+                            int nIntersection2 = childNodes.IndexOf(intersectionNodes[1].Node);
+
+                            if (nIntersection == -1)
+                            {
+                                int index = childNodes.IndexOf(linkedNodes[intersectionNodes[0].Node]);
+                                childNodes.Insert(index + 1, intersectionNodes[0].Node);
+                                nIntersection = index + 1;
+                            }
+
+                            if (nIntersection2 == -1)
+                            {
+                                int index = childNodes.IndexOf(linkedNodes[intersectionNodes[1].Node]);
+                                childNodes.Insert(index + 1, intersectionNodes[1].Node);
+                                nIntersection2 = index + 1;
+                            }
+
+                            var composite = new Route(-1);
+                            if (nIntersection2 <= nIntersection || vIntersection2 <= vIntersection1)
+                                continue;
+                            
+                            composite.AddRange(child.Route.GetRange(0, nIntersection));
+                            composite.AddRange(vRoute.GetRange(vIntersection1, vIntersection2 - vIntersection1));
+                            composite.AddRange(child.Route.GetRange(nIntersection2, child.Route.Count - nIntersection2 - 1));
+
+                            child.Route = composite;
+
+
+
+
+                        }
+
+                    }
+                     * */
+
+
+                }
 
 
                 if (doMutation)
@@ -509,7 +599,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 Assert.That(children[0].departureTime != default(DateTime) && children[1].departureTime != default(DateTime));
 
-                if (doCrossover || doMutation)
+                if (doCrossover || doMutation || doInfect)
                 {
                     children[0].Fitness = this.Properties.FitnessFunction.GetFitness(children[0].Route, children[0].departureTime);
                     children[1].Fitness = this.Properties.FitnessFunction.GetFitness(children[1].Route, children[1].departureTime);
@@ -834,7 +924,40 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </summary>
         private void InitPopulation()
         {
+            var provider = (MetlinkDataProvider)this.properties.NetworkDataProviders[0];
+            this.virusPopulation = new List<List<INetworkNode>>
+                                       {
 
+                                           provider.GetLineNodes(2272),
+                                           //503i
+                                           provider.GetLineNodes(2273),
+                                           //503o
+                                           provider.GetLineNodes(2282),
+                                           //510i
+                                           provider.GetLineNodes(2283),
+                                           //510o
+                                           provider.GetLineNodes(2272),
+                                           //503i
+                                           provider.GetLineNodes(2273),
+                                           //503o
+                                           provider.GetLineNodes(3984),
+                                           //903i
+                                           provider.GetLineNodes(3985),
+                                           //903o
+                                           provider.GetLineNodes(31),
+                                           //Upfield
+                                           provider.GetLineNodes(46),
+                                           //Upfield
+                                           provider.GetLineNodes(21),
+                                           //Craigyburn
+                                           provider.GetLineNodes(36) //Craigyburn
+                                       };
+
+
+            
+            
+            
+            
             this.population = new[] { new Population(), new Population() };
             var sw = Stopwatch.StartNew();
             var routesUsed = new Dictionary<int, int>();

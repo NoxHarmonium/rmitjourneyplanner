@@ -844,6 +844,14 @@ ORDER BY sr.RouteID, sr.StopOrder;
             return new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks);
         }
 
+        public List<INetworkNode> GetLineNodes(int lineId)
+        {
+            string query = String.Format("SELECT MetlinkStopID FROM tblLinesStops WHERE LineID={0} ORDER BY Sequence",lineId);
+            var result = database.GetDataSet(query);
+            var nodes = new List<INetworkNode>(result.Rows.Count);
+            nodes.AddRange((from DataRow row in result.Rows select list[Convert.ToInt32(row["MetlinkStopID"])][0]));
+            return nodes;
+        }
 
         /// <summary>
         ///   Gets the network node that is closest to the specified point on the specified route.

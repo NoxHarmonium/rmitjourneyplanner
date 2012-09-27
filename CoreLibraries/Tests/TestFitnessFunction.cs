@@ -38,7 +38,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 		[Test]
 		public void TestRouteGeneration()
 		{
-			 EvolutionaryProperties properties = new EvolutionaryProperties();
+			 var properties = new EvolutionaryProperties();
 				properties.NetworkDataProviders = new [] {provider};
                 properties.Bidirectional = false;
                 properties.PointDataProviders = new [] {new WalkingDataProvider()};
@@ -47,12 +47,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 properties.MaximumWalkDistance = 1.5;
                 properties.PopulationSize = 100;
                 properties.MaxDistance = 0.5;
+		        properties.InfectionRate = 0.2;
                 properties.DepartureTime = DateTime.Parse("2012/7/24 6:00 PM");//DateTime.Parse(date + " "+ time);
                 properties.NumberToKeep = 25;
                 properties.MutationRate = 0.1;
                 properties.CrossoverRate = 0.7;
                 //properties.RouteGenerator = new AlRouteGenerator(properties);
-				properties.SearchType = SearchType.Greedy_BiDir;
+				properties.SearchType = SearchType.Greedy_Standard;
                 properties.RouteGenerator = new DFSRoutePlanner(properties);
                 properties.Mutator = new StandardMutator(properties);
                 properties.Breeder = new StandardBreeder(properties);
@@ -64,12 +65,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                    // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
                 //properties.Origin = new MetlinkNode(19965, metlinkProvider);//
                     //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
-                properties.Origin = new MetlinkNode(22180,provider);//
+                properties.Origin = new MetlinkNode(19965, provider);//
                     //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
                    
                 properties.Destination.RetrieveData();
                 properties.Origin.RetrieveData();
-                properties.Objectives = new [] {FitnessParameter.Changes, FitnessParameter.PercentTrains, FitnessParameter.PercentTrams};
+                properties.Objectives = new [] {FitnessParameter.Changes, FitnessParameter.TotalTravelTime, FitnessParameter.TotalJourneyTime};
 
 
                 properties.Database.Open();
