@@ -33,7 +33,7 @@ namespace JRPCServer
 			//var properties = new EvolutionaryProperties();
 			//reader.StepOut();
 			//JsonToken token = reader.Token;
-			
+            properties = new EvolutionaryProperties();
 
 			PropertyValue[] o = context.Import<PropertyValue[]>(reader);
 			SetProperties(o);

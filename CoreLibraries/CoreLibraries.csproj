@@ -106,6 +106,7 @@
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="NPack\MersenneTwister.cs" />
+    <Compile Include="RoutePlanners\Evolutionary\Breeders\TimeBlendBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\MOEARoutePlanner.cs" />
     <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\DFSRoutePlanner.cs" />
     <Compile Include="Settings.cs" />

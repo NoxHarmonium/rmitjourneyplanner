@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     /// </summary>
     public enum FitnessParameter
     {
-
+        
         /// <summary>
         /// Gets the non-normalised journey time in fractional minutes.
         /// </summary>
@@ -26,52 +26,52 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// Gets the normalised changes value.
         /// </summary>
-        NormalisedChanges,
-
+        NormalisedChanges ,
+        
         /// <summary>
         /// The total journey time.
         /// </summary>
-        TotalJourneyTime,
+        TotalJourneyTime, 
 
         /// <summary>
         /// The non normalise changes.
         /// </summary>
-        Changes,
+        Changes, 
 
         /// <summary>
         /// The walking time.
         /// </summary>
-        WalkingTime,
+        WalkingTime, 
 
         /// <summary>
         /// The percent trams.
         /// </summary>
-        PercentTrams,
+        PercentTrams, 
 
         /// <summary>
         /// The percent buses.
         /// </summary>
-        PercentBuses,
+        PercentBuses, 
 
         /// <summary>
         /// The percent trains.
         /// </summary>
-        PercentTrains,
+        PercentTrains, 
 
         /// <summary>
         /// The co 2 emmissions.
         /// </summary>
-        Co2Emmissions,
+        Co2Emmissions, 
 
         /// <summary>
         /// The percent disable friendly.
         /// </summary>
-        PercentDisableFriendly,
+        PercentDisableFriendly, 
 
         /// <summary>
         /// The total travel time.
         /// </summary>
-        TotalTravelTime,
+        TotalTravelTime, 
 
         /// <summary>
         /// The total waiting time.
@@ -203,12 +203,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         {
             get
             {
-
+             
                 return this[(int)fitnessParameter];
             }
 
         }
-
+        
         /// <summary>
         /// References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
         /// </summary>
@@ -278,17 +278,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public static Fitness operator +(Fitness c1, Fitness c2)
         {
             var fitness = new Fitness
-            {
-                Changes = c1.Changes + c2.Changes,
-                Co2Emmissions = c1.Co2Emmissions + c2.Co2Emmissions,
-                PercentBuses = c1.PercentBuses + c2.PercentBuses,
-                PercentDisableFriendly = c1.PercentDisableFriendly + c2.PercentDisableFriendly,
-                PercentTrains = c1.PercentTrains + c2.PercentTrains,
-                PercentTrams = c1.PercentTrams + c2.PercentTrams,
-                TotalJourneyTime = c1.TotalJourneyTime + c2.TotalJourneyTime,
-                TotalTravelTime = c1.TotalTravelTime + c2.TotalTravelTime,
-                TotalWaitingTime = c1.TotalWaitingTime + c2.TotalWaitingTime
-            };
+                {
+                    Changes = c1.Changes + c2.Changes, 
+                    Co2Emmissions = c1.Co2Emmissions + c2.Co2Emmissions, 
+                    PercentBuses = c1.PercentBuses + c2.PercentBuses, 
+                    PercentDisableFriendly = c1.PercentDisableFriendly + c2.PercentDisableFriendly, 
+                    PercentTrains = c1.PercentTrains + c2.PercentTrains, 
+                    PercentTrams = c1.PercentTrams + c2.PercentTrams, 
+                    TotalJourneyTime = c1.TotalJourneyTime + c2.TotalJourneyTime, 
+                    TotalTravelTime = c1.TotalTravelTime + c2.TotalTravelTime, 
+                    TotalWaitingTime = c1.TotalWaitingTime + c2.TotalWaitingTime
+                };
             return fitness;
         }
 
@@ -301,17 +301,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public static Fitness operator /(Fitness c1, double c2)
         {
             var fitness = new Fitness
-            {
-                Changes = (int)(c1.Changes / c2),
-                Co2Emmissions = c1.Co2Emmissions / c2,
-                PercentBuses = c1.PercentBuses / c2,
-                PercentDisableFriendly = c1.PercentDisableFriendly / c2,
-                PercentTrains = c1.PercentTrains / c2,
-                PercentTrams = c1.PercentTrams / c2,
-                TotalJourneyTime = TimeSpan.FromMilliseconds(c1.TotalJourneyTime.TotalMilliseconds / c2),
-                TotalTravelTime = TimeSpan.FromMilliseconds(c1.TotalTravelTime.TotalMilliseconds / c2),
-                TotalWaitingTime = TimeSpan.FromMilliseconds(c1.TotalWaitingTime.TotalMilliseconds / c2)
-            };
+                {
+                    Changes = (int)(c1.Changes / c2), 
+                    Co2Emmissions = c1.Co2Emmissions / c2, 
+                    PercentBuses = c1.PercentBuses / c2, 
+                    PercentDisableFriendly = c1.PercentDisableFriendly / c2, 
+                    PercentTrains = c1.PercentTrains / c2, 
+                    PercentTrams = c1.PercentTrams / c2, 
+                    TotalJourneyTime = TimeSpan.FromMilliseconds(c1.TotalJourneyTime.TotalMilliseconds / c2), 
+                    TotalTravelTime = TimeSpan.FromMilliseconds(c1.TotalTravelTime.TotalMilliseconds / c2), 
+                    TotalWaitingTime = TimeSpan.FromMilliseconds(c1.TotalWaitingTime.TotalMilliseconds / c2)
+                };
             return fitness;
         }
 
@@ -356,21 +356,21 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public object Clone()
         {
             return new Fitness
-            {
-                Changes = this.Changes,
-                Co2Emmissions = this.Co2Emmissions,
-                NormalisedChanges = this.NormalisedChanges,
-                NormalisedJourneyTime = this.NormalisedJourneyTime,
-                PercentBuses = this.PercentBuses,
-                PercentDisableFriendly = this.PercentDisableFriendly,
-                PercentTrains = this.PercentTrains,
-                PercentTrams = this.PercentTrams,
-                TotalJourneyTime = this.TotalJourneyTime,
-                TotalTravelTime = this.TotalTravelTime,
-                JourneyLegs = this.JourneyLegs,
-                WalkingTime = this.WalkingTime,
-                TotalWaitingTime = this.TotalWaitingTime
-            };
+                {
+                    Changes = this.Changes, 
+                    Co2Emmissions = this.Co2Emmissions, 
+                    NormalisedChanges = this.NormalisedChanges, 
+                    NormalisedJourneyTime = this.NormalisedJourneyTime, 
+                    PercentBuses = this.PercentBuses, 
+                    PercentDisableFriendly = this.PercentDisableFriendly, 
+                    PercentTrains = this.PercentTrains, 
+                    PercentTrams = this.PercentTrams, 
+                    TotalJourneyTime = this.TotalJourneyTime, 
+                    TotalTravelTime = this.TotalTravelTime, 
+                    JourneyLegs = this.JourneyLegs,
+                   WalkingTime = this.WalkingTime,
+                   TotalWaitingTime = this.TotalWaitingTime
+                };
         }
 
         /// <summary>

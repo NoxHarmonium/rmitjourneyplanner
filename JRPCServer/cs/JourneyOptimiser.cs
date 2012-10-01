@@ -12,6 +12,7 @@ namespace JRPCServer
     using Jayrock.Json;
     using Jayrock.Json.Conversion;
 
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     public enum OptimiserState
@@ -348,7 +349,7 @@ namespace JRPCServer
                     currentJourney = journey;
                     run.JourneyUuid = journey.Uuid;
                     run.TimeStarted = DateTime.Now;
-                    var planner = journey.Properties.Planner;
+                    var planner = new MoeaRoutePlanner(journey.Properties);
                     planner.Start();
                     var results = new List<Result>(journey.Properties.MaxIterations);
                     maxIterations = journey.Properties.MaxIterations;
@@ -375,8 +376,6 @@ namespace JRPCServer
                     var minJT = results.Min(r => r.Population.Min(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
                     var maxCh = results.Max(r => r.Population.Max(p => p.Fitness.Changes));
                     var minCh = results.Min(r => r.Population.Min(p => p.Fitness.Changes));
-                    var maxTT = results.Max(r => r.Population.Max(p => p.Fitness.TotalTravelTime)).TotalSeconds;
-                    var minTT = results.Min(r => r.Population.Min(p => p.Fitness.TotalTravelTime)).TotalSeconds;
 
                     foreach (var result in results)
                     {
@@ -384,7 +383,6 @@ namespace JRPCServer
                         {
                             p.Fitness.NormalisedChanges = Math.Min(1.0f, (p.Fitness.Changes) / 10.0);
                             p.Fitness.NormalisedJourneyTime = Math.Max(1.0f,p.Fitness.TotalJourneyTime.TotalSeconds / 7200.0f);
-                            p.Fitness.NormalisedTravelTime = Math.Max(1.0f,p.Fitness.TotalTravelTime.TotalSeconds / 7200.0f);
                         }
                     }
 
@@ -414,10 +412,10 @@ namespace JRPCServer
                                     using (var writer = new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
                                     {
 
-                                        results[i].Hypervolume =
-                                            results[i].Population.CalculateHyperVolume(
+                                        results[i].Hypervolume = 0.0;
+                                            /*results[i].Population.CalculateHyperVolume(
                                                 journey.Properties.Objectives,
-                                                new double[journey.Properties.Objectives.Length]);
+                                                new double[journey.Properties.Objectives.Length]);*/
                                         exportContext.Export(results[i], new JsonTextWriter(writer));
                                         resultWriter.Write("{0}, {1}, {2}, ", i, results[i].Hypervolume,results[i].Cardinality);
                                         foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
