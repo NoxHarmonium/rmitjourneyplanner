@@ -196,7 +196,8 @@ restart:
             int totalBus = 0;
             int totalTrain = 0;
             int totalTram = 0;
-                DateTime departTime = initialDepart;
+            double totalDistance = 0;
+            DateTime departTime = initialDepart;
        
             //Console.WriteLine("-------UnifiedFitnessScore Evaluation-------");
             while (pointer < route.Count - 1)
@@ -274,6 +275,7 @@ restart:
                 legs++;
                 totalTime += bestArc.Time;
                 departTime += bestArc.Time.TotalTime;
+                totalDistance += GeometryHelper.GetStraightLineDistance(bestArc.Source, bestArc.Destination);
                 Assert.That(totalTime.TotalTime != TimeSpan.Zero, "Last arc was zero time.");
                 Assert.That(departTime != default(DateTime), "DepartTime is zero.");
 
@@ -296,6 +298,7 @@ restart:
             fitness.TotalTravelTime = totalTime.TravelTime;
             fitness.TotalWaitingTime = totalTime.WaitingTime;
             fitness.TotalJourneyTime = totalTime.TotalTime;
+            fitness.TotalDistance = totalDistance;
             fitness.Changes = legs;
             //fitness.PercentBuses = new[] { totalBus, totalTrain, totalTram }.Max() / (double) legs;
             
