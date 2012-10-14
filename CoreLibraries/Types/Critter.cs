@@ -85,7 +85,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 		/// </value>
         public double Distance { get; set; }
 
-      	/// <summary>
+        public override string ToString()
+        {
+            return string.Format("Rank: {0}, JT: {1}, DepartureTime: {2}, Route: {3}", Rank,Fitness.TotalJourneyTime, departureTime, route);
+        }
+
+        /// <summary>
       	/// Gets or sets the unified fitness score of this critter.
       	/// </summary>
       	/// <value>

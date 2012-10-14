@@ -36,19 +36,24 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         
         protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
-           
 
+            var target = (Location) (CurrentIndex == 0 ? this.Destination : this.Origin);
             foreach (var wrapper in nodes)
             {
                
+                /*
                 if (Bidirectional)
                 {
                     INetworkNode otherCurrent = this.current[CurrentIndex == 0 ? 1 : 0].Node;
+                    /*
                     wrapper.EuclidianDistance = this.Bidirectional && otherCurrent != null
                                                          ? GeometryHelper.GetStraightLineDistance(
                                                              (Location)wrapper.Node, (Location)otherCurrent)
                                                          : GeometryHelper.GetStraightLineDistance(
                                                              (Location)wrapper.Node, (Location)this.Destination);
+                     * 
+
+                    
                 }
                 else
                 {
@@ -59,13 +64,18 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 //{
                 //    wrapper.EuclidianDistance /= 2.0;
                // }
+                 * 
+                 **/
+
+                wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, target);
 
             }
 
             //Array.Sort(nodes, new NodeComparer());
             nodes.StochasticSort(Entropy);
+ 
 
-            return nodes;
+            return nodes.Reverse().ToArray();
             //return nodes.OrderBy(n => n.EuclidianDistance).Reverse().ToArray();
         }
 

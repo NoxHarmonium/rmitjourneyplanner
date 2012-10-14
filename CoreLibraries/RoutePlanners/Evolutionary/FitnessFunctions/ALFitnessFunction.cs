@@ -250,7 +250,9 @@ restart:
                 if (mode == TransportMode.Unknown)
                 {
                     mode = route[pointer].Node.TransportType;
-                    switch (route[pointer].Node.TransportType)
+
+                }
+                switch (route[pointer].Node.TransportType)
                     {
                         case TransportMode.Train:
                             totalTrain++;
@@ -264,7 +266,7 @@ restart:
                         default:
                             break;
                     }
-                }
+                
                 
                 fitness.JourneyLegs.Add(
                     new JourneyLeg(
@@ -305,6 +307,8 @@ restart:
             fitness.PercentBuses = (double)totalBus / legs;
             fitness.PercentTrains = (double)totalTrain / legs;
             fitness.PercentTrams = (double)totalTram / legs;
+            double totalPercent = fitness.PercentBuses + fitness.PercentTrains + fitness.PercentTrams;
+            Assert.That(totalPercent <= 1);
             //Console.WriteLine("Evaluated fitness: {0}" , fitness);
 
             return fitness;

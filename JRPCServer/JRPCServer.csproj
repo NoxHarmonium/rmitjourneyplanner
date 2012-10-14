@@ -26,7 +26,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,13 +64,11 @@
     <Reference Include="Jayrock.Sandbox">
       <HintPath>..\Libraries\Jayrock.Sandbox.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Mono.Security.dll</HintPath>
+    <Reference Include="Mono.Security">
+      <HintPath>bin\Mono.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.WebServer2, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Mono.WebServer2.dll</HintPath>
+    <Reference Include="Mono.WebServer2">
+      <HintPath>bin\Mono.WebServer2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -36,18 +36,22 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             this.provider = provider;
         }
 
-        protected override NodeWrapper<INetworkNode>[] GetChildren(INetworkNode node)
+        protected override NodeWrapper<INetworkNode>[] GetChildren(NodeWrapper<INetworkNode> node)
         {
+
+            if (node.CurrentRoute >= 20000)
+            {
+                return new NodeWrapper<INetworkNode>[0];
+            }
             
-           
-            List<INetworkNode> nodes = provider.GetAdjacentNodes(node);
+            List<INetworkNode> nodes = provider.GetAdjacentNodes(node.Node);
 
             
             var wrappers = new NodeWrapper<INetworkNode>[nodes.Count];
 
             for (int i = 0; i < nodes.Count; i++ )
             {
-                wrappers[i] = new NodeWrapper<INetworkNode>(nodes[i]);
+                wrappers[i] = new NodeWrapper<INetworkNode>(nodes[i]) {CurrentRoute = node.CurrentRoute+1};
 
             }
             
@@ -58,15 +62,15 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         {
             var oldNodes = new List<NodeWrapper<INetworkNode>>(nodes);
 
-            
-            nodes.StochasticSort(Entropy);
+            oldNodes.Shuffle();
+            //nodes.StochasticSort(Entropy);
 
-            if (oldNodes.Any(node => !nodes.Contains(node)) || nodes.Any(node => !oldNodes.Contains(node)))
-            {
-                throw new Exception("Nodes are not consistant after sort.");
-            }
+            //if (oldNodes.Any(node => !nodes.Contains(node)) || nodes.Any(node => !oldNodes.Contains(node)))
+            //{
+            //    throw new Exception("Nodes are not consistant after sort.");
+            //}
 
-            return nodes;
+            return oldNodes.ToArray();
         }
     }
 }

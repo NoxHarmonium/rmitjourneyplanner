@@ -1096,7 +1096,16 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// <returns> A boolean value. </returns>
         public bool RoutesIntersect(INetworkNode first, INetworkNode second)
         {
-            return this.routeMap[first.Id].Intersect(this.routeMap[second.Id]).Any();
+            List<int> a;
+            List<int> b;
+
+            this.routeMap.TryGetValue(first.Id, out a);
+            this.routeMap.TryGetValue(second.Id, out b);
+            if (a  == null  || !a.Any() || b == null || !b.Any())
+            {
+                return false;
+            }
+            return a.Intersect(b).Any();
         }
 
         /// <summary>

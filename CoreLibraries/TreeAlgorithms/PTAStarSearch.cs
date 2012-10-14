@@ -54,35 +54,22 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
             //nodes = base.OrderChildren(nodes);
+            var target = (Location)(CurrentIndex == 0 ? this.Destination : this.Origin);
 
             foreach (var wrapper in nodes)
             {
 
-                if (Bidirectional)
+                wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, target);
+                //wrapper.EuclidianDistance = 1;
+                if (((MetlinkDataProvider)provider).RoutesIntersect(wrapper.Node, this.current[0].Node))
                 {
-                    INetworkNode otherCurrent = this.current[CurrentIndex == 0 ? 1 : 0].Node;
-                    wrapper.EuclidianDistance = this.Bidirectional && otherCurrent != null
-                                                         ? GeometryHelper.GetStraightLineDistance(
-                                                             (Location)wrapper.Node, (Location)otherCurrent)
-                                                         : GeometryHelper.GetStraightLineDistance(
-                                                             (Location)wrapper.Node, (Location)this.Destination);
+                   wrapper.EuclidianDistance *= 0.5;
+                    //wrapper.EuclidianDistance = 0.90;
 
-                    //wrapper.Cost = GeometryHelper.GetStraightLineDistance((Location)this.current[CurrentIndex].Node, (Location)wrapper.Node);
-
+                }
                    
+                
 
-                }
-                else
-                {
-                    wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, (Location)this.Destination);
-                    //wrapper.Cost = GeometryHelper.GetStraightLineDistance((Location)this.current[CurrentIndex].Node, (Location)wrapper.Node);
-                   
-                }
-
-                if (((MetlinkDataProvider)provider).InSameLine((MetlinkNode)wrapper.Node, (MetlinkNode)this.Destination))
-                {
-                    wrapper.EuclidianDistance /= 4.0;
-                }
                 
 
             }
@@ -91,7 +78,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             //Array.Reverse(nodes);
             nodes.StochasticSort(Entropy);
 
-            return nodes;
+            return nodes.Reverse().ToArray();
         }
     }
 }

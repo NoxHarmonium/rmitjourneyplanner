@@ -121,5 +121,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("Route: {0}", String.Join(",",this.Select(n=>((MetlinkNode)n.Node).StopSpecName)));
+        }
     }
 }

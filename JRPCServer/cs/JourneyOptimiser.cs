@@ -371,7 +371,8 @@ namespace JRPCServer
 
                     }
                     run.TimeFinished = DateTime.Now;
-
+                    var maxTT = results.Max(r => r.Population.Max(p => p.Fitness.TotalTravelTime)).TotalSeconds;
+                    var minTT = results.Min(r => r.Population.Min(p => p.Fitness.TotalTravelTime)).TotalSeconds;
                     var maxJT = results.Max(r => r.Population.Max(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
                     var minJT = results.Min(r => r.Population.Min(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
                     var maxCh = results.Max(r => r.Population.Max(p => p.Fitness.Changes));
@@ -381,8 +382,9 @@ namespace JRPCServer
                     {
                         foreach (var p in result.Population)
                         {
-                            p.Fitness.NormalisedChanges = Math.Min(1.0f, (p.Fitness.Changes) / 10.0);
-                            p.Fitness.NormalisedJourneyTime = Math.Max(1.0f,p.Fitness.TotalJourneyTime.TotalSeconds / 7200.0f);
+                            p.Fitness.NormalisedChanges = Math.Min(1.0f, (p.Fitness.Changes) / (double)(maxCh - minCh));
+                            p.Fitness.NormalisedJourneyTime = Math.Max(1.0f, p.Fitness.TotalJourneyTime.TotalSeconds / (maxJT - minJT));
+                            p.Fitness.NormalisedTravelTime = Math.Max(1.0f, p.Fitness.TotalTravelTime.TotalSeconds/ (maxTT - minTT));
                         }
                     }
 

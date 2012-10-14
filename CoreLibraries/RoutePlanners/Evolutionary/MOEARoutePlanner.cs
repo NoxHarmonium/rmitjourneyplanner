@@ -248,6 +248,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
             }
 
+           
             if (flags[0] && !flags[1]) 
             {
                 dominated = true;
@@ -372,6 +373,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         {
             var first = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
             var second = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
+            /*
+            int attempts = 0;
+            while (first.Route.Count == second.Route.Count && first.Route.Select(n2=>n2.Node).Intersect(second.Route.Select(n=>n.Node)).Count() == first.Route.Count)
+            {
+                attempts++;
+                second = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
+                if (attempts > 100 )
+                {
+                    break;
+                }
+            }
+             */
             if (CompareCritters(first,second) == 1)
             {
                 return first;
@@ -414,43 +427,76 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             var r = new Population(population[0].Union(population[1]));
 
-            
 
-            double jtMaxTime = r.Max(c => c.Fitness.TotalJourneyTime).TotalHours;
-            double jtMinTime = r.Min(c => c.Fitness.TotalJourneyTime).TotalHours;
-            double ttMaxTime = r.Max(c => c.Fitness.TotalTravelTime).TotalHours;
-            double ttMinTime = r.Min(c => c.Fitness.TotalTravelTime).TotalHours;
-            int maxChanges = r.Max(c => c.Fitness.Changes);
-            int minChanges = r.Min(c => c.Fitness.Changes);
+
 
             foreach (var c in r)
             {
-                c.Fitness.NormalisedJourneyTime = c.Fitness.TotalJourneyTime.TotalHours / (jtMaxTime - jtMinTime);
-                c.Fitness.NormalisedChanges = (double)c.Fitness.Changes / (maxChanges - minChanges);
-                c.Fitness.NormalisedTravelTime = c.Fitness.TotalJourneyTime.TotalHours / (ttMaxTime - ttMinTime);
+                double totalDistance = 0.0;
+                foreach (var c2 in r)
+                {
+                    /*
+                    totalDistance += Math.Max(Math.Max(Math.Abs(c.Fitness.PercentBuses - c2.Fitness.PercentBuses) ,
+                                     Math.Abs(c.Fitness.PercentTrains - c2.Fitness.PercentTrains)) ,
+                                     Math.Abs(c.Fitness.PercentTrams - c2.Fitness.PercentTrams));
+                    */
+
+                    totalDistance += Math.Sqrt(Math.Pow(c.Fitness.PercentBuses - c2.Fitness.PercentBuses,2.0)+
+                                   Math.Pow(c.Fitness.PercentTrains - c2.Fitness.PercentTrains,2.0) +
+                                    Math.Pow(c.Fitness.PercentTrams - c2.Fitness.PercentTrams,2.0));
+                }
+                c.Fitness.DiversityMetric = totalDistance;
+            }
+
+
+            double jtMaxTime = r.Max(c => c.Fitness.TotalJourneyTime).TotalHours;
+            double jtMinTime = r.Min(c => c.Fitness.TotalJourneyTime).TotalHours;
+            double ttMaxTime = r.Max(c => c.Fitness.TotalDistance);
+            double ttMinTime = r.Min(c => c.Fitness.TotalDistance);
+            double minDM = r.Min(c => c.Fitness.DiversityMetric);
+            double maxDM = r.Max(c => c.Fitness.DiversityMetric);
+            int maxChanges = r.Max(c => c.Fitness.Changes);
+            int minChanges = r.Min(c => c.Fitness.Changes);
+
+           
+
+
+            foreach (var c in r)
+            {
+                c.Fitness.NormalisedJourneyTime = (c.Fitness.TotalJourneyTime.TotalHours-jtMinTime) / (jtMaxTime - jtMinTime);
+                c.Fitness.NormalisedChanges = (double)(c.Fitness.Changes-minChanges) / (maxChanges - minChanges);
+                c.Fitness.NormalisedTravelTime = (c.Fitness.TotalDistance-ttMinTime) / (ttMaxTime - ttMinTime);
+                c.Fitness.DiversityMetric = (c.Fitness.DiversityMetric-minDM)/(maxDM - minDM);
+
+                
                 
                 if (double.IsInfinity(c.Fitness.NormalisedChanges))
                 {
-                    c.Fitness.NormalisedChanges = 1;
+                    c.Fitness.NormalisedChanges = 0;
                 }
                 if ((double.IsInfinity(c.Fitness.NormalisedJourneyTime)))
                 {
-                    c.Fitness.NormalisedJourneyTime = 1;
+                    c.Fitness.NormalisedJourneyTime = 0;
                 }
                 if ((double.IsInfinity(c.Fitness.NormalisedTravelTime)))
                 {
-                    c.Fitness.NormalisedTravelTime = 1;
+                    c.Fitness.NormalisedTravelTime = 0;
+                }
+
+                   if ((double.IsInfinity(c.Fitness.DiversityMetric)))
+                {
+                    c.Fitness.DiversityMetric = 0;
                 }
                  
                 Console.WriteLine("{0}, {1},{2},{3}", c.Fitness.NormalisedJourneyTime, c.Fitness.NormalisedChanges, c.Fitness.PercentBuses, c.Fitness.PercentTrains);
                 c.N = 0;
                 c.Rank = 0;
-                c.Distance = 0;
+                //c.Distance = 0;
             }
 
 
             this.nonDominatedSort(r);
-
+            /*
             var ranks = r.GroupBy(g => g.Rank);
             foreach (var rank in ranks)
             {
@@ -464,7 +510,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
 
             }
-
+            */
             population[0] = new Population();
 
             int j = 0;
@@ -760,6 +806,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
             this.result.Cardinality = distinct.Count;
 
+            /*
              ranks = distinct.GroupBy(g => g.Rank);
             foreach (var rank in ranks)
             {
@@ -773,7 +820,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
 
             }
-
+            */
             this.result.Population = (Population) this.population[0].Clone();
 
 
@@ -812,7 +859,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Methods
 
         private void checkPopDupes()
-        {
+        {/*
+            
             for (int p = 0; p < 2; p++)
             {
                 for (int i = 0; i < this.population[p].Count; i++)
@@ -826,7 +874,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                 }
             }
-
+            */
         }
 
         /// <summary>
@@ -839,11 +887,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             var sw = Stopwatch.StartNew();
             var routesUsed = new Dictionary<int, int>();
 
-            targetProgress = this.Properties.PopulationSize * 2;
+            targetProgress = this.Properties.PopulationSize;
 
             for (int p = 0; p < 2; p++)
             {
-                for (int i = 0; i < this.Properties.PopulationSize; i++)
+                for (int i = 0; i < this.Properties.PopulationSize*2; i++)
                 {
                     progress = i + 1;
                     Route route = null;
@@ -858,10 +906,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     }
 
 
-                    var critter = new Critter(route, this.Properties.FitnessFunction.GetFitness(route));
+                    var critter = new Critter(route,new Fitness());
                     critter.departureTime =
                         properties.DepartureTime.AddMinutes(
-                            (CoreLibraries.Random.GetInstance().NextDouble() * 30.0) - 15.0);
+                            (CoreLibraries.Random.GetInstance().NextDouble() * 60.0) - 30.0);
+
+                    critter.Fitness = this.Properties.FitnessFunction.GetFitness(route,critter.departureTime);
                     Assert.That(critter.departureTime != default(DateTime));
 
                     Logging.Logger.Log(

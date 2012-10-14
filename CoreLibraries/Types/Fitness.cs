@@ -76,7 +76,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         /// The total waiting time.
         /// </summary>
-        TotalWaitingTime
+        TotalWaitingTime,
+
+        TotalTravelMinutes,
+
+        DiversityMetric,
+
+        TotalDistance
     }
 
     /// <summary>
@@ -136,6 +142,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             }
         }
 
+        public double TotalDistance { get; set; }
+
         /// <summary>
         /// Gets or sets NormalisedChanges.
         /// </summary>
@@ -150,6 +158,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The normalised travel time of the leg (0.0-1.0).
         /// </summary>
         public double NormalisedTravelTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the diversity metric.
+        /// </summary>
+        public double DiversityMetric { get; set; }
 
         /// <summary>
         /// The percent of the journey that uses buses. (0.0 - 1.0)
@@ -220,6 +233,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 switch ((FitnessParameter)i)
                 {
+                    case FitnessParameter.TotalDistance:
+                        return TotalDistance;
+
                     case FitnessParameter.TotalJourneyTime:
                         if (this.TotalJourneyTime.TotalSeconds <= 0)
                         {
@@ -236,6 +252,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
                     case FitnessParameter.TotalJourneyMinutes:
                         return this.TotalJourneyTime.TotalMinutes;
+
+                    case FitnessParameter.TotalTravelMinutes:
+                        return this.TotalTravelTime.TotalMinutes;
 
                     case FitnessParameter.WalkingTime:
                         return this.WalkingTime.TotalSeconds;
@@ -259,6 +278,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
                     case FitnessParameter.TotalWaitingTime:
                         return this.TotalWaitingTime.TotalSeconds;
+
+                    case FitnessParameter.DiversityMetric:
+                        return 1-this.DiversityMetric;
                     default:
                         throw new ArgumentOutOfRangeException("i");
                 }
@@ -370,6 +392,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     JourneyLegs = this.JourneyLegs,
                    WalkingTime = this.WalkingTime,
                    TotalWaitingTime = this.TotalWaitingTime
+                    //TotalJourneyTime,TotalTravelTime,NormalisedChanges
                 };
         }
 

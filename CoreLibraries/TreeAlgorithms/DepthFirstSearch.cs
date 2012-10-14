@@ -162,6 +162,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             if(origin.Equals(destination))
                 return new T[]{origin};
             
+
             map.Clear();
             iterations = 0;
             startTime = DateTime.Now;
@@ -174,6 +175,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
            T[] goal = new T[2];
            goal[0] = this.destination;
            current[0] = new NodeWrapper<T>(this.origin);
+            current[0].CurrentRoute = 0;
            
 
            if (this.bidirectional)
@@ -183,6 +185,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                stack[1].Push(new NodeWrapper<T>(this.destination));
                goal[1] = this.origin;
                current[1] = new NodeWrapper<T>(this.destination);
+               current[1].CurrentRoute = 0;
            }
          
            stack[0].Push(new NodeWrapper<T>(this.origin));
@@ -236,7 +239,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                    {
                        Visited[i].Add(current[i].Node);
                    }
-                   NodeWrapper<T>[] children = this.OrderChildren(GetChildren(current[i].Node));
+                   NodeWrapper<T>[] children = this.OrderChildren(GetChildren(current[i]));
                     
 
                     foreach (NodeWrapper<T> child in children)
@@ -459,7 +462,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             return path;
         }
     */
-        protected abstract NodeWrapper<T>[] GetChildren(T node);
+        protected abstract NodeWrapper<T>[] GetChildren(NodeWrapper<T> node);
 
         protected abstract NodeWrapper<T>[] OrderChildren(NodeWrapper<T>[] nodes);
 

@@ -123,7 +123,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                 probabilities[i] /= totalPr;
             }
             */
-            var pairs = (from entry in pDict orderby entry.Value ascending select entry).ToList();
+            var pairs = (from entry in pDict orderby entry.Value descending select entry).ToList();
 
             var newNodes = new List<NodeWrapper<INetworkNode>>();
             var usedNodes = new List<NodeWrapper<INetworkNode>>();

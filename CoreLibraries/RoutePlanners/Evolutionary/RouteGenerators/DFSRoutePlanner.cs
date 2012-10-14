@@ -111,6 +111,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                 case SearchType.Greedy_Standard:
                     nodes = nodes.Reverse().ToArray();
                     break;
+                case SearchType.A_Star_Standard:
+                    nodes = nodes.Reverse().ToArray();
+                    break;
                     
             }
             //if (!properties.Bidirectional)
