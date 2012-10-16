@@ -308,7 +308,7 @@ restart:
             fitness.PercentTrains = (double)totalTrain / legs;
             fitness.PercentTrams = (double)totalTram / legs;
             double totalPercent = fitness.PercentBuses + fitness.PercentTrains + fitness.PercentTrams;
-            Assert.That(totalPercent <= 1);
+            Assert.That(totalPercent <= 1.01);
             //Console.WriteLine("Evaluated fitness: {0}" , fitness);
 
             return fitness;

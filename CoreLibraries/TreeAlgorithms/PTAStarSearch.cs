@@ -63,8 +63,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 //wrapper.EuclidianDistance = 1;
                 if (((MetlinkDataProvider)provider).RoutesIntersect(wrapper.Node, this.current[0].Node))
                 {
-                   wrapper.EuclidianDistance *= 0.5;
-                    //wrapper.EuclidianDistance = 0.90;
+                   //wrapper.EuclidianDistance *= 0.5; //best
+                    wrapper.EuclidianDistance *= 0.5;
 
                 }
                    
