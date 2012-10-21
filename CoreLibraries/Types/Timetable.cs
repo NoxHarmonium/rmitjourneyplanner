@@ -116,6 +116,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </summary>
         public void Optimise()
         {
+         
+            
             int currentStopId = entries[0][StopIdIndex];
             int currentRouteId = entries[0][RouteIDIndex];
             int currentDOW = entries[0][dayOfWeekIndex];

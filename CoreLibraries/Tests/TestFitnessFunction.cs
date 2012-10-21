@@ -102,7 +102,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 properties.PopulationSize = 100;
                 properties.MaxDistance = 0.5;
 		        properties.InfectionRate = 0.2;
-                properties.DepartureTime = DateTime.Parse("2012/11/10 9:30 AM");//DateTime.Parse(date + " "+ time);
+                properties.DepartureTime = DateTime.Parse("2012/10/17 9:30 AM");//DateTime.Parse(date + " "+ time);
                 properties.NumberToKeep = 25;
                 properties.MutationRate = 0.25;
                 properties.CrossoverRate = 0.7;
@@ -116,14 +116,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 //properties.Destination = new MetlinkNode(628, provider);// kew
                 //properties.Origin = new MetlinkNode(9601, provider);// reynard st
 
-		     //properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
-                properties.Origin = new MetlinkNode(19965, provider); // Coburg
-                properties.Destination = new MetlinkNode(20039, provider); //ascot vale
+		     properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
+                //properties.Origin = new MetlinkNode(19965, provider); // Coburg
+                //properties.Destination = new MetlinkNode(20039, provider); //ascot vale
                 //properties.Origin = new MetlinkNode(19036,provider); //Cotham (o)
                 //properties.Destination = new MetlinkNode(19943, provider); // Caulfielsd
                 //properties.Destination = new MetlinkNode(19933, provider); // Darebinor whateves
                 //properties.Destination = new MetlinkNode(19394,provider); // other kew
-            // properties.Destination = new MetlinkNode(4141, provider); // Jolimont
+             properties.Destination = new MetlinkNode(4141, provider); // Jolimont
                 //properties.Destination = new MetlinkNode(628,metlinkProvider);
                    // new TerminalNode(-1, destination);
                    // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
@@ -140,7 +140,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 //properties.DataStructures = new DataStructures(properties);
 
 
-                properties.Planner = new MoeaRoutePlanner(properties);
+                properties.Planner = new EaRoutePlanner(properties);
 
                 properties.Planner.Start();
 				for(int i = 0; i < 100; i++)

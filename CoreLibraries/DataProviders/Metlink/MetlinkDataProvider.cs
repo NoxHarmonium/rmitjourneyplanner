@@ -42,7 +42,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 		/// <summary>
 		/// The ammount of records to read in at any given time.
 		/// </summary>
-		private const int RecordChunk = 10000;
+		private const int RecordChunk = 10000000;
 
         /// <summary>
         ///   The Metlink database object.
@@ -97,9 +97,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 Logger.Log(this, "Error opening database: " + e.Message);
                 throw e;
             }
-            try
+           // try
             {
-
+                var nonNumericCharacters = new System.Text.RegularExpressions.Regex(@"[^\d^\.]");
                 Logger.Log(this, "Route Generator Initializing...");
 
                 Logger.Log(this, "Building node-route map...");
@@ -259,6 +259,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 ORDER BY sr.RouteID, sr.StopOrder;
                     ");
 
+                    
+
+                    int prevRowOrder = -1;
+                    int prevRowId = -1;
                     for (i = 0; i < nodeData.Rows.Count - 1; i++)
                     {
                         DataRow row = nodeData.Rows[i];
@@ -266,20 +270,27 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                         // var RouteID = (int)row["RouteID"];
                         var rowId = (int)row["MetlinkStopID"];
-                        var rowStopOrder = (int)row["StopOrder"];
+                        var rowStopOrder = Convert.ToInt32(nonNumericCharacters.Replace(row["StopOrder"].ToString(),String.Empty));
                         var rowServiceId = (int)row["RouteID"];
+
+                        if (prevRowOrder != rowStopOrder)
+                        {
+                            prevRowOrder = rowStopOrder;
+                            prevRowId = rowId;
+
+                        }
                    
 
                         var nextId = (int)nextRow["MetlinkStopID"];
-                        var nextStopOrder = (int)nextRow["StopOrder"];
+                        var nextStopOrder = (int)Convert.ToInt32(nonNumericCharacters.Replace(nextRow["StopOrder"].ToString(), String.Empty));
                         var nextServiceId = (int)nextRow["RouteID"];
 
                     
-                        if ((nextStopOrder >= rowStopOrder ||  nextStopOrder == 0) && 
-                            !this.list[rowId].Contains(this.list[nextId][0])&&
+                        if ((nextStopOrder >= rowStopOrder ||  nextStopOrder == 0) &&
+                            !this.list[prevRowId].Contains(this.list[nextId][0]) &&
                             nextServiceId == rowServiceId)
                         {
-                            this.list[rowId].Add(this.list[nextId][0]);
+                            this.list[prevRowId].Add(this.list[nextId][0]);
                             totalLinks++;
                         }
                     }
@@ -444,7 +455,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 							foreach (DataRow row in timetableData.Rows)
 		                    {                        
 									
-								var serviceId = Convert.ToInt32(timetableData.Rows[0][6]);
+								//var serviceId = Convert.ToInt32(timetableData.Rows[0][6]);
 		                        
 		                        timetable.AddTimetableEntry(
 		                            Convert.ToInt32(row[0]),
@@ -453,14 +464,17 @@ ORDER BY sr.RouteID, sr.StopOrder;
 		                            Convert.ToInt32(row[3]),
 		                            Convert.ToInt32(row[4]),
 		                            Convert.ToInt32(row[5]),
-									Convert.ToInt32(row[6]));
+                                    (int)Convert.ToDouble(nonNumericCharacters.Replace(row[6].ToString(), String.Empty)));
 		
 		                    }
 						}
 						i++;
+
+
 					} 
 					while(timetableData != null && timetableData.Rows.Count > 0);
-					
+
+                  
                     Logger.Log(this,"Saving cache file...");
                     timetable.Save("TimetableCache.dat");
 
@@ -508,11 +522,11 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 }
 				 */
             }
-            catch (Exception e)
-            {
-                Logger.Log(this, "Error intitilizing MetlinkDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
-                throw;
-            }
+           // catch (Exception e)
+            //{
+           //     Logger.Log(this, "Error intitilizing MetlinkDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
+            //    throw;
+           // }
 
            
         }
@@ -690,7 +704,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 
                 if (departure.departureTime == -1 && departure.arrivalTime == -1)
                 {
-                    //This station is expressed. Do something to select the next service.
+                    string ohGod = "dfdf";
 
                 }
 

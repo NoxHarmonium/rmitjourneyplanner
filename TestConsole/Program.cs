@@ -23,6 +23,8 @@ namespace TestConsole
 
         static void Main(string[] args)
         {
+            //RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += new RmitJourneyPlanner.CoreLibraries.Logging.LogEventHandler(Logger_LogEvent);
+
 
             journeys.Add(1,new KeyValuePair<int, int>(19965, 20039)); //Coburg to ascii
             journeys.Add(2,new KeyValuePair<int, int>(19965,628)); //Coburg to kew
@@ -31,6 +33,8 @@ namespace TestConsole
             journeys.Add(5,new KeyValuePair<int, int>(18536, 4141));//Abbasford st inter to girtrude
 
             string instanceUUID = Guid.NewGuid().ToString();
+            RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent +=
+         (sender, message) => { Console.WriteLine("[{0}]: {1}", sender, message); };
 
             while (true)
             {
@@ -38,8 +42,7 @@ namespace TestConsole
                 string runUUID = "None";
                 
                 MetlinkDataProvider provider = new MetlinkDataProvider();
-                RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent +=
-                    (sender, message) => { Console.WriteLine("[{0}]: {1}", sender, message); };
+     
                 try
                 {
 
@@ -131,9 +134,9 @@ namespace TestConsole
                                 //properties.DataStructures = new DataStructures(properties);
 
 
-                                properties.Planner = new MoeaRoutePlanner(properties);
+                                properties.Planner = new EaRoutePlanner(properties);
 
-                                //properties.Planner.Start();
+                                properties.Planner.Start();
 
                                 runUUID = Guid.NewGuid().ToString();
                                 string runDirectory = String.Format("./Results/{0}/{1}/", testNumber, runUUID);
@@ -238,6 +241,11 @@ namespace TestConsole
 
 
 
+        }
+
+        static void Logger_LogEvent(object sender, string message)
+        {
+            Console.WriteLine("[LOGGER: ] " + message);
         }
     }
 }
