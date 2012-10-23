@@ -369,10 +369,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             return -1;
         }
 
-        private Critter TournamentSelect()
+        private Critter TournamentSelect(List<Critter> p )
         {
-            var first = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
-            var second = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
+            //this.population[0]
+            var first = (Critter) p[this.random.Next(p.Count - 1)].Clone();
+            var second = (Critter) p[this.random.Next(p.Count - 1)].Clone();
             /*
             int attempts = 0;
             while (first.Route.Count == second.Route.Count && first.Route.Select(n2=>n2.Node).Intersect(second.Route.Select(n=>n.Node)).Count() == first.Route.Count)
@@ -445,7 +446,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                                    Math.Pow(c.Fitness.PercentTrains - c2.Fitness.PercentTrains,2.0) +
                                     Math.Pow(c.Fitness.PercentTrams - c2.Fitness.PercentTrams,2.0));
                 }
-                c.Fitness.DiversityMetric = totalDistance;
+                c.Fitness.DiversityMetric = totalDistance/(double)r.Count;
             }
 
 
@@ -514,8 +515,44 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             population[0] = new Population();
 
             int j = 0;
+            int nCarryOver = 0;
 
+            foreach (var front in this.Fronts)
+            {
+                double reductionRate = 0.65;
+                int maxN =
+                    Convert.ToInt32(this.Properties.PopulationSize*
+                                    ((1 - reductionRate)/(1 - Math.Pow(reductionRate, this.Fronts.Count)))*
+                                    Math.Pow(reductionRate, j));
+                maxN += nCarryOver;
 
+                if (maxN > front.Count)
+                {
+                    nCarryOver = maxN - front.Count;
+                    maxN = front.Count;
+                }
+
+                if (maxN + this.population[0].Count > this.properties.PopulationSize)
+                {
+                    maxN = this.properties.PopulationSize - this.population[0].Count;
+                }
+
+                for (int k = 0; k < maxN; k++)
+                {
+                    this.population[0].Add(TournamentSelect(front));
+                    if (this.population[0].Count >= this.properties.PopulationSize)
+                    {
+                        break;
+                    }
+                }
+
+                if (this.population[0].Count >= this.properties.PopulationSize)
+                {
+                    break;
+                }
+            }
+
+            /*
             while (this.population[0].Count + this.Fronts[j].Count <= this.Properties.PopulationSize)
             {
                 var front = this.Fronts[j];
@@ -527,14 +564,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             this.Fronts[j].Sort(CompareCritters);
             this.population[0].AddRange(this.Fronts[j].GetRange(0, this.Properties.PopulationSize - this.population[0].Count));
-
+            */
 
             population[1] = new Population();
 
             for (int i = 0; i < this.Properties.PopulationSize/2; i++)
             {
-                var first = TournamentSelect();
-                var second = TournamentSelect();
+                var first = TournamentSelect(this.population[0]);
+                var second = TournamentSelect(this.population[0]);
 
 
 
@@ -909,7 +946,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     var critter = new Critter(route,new Fitness());
                     critter.departureTime =
                         properties.DepartureTime.AddMinutes(
-                            (CoreLibraries.Random.GetInstance().NextDouble() * 60.0) - 30.0);
+                            (CoreLibraries.Random.GetInstance().NextDouble() * 30.0) - 15.0);
 
                     critter.Fitness = this.Properties.FitnessFunction.GetFitness(route,critter.departureTime);
                     Assert.That(critter.departureTime != default(DateTime));

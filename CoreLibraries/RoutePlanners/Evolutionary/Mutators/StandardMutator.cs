@@ -53,7 +53,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
         /// <returns> A mutated critter. </returns>
         public Critter Mutate(Critter child)
         {
-            child.departureTime = properties.DepartureTime.AddMinutes((CoreLibraries.Random.GetInstance().NextDouble() * 5.0)-2.5);
+
+            var rand = CoreLibraries.Random.GetInstance();
+            double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
+            double u2 = rand.NextDouble();
+            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                   Math.Sin(2.0 * Math.PI * u2); //random no
+
+            int xOverWeight = (int)Tools.Clamp(10 * randStdNormal,-30,30);
+
+
+
+            child.departureTime = properties.DepartureTime.AddMinutes(xOverWeight);
             Assert.That(child.departureTime != default(DateTime));
 
 

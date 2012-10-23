@@ -96,8 +96,21 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
                     new Critter((Route)secondChild.Clone(), new Fitness())
                 };
 
-            output[0].departureTime = new DateTime((first.departureTime.Ticks + second.departureTime.Ticks) / 2);
-            output[1].departureTime = new DateTime((first.departureTime.Ticks + second.departureTime.Ticks) / 2);
+            var rand = CoreLibraries.Random.GetInstance();
+            double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
+            double u2 = rand.NextDouble();
+            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                   Math.Sin(2.0 * Math.PI * u2); //random no
+
+            double xOverWeight =Tools.Clamp(0.5 + 0.5*randStdNormal);
+            long difference = Math.Abs(first.departureTime.Ticks - second.departureTime.Ticks);
+            long diffTime = (long)((double)difference*xOverWeight);
+            var newDepart = new DateTime(Math.Min(first.departureTime.Ticks, second.departureTime.Ticks) + diffTime);
+
+
+
+            output[0].departureTime = newDepart;
+            output[1].departureTime = newDepart;
 
             Assert.That(output[0].departureTime != default(DateTime));
             Assert.That(output[1].departureTime != default(DateTime));

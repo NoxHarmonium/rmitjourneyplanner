@@ -252,7 +252,9 @@ restart:
                     mode = route[pointer].Node.TransportType;
 
                 }
-                switch (route[pointer].Node.TransportType)
+                if (mode != TransportMode.Walking)
+                {
+                    switch (route[pointer].Node.TransportType)
                     {
                         case TransportMode.Train:
                             totalTrain++;
@@ -266,15 +268,19 @@ restart:
                         default:
                             break;
                     }
-                
-                
+
+                }
                 fitness.JourneyLegs.Add(
                     new JourneyLeg(
                         mode,
                         (MetlinkNode)bestArc.Source,
                         (MetlinkNode)bestArc.Destination, departTime, 
                         bestArc.Time.TotalTime,bestArc.RouteId.ToString()));
-                legs++;
+
+                if (mode != TransportMode.Walking)
+                {
+                    legs++;
+                }
                 totalTime += bestArc.Time;
                 departTime += bestArc.Time.TotalTime;
                 totalDistance += GeometryHelper.GetStraightLineDistance(bestArc.Source, bestArc.Destination);
@@ -303,11 +309,23 @@ restart:
             fitness.TotalDistance = totalDistance;
             fitness.Changes = legs;
             //fitness.PercentBuses = new[] { totalBus, totalTrain, totalTram }.Max() / (double) legs;
-            
-            fitness.PercentBuses = (double)totalBus / legs;
-            fitness.PercentTrains = (double)totalTrain / legs;
-            fitness.PercentTrams = (double)totalTram / legs;
+            if (legs != 0)
+            {
+                fitness.PercentBuses = (double)totalBus / legs;
+                fitness.PercentTrains = (double)totalTrain / legs;
+                fitness.PercentTrams = (double)totalTram / legs;
+
+            }
+            else
+            {
+                fitness.PercentBuses = 0;
+                fitness.PercentTrains = 0;
+                fitness.PercentTrams = 0;
+            }
+          
             double totalPercent = fitness.PercentBuses + fitness.PercentTrains + fitness.PercentTrams;
+
+            
             Assert.That(totalPercent <= 1.01);
             //Console.WriteLine("Evaluated fitness: {0}" , fitness);
 

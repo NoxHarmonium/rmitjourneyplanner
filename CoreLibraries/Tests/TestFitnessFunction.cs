@@ -116,14 +116,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 //properties.Destination = new MetlinkNode(628, provider);// kew
                 //properties.Origin = new MetlinkNode(9601, provider);// reynard st
 
-		     properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
-                //properties.Origin = new MetlinkNode(19965, provider); // Coburg
-                //properties.Destination = new MetlinkNode(20039, provider); //ascot vale
+		     //properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
+                properties.Origin = new MetlinkNode(19965, provider); // Coburg
+                properties.Destination = new MetlinkNode(20039, provider); //ascot vale
                 //properties.Origin = new MetlinkNode(19036,provider); //Cotham (o)
                 //properties.Destination = new MetlinkNode(19943, provider); // Caulfielsd
                 //properties.Destination = new MetlinkNode(19933, provider); // Darebinor whateves
                 //properties.Destination = new MetlinkNode(19394,provider); // other kew
-             properties.Destination = new MetlinkNode(4141, provider); // Jolimont
+             //properties.Destination = new MetlinkNode(4141, provider); // Jolimont
                 //properties.Destination = new MetlinkNode(628,metlinkProvider);
                    // new TerminalNode(-1, destination);
                    // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
@@ -134,13 +134,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                    
                 properties.Destination.RetrieveData();
                 properties.Origin.RetrieveData();
-                properties.Objectives = new [] {FitnessParameter.NormalisedChanges, FitnessParameter.TotalJourneyTime, FitnessParameter.DiversityMetric};
+                properties.Objectives = new [] {FitnessParameter.NormalisedChanges, FitnessParameter.TotalJourneyTime,FitnessParameter.DiversityMetric};
 
                 properties.Database.Open();
                 //properties.DataStructures = new DataStructures(properties);
 
 
-                properties.Planner = new EaRoutePlanner(properties);
+                properties.Planner = new MoeaRoutePlanner(properties);
 
                 properties.Planner.Start();
 				for(int i = 0; i < 100; i++)
@@ -152,11 +152,45 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 		[Test]
 		public void TestSingleTramRoutes()
 		{
-		var tests = new List<KeyValuePair<Route, TransportTimeSpan>>();
+		    var tests = new List<KeyValuePair<Route, TransportTimeSpan>>();
 
             
             //Single Legs
-            
+
+		    var bus512Route = new Route(512, new[]
+		                                         {
+		                                             new MetlinkNode(9335, provider),
+		                                             new MetlinkNode(9334, provider),
+		                                             new MetlinkNode(9333, provider),
+		                                             new MetlinkNode(9332, provider),
+		                                             new MetlinkNode(9331, provider),
+		                                             new MetlinkNode(9330, provider),
+		                                             new MetlinkNode(9329, provider),
+		                                             new MetlinkNode(9328, provider),
+		                                             new MetlinkNode(9327, provider),
+		                                             new MetlinkNode(9326, provider),
+		                                             new MetlinkNode(9325, provider),
+		                                             new MetlinkNode(9324, provider),
+		                                             new MetlinkNode(9323, provider),
+		                                             new MetlinkNode(20754, provider),
+		                                             new MetlinkNode(9321, provider),
+		                                             new MetlinkNode(9320, provider),
+		                                             new MetlinkNode(9319, provider),
+		                                             new MetlinkNode(9318, provider),
+		                                             new MetlinkNode(9317, provider),
+		                                             new MetlinkNode(9316, provider),
+		                                             new MetlinkNode(21267, provider),
+		                                             new MetlinkNode(21268, provider),
+		                                             new MetlinkNode(9315, provider),
+		                                             new MetlinkNode(20755, provider),
+		                                             new MetlinkNode(9314, provider),
+		                                             new MetlinkNode(9313, provider),
+		                                             new MetlinkNode(9312, provider),
+		                                             new MetlinkNode(20756, provider),
+		                                             new MetlinkNode(9310, provider),
+		                                             new MetlinkNode(20757, provider)
+		                                         });
+            /*
             var tram19Route = new Route(19,new []
                 {
                     new MetlinkNode(17306,provider), 
@@ -190,7 +224,6 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                     new MetlinkNode(17335,provider), 
                     new MetlinkNode(17868,provider), 
                     new MetlinkNode(17869,provider), 
-                    new MetlinkNode(17870,provider), 
                     new MetlinkNode(17871,provider), 
                     new MetlinkNode(17872,provider), 
                     new MetlinkNode(17873,provider), 
@@ -355,6 +388,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 				
 			//};
 
+             */
 		    var expressTest = new Route(-1)
 		        {
 		            
@@ -368,7 +402,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                      new MetlinkNode(20013 ,provider)
 
 		        };
-
+            /*
 		    var bigTest = new Route(-1)
 		        {
 		            new MetlinkNode(19965, provider),
@@ -394,6 +428,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 		            new MetlinkNode(3218, provider),
 		            new MetlinkNode(20039, provider)
 		        };
+             * 
 
             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
                 tram19Route, new TransportTimeSpan { WaitingTime = new TimeSpan(0, 0, 0), TravelTime = new TimeSpan(0, 40, 0) }));
@@ -405,7 +440,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                tram55up, new TransportTimeSpan { WaitingTime = new TimeSpan(0, 10, 0), TravelTime = new TimeSpan(0, 45, 0) }));
              tests.Add(new KeyValuePair<Route, TransportTimeSpan>(
                 bigTest , new TransportTimeSpan { WaitingTime = new TimeSpan(0, 10, 0), TravelTime = new TimeSpan(0, 45, 0) }));
-            
+            */
+            tests.Add(new KeyValuePair<Route, TransportTimeSpan>(bus512Route, new TransportTimeSpan()));
             
             var properties = new EvolutionaryProperties();
            
@@ -416,7 +452,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
             AlFitnessFunction target;
             properties.FitnessFunction = target = new AlFitnessFunction(properties); 
             
-            DateTime initialDepart = DateTime.Parse("8/08/2012 6:00 PM");
+            DateTime initialDepart = DateTime.Parse("8/08/2012 3:00 PM");
             foreach (var keyValuePair in tests)
             {
                 Console.WriteLine("Getting fitness from {0} to {1}",keyValuePair.Key.First(),keyValuePair.Key.Last());

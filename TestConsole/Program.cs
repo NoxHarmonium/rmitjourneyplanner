@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,58 @@ using System.IO.Compression;
 
 namespace TestConsole
 {
+
+    public sealed class GaussianRandom
+    {
+        private bool _hasDeviate;
+        private double _storedDeviate;
+        private readonly Random _random;
+
+        public GaussianRandom(Random random = null)
+        {
+            _random = random ?? new Random();
+        }
+
+        /// <summary>
+        /// Obtains normally (Gaussian) distributed random numbers, using the Box-Muller
+        /// transformation.  This transformation takes two uniformly distributed deviates
+        /// within the unit circle, and transforms them into two independently
+        /// distributed normal deviates.
+        /// </summary>
+        /// <param name="mu">The mean of the distribution.  Default is zero.</param>
+        /// <param name="sigma">The standard deviation of the distribution.  Default is one.</param>
+        /// <returns></returns>
+        public double NextGaussian(double mu = 0, double sigma = 1)
+        {
+            if (sigma <= 0)
+                throw new ArgumentOutOfRangeException("sigma", "Must be greater than zero.");
+
+            if (_hasDeviate)
+            {
+                _hasDeviate = false;
+                return _storedDeviate * sigma + mu;
+            }
+
+            double v1, v2, rSquared;
+            do
+            {
+                // two random values between -1.0 and 1.0
+                v1 = 2 * _random.NextDouble() - 1;
+                v2 = 2 * _random.NextDouble() - 1;
+                rSquared = v1 * v1 + v2 * v2;
+                // ensure within the unit circle
+            } while (rSquared >= 1 || rSquared == 0);
+
+            // calculate polar tranformation for each deviate
+            var polar = Math.Sqrt(-2 * Math.Log(rSquared) / rSquared);
+            // store first deviate
+            _storedDeviate = v2 * polar;
+            _hasDeviate = true;
+            // return second deviate
+            return v1 * polar * sigma + mu;
+        }
+    }
+
     class Program
     {
         private static Dictionary<int,KeyValuePair<int, int>> journeys = new Dictionary<int,KeyValuePair<int, int>>();
@@ -24,6 +77,7 @@ namespace TestConsole
         static void Main(string[] args)
         {
             //RmitJourneyPlanner.CoreLibraries.Logging.Logger.LogEvent += new RmitJourneyPlanner.CoreLibraries.Logging.LogEventHandler(Logger_LogEvent);
+
 
 
             journeys.Add(1,new KeyValuePair<int, int>(19965, 20039)); //Coburg to ascii
@@ -133,8 +187,8 @@ namespace TestConsole
                                 properties.Database.Open();
                                 //properties.DataStructures = new DataStructures(properties);
 
-
-                                properties.Planner = new EaRoutePlanner(properties);
+                                Stopwatch sw = Stopwatch.StartNew();
+                                properties.Planner = new MoeaRoutePlanner(properties);
 
                                 properties.Planner.Start();
 
@@ -176,7 +230,7 @@ namespace TestConsole
                                 {
                                     properties.Planner.SolveStep();
 
-
+                                    /*
                                     using (
                                         var writer =
                                             new StreamWriter(
@@ -184,6 +238,12 @@ namespace TestConsole
                                                     new FileStream(
                                                         String.Format("{0}iteration.{1}.csv.gz", runDirectory, i),
                                                         FileMode.Create), CompressionMode.Compress)))
+                                    {
+                                     * */
+                                    using (
+                                        var writer =
+                                            new StreamWriter(
+                                                String.Format("{0}iteration.{1}.csv", runDirectory, i),false))
                                     {
                                         int count = 0;
                                         foreach (var member in properties.Planner.Population)
@@ -209,13 +269,13 @@ namespace TestConsole
                                                                            leg.DepartureTime + leg.TotalTime);
                                             }
 
-                                            writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
+                                            writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
                                                              count++, member.Rank, member.Distance,
                                                              member.departureTime,
                                                              member.Fitness.TotalJourneyTime.TotalMinutes,
                                                              member.Fitness.Changes, member.Fitness.DiversityMetric,
                                                              member.Fitness.TotalDistance, nodeIds, nodeNames,
-                                                             nodeCoords, legString);
+                                                             nodeCoords, legString, sw.ElapsedMilliseconds);
                                         }
 
                                     }

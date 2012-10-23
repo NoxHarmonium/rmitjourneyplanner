@@ -127,6 +127,20 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             return prev;
         }
 
+        /// <summary>
+        /// Clamps a specified value between the bounds l and u.
+        /// </summary>
+        /// <param name="value">The value that is to be clamped.</param>
+        /// <param name="l">The lower bounds of the clamp.</param>
+        /// <param name="u">The upper bounds of the clamp.</param>
+        /// <returns>The clamped value.</returns>
+        public static double Clamp(double value, double l = 0, double u = 1)
+        {
+
+            return Math.Min(Math.Max(value, l),u);
+
+
+        }
         #endregion
     }
 }
