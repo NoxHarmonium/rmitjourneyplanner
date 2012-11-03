@@ -309,7 +309,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     PercentTrams = c1.PercentTrams + c2.PercentTrams, 
                     TotalJourneyTime = c1.TotalJourneyTime + c2.TotalJourneyTime, 
                     TotalTravelTime = c1.TotalTravelTime + c2.TotalTravelTime, 
-                    TotalWaitingTime = c1.TotalWaitingTime + c2.TotalWaitingTime
+                    TotalWaitingTime = c1.TotalWaitingTime + c2.TotalWaitingTime,
+                    DiversityMetric = c1.DiversityMetric + c2.DiversityMetric
                 };
             return fitness;
         }
@@ -332,7 +333,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     PercentTrams = c1.PercentTrams / c2, 
                     TotalJourneyTime = TimeSpan.FromMilliseconds(c1.TotalJourneyTime.TotalMilliseconds / c2), 
                     TotalTravelTime = TimeSpan.FromMilliseconds(c1.TotalTravelTime.TotalMilliseconds / c2), 
-                    TotalWaitingTime = TimeSpan.FromMilliseconds(c1.TotalWaitingTime.TotalMilliseconds / c2)
+                    TotalWaitingTime = TimeSpan.FromMilliseconds(c1.TotalWaitingTime.TotalMilliseconds / c2),
+                    DiversityMetric = c1.DiversityMetric / c2
                 };
             return fitness;
         }
@@ -391,7 +393,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     TotalTravelTime = this.TotalTravelTime, 
                     JourneyLegs = this.JourneyLegs,
                    WalkingTime = this.WalkingTime,
-                   TotalWaitingTime = this.TotalWaitingTime
+                   TotalWaitingTime = this.TotalWaitingTime,
+                   DiversityMetric = this.DiversityMetric
                     //TotalJourneyTime,TotalTravelTime,NormalisedChanges
                 };
         }

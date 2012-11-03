@@ -113,17 +113,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 properties.Breeder = new TimeBlendBreeder(properties);
                 properties.FitnessFunction = new AlFitnessFunction(properties);
                 properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-                //properties.Destination = new MetlinkNode(628, provider);// kew
+               //properties.Destination = new MetlinkNode(628, provider);// kew
                 //properties.Origin = new MetlinkNode(9601, provider);// reynard st
-
-		     //properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
-                properties.Origin = new MetlinkNode(19965, provider); // Coburg
-                properties.Destination = new MetlinkNode(20039, provider); //ascot vale
+                //properties.Origin = new MetlinkNode( 20013, provider); // Bell
+                //properties.Destination = new MetlinkNode(20042, provider); //Boxhill
+            
+		     properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
+               // properties.Origin = new MetlinkNode(19965, provider); // Coburg
+                //properties.Destination = new MetlinkNode(20039, provider); //ascot vale
                 //properties.Origin = new MetlinkNode(19036,provider); //Cotham (o)
                 //properties.Destination = new MetlinkNode(19943, provider); // Caulfielsd
                 //properties.Destination = new MetlinkNode(19933, provider); // Darebinor whateves
                 //properties.Destination = new MetlinkNode(19394,provider); // other kew
-             //properties.Destination = new MetlinkNode(4141, provider); // Jolimont
+             properties.Destination = new MetlinkNode(4141, provider); // Jolimont
                 //properties.Destination = new MetlinkNode(628,metlinkProvider);
                    // new TerminalNode(-1, destination);
                    // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
@@ -134,7 +136,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                    
                 properties.Destination.RetrieveData();
                 properties.Origin.RetrieveData();
-                properties.Objectives = new [] {FitnessParameter.NormalisedChanges, FitnessParameter.TotalJourneyTime,FitnessParameter.DiversityMetric};
+                properties.Objectives = new [] {FitnessParameter.TotalJourneyTime,FitnessParameter.DiversityMetric,FitnessParameter.TotalTravelTime};
 
                 properties.Database.Open();
                 //properties.DataStructures = new DataStructures(properties);

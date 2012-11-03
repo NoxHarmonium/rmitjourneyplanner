@@ -196,6 +196,7 @@ restart:
             int totalBus = 0;
             int totalTrain = 0;
             int totalTram = 0;
+                int fakeLegs = 0;
             double totalDistance = 0;
             DateTime departTime = initialDepart;
        
@@ -281,6 +282,7 @@ restart:
                 {
                     legs++;
                 }
+                fakeLegs++;
                 totalTime += bestArc.Time;
                 departTime += bestArc.Time.TotalTime;
                 totalDistance += GeometryHelper.GetStraightLineDistance(bestArc.Source, bestArc.Destination);

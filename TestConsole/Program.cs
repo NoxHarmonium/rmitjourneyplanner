@@ -179,9 +179,8 @@ namespace TestConsole
                                 properties.Origin.RetrieveData();
                                 properties.Objectives = new[]
                                                             {
-                                                                FitnessParameter.NormalisedChanges,
-                                                                FitnessParameter.TotalJourneyTime,
-                                                                FitnessParameter.DiversityMetric
+                                                                FitnessParameter.TotalJourneyTime, 
+                                                                FitnessParameter.NormalisedChanges
                                                             };
 
                                 properties.Database.Open();
@@ -226,7 +225,7 @@ namespace TestConsole
 
                                 */
                                 
-                                for (int i = 0; i < 100; i++)
+                                for (int i = 0; i < 200; i++)
                                 {
                                     properties.Planner.SolveStep();
 

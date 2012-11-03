@@ -452,8 +452,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             double jtMaxTime = r.Max(c => c.Fitness.TotalJourneyTime).TotalHours;
             double jtMinTime = r.Min(c => c.Fitness.TotalJourneyTime).TotalHours;
-            double ttMaxTime = r.Max(c => c.Fitness.TotalDistance);
-            double ttMinTime = r.Min(c => c.Fitness.TotalDistance);
+            double ttMaxTime = r.Max(c => c.Fitness.WalkingTime).TotalHours;
+            double ttMinTime = r.Min(c => c.Fitness.WalkingTime).TotalHours;
             double minDM = r.Min(c => c.Fitness.DiversityMetric);
             double maxDM = r.Max(c => c.Fitness.DiversityMetric);
             int maxChanges = r.Max(c => c.Fitness.Changes);
@@ -466,7 +466,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 c.Fitness.NormalisedJourneyTime = (c.Fitness.TotalJourneyTime.TotalHours-jtMinTime) / (jtMaxTime - jtMinTime);
                 c.Fitness.NormalisedChanges = (double)(c.Fitness.Changes-minChanges) / (maxChanges - minChanges);
-                c.Fitness.NormalisedTravelTime = (c.Fitness.TotalDistance-ttMinTime) / (ttMaxTime - ttMinTime);
+                c.Fitness.NormalisedTravelTime = (c.Fitness.TotalWaitingTime.TotalHours-ttMinTime) / (ttMaxTime - ttMinTime);
                 c.Fitness.DiversityMetric = (c.Fitness.DiversityMetric-minDM)/(maxDM - minDM);
 
                 
@@ -520,6 +520,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             foreach (var front in this.Fronts)
             {
                 double reductionRate = 0.65;
+                //double reductionRate = 0.2;
                 int maxN =
                     Convert.ToInt32(this.Properties.PopulationSize*
                                     ((1 - reductionRate)/(1 - Math.Pow(reductionRate, this.Fronts.Count)))*
@@ -975,11 +976,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     this.population[p].Add(critter);
                 }
             }
-            checkPopDupes();
+            //checkPopDupes();
             
            // this.Population.Sort(new CritterComparer());
 
-            checkPopDupes();
+           // checkPopDupes();
 
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
