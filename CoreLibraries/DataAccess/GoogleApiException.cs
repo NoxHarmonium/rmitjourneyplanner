@@ -72,7 +72,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <filterpriority>2</filterpriority>
         public override string HelpLink
         {
-            get { throw new NotImplementedException(); }
+            get { return Urls.GoogleApiGeocodingHelp; }
         
         }
 

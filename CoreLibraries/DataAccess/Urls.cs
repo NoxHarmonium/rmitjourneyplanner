@@ -102,6 +102,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         public const string TramTrackerUrl = @"http://ws.tramtracker.com.au/pidsservice/pids.asmx";
 
+        /// <summary>
+        /// The URL of the link explaining the geocoding error codes.
+        /// </summary>
+        public const string GoogleApiGeocodingHelp =
+            @"https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes";
+
         #endregion
     }
 }
