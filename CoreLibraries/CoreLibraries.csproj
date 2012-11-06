@@ -85,8 +85,8 @@
     <Compile Include="DataAccess\DistanceAPI.cs" />
     <Compile Include="DataAccess\GeocodingAPI.cs" />
     <Compile Include="DataAccess\GoogleApiException.cs" />
-    <Compile Include="DataAccess\MetlinkDatabase.cs" />
     <Compile Include="DataAccess\MySQLDatabase.cs" />
+    <Compile Include="DataAccess\NamespaceDoc.cs" />
     <Compile Include="DataAccess\RequestType.cs" />
     <Compile Include="DataAccess\SOAP.cs" />
     <Compile Include="DataAccess\ISQLDatabase.cs" />
