@@ -35,7 +35,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         private MySqlTransaction transaction;
 
-
+        /// <summary>
+        /// Provides locking functionality to prevent multiple simultaneous queries from different threads. 
+        /// This was added as it was suspected to be causing issues.
+        /// </summary>
+        //TODO: Investigate multithreaded database access and whether it is actually an issue.
         private readonly Object databaseLock = new object();
 
         #endregion
@@ -47,6 +51,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// </summary>
         public MySqlDatabase()
         {
+            this.connectionString = Settings.Entries["ConnectionString"];
             this.connection = new MySqlConnection(this.connectionString);
         }
 
@@ -54,11 +59,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         ///   Initializes a new instance of the <see cref="MySqlDatabase" /> class with a specified database name.
         /// </summary>
         /// <param name="database"> The database. </param>
-        [Obsolete]
+        //TODO: Remove obsolete MySqlDatabase constructor.
+        //TODO: Create connection string helper class to generate connection strings.
+        [Obsolete("You can no longer initialise this object by passing a database name. You must define the connection string property in the Settings class. This constructor ignores the database parameter.")]
         public MySqlDatabase(string database)
         {
             this.connectionString = Settings.Entries["ConnectionString"];
-                //"server=localhost;User Id=root;password=qwerasdf;Persist Security Info=True;database=" + database;
             this.connection = new MySqlConnection(this.connectionString);
         }
 
@@ -70,12 +76,19 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             this.Dispose(false);
         }
 
+        /// <summary>
+        /// Closes all connections and disposes of this object.
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Closes all connections and disposes of this object.
+        /// </summary>
+        /// <param name="disposing">True if called from finalizer, false if called by programmer.</param>
         public void Dispose(bool disposing)
         {
             if (this.connection.State == ConnectionState.Open)
@@ -142,24 +155,31 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
 
+        /// <summary>
+        /// Uses a fast <see cref="MySqlDataReader"/> object to put a single query result an array of objects representing each column.
+        /// </summary>
+        /// <param name="query">The SQL query to submit to the database. </param>
+        /// <returns>An array of objects representing the result.</returns>
         public object[] GetFastData(string query)
         {
+            if (this.transaction != null)
+            {
+                //TODO: Implement transactions with GetFastData
+                throw new NotImplementedException("Transactions are not implimented with GetFastData at this time.");
+            }
+            
             lock (this.databaseLock)
             {
-                if (this.transaction == null)
+                var command = new MySqlCommand(query, connection);
+                var reader = command.ExecuteReader(CommandBehavior.SingleResult);
+                var o = new object[reader.FieldCount];
+                for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    var command = new MySqlCommand(query, connection);
-                    var reader = command.ExecuteReader(CommandBehavior.SingleResult);
-                    object[] o = new object[reader.FieldCount];
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        reader.Read();
-                        o[i] = reader.GetValue(i);
-                    }
-                    reader.Close();
-                    return o;
+                    reader.Read();
+                    o[i] = reader.GetValue(i);
                 }
-                return null;
+                reader.Close();
+                return o;
             }
         }
 
@@ -171,22 +191,28 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <returns> A datatable with the result of the query, or null if there are no results. </returns>
         public DataTable GetDataSet(string query)
         {
-            lock (this.databaseLock)
+
+            if (this.transaction != null)
             {
-                if (this.transaction == null)
-                {
-                    var table = new DataTable();
-                    var adapter = new MySqlDataAdapter(query, this.connection);
-
-                    // Open();
-                    adapter.Fill(table);
-
-                    // Close();
-                    return table;
-                }
+                //TODO: Implement transactions with GetDataSet
+                throw new NotImplementedException("Transactions are not implimented with GetDataSet at this time.");
             }
 
-            throw new NotImplementedException("TODO: Implement transactions with GetDataSet");
+            lock (this.databaseLock)
+            {
+               
+                var table = new DataTable();
+                var adapter = new MySqlDataAdapter(query, this.connection);
+
+                // Open();
+                adapter.Fill(table);
+
+                // Close();
+                return table;
+                
+            }
+
+           
         }
 
         /// <summary>
