@@ -13,7 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     ///   Represents an error returned from the Google Maps API.
     /// </summary>
-    internal class GoogleApiException : Exception
+    class GoogleApiException : Exception
     {
         #region Constants and Fields
 
@@ -51,6 +51,31 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             }
         }
 
+        /// <summary>
+        /// Gets a message that describes the current exception.
+        /// </summary>
+        /// <returns>
+        /// The error message that explains the reason for the exception, or an empty string("").
+        /// </returns>
+        /// <filterpriority>1</filterpriority>
+        public override string Message
+        {
+            get { return GetDescription(this.errorCode); }
+        }
+
+        /// <summary>
+        /// Gets or sets a link to the help file associated with this exception.
+        /// </summary>
+        /// <returns>
+        /// The Uniform Resource Name (URN) or Uniform Resource Locator (URL).
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string HelpLink
+        {
+            get { throw new NotImplementedException(); }
+        
+        }
+
         #endregion
 
         #region Methods
@@ -62,6 +87,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <returns> A string containing a description of the error code. </returns>
         private static string GetDescription(string errorCode)
         {
+            //Source: https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes
+            //TODO: Add all the status codes for all the Google APIs. It is currently just Geocoding API.
             switch (errorCode)
             {
                 case "INVALID_REQUEST":
@@ -83,8 +110,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 case "ZERO_RESULTS":
                     return "The query executed successfully but no results were found.";
 
+                case "NOT_FOUND":
+                    return "The origin and/or destination of this pairing could not be geocoded.";
+                           
+
                 default:
-                    return "An unknown error code or corrupted data was recieved from the Google API.";
+                    return String.Format("An unknown error code or corrupted data was recieved from the Google API. ({0})", this.errorCode);
             }
         }
 

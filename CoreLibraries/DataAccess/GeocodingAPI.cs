@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     /// <summary>
     ///   Interfaces with the Google Geocoding API to retrieve the coordinates from a location string and vice-versa.
     /// </summary>
-    internal class GeocodingApi : XmlRequester
+    class GeocodingApi : XmlRequester
     {
         #region Constants and Fields
 
@@ -41,13 +41,25 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="GeocodingApi" /> class.
+        ///   Initializes a new instance of the <see cref="GeocodingApi" /> class using default settings of no sensor and "au" region.
         /// </summary>
         public GeocodingApi()
             : base(Urls.GeocodingApiUrl)
         {
             this.Sensor = false;
             this.Region = "au";
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref="GeocodingApi" /> class.
+        /// </summary>
+        /// <param name="sensor">The sensor parameter required by Google. See <see cref="https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API"/> for more information.</param>
+        /// <param name="region">The region string used by the Google API. (i.e. "au")</param>
+        public GeocodingApi(bool sensor, string region)
+            : base(Urls.GeocodingApiUrl)
+        {
+            this.Sensor = sensor;
+            this.Region = region;
         }
 
         #endregion
@@ -151,8 +163,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <example>
         ///   Pizza shops near RMIT University
         /// </example>
-        /// <param name="locationString"> A Google Maps search string </param>
-        /// <returns> A <see cref="Location" /> object. </returns>
+        /// <param name="locationString"> A Google Maps search string.</param>
+        /// <returns> A <see cref="Location" /> A location object representing the result.</returns>
         public Location GetLocation(string locationString)
         {
             // Clear out old request data
@@ -187,7 +199,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         ///   Gets a human readable address that is closest to the provided location.
         /// </summary>
         /// <param name="location"> A location for which you want to find the nearest address </param>
-        /// <returns> The get location string. </returns>
+        /// <returns> A string representing a human readable address corrosponding to that location. </returns>
         public string GetLocationString(Location location)
         {
             this.Parameters.Remove("address");
