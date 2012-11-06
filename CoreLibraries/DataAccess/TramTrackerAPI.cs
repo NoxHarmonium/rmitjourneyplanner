@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    ///   Interfaces with the Yarra Trams Tramtracker Soap webservice to get various data.
+    ///   Interfaces with the Yarra Trams Tramtracker Soap webservice to get various types of data.
     /// </summary>
     internal class TramTrackerApi : XmlRequester
     {
@@ -157,34 +157,41 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Public Methods
 
         /// <summary>
-        ///   Gets a dataset containing the end-points of each tram route.
+        ///   Gets a dataset containing the end-points of each tram route. 
         /// </summary>
         /// <returns> A <see cref="DataSet" /> containing the results. </returns>
         public DataSet GetDestinationsForAllRoutes()
         {
-            this.Parameters.Clear();
+            // Doesn't use  Soap.BuildDataSetFromSoapResponse() as the response is more complex.
 
-            // Set parameters           
-            this.SoapAction = Urls.GetDestinationsForAllRoutes;
-            this.Parameters["GetDestinationsForAllRoutes"] = null;
-            XmlDocument responseDoc = this.Request();
-
-            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetDestinationsForAllRoutesResponse"];
-            if (response == null)
+            try
             {
-                throw new Exception("XML response is invalid.");
-            }
+                this.Parameters.Clear();
 
-            string validationResult = response["validationResult"].InnerText;
-            if (validationResult.Contains("Request Denied:"))
+                // Set parameters           
+                this.SoapAction = Urls.GetDestinationsForAllRoutes;
+                this.Parameters["GetDestinationsForAllRoutes"] = null;
+                XmlDocument responseDoc = this.Request();
+
+
+                XmlNode response = responseDoc["soap:Envelope"]["soap:Body"]["GetDestinationsForAllRoutesResponse"];
+
+
+                string validationResult = response["validationResult"].InnerText;
+                if (validationResult.Contains("Request Denied:"))
+                {
+                    throw new Exception("Tramtracker webservice error:\n" + validationResult);
+                }
+
+                var results = new DataSet();
+                results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
+                results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+                return results;
+            }
+            catch (Exception e)
             {
-                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+                throw new Exception("XML response is invalid.", e);
             }
-
-            var results = new DataSet();
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
-            return results;
         }
 
         /// <summary>

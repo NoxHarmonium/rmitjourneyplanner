@@ -42,23 +42,27 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <exception cref="Exception">Throws an exception when Tramtracker sends an error message.</exception>
         public static DataSet BuildDataSetFromSoapResponse(XmlDocument responseDoc)
         {
-            XmlNode response = responseDoc["soap:Envelope"]["soap:Body"].FirstChild;
-            if (response == null)
+           
+            try
             {
-                throw new Exception("XML response is invalid.");
-            }
+                XmlNode response = responseDoc["soap:Envelope"]["soap:Body"].FirstChild;
 
-            string validationResult = response["validationResult"].InnerText;
-            if (validationResult.Contains("Request Denied:"))
+                string validationResult = response["validationResult"].InnerText;
+                if (validationResult.Contains("Request Denied:"))
+                {
+                    throw new Exception("Tramtracker webservice error:\n" + validationResult);
+                }
+
+                var results = new DataSet();
+                results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
+                results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
+                return results;
+            }
+            catch (Exception e)
             {
-                throw new Exception("Tramtracker webservice error:\n" + validationResult);
+                throw new Exception("XML response is invalid.", e);
             }
-
-            var results = new DataSet();
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.ReadSchema);
-            results.ReadXml(new StringReader(response.FirstChild.OuterXml), XmlReadMode.DiffGram);
-
-            return results;
+           
         }
 
         /// <summary>
