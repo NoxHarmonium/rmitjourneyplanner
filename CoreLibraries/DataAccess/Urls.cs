@@ -5,7 +5,7 @@
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
     /// <summary>
-    ///   The urls.
+    ///   A collection of URLs that are used interally by the <see cref="RmitJourneyPlanner.CoreLibraries.DataAccess"/> namespace.
     /// </summary>
     internal static class Urls
     {
