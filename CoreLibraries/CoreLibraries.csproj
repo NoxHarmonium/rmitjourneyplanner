@@ -82,7 +82,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comparers\CritterComparer.cs" />
     <Compile Include="DataAccess\DistanceAPI.cs" />
     <Compile Include="DataAccess\GeocodingAPI.cs" />
     <Compile Include="DataAccess\GoogleApiException.cs" />
@@ -94,12 +93,10 @@
     <Compile Include="DataAccess\TramTrackerAPI.cs" />
     <Compile Include="DataAccess\Urls.cs" />
     <Compile Include="DataAccess\XMLRequester.cs" />
-    <Compile Include="DataAccess\ConnectionInfo.cs" />
     <Compile Include="DataProviders\Google\DrivingDataProvider.cs" />
     <Compile Include="DataProviders\INetworkDataProvider.cs" />
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
-    <Compile Include="Comparers\NodeComparer.cs" />
     <Compile Include="DataProviders\Metlink\MetlinkDataProvider.cs" />
     <Compile Include="DataProviders\Metlink\MetlinkNode.cs" />
     <Compile Include="DataProviders\TerminalNode.cs" />
@@ -138,7 +135,6 @@
     <Compile Include="TreeAlgorithms\PTUniformCostSearch.cs" />
     <Compile Include="Types\AdjacencyList.cs" />
     <Compile Include="Types\Arc.cs" />
-    <Compile Include="Comparers\ArcComparer.cs" />
     <Compile Include="Types\ClosedRoute.cs" />
     <Compile Include="Types\Critter.cs" />
     <Compile Include="Types\Departure.cs" />

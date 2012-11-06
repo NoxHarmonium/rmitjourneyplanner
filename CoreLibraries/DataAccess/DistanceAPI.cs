@@ -69,7 +69,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
             XmlNode response = doc["DistanceMatrixResponse"];
 
-            if (response["status"] == null)
+            //Check for null references
+            if (response == null || response["status"] == null)
             {
                 throw new Exception("XML response is invalid.");
             }
@@ -80,9 +81,21 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 throw new GoogleApiException(response["status"].InnerText);
             }
 
+            //Check for null references
+            if (response["row"] == null || response["row"]["element"] == null)
+            {
+                throw new Exception("XML response is invalid.");
+            }
+            
             // Extract element
             XmlNode element = response["row"]["element"];
 
+            //Check for null references
+            if (element["duration"]["value"] == null || element["distance"]["value"] == null)
+            {
+                throw new Exception("XML response is invalid.");
+            }
+            
             // Get results
             var duration = new TimeSpan(0, 0, Convert.ToInt32(element["duration"]["value"].InnerText));
             double distance = Convert.ToDouble(element["distance"]["value"].InnerText);
