@@ -1,34 +1,34 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RequestType.cs" company="RMIT University">
+// <copyright file="ConnectionInfo.cs" company="RMIT University">
 //   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
 // Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
 // </copyright>
 // <summary>
-//   Represents the request type for the XMLRequestor class.
+//   Contains the information used to connect to the internet.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
+    #region Using Directives
+
+    using System.Net;
+
+    #endregion
+
     /// <summary>
-    /// Represents the request type for the XMLRequestor class.
+    /// Contains the information used to connect to the internet.
     /// </summary>
-    internal enum RequestType
+    public static class ConnectionInfo
     {
-        /// <summary>
-        ///   Use a simple GET html request for the XML.
-        /// </summary>
-        /// <example>
-        ///   Google Maps API.
-        /// </example>
-        Get = 0, 
+        #region Public Properties
 
         /// <summary>
-        ///   Use a SOAP request for the XML.
+        ///   Gets or sets the proxy used by internet connections in this assembly.
         /// </summary>
-        /// <example>
-        ///   Tram Tracker API.
-        /// </example>
-        Soap = 1
+        ////TODO: Merge this into a unified settings class.
+        public static WebProxy Proxy { get; set; }
+
+        #endregion
     }
 }

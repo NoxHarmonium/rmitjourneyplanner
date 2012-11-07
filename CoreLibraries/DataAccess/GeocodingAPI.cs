@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GeocodingAPI.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Interfaces with the Google Geocoding API to retrieve the coordinates from a location string and vice-versa.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
-    #region
+    #region Using Directives
 
     using System;
     using System.Globalization;
@@ -15,9 +21,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    ///   Interfaces with the Google Geocoding API to retrieve the coordinates from a location string and vice-versa.
+    /// Interfaces with the Google Geocoding API to retrieve the coordinates from a location string and vice-versa.
     /// </summary>
-    class GeocodingApi : XmlRequester
+    internal class GeocodingApi : XmlRequester
     {
         #region Constants and Fields
 
@@ -41,7 +47,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="GeocodingApi" /> class using default settings of no sensor and "au" region.
+        ///   Initializes a new instance of the <see cref = "GeocodingApi" /> class using default settings of no sensor and "au" region.
         /// </summary>
         public GeocodingApi()
             : base(Urls.GeocodingApiUrl)
@@ -51,10 +57,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="GeocodingApi" /> class.
+        /// Initializes a new instance of the <see cref="GeocodingApi"/> class.
         /// </summary>
-        /// <param name="sensor">The sensor parameter required by Google. See <see cref="https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API"/> for more information.</param>
-        /// <param name="region">The region string used by the Google API. (i.e. "au")</param>
+        /// <param name="sensor">
+        /// The sensor parameter required by Google. See <see href="https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API">this link</see> for more information.
+        /// </param>
+        /// <param name="region">
+        /// The region string used by the Google API. (i.e. "au")
+        /// </param>
         public GeocodingApi(bool sensor, string region)
             : base(Urls.GeocodingApiUrl)
         {
@@ -101,7 +111,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        ///   Enable bounding of the result within the square defined by BoundsUpperLeft and BoundsBottomRight.
+        ///   Gets or sets a value indicating whether bounding of the result within the square defined by BoundsUpperLeft and BoundsBottomRight is enabled.
         /// </summary>
         public bool EnableBounding
         {
@@ -121,7 +131,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         ///   Gets or sets the region in which to search in to limit search results.
         /// </summary>
         /// <example>
-        ///   au, es
+        ///   "au", "es"
         /// </example>
         public string Region
         {
@@ -154,17 +164,21 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   Gets a new Location from a Google Maps search string.
+        /// Gets a new Location from a Google Maps search string.
         /// </summary>
         /// OK
         /// <example>
-        ///   Pizza shops near RMIT University
+        /// Pizza shops near RMIT University
         /// </example>
-        /// <param name="locationString"> A Google Maps search string.</param>
-        /// <returns> A <see cref="Location" /> A location object representing the result.</returns>
+        /// <param name="locationString">
+        /// A Google Maps search string.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Location"/> A location object representing the result.
+        /// </returns>
         public Location GetLocation(string locationString)
         {
             // Clear out old request data
@@ -196,10 +210,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        ///   Gets a human readable address that is closest to the provided location.
+        /// Gets a human readable address that is closest to the provided location.
         /// </summary>
-        /// <param name="location"> A location for which you want to find the nearest address </param>
-        /// <returns> A string representing a human readable address corrosponding to that location. </returns>
+        /// <param name="location">
+        /// A location for which you want to find the nearest address 
+        /// </param>
+        /// <returns>
+        /// A string representing a human readable address corresponding to that location. 
+        /// </returns>
         public string GetLocationString(Location location)
         {
             this.Parameters.Remove("address");
@@ -233,7 +251,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Methods
 
         /// <summary>
-        ///   Sets the bounds parameter for the XML request from the stored Location objects.
+        /// Sets the bounds parameter for the XML request from the stored Location objects.
         /// </summary>
         private void SetBounds()
         {

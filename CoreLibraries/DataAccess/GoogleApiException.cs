@@ -1,19 +1,25 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GoogleApiException.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Represents an error returned from the Google Maps API.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
-    #region
+    #region Using Directives
 
     using System;
 
     #endregion
 
     /// <summary>
-    ///   Represents an error returned from the Google Maps API.
+    /// Represents an error returned from the Google Maps API.
     /// </summary>
-    class GoogleApiException : Exception
+    internal class GoogleApiException : Exception
     {
         #region Constants and Fields
 
@@ -27,9 +33,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the GoogleApiException class from the supplied error code.
+        /// Initializes a new instance of the GoogleApiException class from the supplied error code.
         /// </summary>
-        /// <param name="errorCode"> The error code recieved from the Google Maps API. </param>
+        /// <param name="errorCode">
+        /// The error code received from the Google Maps API. 
+        /// </param>
         public GoogleApiException(string errorCode)
             : base(GetDescription(errorCode))
         {
@@ -52,28 +60,33 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         }
 
         /// <summary>
-        /// Gets a message that describes the current exception.
+        ///   Gets or sets a link to the help file associated with this exception.
         /// </summary>
         /// <returns>
-        /// The error message that explains the reason for the exception, or an empty string("").
-        /// </returns>
-        /// <filterpriority>1</filterpriority>
-        public override string Message
-        {
-            get { return GetDescription(this.errorCode); }
-        }
-
-        /// <summary>
-        /// Gets or sets a link to the help file associated with this exception.
-        /// </summary>
-        /// <returns>
-        /// The Uniform Resource Name (URN) or Uniform Resource Locator (URL).
+        ///   The Uniform Resource Name (URN) or Uniform Resource Locator (URL).
         /// </returns>
         /// <filterpriority>2</filterpriority>
         public override string HelpLink
         {
-            get { return Urls.GoogleApiGeocodingHelp; }
-        
+            get
+            {
+                return Urls.GoogleApiGeocodingHelp;
+            }
+        }
+
+        /// <summary>
+        ///   Gets a message that describes the current exception.
+        /// </summary>
+        /// <returns>
+        ///   The error message that explains the reason for the exception, or an empty string("").
+        /// </returns>
+        /// <filterpriority>1</filterpriority>
+        public override string Message
+        {
+            get
+            {
+                return GetDescription(this.errorCode);
+            }
         }
 
         #endregion
@@ -81,14 +94,18 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         #region Methods
 
         /// <summary>
-        ///   Converts the Google Maps API error codes into a human readable message.
+        /// Converts the Google Maps API error codes into a human readable message.
         /// </summary>
-        /// <param name="errorCode"> The string recieved from the Google Maps API. </param>
-        /// <returns> A string containing a description of the error code. </returns>
+        /// <param name="errorCode">
+        /// The string received from the Google Maps API. 
+        /// </param>
+        /// <returns>
+        /// A string containing a description of the error code. 
+        /// </returns>
         private static string GetDescription(string errorCode)
         {
-            //Source: https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes
-            //TODO: Add all the status codes for all the Google APIs. It is currently just Geocoding API.
+            // Source: https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes
+            ////TODO: Add all the status codes for all the Google APIs. It is currently just Geocoding API.
             switch (errorCode)
             {
                 case "INVALID_REQUEST":
@@ -112,10 +129,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
                 case "NOT_FOUND":
                     return "The origin and/or destination of this pairing could not be geocoded.";
-                           
 
                 default:
-                    return String.Format("An unknown error code or corrupted data was recieved from the Google API. ({0})", this.errorCode);
+                    return
+                        string.Format(
+                            "An unknown error code or corrupted data was recieved from the Google API. ({0})", errorCode);
             }
         }
 

@@ -1,16 +1,21 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Urls.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   A collection of URLs that are used internally by the <see cref="RmitJourneyPlanner.CoreLibraries.DataAccess" /> namespace.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
     /// <summary>
-    ///   A collection of URLs that are used interally by the <see cref="RmitJourneyPlanner.CoreLibraries.DataAccess"/> namespace.
+    /// A collection of URLs that are used internally by the <see cref="RmitJourneyPlanner.CoreLibraries.DataAccess"/> namespace.
     /// </summary>
     internal static class Urls
     {
         // Google Maps Strings
-
         #region Constants and Fields
 
         /// <summary>
@@ -93,6 +98,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
             @"http://www.yarratrams.com.au/pidsservice/GetStopsAndRoutesUpdatesSince";
 
         /// <summary>
+        ///   The URL of the link explaining the geocoding error codes.
+        /// </summary>
+        public const string GoogleApiGeocodingHelp =
+            @"https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes";
+
+        /// <summary>
         ///   The TramTracker namespace.
         /// </summary>
         public const string TramTrackerNameSpace = @"http://www.yarratrams.com.au/pidsservice/";
@@ -101,12 +112,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         ///   The TramTracker url.
         /// </summary>
         public const string TramTrackerUrl = @"http://ws.tramtracker.com.au/pidsservice/pids.asmx";
-
-        /// <summary>
-        /// The URL of the link explaining the geocoding error codes.
-        /// </summary>
-        public const string GoogleApiGeocodingHelp =
-            @"https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingStatusCodes";
 
         #endregion
     }

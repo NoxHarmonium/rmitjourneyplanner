@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DistanceAPI.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Interfaces with the Google Distance Matrix API to retrieve distances between points (as navigated by Google Maps).
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 {
-    #region
+    #region Using Directives
 
     using System;
     using System.Xml;
@@ -15,14 +21,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
     #endregion
 
     /// <summary>
-    ///   Interfaces with the Google Distance Matrix API to retrieve distances between points (as navigated by Google Maps).
+    /// Interfaces with the Google Distance Matrix API to retrieve distances between points (as navigated by Google Maps).
     /// </summary>
-    class DistanceApi : XmlRequester
+    internal class DistanceApi : XmlRequester
     {
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="DistanceApi" /> class.
+        ///   Initializes a new instance of the <see cref = "DistanceApi" /> class.
         /// </summary>
         public DistanceApi()
             : base(Urls.DistanceApiUrl)
@@ -32,26 +38,40 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   Returns the distance between 2 points using the default transport mode (driving).
+        /// Returns the distance between 2 points using the default transport mode (driving).
         /// </summary>
-        /// <param name="pointA"> The first point </param>
-        /// <param name="pointB"> The second point </param>
-        /// <returns> The distance between pointA and pointB </returns>
+        /// <param name="pointA">
+        /// The first point 
+        /// </param>
+        /// <param name="pointB">
+        /// The second point 
+        /// </param>
+        /// <returns>
+        /// The distance between pointA and pointB 
+        /// </returns>
         public Arc GetDistance(Location pointA, Location pointB)
         {
             return this.GetDistance(pointA, pointB, TransportMode.Driving);
         }
 
         /// <summary>
-        ///   Returns the distance between 2 points using the specified transport mode.
+        /// Returns the distance between 2 points using the specified transport mode.
         /// </summary>
-        /// <param name="pointA"> The first point </param>
-        /// <param name="pointB"> The second point </param>
-        /// <param name="transportMode"> Specified the mode of transport used between points. </param>
-        /// <returns> The distance between pointA and pointB </returns>
+        /// <param name="pointA">
+        /// The first point 
+        /// </param>
+        /// <param name="pointB">
+        /// The second point 
+        /// </param>
+        /// <param name="transportMode">
+        /// Specified the mode of transport used between points. 
+        /// </param>
+        /// <returns>
+        /// The distance between pointA and pointB 
+        /// </returns>
         public Arc GetDistance(Location pointA, Location pointB, TransportMode transportMode)
         {
             // Set parameters
@@ -69,7 +89,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
 
             XmlNode response = doc["DistanceMatrixResponse"];
 
-            //Check for null references
+            // Check for null references
             if (response == null || response["status"] == null)
             {
                 throw new Exception("XML response is invalid.");
@@ -81,27 +101,33 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
                 throw new GoogleApiException(response["status"].InnerText);
             }
 
-            //Check for null references
+            // Check for null references
             if (response["row"] == null || response["row"]["element"] == null)
             {
                 throw new Exception("XML response is invalid.");
             }
-            
+
             // Extract element
             XmlNode element = response["row"]["element"];
 
-            //Check for null references
+            // Check for null references
             if (element["duration"]["value"] == null || element["distance"]["value"] == null)
             {
                 throw new Exception("XML response is invalid.");
             }
-            
+
             // Get results
             var duration = new TimeSpan(0, 0, Convert.ToInt32(element["duration"]["value"].InnerText));
             double distance = Convert.ToDouble(element["distance"]["value"].InnerText);
 
             // Return new object
-            return new Arc(pointA, pointB, new TransportTimeSpan() { TravelTime = duration ,WaitingTime = default(TimeSpan)}, distance, default(DateTime), transportMode.ToString());
+            return new Arc(
+                pointA, 
+                pointB, 
+                new TransportTimeSpan { TravelTime = duration, WaitingTime = default(TimeSpan) }, 
+                distance, 
+                default(DateTime), 
+                transportMode.ToString());
         }
 
         #endregion
