@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="StandardBreeder.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   A stock standard crossover algorithm.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
 {
-    #region
+    #region Using Directives
 
     using System;
     using System.Collections.Generic;
@@ -15,10 +21,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
+    using Random = RmitJourneyPlanner.CoreLibraries.Random;
+
     #endregion
 
     /// <summary>
-    ///   A stock standard crossover algorithm.
+    /// A stock standard crossover algorithm.
     /// </summary>
     public class StandardBreeder : IBreeder
     {
@@ -34,9 +42,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="StandardBreeder" /> class.
+        /// Initializes a new instance of the <see cref="StandardBreeder"/> class.
         /// </summary>
-        /// <param name="properties"> The properties. </param>
+        /// <param name="properties">
+        /// The properties. 
+        /// </param>
         public StandardBreeder(EvolutionaryProperties properties)
         {
             this.properties = properties;
@@ -44,17 +54,23 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   Applies crossover to 2 parents to create a child.
+        /// Applies crossover to 2 parents to create a child.
         /// </summary>
-        /// <param name="first"> The first parent of the crossover. </param>
-        /// <param name="second"> The second parent of the crossover. </param>
-        /// <returns> If the operation is successful then the result is returned, otherwise null. </returns>
+        /// <param name="first">
+        /// The first parent of the crossover. 
+        /// </param>
+        /// <param name="second">
+        /// The second parent of the crossover. 
+        /// </param>
+        /// <returns>
+        /// If the operation is successful then the result is returned, otherwise null. 
+        /// </returns>
         public Critter[] Crossover(Critter first, Critter second)
         {
-            var random = CoreLibraries.Random.GetInstance();
+            var random = Random.GetInstance();
 
             List<NodeWrapper<INetworkNode>> firstNodes = first.Route;
             List<NodeWrapper<INetworkNode>> secondNodes = second.Route;
@@ -74,8 +90,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
 
             if (crossoverPoints.Count == 0)
             {
-                //throw new Exception("StandardBreeder.cs: The crossover points are undefined.");
-                //crossoverPoints.Add(new KeyValuePair<int, int>(random.Next(firstNodes.Count - 1), random.Next(secondNodes.Count - 1)));
+                // throw new Exception("StandardBreeder.cs: The crossover points are undefined.");
+                // crossoverPoints.Add(new KeyValuePair<int, int>(random.Next(firstNodes.Count - 1), random.Next(secondNodes.Count - 1)));
                 return null;
             }
 
@@ -89,23 +105,23 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
             secondChild.AddRange(secondNodes.GetRange(0, crossoverPoint.Value));
             secondChild.AddRange(firstNodes.GetRange(crossoverPoint.Key, firstNodes.Count - crossoverPoint.Key));
 
-          	
             var output = new[]
                 {
-                    new Critter((Route)firstChild.Clone(), new Fitness()),
+                    new Critter((Route)firstChild.Clone(), new Fitness()), 
                     new Critter((Route)secondChild.Clone(), new Fitness())
                 };
-			
-			output[0].departureTime = second.departureTime;
-			output[1].departureTime = first.departureTime;
+
+            output[0].departureTime = second.departureTime;
+            output[1].departureTime = first.departureTime;
 
             Assert.That(output[0].departureTime != default(DateTime));
             Assert.That(output[1].departureTime != default(DateTime));
-			
+
             if (output == null || output[0] == null || output[1] == null)
             {
                 throw new Exception("StandardBreeder.cs: One or more decendants of crossover are null.");
             }
+
             return output;
         }
 

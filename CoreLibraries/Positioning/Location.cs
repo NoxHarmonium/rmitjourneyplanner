@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Location.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Represents a location on earth.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Positioning
 {
-    #region
+    #region Using Directives
 
     using System;
 
@@ -14,7 +20,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
     #endregion
 
     /// <summary>
-    ///   Represents a location on earth.
+    /// Represents a location on earth.
     /// </summary>
     public class Location
     {
@@ -35,10 +41,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Location" /> class. Creates a Location object directly from the latitude and longitude.
+        /// Initializes a new instance of the <see cref="Location"/> class. Creates a Location object directly from the latitude and longitude.
         /// </summary>
-        /// <param name="latitude"> The latitude of the location </param>
-        /// <param name="longitude"> The longitude of the location </param>
+        /// <param name="latitude">
+        /// The latitude of the location 
+        /// </param>
+        /// <param name="longitude">
+        /// The longitude of the location 
+        /// </param>
         public Location(double latitude, double longitude)
         {
             this.latitude = latitude;
@@ -46,10 +56,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Location" /> class. Creates a Location object directly from the latitude and longitude.
+        /// Initializes a new instance of the <see cref="Location"/> class. Creates a Location object directly from the latitude and longitude.
         /// </summary>
-        /// <param name="latitude"> The latitude of the location </param>
-        /// <param name="longitude"> The longitude of the location </param>
+        /// <param name="latitude">
+        /// The latitude of the location 
+        /// </param>
+        /// <param name="longitude">
+        /// The longitude of the location 
+        /// </param>
         public Location(float latitude, float longitude)
         {
             this.latitude = latitude;
@@ -57,12 +71,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Location" /> class.
+        /// Initializes a new instance of the <see cref="Location"/> class.
         /// </summary>
-        /// <param name="location"> The location string to be resolved by the Google Maps API. </param>
+        /// <param name="location">
+        /// The location string to be resolved by the Google Maps API. 
+        /// </param>
         public Location(string location)
         {
-            Logger.Log(this,"Querying Google API for location: {0}", location);
+            Logger.Log(this, "Querying Google API for location: {0}", location);
             var geocoding = new GeocodingApi();
             Location discoveredLocation = geocoding.GetLocation(location);
             this.latitude = discoveredLocation.Latitude;
@@ -107,13 +123,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   Parses a comma delimted latitude and longitude string and returns a corrosponding location object.
+        /// Parses a comma delimted latitude and longitude string and returns a corrosponding location object.
         /// </summary>
-        /// <param name="locationString"> The location string to parse to a location. </param>
-        /// <returns> A <see cref="Location" /> object that represents the provided location string. </returns>
+        /// <param name="locationString">
+        /// The location string to parse to a location. 
+        /// </param>
+        /// <returns>
+        /// A <see cref="Location"/> object that represents the provided location string. 
+        /// </returns>
         public static Location Parse(string locationString)
         {
             int commaIndex = locationString.IndexOf(",", StringComparison.Ordinal);
@@ -124,9 +144,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         }
 
         /// <summary>
-        ///   Returns a comma delimited string of latitude and longitude.
+        /// Returns a comma delimited string of latitude and longitude.
         /// </summary>
-        /// <returns> A string. </returns>
+        /// <returns>
+        /// A string. 
+        /// </returns>
         public override string ToString()
         {
             return string.Format("{0},{1}", this.latitude, this.longitude);

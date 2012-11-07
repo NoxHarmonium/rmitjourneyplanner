@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Route.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Represents a route made up of INetworkNodes.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
-    #region
+    #region Using Directives
 
     using System;
     using System.Collections.Generic;
@@ -17,7 +23,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     #endregion
 
     /// <summary>
-    ///   Represents a route made up of INetworkNodes.
+    /// Represents a route made up of INetworkNodes.
     /// </summary>
     public class Route : List<NodeWrapper<INetworkNode>>, ICloneable
     {
@@ -33,36 +39,48 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Route" /> class. 
+        /// Initializes a new instance of the <see cref="Route"/> class.
         /// </summary>
-        /// <param name="routeId"> The Id of the specified route. </param>
+        /// <param name="routeId">
+        /// The Id of the specified route. 
+        /// </param>
         public Route(int routeId)
         {
             this.id = routeId;
         }
+
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Route" /> class. 
+        /// Initializes a new instance of the <see cref="Route"/> class.
         /// </summary>
-        /// <param name="routeId"> The Id of the specified route. </param>
-        /// <param name="nodes">An list of <see cref="INetworkNode" /> objects to initialize the route with.</param>
-        public Route(int routeId, IEnumerable<NodeWrapper<INetworkNode>> nodes ) : base(nodes)
+        /// <param name="routeId">
+        /// The Id of the specified route. 
+        /// </param>
+        /// <param name="nodes">
+        /// An list of <see cref="INetworkNode"/> objects to initialize the route with.
+        /// </param>
+        public Route(int routeId, IEnumerable<NodeWrapper<INetworkNode>> nodes)
+            : base(nodes)
         {
             this.id = routeId;
         }
-		
-		/// <summary>
-        ///   Initializes a new instance of the <see cref="Route" /> class. 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Route"/> class.
         /// </summary>
-        /// <param name="routeId"> The Id of the specified route. </param>
-        /// <param name="nodes">An list of <see cref="INetworkNode" /> objects to initialize the route with.</param>
-        public Route(int routeId, IEnumerable<INetworkNode> nodes )
+        /// <param name="routeId">
+        /// The Id of the specified route. 
+        /// </param>
+        /// <param name="nodes">
+        /// An list of <see cref="INetworkNode"/> objects to initialize the route with.
+        /// </param>
+        public Route(int routeId, IEnumerable<INetworkNode> nodes)
         {
             foreach (INetworkNode node in nodes)
-			{
-				this.Add(node);	
-			}
-			
-			this.id = routeId;
+            {
+                this.Add(node);
+            }
+
+            this.id = routeId;
         }
 
         #endregion
@@ -82,14 +100,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
         /// Returns a new route as a combination of 2 routes joined from the end nodes.
         /// </summary>
-        /// <param name="route1"></param>
-        /// <param name="route2"></param>
-        /// <returns></returns>
+        /// <param name="route1">
+        /// </param>
+        /// <param name="route2">
+        /// </param>
+        /// <returns>
+        /// </returns>
         public static Route Glue(Route route1, Route route2)
         {
             Route r = new Route(-1);
@@ -98,21 +119,25 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             route2.RemoveAt(0);
             r.AddRange(route2);
             return r;
-
-
         }
-        
-		public void Add(INetworkNode node)
-		{
-			this.Add(new NodeWrapper<INetworkNode>(node));	
-		}
-		
-		
-        
+
         /// <summary>
-        ///   Returns a copy of this route and copies all internal nodes.
+        /// The add.
         /// </summary>
-        /// <returns> A new Route object. </returns>
+        /// <param name="node">
+        /// The node.
+        /// </param>
+        public void Add(INetworkNode node)
+        {
+            this.Add(new NodeWrapper<INetworkNode>(node));
+        }
+
+        /// <summary>
+        /// Returns a copy of this route and copies all internal nodes.
+        /// </summary>
+        /// <returns>
+        /// A new Route object. 
+        /// </returns>
         public object Clone()
         {
             var newRoute = new Route(this.id);
@@ -120,11 +145,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return newRoute;
         }
 
-        #endregion
-
+        /// <summary>
+        /// The to string.
+        /// </summary>
+        /// <returns>
+        /// The to string.
+        /// </returns>
         public override string ToString()
         {
-            return string.Format("Route: {0}", String.Join(",",this.Select(n=>((MetlinkNode)n.Node).StopSpecName)));
+            return string.Format("Route: {0}", string.Join(",", this.Select(n => ((MetlinkNode)n.Node).StopSpecName)));
         }
+
+        #endregion
     }
 }

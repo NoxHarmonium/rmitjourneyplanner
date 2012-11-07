@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Settings.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   A static class that shares variables around the class library. Used for things such as loggers and should be used sparingly.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries
 {
-    #region
+    #region Using Directives
 
     using System;
     using System.Collections.Generic;
@@ -13,7 +19,7 @@ namespace RmitJourneyPlanner.CoreLibraries
     #endregion
 
     /// <summary>
-    ///   A static class that shares variables around the class library. Used for things such as loggers and should be used sparingly.
+    /// A static class that shares variables around the class library. Used for things such as loggers and should be used sparingly.
     /// </summary>
     public static class Settings
     {
@@ -29,7 +35,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes static members of the <see cref="Settings" /> class.
+        ///   Initializes static members of the <see cref = "Settings" /> class.
         /// </summary>
         static Settings()
         {
@@ -47,11 +53,10 @@ namespace RmitJourneyPlanner.CoreLibraries
             }
             catch (Exception e)
             {
-                throw new Exception("Unable to read settings file. Make sure that Settings.xml is found in the same directory as this assembly.",e);
+                throw new Exception(
+                    "Unable to read settings file. Make sure that Settings.xml is found in the same directory as this assembly.", 
+                    e);
             }
-            
-            
-        
         }
 
         #endregion

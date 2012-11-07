@@ -1,46 +1,104 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PTGreedySearch.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PTGreedySearch.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   TODO: Update summary.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 {
-    using System;
-    using System.Collections.Generic;
+    #region Using Directives
+
     using System.Linq;
-    using System.Text;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
+
+    #endregion
 
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class PTGreedySearch : PTDepthFirstSearch
     {
-         private readonly INetworkDataProvider provider;
+        #region Constants and Fields
 
-        public PTGreedySearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
-            : base(depth,bidirectional, provider, origin, goal)
+        /// <summary>
+        ///   The provider.
+        /// </summary>
+        private readonly INetworkDataProvider provider;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PTGreedySearch"/> class.
+        /// </summary>
+        /// <param name="depth">
+        /// The depth.
+        /// </param>
+        /// <param name="bidirectional">
+        /// The bidirectional.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="origin">
+        /// The origin.
+        /// </param>
+        /// <param name="goal">
+        /// The goal.
+        /// </param>
+        public PTGreedySearch(
+            int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+            : base(depth, bidirectional, provider, origin, goal)
         {
             this.provider = provider;
         }
 
-        public PTGreedySearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
-            : base(bidirectional,provider,origin, destination)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PTGreedySearch"/> class.
+        /// </summary>
+        /// <param name="bidirectional">
+        /// The bidirectional.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="origin">
+        /// The origin.
+        /// </param>
+        /// <param name="destination">
+        /// The destination.
+        /// </param>
+        public PTGreedySearch(
+            bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
+            : base(bidirectional, provider, origin, destination)
         {
             this.provider = provider;
         }
 
-        
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The order children.
+        /// </summary>
+        /// <param name="nodes">
+        /// The nodes.
+        /// </param>
+        /// <returns>
+        /// </returns>
         protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
-
-            var target = (Location) (CurrentIndex == 0 ? this.Destination : this.Origin);
+            var target = (Location)(this.CurrentIndex == 0 ? this.Destination : this.Origin);
             foreach (var wrapper in nodes)
             {
-               
                 /*
                 if (Bidirectional)
                 {
@@ -66,18 +124,17 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                // }
                  * 
                  **/
-
                 wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, target);
-
             }
 
-            //Array.Sort(nodes, new NodeComparer());
-            nodes.StochasticSort(Entropy);
- 
+            // Array.Sort(nodes, new NodeComparer());
+            nodes.StochasticSort(this.Entropy);
 
             return nodes.Reverse().ToArray();
-            //return nodes.OrderBy(n => n.EuclidianDistance).Reverse().ToArray();
+
+            // return nodes.OrderBy(n => n.EuclidianDistance).Reverse().ToArray();
         }
 
+        #endregion
     }
 }

@@ -1,46 +1,122 @@
-﻿
- using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
-using RmitJourneyPlanner.CoreLibraries.Types;
-using System;
-using System.Linq;
-using NUnit.Framework;
-using System.Collections.Generic;
-
-using RmitJourneyPlanner.CoreLibraries.DataProviders;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
-using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
-//using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
-//using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
-//using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
-using RmitJourneyPlanner.CoreLibraries.DataAccess;
-//using RmitJourneyPlanner.CoreLibraries.Types;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TestFitnessFunction.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   The test fitness function.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Tests
 {
-	[TestFixture]
-	public class TestFitnessFunction
-	{
-		private MetlinkDataProvider provider;
-		
-		
-		public TestFitnessFunction ()
-		{
-			provider = new MetlinkDataProvider();
-		    Logging.Logger.LogEvent += (sender, message) => { Console.WriteLine("[{0}]: {1}", sender, message); };
-		}
-        
+    #region Using Directives
+
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using NUnit.Framework;
+
+    using RmitJourneyPlanner.CoreLibraries.DataAccess;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.Logging;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
+    using RmitJourneyPlanner.CoreLibraries.Types;
+
+    #endregion
+
+    /// <summary>
+    /// The test fitness function.
+    /// </summary>
+    [TestFixture]
+    public class TestFitnessFunction
+    {
+        #region Constants and Fields
+
+        /// <summary>
+        ///   The provider.
+        /// </summary>
+        private readonly MetlinkDataProvider provider;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///   Initializes a new instance of the <see cref = "TestFitnessFunction" /> class.
+        /// </summary>
+        public TestFitnessFunction()
+        {
+            this.provider = new MetlinkDataProvider();
+            Logger.LogEvent += (sender, message) => { Console.WriteLine("[{0}]: {1}", sender, message); };
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The test multi mode routes.
+        /// </summary>
+        [Test]
+        public void TestMultiModeRoutes()
+        {
+            var properties = new EvolutionaryProperties();
+            properties.NetworkDataProviders = new[] { this.provider };
+            properties.PointDataProviders = new[] { new WalkingDataProvider() };
+            AlFitnessFunction target;
+            properties.FitnessFunction = target = new AlFitnessFunction(properties);
+
+            // LineID    LineMainID  LineDesc    DirectionDesc   LineFrom    LineTo  
+            // 3984      1695        903i        To Altona       Mordialloc  Altona      
+            // 3985      1695        903o        To Mordialloc   Altona      Mordialloc   
+
+            // Train: Coburg Station 19965 --> Walk
+            // Bus:Coburg Station -- 2262-->18773 Essendon Station
+            // Train 
+            var route1 = new Route(-1)
+                {
+                    new MetlinkNode(19965, this.provider), 
+                    // new MetlinkNode(2262,provider), 
+                    // new MetlinkNode(2263,provider), 
+                    new MetlinkNode(2262, this.provider), 
+                    new MetlinkNode(10037, this.provider), 
+                    new MetlinkNode(10036, this.provider), 
+                    new MetlinkNode(10035, this.provider), 
+                    new MetlinkNode(10034, this.provider), 
+                    new MetlinkNode(10033, this.provider), 
+                    new MetlinkNode(10032, this.provider), 
+                    new MetlinkNode(40895, this.provider), 
+                    new MetlinkNode(40896, this.provider), 
+                    new MetlinkNode(40897, this.provider), 
+                    new MetlinkNode(40898, this.provider), 
+                    new MetlinkNode(9089, this.provider), 
+                    new MetlinkNode(9088, this.provider), 
+                    new MetlinkNode(18773, this.provider), 
+                    new MetlinkNode(20037, this.provider), 
+                    new MetlinkNode(20038, this.provider), 
+                    new MetlinkNode(20039, this.provider), 
+                };
+
+            DateTime initialDepart = DateTime.Parse("8/08/2012 6:00 PM");
+            var actual = target.GetFitness(route1, initialDepart);
+            Assert.AreEqual(41, actual.TotalJourneyTime.Minutes);
+        }
+
+        /// <summary>
+        /// The test random walk.
+        /// </summary>
         [Test]
         public void TestRandomWalk()
         {
-
             var properties = new EvolutionaryProperties();
-            properties.NetworkDataProviders = new[] { provider };
+            properties.NetworkDataProviders = new[] { this.provider };
             properties.Bidirectional = false;
             properties.PointDataProviders = new[] { new WalkingDataProvider() };
             properties.ProbMinDistance = 0.7;
@@ -49,149 +125,139 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
             properties.PopulationSize = 100;
             properties.MaxDistance = 0.5;
             properties.InfectionRate = 0.2;
-            properties.DepartureTime = DateTime.Parse("2012/7/24 2:00 PM");//DateTime.Parse(date + " "+ time);
+            properties.DepartureTime = DateTime.Parse("2012/7/24 2:00 PM"); // DateTime.Parse(date + " "+ time);
             properties.NumberToKeep = 25;
             properties.MutationRate = 0.1;
             properties.CrossoverRate = 0.7;
-            //properties.RouteGenerator = new AlRouteGenerator(properties);
+
+            // properties.RouteGenerator = new AlRouteGenerator(properties);
             properties.SearchType = SearchType.RW_Standard;
             properties.RouteGenerator = new DFSRoutePlanner(properties);
             properties.Mutator = new StandardMutator(properties);
             properties.Breeder = new StandardBreeder(properties);
             properties.FitnessFunction = new AlFitnessFunction(properties);
             properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-            properties.Destination = new MetlinkNode(20039, provider);//
-            //properties.Destination = new MetlinkNode(628,metlinkProvider);
+
+            // properties.Destination = new MetlinkNode(628,metlinkProvider);
             // new TerminalNode(-1, destination);
             // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
-            //properties.Origin = new MetlinkNode(19965, metlinkProvider);//
-            //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
-            properties.Origin = new MetlinkNode(19965, provider);//
-            //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
-
+            // properties.Origin = new MetlinkNode(19965, metlinkProvider);//
+            // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
+            // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
             properties.Destination.RetrieveData();
             properties.Origin.RetrieveData();
-            properties.Objectives = new[] { FitnessParameter.TotalJourneyTime, FitnessParameter.PercentTrains, FitnessParameter.PercentTrams };
-
+            properties.Objectives = new[]
+                {
+                   FitnessParameter.TotalJourneyTime, FitnessParameter.PercentTrains, FitnessParameter.PercentTrams 
+                };
 
             properties.Database.Open();
-            //properties.DataStructures = new DataStructures(properties);
 
-
+            // properties.DataStructures = new DataStructures(properties);
             properties.Planner = new MoeaRoutePlanner(properties);
 
-            properties.RouteGenerator.Generate(properties.Origin, properties.Destination,DateTime.Now);
-
-
-
-
-
-
+            properties.RouteGenerator.Generate(properties.Origin, properties.Destination, DateTime.Now);
         }
 
-		[Test]
-		public void TestRouteGeneration()
-		{
-			 var properties = new EvolutionaryProperties();
-				properties.NetworkDataProviders = new [] {provider};
-                properties.Bidirectional = false;
-                properties.PointDataProviders = new [] {new WalkingDataProvider()};
-                properties.ProbMinDistance = 0.7;
-                properties.ProbMinTransfers = 0.2;
-                properties.MaximumWalkDistance = 1.5;
-                properties.PopulationSize = 100;
-                properties.MaxDistance = 0.5;
-		        properties.InfectionRate = 0.2;
-                properties.DepartureTime = DateTime.Parse("2012/10/17 9:30 AM");//DateTime.Parse(date + " "+ time);
-                properties.NumberToKeep = 25;
-                properties.MutationRate = 0.25;
-                properties.CrossoverRate = 0.7;
-                //properties.RouteGenerator = new AlRouteGenerator(properties);
-		    properties.SearchType = SearchType.A_Star_BiDir;
-                properties.RouteGenerator = new DFSRoutePlanner(properties);
-		        properties.Mutator = new StandardMutator(properties);
-                properties.Breeder = new TimeBlendBreeder(properties);
-                properties.FitnessFunction = new AlFitnessFunction(properties);
-                properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-               //properties.Destination = new MetlinkNode(628, provider);// kew
-                //properties.Origin = new MetlinkNode(9601, provider);// reynard st
-                //properties.Origin = new MetlinkNode( 20013, provider); // Bell
-                //properties.Destination = new MetlinkNode(20042, provider); //Boxhill
-            
-		     properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
-               // properties.Origin = new MetlinkNode(19965, provider); // Coburg
-                //properties.Destination = new MetlinkNode(20039, provider); //ascot vale
-                //properties.Origin = new MetlinkNode(19036,provider); //Cotham (o)
-                //properties.Destination = new MetlinkNode(19943, provider); // Caulfielsd
-                //properties.Destination = new MetlinkNode(19933, provider); // Darebinor whateves
-                //properties.Destination = new MetlinkNode(19394,provider); // other kew
-             properties.Destination = new MetlinkNode(4141, provider); // Jolimont
-                //properties.Destination = new MetlinkNode(628,metlinkProvider);
-                   // new TerminalNode(-1, destination);
-                   // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
-                //properties.Origin = new MetlinkNode(19965, metlinkProvider);//
-                    //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
-              
-                    //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
-                   
-                properties.Destination.RetrieveData();
-                properties.Origin.RetrieveData();
-                properties.Objectives = new [] {FitnessParameter.TotalJourneyTime,FitnessParameter.DiversityMetric,FitnessParameter.TotalTravelTime};
+        /// <summary>
+        /// The test route generation.
+        /// </summary>
+        [Test]
+        public void TestRouteGeneration()
+        {
+            var properties = new EvolutionaryProperties();
+            properties.NetworkDataProviders = new[] { this.provider };
+            properties.Bidirectional = false;
+            properties.PointDataProviders = new[] { new WalkingDataProvider() };
+            properties.ProbMinDistance = 0.7;
+            properties.ProbMinTransfers = 0.2;
+            properties.MaximumWalkDistance = 1.5;
+            properties.PopulationSize = 100;
+            properties.MaxDistance = 0.5;
+            properties.InfectionRate = 0.2;
+            properties.DepartureTime = DateTime.Parse("2012/10/17 9:30 AM"); // DateTime.Parse(date + " "+ time);
+            properties.NumberToKeep = 25;
+            properties.MutationRate = 0.25;
+            properties.CrossoverRate = 0.7;
 
-                properties.Database.Open();
-                //properties.DataStructures = new DataStructures(properties);
+            // properties.RouteGenerator = new AlRouteGenerator(properties);
+            properties.SearchType = SearchType.A_Star_BiDir;
+            properties.RouteGenerator = new DFSRoutePlanner(properties);
+            properties.Mutator = new StandardMutator(properties);
+            properties.Breeder = new TimeBlendBreeder(properties);
+            properties.FitnessFunction = new AlFitnessFunction(properties);
+            properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
 
+            // properties.Destination = new MetlinkNode(628, provider);// kew
+            // properties.Origin = new MetlinkNode(9601, provider);// reynard st
+            // properties.Origin = new MetlinkNode( 20013, provider); // Bell
+            // properties.Destination = new MetlinkNode(20042, provider); //Boxhill
+            properties.Origin = new MetlinkNode(18536, this.provider); // abbotsford interchange
 
-                properties.Planner = new MoeaRoutePlanner(properties);
+            // properties.Origin = new MetlinkNode(19965, provider); // Coburg
+            // properties.Destination = new MetlinkNode(20039, provider); //ascot vale
+            // properties.Origin = new MetlinkNode(19036,provider); //Cotham (o)
+            // properties.Destination = new MetlinkNode(19943, provider); // Caulfielsd
+            // properties.Destination = new MetlinkNode(19933, provider); // Darebinor whateves
+            // properties.Destination = new MetlinkNode(19394,provider); // other kew
+            properties.Destination = new MetlinkNode(4141, this.provider); // Jolimont
 
-                properties.Planner.Start();
-				for(int i = 0; i < 100; i++)
-				{
-                    properties.Planner.SolveStep();	
-				}
-		}
-		
-		[Test]
-		public void TestSingleTramRoutes()
-		{
-		    var tests = new List<KeyValuePair<Route, TransportTimeSpan>>();
+            // properties.Destination = new MetlinkNode(628,metlinkProvider);
+            // new TerminalNode(-1, destination);
+            // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
+            // properties.Origin = new MetlinkNode(19965, metlinkProvider);//
+            // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
 
-            
-            //Single Legs
+            // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
+            properties.Destination.RetrieveData();
+            properties.Origin.RetrieveData();
+            properties.Objectives = new[]
+                {
+                    FitnessParameter.TotalJourneyTime, FitnessParameter.DiversityMetric, FitnessParameter.TotalTravelTime
+                };
 
-		    var bus512Route = new Route(512, new[]
-		                                         {
-		                                             new MetlinkNode(9335, provider),
-		                                             new MetlinkNode(9334, provider),
-		                                             new MetlinkNode(9333, provider),
-		                                             new MetlinkNode(9332, provider),
-		                                             new MetlinkNode(9331, provider),
-		                                             new MetlinkNode(9330, provider),
-		                                             new MetlinkNode(9329, provider),
-		                                             new MetlinkNode(9328, provider),
-		                                             new MetlinkNode(9327, provider),
-		                                             new MetlinkNode(9326, provider),
-		                                             new MetlinkNode(9325, provider),
-		                                             new MetlinkNode(9324, provider),
-		                                             new MetlinkNode(9323, provider),
-		                                             new MetlinkNode(20754, provider),
-		                                             new MetlinkNode(9321, provider),
-		                                             new MetlinkNode(9320, provider),
-		                                             new MetlinkNode(9319, provider),
-		                                             new MetlinkNode(9318, provider),
-		                                             new MetlinkNode(9317, provider),
-		                                             new MetlinkNode(9316, provider),
-		                                             new MetlinkNode(21267, provider),
-		                                             new MetlinkNode(21268, provider),
-		                                             new MetlinkNode(9315, provider),
-		                                             new MetlinkNode(20755, provider),
-		                                             new MetlinkNode(9314, provider),
-		                                             new MetlinkNode(9313, provider),
-		                                             new MetlinkNode(9312, provider),
-		                                             new MetlinkNode(20756, provider),
-		                                             new MetlinkNode(9310, provider),
-		                                             new MetlinkNode(20757, provider)
-		                                         });
+            properties.Database.Open();
+
+            // properties.DataStructures = new DataStructures(properties);
+            properties.Planner = new MoeaRoutePlanner(properties);
+
+            properties.Planner.Start();
+            for (int i = 0; i < 100; i++)
+            {
+                properties.Planner.SolveStep();
+            }
+        }
+
+        /// <summary>
+        /// The test single tram routes.
+        /// </summary>
+        [Test]
+        public void TestSingleTramRoutes()
+        {
+            var tests = new List<KeyValuePair<Route, TransportTimeSpan>>();
+
+            // Single Legs
+            var bus512Route = new Route(
+                512, 
+                new[]
+                    {
+                        new MetlinkNode(9335, this.provider), new MetlinkNode(9334, this.provider), 
+                        new MetlinkNode(9333, this.provider), new MetlinkNode(9332, this.provider), 
+                        new MetlinkNode(9331, this.provider), new MetlinkNode(9330, this.provider), 
+                        new MetlinkNode(9329, this.provider), new MetlinkNode(9328, this.provider), 
+                        new MetlinkNode(9327, this.provider), new MetlinkNode(9326, this.provider), 
+                        new MetlinkNode(9325, this.provider), new MetlinkNode(9324, this.provider), 
+                        new MetlinkNode(9323, this.provider), new MetlinkNode(20754, this.provider), 
+                        new MetlinkNode(9321, this.provider), new MetlinkNode(9320, this.provider), 
+                        new MetlinkNode(9319, this.provider), new MetlinkNode(9318, this.provider), 
+                        new MetlinkNode(9317, this.provider), new MetlinkNode(9316, this.provider), 
+                        new MetlinkNode(21267, this.provider), new MetlinkNode(21268, this.provider), 
+                        new MetlinkNode(9315, this.provider), new MetlinkNode(20755, this.provider), 
+                        new MetlinkNode(9314, this.provider), new MetlinkNode(9313, this.provider), 
+                        new MetlinkNode(9312, this.provider), new MetlinkNode(20756, this.provider), 
+                        new MetlinkNode(9310, this.provider), new MetlinkNode(20757, this.provider)
+                    });
+
             /*
             var tram19Route = new Route(19,new []
                 {
@@ -391,19 +457,18 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
 			//};
 
              */
-		    var expressTest = new Route(-1)
-		        {
-		            
-                     new MetlinkNode(19975 ,provider),
-                     new MetlinkNode(19974 ,provider),
-                     new MetlinkNode(20019 ,provider),
-                     new MetlinkNode(20017 ,provider),
-                     new MetlinkNode(20016 ,provider),
-                     new MetlinkNode(20015 ,provider),
-                     new MetlinkNode(20014 ,provider),
-                     new MetlinkNode(20013 ,provider)
+            var expressTest = new Route(-1)
+                {
+                    new MetlinkNode(19975, this.provider), 
+                    new MetlinkNode(19974, this.provider), 
+                    new MetlinkNode(20019, this.provider), 
+                    new MetlinkNode(20017, this.provider), 
+                    new MetlinkNode(20016, this.provider), 
+                    new MetlinkNode(20015, this.provider), 
+                    new MetlinkNode(20014, this.provider), 
+                    new MetlinkNode(20013, this.provider)
+                };
 
-		        };
             /*
 		    var bigTest = new Route(-1)
 		        {
@@ -444,23 +509,21 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 bigTest , new TransportTimeSpan { WaitingTime = new TimeSpan(0, 10, 0), TravelTime = new TimeSpan(0, 45, 0) }));
             */
             tests.Add(new KeyValuePair<Route, TransportTimeSpan>(bus512Route, new TransportTimeSpan()));
-            
+
             var properties = new EvolutionaryProperties();
-           
-			
-			
-			properties.NetworkDataProviders = new [] {provider};
-            properties.PointDataProviders = new [] {new WalkingDataProvider()};
+
+            properties.NetworkDataProviders = new[] { this.provider };
+            properties.PointDataProviders = new[] { new WalkingDataProvider() };
             AlFitnessFunction target;
-            properties.FitnessFunction = target = new AlFitnessFunction(properties); 
-            
+            properties.FitnessFunction = target = new AlFitnessFunction(properties);
+
             DateTime initialDepart = DateTime.Parse("8/08/2012 3:00 PM");
             foreach (var keyValuePair in tests)
             {
-                Console.WriteLine("Getting fitness from {0} to {1}",keyValuePair.Key.First(),keyValuePair.Key.Last());
-				var actual = target.GetFitness(keyValuePair.Key, initialDepart);
-                Assert.AreEqual(keyValuePair.Value.TotalTime,actual.TotalJourneyTime);
-            }		
+                Console.WriteLine("Getting fitness from {0} to {1}", keyValuePair.Key.First(), keyValuePair.Key.Last());
+                var actual = target.GetFitness(keyValuePair.Key, initialDepart);
+                Assert.AreEqual(keyValuePair.Value.TotalTime, actual.TotalJourneyTime);
+            }
 
             for (int i = 0; i < 24; i++)
             {
@@ -468,57 +531,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 var actual = target.GetFitness(expressTest, newDepart);
                 Assert.That(actual.TotalTravelTime == TimeSpan.FromMinutes(13));
                 Assert.That(actual.TotalWaitingTime < TimeSpan.FromMinutes(30));
-
             }
-		}
-
-        [Test]
-        public void TestMultiModeRoutes()
-        {
-            var properties = new EvolutionaryProperties();
-            properties.NetworkDataProviders = new [] {provider};
-            properties.PointDataProviders = new [] {new WalkingDataProvider()};
-            AlFitnessFunction target;
-            properties.FitnessFunction = target = new AlFitnessFunction(properties); 
-            
-            //LineID    LineMainID  LineDesc    DirectionDesc   LineFrom    LineTo  
-            //3984      1695        903i        To Altona       Mordialloc  Altona      
-            //3985      1695        903o        To Mordialloc   Altona      Mordialloc   
-
-            //Train: Coburg Station 19965 --> Walk
-            // Bus:Coburg Station -- 2262-->18773 Essendon Station
-            // Train 
-            var route1 = new Route(-1)
-            {
-                new MetlinkNode(19965,provider),
-
-                //new MetlinkNode(2262,provider), 
-                //new MetlinkNode(2263,provider), 
-                new MetlinkNode(2262,provider), 
-                new MetlinkNode(10037,provider), 
-                new MetlinkNode(10036,provider), 
-                new MetlinkNode(10035,provider), 
-                new MetlinkNode(10034,provider), 
-                new MetlinkNode(10033,provider), 
-                new MetlinkNode(10032,provider), 
-                new MetlinkNode(40895,provider), 
-                new MetlinkNode(40896,provider), 
-                new MetlinkNode(40897,provider), 
-                new MetlinkNode(40898,provider), 
-                new MetlinkNode(9089,provider), 
-                new MetlinkNode(9088,provider), 
-                new MetlinkNode(18773,provider), 
-
-                new MetlinkNode(20037,provider), 
-                new MetlinkNode(20038,provider), 
-                new MetlinkNode(20039,provider), 
-            };
-
-
-            DateTime initialDepart = DateTime.Parse("8/08/2012 6:00 PM");
-            var actual = target.GetFitness(route1, initialDepart);
-            Assert.AreEqual(41, actual.TotalJourneyTime.Minutes);
         }
-	}
-}
 
+        #endregion
+    }
+}

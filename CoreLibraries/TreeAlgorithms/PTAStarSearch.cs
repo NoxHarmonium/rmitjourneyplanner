@@ -1,84 +1,160 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PTAStarSearch.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PTAStarSearch.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   TODO: Update summary.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    #region Using Directives
 
-    using RmitJourneyPlanner.CoreLibraries.Comparers;
+    using System.Linq;
+
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
-    using RmitJourneyPlanner.CoreLibraries.Types;
+
+    #endregion
 
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class PTAStarSearch : PTDepthFirstSearch
     {
-        private readonly INetworkDataProvider provider;
+        #region Constants and Fields
 
+        /// <summary>
+        ///   The properties.
+        /// </summary>
         private readonly EvolutionaryProperties properties;
 
-        public PTAStarSearch(int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
+        /// <summary>
+        ///   The provider.
+        /// </summary>
+        private readonly INetworkDataProvider provider;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PTAStarSearch"/> class.
+        /// </summary>
+        /// <param name="depth">
+        /// The depth.
+        /// </param>
+        /// <param name="bidirectional">
+        /// The bidirectional.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="origin">
+        /// The origin.
+        /// </param>
+        /// <param name="goal">
+        /// The goal.
+        /// </param>
+        public PTAStarSearch(
+            int depth, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode goal)
             : base(depth, bidirectional, provider, origin, goal)
         {
-           
             this.provider = provider;
         }
 
-        public PTAStarSearch(bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PTAStarSearch"/> class.
+        /// </summary>
+        /// <param name="bidirectional">
+        /// The bidirectional.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="origin">
+        /// The origin.
+        /// </param>
+        /// <param name="destination">
+        /// The destination.
+        /// </param>
+        public PTAStarSearch(
+            bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
             : base(bidirectional, provider, origin, destination)
         {
-           
             this.provider = provider;
         }
 
-        public PTAStarSearch(EvolutionaryProperties properties, bool bidirectional, INetworkDataProvider provider, INetworkNode origin, INetworkNode destination)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PTAStarSearch"/> class.
+        /// </summary>
+        /// <param name="properties">
+        /// The properties.
+        /// </param>
+        /// <param name="bidirectional">
+        /// The bidirectional.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="origin">
+        /// The origin.
+        /// </param>
+        /// <param name="destination">
+        /// The destination.
+        /// </param>
+        public PTAStarSearch(
+            EvolutionaryProperties properties, 
+            bool bidirectional, 
+            INetworkDataProvider provider, 
+            INetworkNode origin, 
+            INetworkNode destination)
             : base(bidirectional, provider, origin, destination)
         {
-           
             this.provider = provider;
             this.properties = properties;
-            
         }
 
+        #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// The order children.
+        /// </summary>
+        /// <param name="nodes">
+        /// The nodes.
+        /// </param>
+        /// <returns>
+        /// </returns>
         protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
-            //nodes = base.OrderChildren(nodes);
-            var target = (Location)(CurrentIndex == 0 ? this.Destination : this.Origin);
+            // nodes = base.OrderChildren(nodes);
+            var target = (Location)(this.CurrentIndex == 0 ? this.Destination : this.Origin);
 
             foreach (var wrapper in nodes)
             {
-
                 wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, target);
-                //wrapper.EuclidianDistance = 1;
-                if (((MetlinkDataProvider)provider).RoutesIntersect(wrapper.Node, this.current[0].Node))
+
+                // wrapper.EuclidianDistance = 1;
+                if (((MetlinkDataProvider)this.provider).RoutesIntersect(wrapper.Node, this.current[0].Node))
                 {
-                   //wrapper.EuclidianDistance *= 0.5; //best
+                    // wrapper.EuclidianDistance *= 0.5; //best
                     wrapper.EuclidianDistance *= 0.5;
-
                 }
-                   
-                
-
-                
-
             }
 
-            //Array.Sort(nodes, new NodeComparer());
-            //Array.Reverse(nodes);
-            nodes.StochasticSort(Entropy);
+            // Array.Sort(nodes, new NodeComparer());
+            // Array.Reverse(nodes);
+            nodes.StochasticSort(this.Entropy);
 
             return nodes.Reverse().ToArray();
         }
+
+        #endregion
     }
 }

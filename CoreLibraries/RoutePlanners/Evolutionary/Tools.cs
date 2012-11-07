@@ -1,14 +1,19 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Tools.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   A collection of static tools for use by the evolutionary route planner.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
-    #region
+    #region Using Directives
 
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
@@ -19,22 +24,51 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     #endregion
 
     /// <summary>
-    ///   A collection of static tools for use by the evolutionary route planner.
+    /// A collection of static tools for use by the evolutionary route planner.
     /// </summary>
     public static class Tools
     {
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   The save population.
+        /// Clamps a specified value between the bounds l and u.
         /// </summary>
-        /// <param name="population"> The population. </param>
-        /// <param name="generation"> The generation. </param>
-        /// <param name="properties"> The properties. </param>
-        /// <param name="filename">The filename. </param>
-        public static void SavePopulation(List<Critter> population, int generation, EvolutionaryProperties properties, string filename)
+        /// <param name="value">
+        /// The value that is to be clamped.
+        /// </param>
+        /// <param name="l">
+        /// The lower bounds of the clamp.
+        /// </param>
+        /// <param name="u">
+        /// The upper bounds of the clamp.
+        /// </param>
+        /// <returns>
+        /// The clamped value.
+        /// </returns>
+        public static double Clamp(double value, double l = 0, double u = 1)
         {
-            //Console.ForegroundColor = ConsoleColor.Green;
+            return Math.Min(Math.Max(value, l), u);
+        }
+
+        /// <summary>
+        /// The save population.
+        /// </summary>
+        /// <param name="population">
+        /// The population. 
+        /// </param>
+        /// <param name="generation">
+        /// The generation. 
+        /// </param>
+        /// <param name="properties">
+        /// The properties. 
+        /// </param>
+        /// <param name="filename">
+        /// The filename. 
+        /// </param>
+        public static void SavePopulation(
+            List<Critter> population, int generation, EvolutionaryProperties properties, string filename)
+        {
+            // Console.ForegroundColor = ConsoleColor.Green;
 
             // List<KeyValuePair<List<int>, TimeSpan>> kvps = population.ToList();
             // kvps.Sort((x, y) => x.Value.CompareTo(y.Value));
@@ -44,7 +78,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 // Console.WriteLine("{0} : {1}", kvp.UnifiedFitnessScore, kvp.Key.Count);
                 string file = filename;
-                           
+
                 string markerCode = string.Empty;
                 foreach (NodeWrapper<INetworkNode> t in kvp.Route)
                 {
@@ -52,15 +86,15 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     TimeSpan time = t.TotalTime;
 
                     string latlng = string.Format(
-                        "new google.maps.LatLng({0},{1})",
-                        properties.NetworkDataProviders[0].GetNodeFromId(key).Latitude,
+                        "new google.maps.LatLng({0},{1})", 
+                        properties.NetworkDataProviders[0].GetNodeFromId(key).Latitude, 
                         properties.NetworkDataProviders[0].GetNodeFromId(key).Longitude);
                     markerCode +=
                         string.Format(
-                            "var marker = new google.maps.Marker({{position: {0}, map: map,title:\"{1}: {2} ({3})\"}});\n",
-                            latlng,
-                            key,
-                            time.ToString(),
+                            "var marker = new google.maps.Marker({{position: {0}, map: map,title:\"{1}: {2} ({3})\"}});\n", 
+                            latlng, 
+                            key, 
+                            time.ToString(), 
                             ((MetlinkNode)properties.NetworkDataProviders[0].GetNodeFromId(key)).StopSpecName);
                 }
 
@@ -95,10 +129,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        ///   Converts a list of nodes into a linked list of nodes.
+        /// Converts a list of nodes into a linked list of nodes.
         /// </summary>
-        /// <param name="nodes"> The nodes to convert. </param>
-        /// <returns> A node that is the head of the linked list. </returns>
+        /// <param name="nodes">
+        /// The nodes to convert. 
+        /// </param>
+        /// <returns>
+        /// A node that is the head of the linked list. 
+        /// </returns>
         public static INetworkNode ToLinkedNodes(List<INetworkNode> nodes)
         {
             INetworkNode prev = null;
@@ -117,30 +155,16 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     prev = newNode;
                 }
             }
+
             /*
             if (prev != null && prev.Parent != null && prev.TotalTime < prev.Parent.TotalTime)
             {
                 throw new Exception("This should not happen");
             }
              * */
-
             return prev;
         }
 
-        /// <summary>
-        /// Clamps a specified value between the bounds l and u.
-        /// </summary>
-        /// <param name="value">The value that is to be clamped.</param>
-        /// <param name="l">The lower bounds of the clamp.</param>
-        /// <param name="u">The upper bounds of the clamp.</param>
-        /// <returns>The clamped value.</returns>
-        public static double Clamp(double value, double l = 0, double u = 1)
-        {
-
-            return Math.Min(Math.Max(value, l),u);
-
-
-        }
         #endregion
     }
 }

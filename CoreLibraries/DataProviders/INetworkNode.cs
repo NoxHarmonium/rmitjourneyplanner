@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="INetworkNode.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Represents a node in a transport network such a train station or tram stop.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 {
-    #region
+    #region Using Directives
 
     using System;
 
@@ -13,16 +19,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     #endregion
 
     /// <summary>
-    ///   Represents a node in a transport network such a train station or tram stop.
+    /// Represents a node in a transport network such a train station or tram stop.
     /// </summary>
     public interface INetworkNode : IEquatable<INetworkNode>, ICloneable, INode
     {
         #region Public Properties
-
-        /// <summary>
-        ///   Gets or sets the current route that the node is traversing.
-        /// </summary>
-        int RouteId { get; set; }
 
         /// <summary>
         ///   Gets a unique identifier for this node inside of it's network.
@@ -39,13 +40,16 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// </summary>
         double Longitude { get; }
 
-      
-
         /// <summary>
         ///   Gets the DataProvider that the node belongs to.
         /// </summary>
         INetworkDataProvider Provider { get; }
-       
+
+        /// <summary>
+        ///   Gets or sets the current route that the node is traversing.
+        /// </summary>
+        int RouteId { get; set; }
+
         /// <summary>
         ///   Gets or sets the type of transport this node services.
         /// </summary>
@@ -53,10 +57,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   Loads the properties of the node from the parent.
+        /// Loads the properties of the node from the parent.
         /// </summary>
         void RetrieveData();
 

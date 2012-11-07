@@ -1,12 +1,17 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AssemblyInfo.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   AssemblyInfo.cs
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
-#region
+#region Using Directives
 
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 #endregion
@@ -14,7 +19,6 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-
 [assembly: AssemblyTitle("RMIT Journey Planner Core Libraries")]
 [assembly: AssemblyDescription("Main functionality of the jouney planner")]
 [assembly: AssemblyConfiguration("")]
@@ -27,11 +31,9 @@ using System.Runtime.InteropServices;
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
-
 [assembly: ComVisible(false)]
 
 // The following GUID is for the Id of the typelib if this project is exposed to COM
-
 [assembly: Guid("c00ef972-b2f3-4562-8fdc-830958685ac6")]
 
 // Version information for an assembly consists of the following four values:
@@ -42,7 +44,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-
 [assembly: AssemblyVersion("0.0.0.4")]
 [assembly: AssemblyFileVersion("0.0.0.4")]
 

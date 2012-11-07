@@ -1,20 +1,26 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TerminalNode.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   A special class that is used to define terminal points. Used to make mixing nodes and location points easier, basically a wrapper for a Location class.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 {
-    #region
+    #region Using Directives
 
     using System;
 
     using RmitJourneyPlanner.CoreLibraries.Positioning;
-	using RmitJourneyPlanner.CoreLibraries.Types;
+    using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
 
     /// <summary>
-    ///   A special class that is used to define terminal points. Used to make mixing nodes and location points easier, basically a wrapper for a Location class.
+    /// A special class that is used to define terminal points. Used to make mixing nodes and location points easier, basically a wrapper for a Location class.
     /// </summary>
     public class TerminalNode : Location, INetworkNode
     {
@@ -30,11 +36,17 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="TerminalNode" /> class using a latitude and longitude.
+        /// Initializes a new instance of the <see cref="TerminalNode"/> class using a latitude and longitude.
         /// </summary>
-        /// <param name="id"> A unique identifier for this node. </param>
-        /// <param name="latitude"> The latitude value of the this node. </param>
-        /// <param name="longitude"> The longitude value of this node. </param>
+        /// <param name="id">
+        /// A unique identifier for this node. 
+        /// </param>
+        /// <param name="latitude">
+        /// The latitude value of the this node. 
+        /// </param>
+        /// <param name="longitude">
+        /// The longitude value of this node. 
+        /// </param>
         public TerminalNode(int id, double latitude, double longitude)
             : base(latitude, longitude)
         {
@@ -42,10 +54,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="TerminalNode" /> class using a location string which is interpreted by the Google Maps API.
+        /// Initializes a new instance of the <see cref="TerminalNode"/> class using a location string which is interpreted by the Google Maps API.
         /// </summary>
-        /// <param name="id"> A unique identifier for this node. </param>
-        /// <param name="locationString"> The location string that will be parsed by the Google Maps API to get a latitude and longitude. </param>
+        /// <param name="id">
+        /// A unique identifier for this node. 
+        /// </param>
+        /// <param name="locationString">
+        /// The location string that will be parsed by the Google Maps API to get a latitude and longitude. 
+        /// </param>
         public TerminalNode(int id, string locationString)
             : base(locationString)
         {
@@ -55,21 +71,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        ///   Gets or sets the current route of a terminal node which is always an empty string.
-        /// </summary>
-        public int RouteId
-        {
-            get
-            {
-                return -1;
-            }
-
-            set
-            {
-            }
-        }
 
         /// <summary>
         ///   Gets or sets the Euclidian distance to the goal. Used for traversing route trees.
@@ -103,7 +104,20 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             }
         }
 
-        
+        /// <summary>
+        ///   Gets or sets the current route of a terminal node which is always an empty string.
+        /// </summary>
+        public int RouteId
+        {
+            get
+            {
+                return -1;
+            }
+
+            set
+            {
+            }
+        }
 
         /// <summary>
         ///   Gets or sets the total time taken to get to the terminal node.
@@ -117,12 +131,38 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
 
         #endregion
 
-        #region Public Methods
+        #region Explicit Interface Properties
 
         /// <summary>
-        ///   Creates a new terminal node with the same properties.
+        ///   Gets or sets Parent.
         /// </summary>
-        /// <returns> The clone. </returns>
+        /// <exception cref = "NotImplementedException">
+        /// </exception>
+        /// <exception cref = "NotImplementedException">
+        /// </exception>
+        INode INode.Parent
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// Creates a new terminal node with the same properties.
+        /// </summary>
+        /// <returns>
+        /// The clone. 
+        /// </returns>
         public object Clone()
         {
             var newNode = new TerminalNode(this.id, this.Latitude, this.Longitude) { TotalTime = this.TotalTime };
@@ -130,16 +170,20 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
         /// <summary>
-        ///   Returns if 2 terminal nodes are equal.
+        /// Returns if 2 terminal nodes are equal.
         /// </summary>
-        /// <param name="obj"> The object to compare this node to. </param>
-        /// <returns> The equals. </returns>
+        /// <param name="obj">
+        /// The object to compare this node to. 
+        /// </param>
+        /// <returns>
+        /// The equals. 
+        /// </returns>
         public override bool Equals(object obj)
         {
             var networkNode = obj as INetworkNode;
             if (networkNode != null)
             {
-                if ((networkNode).Id == this.id)
+                if (networkNode.Id == this.id)
                 {
                     return true;
                 }
@@ -149,43 +193,37 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         }
 
         /// <summary>
-        ///   Determines if this node is equal to another.
+        /// Determines if this node is equal to another.
         /// </summary>
-        /// <param name="other"> The node to compare this node to. </param>
-        /// <returns> The equals. </returns>
+        /// <param name="other">
+        /// The node to compare this node to. 
+        /// </param>
+        /// <returns>
+        /// The equals. 
+        /// </returns>
         public bool Equals(INetworkNode other)
         {
             return this.Equals((object)other);
         }
 
         /// <summary>
-        ///   Gets the unique identifier for a terminal node.
+        /// Gets the unique identifier for a terminal node.
         /// </summary>
-        /// <returns> The get hash code. </returns>
+        /// <returns>
+        /// The get hash code. 
+        /// </returns>
         public override int GetHashCode()
         {
             return this.id.GetHashCode();
         }
 
         /// <summary>
-        ///   This method does nothing in a terminal node.
+        /// This method does nothing in a terminal node.
         /// </summary>
         public void RetrieveData()
         {
         }
 
         #endregion
-
-        Types.INode Types.INode.Parent
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
     }
 }

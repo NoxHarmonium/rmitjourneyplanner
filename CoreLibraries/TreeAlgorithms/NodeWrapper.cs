@@ -1,62 +1,82 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Node.cs" company="">
-// TODO: Update copyright text.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="NodeWrapper.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
 // </copyright>
-// -----------------------------------------------------------------------
+// <summary>
+//   Represents a generic node for use in route searches.
+//   Basically a wrapper for a generic type to give it a unique address for referencing.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    #region Using Directives
 
-    using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using System;
+
+    #endregion
 
     /// <summary>
     /// Represents a generic node for use in route searches. 
-    /// Basically a wrapper for a generic type to give it a unique address for referencing.
+    ///   Basically a wrapper for a generic type to give it a unique address for referencing.
     /// </summary>
+    /// <typeparam name="T">
+    /// </typeparam>
     public class NodeWrapper<T> : ICloneable
     {
-        private readonly T node;
-
-        private Guid guid;
+        #region Constants and Fields
 
         /// <summary>
-        /// Creates a new instance of the NodeWrapper class.
+        ///   The node.
         /// </summary>
-        /// <param name="node"></param>
+        private readonly T node;
+
+        /// <summary>
+        ///   The guid.
+        /// </summary>
+        private Guid guid;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodeWrapper{T}"/> class. 
+        ///   Creates a new instance of the NodeWrapper class.
+        /// </summary>
+        /// <param name="node">
+        /// </param>
         public NodeWrapper(T node)
         {
             this.node = node;
             this.Cost = 0;
-            guid = Guid.NewGuid();
+            this.guid = Guid.NewGuid();
         }
 
         /// <summary>
-        /// Creates a new instance of the NodeWrapper class.
+        /// Initializes a new instance of the <see cref="NodeWrapper{T}"/> class. 
+        ///   Creates a new instance of the NodeWrapper class.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="cost"></param>
+        /// <param name="node">
+        /// </param>
+        /// <param name="cost">
+        /// </param>
         public NodeWrapper(T node, double cost)
         {
             this.node = node;
             this.Cost = cost;
-            guid = Guid.NewGuid();
-
+            this.guid = Guid.NewGuid();
         }
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
-        /// Gets the internal node represented by the wrapper.
+        ///   Gets or sets the cost associated with this wrapper.
         /// </summary>
-        public T Node
-        {
-            get
-            {
-                return this.node;
-            }
-        }
+        public double Cost { get; set; }
 
         /// <summary>
         ///   Gets or sets the current route that the node is traversing.
@@ -69,21 +89,47 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         public double EuclidianDistance { get; set; }
 
         /// <summary>
+        ///   Gets the internal node represented by the wrapper.
+        /// </summary>
+        public T Node
+        {
+            get
+            {
+                return this.node;
+            }
+        }
+
+        /// <summary>
         ///   Gets or sets the total time taken to reach this node. Used for traversing route trees.
         /// </summary>
         public TimeSpan TotalTime { get; set; }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Gets or sets the cost associated with this wrapper.
+        /// The clone.
         /// </summary>
-        public double Cost { get; set; }
-		public override string ToString ()
-		{
-			return string.Format ("[NodeWrapper: node={0}]", node);
-		}
-      public object Clone()
+        /// <returns>
+        /// The clone.
+        /// </returns>
+        public object Clone()
         {
             return new NodeWrapper<T>(this.node, this.Cost);
         }
+
+        /// <summary>
+        /// The to string.
+        /// </summary>
+        /// <returns>
+        /// The to string.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format("[NodeWrapper: node={0}]", this.node);
+        }
+
+        #endregion
     }
 }

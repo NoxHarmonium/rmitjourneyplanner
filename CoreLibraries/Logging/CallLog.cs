@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CallLog.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Records the calling methods of a given method.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Logging
 {
-    #region
+    #region Using Directives
 
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -14,7 +20,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Logging
     #endregion
 
     /// <summary>
-    ///   Records the calling methods of a given method.
+    /// Records the calling methods of a given method.
     /// </summary>
     public class CallLog
     {
@@ -27,30 +33,30 @@ namespace RmitJourneyPlanner.CoreLibraries.Logging
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   Log the calling method of the method that calls this method.
+        /// Log the calling method of the method that calls this method.
         /// </summary>
         public void Log()
         {
             var st = new StackTrace(true);
 
             string name = string.Format(
-                "{0}({1}).{2}({3}).{4}({5}).{6}({7}).{8}({9}).{10}({11}).{12}({13})",
-                st.GetFrame(8).GetMethod().Name,
-                st.GetFrame(8).GetFileLineNumber(),
-                st.GetFrame(7).GetMethod().Name,
-                st.GetFrame(7).GetFileLineNumber(),
-                st.GetFrame(6).GetMethod().Name,
-                st.GetFrame(6).GetFileLineNumber(),
-                st.GetFrame(5).GetMethod().Name,
-                st.GetFrame(5).GetFileLineNumber(),
-                st.GetFrame(4).GetMethod().Name,
-                st.GetFrame(4).GetFileLineNumber(),
-                st.GetFrame(3).GetMethod().Name,
-                st.GetFrame(3).GetFileLineNumber(),
-                st.GetFrame(2).GetMethod().Name,
+                "{0}({1}).{2}({3}).{4}({5}).{6}({7}).{8}({9}).{10}({11}).{12}({13})", 
+                st.GetFrame(8).GetMethod().Name, 
+                st.GetFrame(8).GetFileLineNumber(), 
+                st.GetFrame(7).GetMethod().Name, 
+                st.GetFrame(7).GetFileLineNumber(), 
+                st.GetFrame(6).GetMethod().Name, 
+                st.GetFrame(6).GetFileLineNumber(), 
+                st.GetFrame(5).GetMethod().Name, 
+                st.GetFrame(5).GetFileLineNumber(), 
+                st.GetFrame(4).GetMethod().Name, 
+                st.GetFrame(4).GetFileLineNumber(), 
+                st.GetFrame(3).GetMethod().Name, 
+                st.GetFrame(3).GetFileLineNumber(), 
+                st.GetFrame(2).GetMethod().Name, 
                 st.GetFrame(2).GetFileLineNumber());
 
             if (!this.dict.ContainsKey(name))
@@ -62,13 +68,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Logging
         }
 
         /// <summary>
-        ///   Returns the recorded values.
+        /// Returns the recorded values.
         /// </summary>
-        /// <returns> The to string. </returns>
+        /// <returns>
+        /// The to string. 
+        /// </returns>
         public override string ToString()
         {
             return this.dict.Aggregate(
-                string.Empty,
+                string.Empty, 
                 (current, kvp) => current + (kvp.Key + ": " + kvp.Value.ToString(CultureInfo.InvariantCulture) + "\n"));
         }
 

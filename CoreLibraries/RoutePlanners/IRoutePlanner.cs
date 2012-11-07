@@ -1,12 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IRoutePlanner.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   A route planner takes a list of nodes and joins them up using the provided transport networks.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
 {
-    #region
-
-    using System.Collections.Generic;
+    #region Using Directives
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
@@ -15,11 +19,21 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
     #endregion
 
     /// <summary>
-    ///   A route planner takes a list of nodes and joins them up using the provided transport networks.
+    /// A route planner takes a list of nodes and joins them up using the provided transport networks.
     /// </summary>
     public interface IRoutePlanner
     {
         #region Public Properties
+
+        /// <summary>
+        ///   Gets the current iteration the route planner is on.
+        /// </summary>
+        int Iteration { get; }
+
+        /// <summary>
+        ///   Gets the result of the last iteration.
+        /// </summary>
+        Result IterationResult { get; }
 
         /// <summary>
         ///   Gets the population of the algorithm.
@@ -27,43 +41,38 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         Population Population { get; }
 
         /// <summary>
-        /// Gets the data structure that holds all the properties related to route planning.
+        ///   Gets the data structure that holds all the properties related to route planning.
         /// </summary>
         EvolutionaryProperties Properties { get; }
 
-        /// <summary>
-        /// Gets the current iteration the route planner is on.
-        /// </summary>
-        int Iteration { get;}
-
-        /// <summary>
-        /// Gets the result of the last iteration.
-        /// </summary>
-        Result IterationResult { get; }
         #endregion
 
-        #region Public Methods
+        #region Public Methods and Operators
 
         /// <summary>
-        ///   Register a network data provider to use with the route planning.
+        /// Register a network data provider to use with the route planning.
         /// </summary>
-        /// <param name="provider"> </param>
+        /// <param name="provider">
+        /// </param>
         void RegisterNetworkDataProvider(INetworkDataProvider provider);
 
         /// <summary>
-        ///   Register a point to point data provider for use with the route planning.
+        /// Register a point to point data provider for use with the route planning.
         /// </summary>
-        /// <param name="provider"> </param>
+        /// <param name="provider">
+        /// </param>
         void RegisterPointDataProvider(IPointDataProvider provider);
 
         /// <summary>
-        ///   Solve the next iteration of the algorithm.
+        /// Solve the next iteration of the algorithm.
         /// </summary>
-        /// <returns> The solve step. </returns>
+        /// <returns>
+        /// The solve step. 
+        /// </returns>
         bool SolveStep();
 
         /// <summary>
-        ///   Start solving a route
+        /// Start solving a route
         /// </summary>
         void Start();
 

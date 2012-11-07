@@ -1,33 +1,39 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="EvolutionaryProperties.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Contains the properties related to a journey planning run.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
-    #region
+    #region Using Directives
 
     using System;
-    using System.Collections.Generic;
 
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
 
     /// <summary>
-    ///   Contains the properties related to one instance of an <see cref="EvolutionaryRoutePlanner" /> .
+    /// Contains the properties related to a journey planning run.
     /// </summary>
     public class EvolutionaryProperties : ICloneable
     {
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="EvolutionaryProperties" /> class.
+        ///   Initializes a new instance of the <see cref = "EvolutionaryProperties" /> class.
         /// </summary>
         public EvolutionaryProperties()
         {
-            this.NetworkDataProviders = new INetworkDataProvider[0];//new List<INetworkDataProvider>();
+            this.NetworkDataProviders = new INetworkDataProvider[0]; // new List<INetworkDataProvider>();
             this.PointDataProviders = new IPointDataProvider[0];
             this.Objectives = new FitnessParameter[0];
         }
@@ -37,12 +43,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the infection rate.
-        /// </summary>
-        public double InfectionRate { get; set; }   
-    
-        /// <summary>
-        /// Gets or sets whether route generation should be bi-directional or not.
+        ///   Gets or sets whether route generation should be bi-directional or not.
         /// </summary>
         public bool Bidirectional { get; set; }
 
@@ -77,9 +78,19 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         public IFitnessFunction FitnessFunction { get; set; }
 
         /// <summary>
+        ///   Gets or sets the infection rate.
+        /// </summary>
+        public double InfectionRate { get; set; }
+
+        /// <summary>
         ///   Gets or sets MaxDistance.
         /// </summary>
         public double MaxDistance { get; set; }
+
+        /// <summary>
+        ///   Gets or sers the maximum number of iterations that the journey optimisation can run for.
+        /// </summary>
+        public int MaxIterations { get; set; }
 
         /// <summary>
         ///   Gets or sets the maximum distance that can be walked.
@@ -107,9 +118,19 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         public int NumberToKeep { get; set; }
 
         /// <summary>
+        ///   Gets or sets the objectives used in the optimisation.
+        /// </summary>
+        public FitnessParameter[] Objectives { get; set; }
+
+        /// <summary>
         ///   Gets or sets the origin of the route.
         /// </summary>
         public INetworkNode Origin { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the route planner used to optimise the journey.
+        /// </summary>
+        public IRoutePlanner Planner { get; set; }
 
         /// <summary>
         ///   Gets or sets a list of point to point data providers used to solve the route.
@@ -137,65 +158,54 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         public IRouteGenerator RouteGenerator { get; set; }
 
         /// <summary>
-        /// Gets or sets the route planner used to optimise the journey.
+        ///   Gets or sets the type of the search.
         /// </summary>
-        public IRoutePlanner Planner { get; set; }
-
-        /// <summary>
-        /// Gets or sers the maximum number of iterations that the journey optimisation can run for.
-        /// </summary>
-        public int MaxIterations { get; set; }
-
-        /// <summary>
-        /// Gets or sets the objectives used in the optimisation.
-        /// </summary>
-        public Types.FitnessParameter[] Objectives { get; set; }
-		
-		/// <summary>
-		/// Gets or sets the type of the search.
-		/// </summary>
-		/// <value>
-		/// The type of the search.
-		/// </value>
-		public RouteGenerators.SearchType SearchType {get;set;}
+        /// <value>
+        ///   The type of the search.
+        /// </value>
+        public SearchType SearchType { get; set; }
 
         #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// Returns a clone of this object.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// The clone.
+        /// </returns>
         public object Clone()
         {
             return new EvolutionaryProperties
                 {
-                    Bidirectional = this.Bidirectional,
-                    Breeder = this.Breeder,
-                    CrossoverRate = this.CrossoverRate,
-                    Database = this.Database,
-                    DepartureTime = this.DepartureTime,
-                    Destination = this.Destination,
-                    FitnessFunction = this.FitnessFunction,
-                    MaxDistance = this.MaxDistance,
-                    MaximumWalkDistance = this.MaximumWalkDistance,
-                    MutationRate = this.MutationRate,
-                    Mutator = this.Mutator,
-                    NetworkDataProviders = this.NetworkDataProviders,
-                    NumberToKeep = this.NumberToKeep,
-                    Objectives = this.Objectives,
-                    Origin = this.Origin,
-                    Planner = this.Planner,
-                    PointDataProviders = this.PointDataProviders,
-                    PopulationSize = this.PopulationSize,
-                    ProbMinDistance = this.ProbMinDistance,
-                    ProbMinTransfers = this.ProbMinTransfers,
-                    RouteGenerator = this.RouteGenerator,
-                    SearchType = this.SearchType,
-                    MaxIterations = this.MaxIterations,
-                    InfectionRate =  this.InfectionRate
-
+                    Bidirectional = this.Bidirectional, 
+                    Breeder = this.Breeder, 
+                    CrossoverRate = this.CrossoverRate, 
+                    Database = this.Database, 
+                    DepartureTime = this.DepartureTime, 
+                    Destination = this.Destination, 
+                    FitnessFunction = this.FitnessFunction, 
+                    MaxDistance = this.MaxDistance, 
+                    MaximumWalkDistance = this.MaximumWalkDistance, 
+                    MutationRate = this.MutationRate, 
+                    Mutator = this.Mutator, 
+                    NetworkDataProviders = this.NetworkDataProviders, 
+                    NumberToKeep = this.NumberToKeep, 
+                    Objectives = this.Objectives, 
+                    Origin = this.Origin, 
+                    Planner = this.Planner, 
+                    PointDataProviders = this.PointDataProviders, 
+                    PopulationSize = this.PopulationSize, 
+                    ProbMinDistance = this.ProbMinDistance, 
+                    ProbMinTransfers = this.ProbMinTransfers, 
+                    RouteGenerator = this.RouteGenerator, 
+                    SearchType = this.SearchType, 
+                    MaxIterations = this.MaxIterations, 
+                    InfectionRate = this.InfectionRate
                 };
-         
         }
+
+        #endregion
     }
 }

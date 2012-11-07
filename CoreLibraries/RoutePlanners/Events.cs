@@ -1,10 +1,16 @@
-﻿// RMIT Journey Planner
-// Written by Sean Dawson 2011.
-// Supervised by Xiaodong Li and Margret Hamilton for the 2011 summer studentship program.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Events.cs" company="RMIT University">
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// </copyright>
+// <summary>
+//   Represents the data produced by a next iteration event.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
 {
-    #region
+    #region Using Directives
 
     using System;
 
@@ -13,7 +19,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
     #endregion
 
     /// <summary>
-    ///   Represents the data produced by a next iteration event.
+    /// Represents the data produced by a next iteration event.
     /// </summary>
     public class NextIterationEventArgs : EventArgs
     {
@@ -29,9 +35,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="NextIterationEventArgs" /> class. Initilizes a new instance of a NextIterationEventArgs object.
+        /// Initializes a new instance of the <see cref="NextIterationEventArgs"/> class. Initilizes a new instance of a NextIterationEventArgs object.
         /// </summary>
-        /// <param name="currentNode"> The current node being traversed. </param>
+        /// <param name="currentNode">
+        /// The current node being traversed. 
+        /// </param>
         public NextIterationEventArgs(INetworkNode currentNode)
         {
             this.node = currentNode;

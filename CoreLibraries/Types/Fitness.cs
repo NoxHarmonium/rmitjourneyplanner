@@ -1,6 +1,7 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Fitness.cs" company="RMIT University">
-//   Sean Dawson
+//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
+// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
 // </copyright>
 // <summary>
 //   A list of the parameters provided by the fitness class.
@@ -9,79 +10,91 @@
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
+
+    #endregion
 
     /// <summary>
     /// A list of the parameters provided by the fitness class.
     /// </summary>
     public enum FitnessParameter
     {
-        
         /// <summary>
-        /// Gets the non-normalised journey time in fractional minutes.
+        ///   Gets the non-normalised journey time in fractional minutes.
         /// </summary>
-        TotalJourneyMinutes,
+        TotalJourneyMinutes, 
 
         /// <summary>
-        /// Gets the normalised changes value.
+        ///   Gets the normalised changes value.
         /// </summary>
-        NormalisedChanges ,
-        
+        NormalisedChanges, 
+
         /// <summary>
-        /// The total journey time.
+        ///   The total journey time.
         /// </summary>
         TotalJourneyTime, 
 
         /// <summary>
-        /// The non normalise changes.
+        ///   The non normalise changes.
         /// </summary>
         Changes, 
 
         /// <summary>
-        /// The walking time.
+        ///   The walking time.
         /// </summary>
         WalkingTime, 
 
         /// <summary>
-        /// The percent trams.
+        ///   The percent trams.
         /// </summary>
         PercentTrams, 
 
         /// <summary>
-        /// The percent buses.
+        ///   The percent buses.
         /// </summary>
         PercentBuses, 
 
         /// <summary>
-        /// The percent trains.
+        ///   The percent trains.
         /// </summary>
         PercentTrains, 
 
         /// <summary>
-        /// The co 2 emmissions.
+        ///   The co 2 emmissions.
         /// </summary>
         Co2Emmissions, 
 
         /// <summary>
-        /// The percent disable friendly.
+        ///   The percent disable friendly.
         /// </summary>
         PercentDisableFriendly, 
 
         /// <summary>
-        /// The total travel time.
+        ///   The total travel time.
         /// </summary>
         TotalTravelTime, 
 
         /// <summary>
-        /// The total waiting time.
+        ///   The total waiting time.
         /// </summary>
-        TotalWaitingTime,
+        TotalWaitingTime, 
 
-        TotalTravelMinutes,
+        /// <summary>
+        ///   The total travel minutes.
+        /// </summary>
+        TotalTravelMinutes, 
 
-        DiversityMetric,
+        /// <summary>
+        ///   The diversity metric.
+        /// </summary>
+        DiversityMetric, 
 
+        /// <summary>
+        ///   The total distance.
+        /// </summary>
         TotalDistance
     }
 
@@ -93,8 +106,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Fitness"/> class. 
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        ///   Initializes a new instance of the <see cref = "Fitness" /> class. 
+        ///   Initializes a new instance of the <see cref = "T:System.Object" /> class.
         /// </summary>
         public Fitness()
         {
@@ -106,7 +119,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Properties
 
         /// <summary>
-        /// Returns the amount of fitness parameters available.
+        ///   Returns the amount of fitness parameters available.
         /// </summary>
         public static int ParameterCount
         {
@@ -117,22 +130,27 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The amount of mode changes of the journey.
+        ///   The amount of mode changes of the journey.
         /// </summary>
         public int Changes { get; set; }
 
         /// <summary>
-        /// The amount of CO2 emmitted in this journey.
+        ///   The amount of CO2 emmitted in this journey.
         /// </summary>
         public double Co2Emmissions { get; set; }
 
         /// <summary>
-        /// The list of legs that make up a journey.
+        ///   Gets or sets the diversity metric.
+        /// </summary>
+        public double DiversityMetric { get; set; }
+
+        /// <summary>
+        ///   The list of legs that make up a journey.
         /// </summary>
         public List<JourneyLeg> JourneyLegs { get; set; }
 
         /// <summary>
-        /// Returns the amount of fitness parameters available.
+        ///   Returns the amount of fitness parameters available.
         /// </summary>
         public int Length
         {
@@ -142,65 +160,63 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             }
         }
 
-        public double TotalDistance { get; set; }
-
         /// <summary>
-        /// Gets or sets NormalisedChanges.
+        ///   Gets or sets NormalisedChanges.
         /// </summary>
         public double NormalisedChanges { get; set; }
 
         /// <summary>
-        /// The normalised journey time of the leg (0.0-1.0).
+        ///   The normalised journey time of the leg (0.0-1.0).
         /// </summary>
         public double NormalisedJourneyTime { get; set; }
 
         /// <summary>
-        /// The normalised travel time of the leg (0.0-1.0).
+        ///   The normalised travel time of the leg (0.0-1.0).
         /// </summary>
         public double NormalisedTravelTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the diversity metric.
-        /// </summary>
-        public double DiversityMetric { get; set; }
-
-        /// <summary>
-        /// The percent of the journey that uses buses. (0.0 - 1.0)
+        ///   The percent of the journey that uses buses. (0.0 - 1.0)
         /// </summary>
         public double PercentBuses { get; set; }
 
         /// <summary>
-        /// The percent of the journey that is accessable for disabled passengers. (0.0 - 1.0)
+        ///   The percent of the journey that is accessable for disabled passengers. (0.0 - 1.0)
         /// </summary>
         public double PercentDisableFriendly { get; set; }
 
         /// <summary>
-        /// The percent of the journey that uses trains. (0.0 - 1.0)
+        ///   The percent of the journey that uses trains. (0.0 - 1.0)
         /// </summary>
         public double PercentTrains { get; set; }
 
         /// <summary>
-        /// The percent of the journey that uses trams. (0.0 - 1.0)
+        ///   The percent of the journey that uses trams. (0.0 - 1.0)
         /// </summary>
         public double PercentTrams { get; set; }
 
         /// <summary>
-        /// The total time of the whole journey.
+        ///   Gets or sets TotalDistance.
+        /// </summary>
+        public double TotalDistance { get; set; }
+
+        /// <summary>
+        ///   The total time of the whole journey.
         /// </summary>
         public TimeSpan TotalJourneyTime { get; set; }
 
         /// <summary>
-        /// The total time spent on a service in the journey.
+        ///   The total time spent on a service in the journey.
         /// </summary>
         public TimeSpan TotalTravelTime { get; set; }
 
         /// <summary>
-        /// The total time spent waiting for a service in the journey.
+        ///   The total time spent waiting for a service in the journey.
         /// </summary>
         public TimeSpan TotalWaitingTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the total time walking in a journey.
+        ///   Gets or sets the total time walking in a journey.
         /// </summary>
         public TimeSpan WalkingTime { get; set; }
 
@@ -209,24 +225,22 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Indexers
 
         /// <summary>
-        /// References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
+        ///   References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
         /// </summary>
-        /// <param name="i">The index of the parameter. <see cref="FitnessParameter"/></param>
+        /// <param name = "i">The index of the parameter. <see cref = "FitnessParameter" /></param>
         public double this[FitnessParameter fitnessParameter]
         {
             get
             {
-             
                 return this[(int)fitnessParameter];
             }
-
         }
-        
+
         /// <summary>
-        /// References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
+        ///   References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
         /// </summary>
-        /// <param name="i">The index of the parameter. <see cref="FitnessParameter"/></param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if a index is refereced that is out of range.</exception>
+        /// <param name = "i">The index of the parameter. <see cref = "FitnessParameter" /></param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown if a index is refereced that is out of range.</exception>
         public double this[int i]
         {
             get
@@ -234,7 +248,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 switch ((FitnessParameter)i)
                 {
                     case FitnessParameter.TotalDistance:
-                        return TotalDistance;
+                        return this.TotalDistance;
 
                     case FitnessParameter.TotalJourneyTime:
                         if (this.TotalJourneyTime.TotalSeconds <= 0)
@@ -274,13 +288,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                         return 1 - this.PercentTrams;
 
                     case FitnessParameter.TotalTravelTime:
-                        return NormalisedTravelTime;
+                        return this.NormalisedTravelTime;
 
                     case FitnessParameter.TotalWaitingTime:
                         return this.TotalWaitingTime.TotalSeconds;
 
                     case FitnessParameter.DiversityMetric:
-                        return 1-this.DiversityMetric;
+                        return 1 - this.DiversityMetric;
                     default:
                         throw new ArgumentOutOfRangeException("i");
                 }
@@ -292,10 +306,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Methods and Operators
 
         /// <summary>
-        /// Adds 2 fitness objects together
+        ///   Adds 2 fitness objects together
         /// </summary>
-        /// <param name="c1"></param>
-        /// <param name="c2"></param>
+        /// <param name = "c1"></param>
+        /// <param name = "c2"></param>
         /// <returns></returns>
         public static Fitness operator +(Fitness c1, Fitness c2)
         {
@@ -309,17 +323,17 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     PercentTrams = c1.PercentTrams + c2.PercentTrams, 
                     TotalJourneyTime = c1.TotalJourneyTime + c2.TotalJourneyTime, 
                     TotalTravelTime = c1.TotalTravelTime + c2.TotalTravelTime, 
-                    TotalWaitingTime = c1.TotalWaitingTime + c2.TotalWaitingTime,
+                    TotalWaitingTime = c1.TotalWaitingTime + c2.TotalWaitingTime, 
                     DiversityMetric = c1.DiversityMetric + c2.DiversityMetric
                 };
             return fitness;
         }
 
         /// <summary>
-        /// Divides all the internal values by the specified double.
+        ///   Divides all the internal values by the specified double.
         /// </summary>
-        /// <param name="c1"></param>
-        /// <param name="c2"></param>
+        /// <param name = "c1"></param>
+        /// <param name = "c2"></param>
         /// <returns></returns>
         public static Fitness operator /(Fitness c1, double c2)
         {
@@ -333,20 +347,20 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     PercentTrams = c1.PercentTrams / c2, 
                     TotalJourneyTime = TimeSpan.FromMilliseconds(c1.TotalJourneyTime.TotalMilliseconds / c2), 
                     TotalTravelTime = TimeSpan.FromMilliseconds(c1.TotalTravelTime.TotalMilliseconds / c2), 
-                    TotalWaitingTime = TimeSpan.FromMilliseconds(c1.TotalWaitingTime.TotalMilliseconds / c2),
+                    TotalWaitingTime = TimeSpan.FromMilliseconds(c1.TotalWaitingTime.TotalMilliseconds / c2), 
                     DiversityMetric = c1.DiversityMetric / c2
                 };
             return fitness;
         }
 
         /// <summary>
-        /// The ==.
+        ///   The ==.
         /// </summary>
-        /// <param name="left">
-        /// The left.
+        /// <param name = "left">
+        ///   The left.
         /// </param>
-        /// <param name="right">
-        /// The right.
+        /// <param name = "right">
+        ///   The right.
         /// </param>
         /// <returns>
         /// </returns>
@@ -356,13 +370,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The !=.
+        ///   The !=.
         /// </summary>
-        /// <param name="left">
-        /// The left.
+        /// <param name = "left">
+        ///   The left.
         /// </param>
-        /// <param name="right">
-        /// The right.
+        /// <param name = "right">
+        ///   The right.
         /// </param>
         /// <returns>
         /// </returns>
@@ -391,11 +405,14 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     PercentTrams = this.PercentTrams, 
                     TotalJourneyTime = this.TotalJourneyTime, 
                     TotalTravelTime = this.TotalTravelTime, 
-                    JourneyLegs = this.JourneyLegs,
-                   WalkingTime = this.WalkingTime,
-                   TotalWaitingTime = this.TotalWaitingTime,
-                   DiversityMetric = this.DiversityMetric
-                    //TotalJourneyTime,TotalTravelTime,NormalisedChanges
+                    JourneyLegs = this.JourneyLegs, 
+                    WalkingTime = this.WalkingTime, 
+                    TotalWaitingTime = this.TotalWaitingTime, 
+                    DiversityMetric = this.DiversityMetric
+                    
+                    
+                    
+                    // TotalJourneyTime,TotalTravelTime,NormalisedChanges
                 };
         }
 
@@ -479,7 +496,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// Serves as a hash function for a particular type. 
+        /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>
         /// A hash code for the current <see cref="T:System.Object"/>.
@@ -528,7 +545,22 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            return string.Format("Changes: {0}, Co2Emmissions: {1}, JourneyLegs: {2}, NormalisedChanges: {3}, NormalisedJourneyTime: {4}, PercentBuses: {5}, PercentDisableFriendly: {6}, PercentTrains: {7}, PercentTrams: {8}, TotalJourneyTime: {9}, TotalTravelTime: {10}, TotalWaitingTime: {11}, WalkingTime: {12}", this.Changes, this.Co2Emmissions, this.JourneyLegs, this.NormalisedChanges, this.NormalisedJourneyTime, this.PercentBuses, this.PercentDisableFriendly, this.PercentTrains, this.PercentTrams, this.TotalJourneyTime, this.TotalTravelTime, this.TotalWaitingTime, this.WalkingTime);
+            return
+                string.Format(
+                    "Changes: {0}, Co2Emmissions: {1}, JourneyLegs: {2}, NormalisedChanges: {3}, NormalisedJourneyTime: {4}, PercentBuses: {5}, PercentDisableFriendly: {6}, PercentTrains: {7}, PercentTrams: {8}, TotalJourneyTime: {9}, TotalTravelTime: {10}, TotalWaitingTime: {11}, WalkingTime: {12}", 
+                    this.Changes, 
+                    this.Co2Emmissions, 
+                    this.JourneyLegs, 
+                    this.NormalisedChanges, 
+                    this.NormalisedJourneyTime, 
+                    this.PercentBuses, 
+                    this.PercentDisableFriendly, 
+                    this.PercentTrains, 
+                    this.PercentTrams, 
+                    this.TotalJourneyTime, 
+                    this.TotalTravelTime, 
+                    this.TotalWaitingTime, 
+                    this.WalkingTime);
         }
 
         #endregion

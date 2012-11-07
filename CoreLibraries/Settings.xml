@@ -1,13 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <settings>
   <setting>
     <name>ConnectionString</name>
-    <value>server=127.0.0.1;User Id=root;password=qwerasdf;Persist Security Info=True;database=20110606fordistributionforrmit;shared memory name=MYSQL; protocol=memory</value>    
+    <value>
+      server=127.0.0.1;User Id=root;password=qwerasdf;Persist Security Info=True;database=20110606fordistributionforrmit;shared memory name=MYSQL; protocol=memory
+    </value>
   </setting>
   <setting>
-      <name></name>
-      <value></value>
-   </setting>
-  
-  
+    <name></name>
+    <value></value>
+  </setting>
+
+
 </settings>

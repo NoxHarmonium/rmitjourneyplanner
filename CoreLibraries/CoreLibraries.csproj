@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\ConnectionInfo.cs" />
     <Compile Include="DataAccess\DistanceAPI.cs" />
     <Compile Include="DataAccess\GeocodingAPI.cs" />
     <Compile Include="DataAccess\GoogleApiException.cs" />
@@ -116,13 +117,10 @@
     <Compile Include="RoutePlanners\Evolutionary\IFitnessFunction.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IMutator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\IRouteGenerator.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\ALRouteGenerator.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\BDALRouteGenerator.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Tools.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Breeders\StandardBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Mutators\StandardMutator.cs" />
     <Compile Include="RoutePlanners\Events.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\EvolutionaryRoutePlanner.cs" />
     <Compile Include="RoutePlanners\IRoutePlanner.cs" />
     <Compile Include="Positioning\GeometryHelper.cs" />
     <Compile Include="Positioning\Location.cs" />
