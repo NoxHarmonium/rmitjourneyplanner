@@ -212,7 +212,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
         /// <summary>
         ///   Gets or sets the route that this node belongs to (when retrieved with <see
-        ///    cref = "MetlinkDataProvider.GetNodeClosestToPointWithinArea" /> ).
+        ///    cref = "PtvDataProvider.GetNodeClosestToPointWithinArea" /> ).
         /// </summary>
         [Obsolete]
         public int RouteId { get; set; }

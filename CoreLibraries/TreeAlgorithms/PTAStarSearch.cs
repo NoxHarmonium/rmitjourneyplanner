@@ -141,7 +141,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, target);
 
                 // wrapper.EuclidianDistance = 1;
-                if (((MetlinkDataProvider)this.provider).RoutesIntersect(wrapper.Node, this.current[0].Node))
+                if (((PtvDataProvider)this.provider).RoutesIntersect(wrapper.Node, this.current[0].Node))
                 {
                     // wrapper.EuclidianDistance *= 0.5; //best
                     wrapper.EuclidianDistance *= 0.5;

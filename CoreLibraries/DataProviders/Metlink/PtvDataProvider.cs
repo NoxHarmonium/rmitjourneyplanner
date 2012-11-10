@@ -35,7 +35,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
     /// <summary>
     /// Providers data on the TransNET database.
     /// </summary>
-    public sealed class MetlinkDataProvider : INetworkDataProvider, IDisposable
+    public sealed class PtvDataProvider : INetworkDataProvider, IDisposable
     {
         #region Constants and Fields
 
@@ -50,9 +50,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         private static readonly Dictionary<string, string> StopModeTable = new Dictionary<string, string>();
 
         /// <summary>
-        ///   The Metlink database object.
+        ///   The PTV database object.
         /// </summary>
-        private readonly MySqlDatabase database = new MySqlDatabase("20110606fordistributionforrmit");
+        private readonly MySqlDatabase database = new MySqlDatabase();
 
         /// <summary>
         ///   The list.
@@ -74,9 +74,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes static members of the <see cref = "MetlinkDataProvider" /> class.
+        ///   Initializes static members of the <see cref = "PtvDataProvider" /> class.
         /// </summary>
-        static MetlinkDataProvider()
+        static PtvDataProvider()
         {
             StopModeTable.Add("1", "Bus");
             StopModeTable.Add("2", "Train");
@@ -89,9 +89,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "MetlinkDataProvider" /> class.
+        ///   Initializes a new instance of the <see cref = "PtvDataProvider" /> class.
         /// </summary>
-        public MetlinkDataProvider()
+        public PtvDataProvider()
         {
             try
             {
@@ -536,9 +536,9 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="MetlinkDataProvider"/> class.
+        /// Finalizes an instance of the <see cref="PtvDataProvider"/> class.
         /// </summary>
-        ~MetlinkDataProvider()
+        ~PtvDataProvider()
         {
             this.Dispose(false);
         }

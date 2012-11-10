@@ -42,7 +42,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
         /// <summary>
         ///   The provider.
         /// </summary>
-        private readonly MetlinkDataProvider provider;
+        private readonly PtvDataProvider provider;
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
         /// </summary>
         public TestFitnessFunction()
         {
-            this.provider = new MetlinkDataProvider();
+            this.provider = new PtvDataProvider();
             Logger.LogEvent += (sender, message) => { Console.WriteLine("[{0}]: {1}", sender, message); };
         }
 

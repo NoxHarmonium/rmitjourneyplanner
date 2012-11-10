@@ -98,7 +98,7 @@
     <Compile Include="DataProviders\INetworkDataProvider.cs" />
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
-    <Compile Include="DataProviders\Metlink\MetlinkDataProvider.cs" />
+    <Compile Include="DataProviders\Metlink\PtvDataProvider.cs" />
     <Compile Include="DataProviders\Metlink\MetlinkNode.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
     <Compile Include="Extensions.cs" />
