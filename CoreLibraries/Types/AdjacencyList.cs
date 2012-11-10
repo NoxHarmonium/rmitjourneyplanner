@@ -15,7 +15,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     using System.Collections;
     using System.Collections.Generic;
 
-    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using Ptv;
 
     #endregion
 
@@ -29,7 +29,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The list.
         /// </summary>
-        private readonly Dictionary<int, List<MetlinkNode>> list = new Dictionary<int, List<MetlinkNode>>();
+        private readonly Dictionary<int, List<PtvNode>> list = new Dictionary<int, List<PtvNode>>();
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         ///   The this.
         /// </summary>
         /// <param name = "id"> The id. </param>
-        public List<MetlinkNode> this[int id]
+        public List<PtvNode> this[int id]
         {
             get
             {

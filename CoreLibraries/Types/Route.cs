@@ -17,7 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     using System.Linq;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
-    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using Ptv;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 
     #endregion
@@ -153,7 +153,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Route: {0}", string.Join(",", this.Select(n => ((MetlinkNode)n.Node).StopSpecName)));
+            return string.Format("Route: {0}", string.Join(",", this.Select(n => ((PtvNode)n.Node).StopSpecName)));
         }
 
         #endregion

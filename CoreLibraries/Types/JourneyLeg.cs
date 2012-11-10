@@ -14,7 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
     using System;
 
-    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using Ptv;
 
     #endregion
 
@@ -38,12 +38,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The node at the end of the leg.
         /// </summary>
-        private readonly MetlinkNode destination;
+        private readonly PtvNode destination;
 
         /// <summary>
         ///   The node at the beginning of the leg.
         /// </summary>
-        private readonly MetlinkNode origin;
+        private readonly PtvNode origin;
 
         /// <summary>
         ///   The total time of the leg.
@@ -82,8 +82,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </param>
         public JourneyLeg(
             TransportMode transportMode, 
-            MetlinkNode origin, 
-            MetlinkNode destination, 
+            PtvNode origin, 
+            PtvNode destination, 
             DateTime departureTime, 
             TimeSpan totalTime, 
             string routeId)
@@ -114,7 +114,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The node at the end of the leg.
         /// </summary>
-        public MetlinkNode Destination
+        public PtvNode Destination
         {
             get
             {
@@ -125,7 +125,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The node at the beginning of the leg.
         /// </summary>
-        public MetlinkNode Origin
+        public PtvNode Origin
         {
             get
             {

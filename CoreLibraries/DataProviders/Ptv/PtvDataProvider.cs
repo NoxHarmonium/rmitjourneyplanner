@@ -8,7 +8,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
+namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
 {
     #region Using Directives
 

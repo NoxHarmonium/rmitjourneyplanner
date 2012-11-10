@@ -98,8 +98,8 @@
     <Compile Include="DataProviders\INetworkDataProvider.cs" />
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
-    <Compile Include="DataProviders\Metlink\PtvDataProvider.cs" />
-    <Compile Include="DataProviders\Metlink\PtvNode.cs" />
+    <Compile Include="DataProviders\Ptv\PtvDataProvider.cs" />
+    <Compile Include="DataProviders\Ptv\PtvNode.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="NPack\MersenneTwister.cs" />

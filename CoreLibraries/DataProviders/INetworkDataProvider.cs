@@ -16,7 +16,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     using System.Collections.Generic;
     using System.Data;
 
-    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -24,7 +24,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     #endregion
 
     /// <summary>
-    /// A NetworkDataProvider is a plugable class that is used to provide information on networks such a train or bus network.
+    /// A NetworkDataProvider is a class that is used to provide information on networks such a train or bus network and can be plugged into journey planners.
     /// </summary>
     public interface INetworkDataProvider
     {
