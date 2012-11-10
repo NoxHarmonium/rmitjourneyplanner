@@ -80,8 +80,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
             {
                 for (int j = 0; j < secondNodes.Count; j++)
                 {
-                    if (firstNodes[i].Node.Equals(secondNodes[j].Node) && !(firstNodes[i].Node is TerminalNode)
-                        && !(secondNodes[j].Node is TerminalNode))
+                    if (firstNodes[i].Node.Equals(secondNodes[j].Node))
                     {
                         crossoverPoints.Add(new KeyValuePair<int, int>(i, j));
                         break;
