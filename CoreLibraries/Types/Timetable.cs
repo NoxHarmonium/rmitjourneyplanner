@@ -236,9 +236,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             {
                 foreach (var dow in route.Value)
                 {
-                    bool wrapped = false;
-
-                    if ((dow.Key & dayOfWeek) != 0)
+                   if ((dow.Key & dayOfWeek) != 0)
                     {
                         // Disabled express services
                         int[] minTime =
@@ -383,6 +381,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             }
 
             this.entries.Clear();
+            this.optimised = true;
         }
 
         /// <summary>

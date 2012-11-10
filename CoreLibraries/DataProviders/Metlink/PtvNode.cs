@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MetlinkNode.cs" company="RMIT University">
+// <copyright file="PtvNode.cs" company="RMIT University">
 //   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
 // Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
 // </copyright>
@@ -21,14 +21,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
     #endregion
 
     /// <summary>
-    /// Represents a stop in the Metlink network.
+    /// Represents a stop in the PTV network.
     /// </summary>
-    public class MetlinkNode : Location, INetworkNode
+    public class PtvNode : Location, INetworkNode
     {
         #region Constants and Fields
 
         /// <summary>
-        ///   The Metlink stop id for this stop.
+        ///   The PTV stop identifer for this stop.
         /// </summary>
         private readonly int id;
 
@@ -46,12 +46,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         ///   The line identifiers.
         /// </summary>
         private int[] lineIds;
-
-        // private DataTable stopData;
-        // Commented: Why persist the datatable???
-        /// <summary>
-        ///   Holds all the data associated with this stop.
-        /// </summary>
+       
         /// <summary>
         ///   The user friendly name of this node.
         /// </summary>
@@ -62,7 +57,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MetlinkNode"/> class. Sets the location of this node to (0,0).
+        /// Initializes a new instance of the <see cref="PtvNode"/> class. Sets the location of this node to (0,0).
         /// </summary>
         /// <param name="id">
         /// The tramtracker Id. 
@@ -70,7 +65,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <param name="provider">
         /// The NetworkProvider that contains this tram stop. 
         /// </param>
-        public MetlinkNode(int id, INetworkDataProvider provider)
+        public PtvNode(int id, INetworkDataProvider provider)
             : base(0, 0)
         {
             this.provider = provider;
@@ -81,7 +76,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MetlinkNode"/> class. Sets the location of this node to position.
+        /// Initializes a new instance of the <see cref="PtvNode"/> class. Sets the location of this node to position.
         /// </summary>
         /// <param name="id">
         /// The tramtracker Id. 
@@ -92,7 +87,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <param name="position">
         /// The position of the node. 
         /// </param>
-        public MetlinkNode(int id, INetworkDataProvider provider, Location position)
+        public PtvNode(int id, INetworkDataProvider provider, Location position)
             : base(position.Latitude, position.Longitude)
         {
             this.provider = provider;
@@ -103,7 +98,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MetlinkNode"/> class. Sets the location of this node to position.
+        /// Initializes a new instance of the <see cref="PtvNode"/> class. Sets the location of this node to position.
         /// </summary>
         /// <param name="id">
         /// The tramtracker Id. 
@@ -117,7 +112,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <param name="provider">
         /// The NetworkProvider that contains this tram stop. 
         /// </param>
-        public MetlinkNode(
+        public PtvNode(
             int id, TransportMode transportType, double latitude, double longitude, INetworkDataProvider provider)
             : base(latitude, longitude)
         {
@@ -130,7 +125,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MetlinkNode"/> class. Sets the location of this node to position.
+        /// Initializes a new instance of the <see cref="PtvNode"/> class. Sets the location of this node to position.
         /// </summary>
         /// <param name="id">
         /// The tramtracker Id. 
@@ -147,7 +142,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <param name="provider">
         /// The NetworkProvider that contains this tram stop. 
         /// </param>
-        public MetlinkNode(
+        public PtvNode(
             int id, 
             TransportMode transportType, 
             string stopSpecName, 
@@ -270,7 +265,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// <filterpriority>2</filterpriority>
         public object Clone()
         {
-            var newNode = new MetlinkNode(this.id, this.provider, this)
+            var newNode = new PtvNode(this.id, this.provider, this)
                 {
                     // EuclidianDistance = this.EuclidianDistance,
                     // TotalTime = this.TotalTime,
@@ -304,7 +299,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 return false;
             }
 
-            return this.id == other.Id && other is MetlinkNode;
+            return this.id == other.Id && other is PtvNode;
         }
 
         /// <summary>
@@ -318,7 +313,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
         /// </returns>
         public override bool Equals(object obj)
         {
-            var metlinkNode = obj as MetlinkNode;
+            var metlinkNode = obj as PtvNode;
             if (metlinkNode != null)
             {
                 return metlinkNode.id == this.id;
@@ -395,7 +390,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 return string.Format("{0}", this.Id);
             }
 
-            return string.Format("[MetlinkNode id: {0} - {1}]", this.id, this.stopSpecName);
+            return string.Format("[PtvNode id: {0} - {1}]", this.id, this.stopSpecName);
         }
 
         #endregion

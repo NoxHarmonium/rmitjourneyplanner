@@ -130,6 +130,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Google
         /// </returns>
         public List<Location> GetPath(Location locationA, Location locationB)
         {
+            //// TODO: Impliment Google walking path finding.
             throw new NotImplementedException();
         }
 

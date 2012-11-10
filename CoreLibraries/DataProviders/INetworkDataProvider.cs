@@ -179,7 +179,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// <returns>
         /// A list of <see cref="INetworkNode"/> objects that are in the specified area. 
         /// </returns>
-        List<NodeWrapper<MetlinkNode>> GetNodesAtLocation(Location location, double radius);
+        List<NodeWrapper<PtvNode>> GetNodesAtLocation(Location location, double radius);
 
         /// <summary>
         /// Gets a list of routes that this node passes through.

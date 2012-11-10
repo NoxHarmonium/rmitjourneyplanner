@@ -79,7 +79,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public double CalculateHyperVolume(FitnessParameter[] objectives, double[] referencePoint)
         {
             int dims = objectives.Length;
-            double volume = 0.0;
+           
 
             var firstFrontRaw = this.Where(c => c.Rank == 1);
 

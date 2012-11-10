@@ -82,26 +82,26 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
             // Train 
             var route1 = new Route(-1)
                 {
-                    new MetlinkNode(19965, this.provider), 
-                    // new MetlinkNode(2262,provider), 
-                    // new MetlinkNode(2263,provider), 
-                    new MetlinkNode(2262, this.provider), 
-                    new MetlinkNode(10037, this.provider), 
-                    new MetlinkNode(10036, this.provider), 
-                    new MetlinkNode(10035, this.provider), 
-                    new MetlinkNode(10034, this.provider), 
-                    new MetlinkNode(10033, this.provider), 
-                    new MetlinkNode(10032, this.provider), 
-                    new MetlinkNode(40895, this.provider), 
-                    new MetlinkNode(40896, this.provider), 
-                    new MetlinkNode(40897, this.provider), 
-                    new MetlinkNode(40898, this.provider), 
-                    new MetlinkNode(9089, this.provider), 
-                    new MetlinkNode(9088, this.provider), 
-                    new MetlinkNode(18773, this.provider), 
-                    new MetlinkNode(20037, this.provider), 
-                    new MetlinkNode(20038, this.provider), 
-                    new MetlinkNode(20039, this.provider), 
+                    new PtvNode(19965, this.provider), 
+                    // new PtvNode(2262,provider), 
+                    // new PtvNode(2263,provider), 
+                    new PtvNode(2262, this.provider), 
+                    new PtvNode(10037, this.provider), 
+                    new PtvNode(10036, this.provider), 
+                    new PtvNode(10035, this.provider), 
+                    new PtvNode(10034, this.provider), 
+                    new PtvNode(10033, this.provider), 
+                    new PtvNode(10032, this.provider), 
+                    new PtvNode(40895, this.provider), 
+                    new PtvNode(40896, this.provider), 
+                    new PtvNode(40897, this.provider), 
+                    new PtvNode(40898, this.provider), 
+                    new PtvNode(9089, this.provider), 
+                    new PtvNode(9088, this.provider), 
+                    new PtvNode(18773, this.provider), 
+                    new PtvNode(20037, this.provider), 
+                    new PtvNode(20038, this.provider), 
+                    new PtvNode(20039, this.provider), 
                 };
 
             DateTime initialDepart = DateTime.Parse("8/08/2012 6:00 PM");
@@ -136,12 +136,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
             properties.Mutator = new StandardMutator(properties);
             properties.Breeder = new StandardBreeder(properties);
             properties.FitnessFunction = new AlFitnessFunction(properties);
-            properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
+            properties.Database = new MySqlDatabase();
 
-            // properties.Destination = new MetlinkNode(628,metlinkProvider);
+            // properties.Destination = new PtvNode(628,metlinkProvider);
             // new TerminalNode(-1, destination);
             // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
-            // properties.Origin = new MetlinkNode(19965, metlinkProvider);//
+            // properties.Origin = new PtvNode(19965, metlinkProvider);//
             // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
             // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
             properties.Destination.RetrieveData();
@@ -186,26 +186,26 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
             properties.Mutator = new StandardMutator(properties);
             properties.Breeder = new TimeBlendBreeder(properties);
             properties.FitnessFunction = new AlFitnessFunction(properties);
-            properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
+            properties.Database = new MySqlDatabase();
 
-            // properties.Destination = new MetlinkNode(628, provider);// kew
-            // properties.Origin = new MetlinkNode(9601, provider);// reynard st
-            // properties.Origin = new MetlinkNode( 20013, provider); // Bell
-            // properties.Destination = new MetlinkNode(20042, provider); //Boxhill
-            properties.Origin = new MetlinkNode(18536, this.provider); // abbotsford interchange
+            // properties.Destination = new PtvNode(628, provider);// kew
+            // properties.Origin = new PtvNode(9601, provider);// reynard st
+            // properties.Origin = new PtvNode( 20013, provider); // Bell
+            // properties.Destination = new PtvNode(20042, provider); //Boxhill
+            properties.Origin = new PtvNode(18536, this.provider); // abbotsford interchange
 
-            // properties.Origin = new MetlinkNode(19965, provider); // Coburg
-            // properties.Destination = new MetlinkNode(20039, provider); //ascot vale
-            // properties.Origin = new MetlinkNode(19036,provider); //Cotham (o)
-            // properties.Destination = new MetlinkNode(19943, provider); // Caulfielsd
-            // properties.Destination = new MetlinkNode(19933, provider); // Darebinor whateves
-            // properties.Destination = new MetlinkNode(19394,provider); // other kew
-            properties.Destination = new MetlinkNode(4141, this.provider); // Jolimont
+            // properties.Origin = new PtvNode(19965, provider); // Coburg
+            // properties.Destination = new PtvNode(20039, provider); //ascot vale
+            // properties.Origin = new PtvNode(19036,provider); //Cotham (o)
+            // properties.Destination = new PtvNode(19943, provider); // Caulfielsd
+            // properties.Destination = new PtvNode(19933, provider); // Darebinor whateves
+            // properties.Destination = new PtvNode(19394,provider); // other kew
+            properties.Destination = new PtvNode(4141, this.provider); // Jolimont
 
-            // properties.Destination = new MetlinkNode(628,metlinkProvider);
+            // properties.Destination = new PtvNode(628,metlinkProvider);
             // new TerminalNode(-1, destination);
             // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
-            // properties.Origin = new MetlinkNode(19965, metlinkProvider);//
+            // properties.Origin = new PtvNode(19965, metlinkProvider);//
             // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
 
             // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
@@ -241,64 +241,64 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
                 512, 
                 new[]
                     {
-                        new MetlinkNode(9335, this.provider), new MetlinkNode(9334, this.provider), 
-                        new MetlinkNode(9333, this.provider), new MetlinkNode(9332, this.provider), 
-                        new MetlinkNode(9331, this.provider), new MetlinkNode(9330, this.provider), 
-                        new MetlinkNode(9329, this.provider), new MetlinkNode(9328, this.provider), 
-                        new MetlinkNode(9327, this.provider), new MetlinkNode(9326, this.provider), 
-                        new MetlinkNode(9325, this.provider), new MetlinkNode(9324, this.provider), 
-                        new MetlinkNode(9323, this.provider), new MetlinkNode(20754, this.provider), 
-                        new MetlinkNode(9321, this.provider), new MetlinkNode(9320, this.provider), 
-                        new MetlinkNode(9319, this.provider), new MetlinkNode(9318, this.provider), 
-                        new MetlinkNode(9317, this.provider), new MetlinkNode(9316, this.provider), 
-                        new MetlinkNode(21267, this.provider), new MetlinkNode(21268, this.provider), 
-                        new MetlinkNode(9315, this.provider), new MetlinkNode(20755, this.provider), 
-                        new MetlinkNode(9314, this.provider), new MetlinkNode(9313, this.provider), 
-                        new MetlinkNode(9312, this.provider), new MetlinkNode(20756, this.provider), 
-                        new MetlinkNode(9310, this.provider), new MetlinkNode(20757, this.provider)
+                        new PtvNode(9335, this.provider), new PtvNode(9334, this.provider), 
+                        new PtvNode(9333, this.provider), new PtvNode(9332, this.provider), 
+                        new PtvNode(9331, this.provider), new PtvNode(9330, this.provider), 
+                        new PtvNode(9329, this.provider), new PtvNode(9328, this.provider), 
+                        new PtvNode(9327, this.provider), new PtvNode(9326, this.provider), 
+                        new PtvNode(9325, this.provider), new PtvNode(9324, this.provider), 
+                        new PtvNode(9323, this.provider), new PtvNode(20754, this.provider), 
+                        new PtvNode(9321, this.provider), new PtvNode(9320, this.provider), 
+                        new PtvNode(9319, this.provider), new PtvNode(9318, this.provider), 
+                        new PtvNode(9317, this.provider), new PtvNode(9316, this.provider), 
+                        new PtvNode(21267, this.provider), new PtvNode(21268, this.provider), 
+                        new PtvNode(9315, this.provider), new PtvNode(20755, this.provider), 
+                        new PtvNode(9314, this.provider), new PtvNode(9313, this.provider), 
+                        new PtvNode(9312, this.provider), new PtvNode(20756, this.provider), 
+                        new PtvNode(9310, this.provider), new PtvNode(20757, this.provider)
                     });
 
             /*
             var tram19Route = new Route(19,new []
                 {
-                    new MetlinkNode(17306,provider), 
-                    new MetlinkNode(17307,provider), 
-                    new MetlinkNode(17308,provider), 
-                    new MetlinkNode(17309,provider), 
-                    new MetlinkNode(17310,provider), 
-                    new MetlinkNode(17311,provider), 
-                    new MetlinkNode(17312,provider), 
-                    new MetlinkNode(17313,provider), 
-                    new MetlinkNode(17314,provider), 
-                    new MetlinkNode(17315,provider), 
-                    new MetlinkNode(17316,provider), 
-                    new MetlinkNode(17317,provider), 
-                    new MetlinkNode(17318,provider), 
-                    new MetlinkNode(17319,provider), 
-                    new MetlinkNode(17320,provider), 
-                    new MetlinkNode(17321,provider), 
-                    new MetlinkNode(17322,provider), 
-                    new MetlinkNode(17323,provider), 
-                    new MetlinkNode(17324,provider), 
-                    new MetlinkNode(17325,provider), 
-                    new MetlinkNode(17327,provider), 
-                    new MetlinkNode(17328,provider), 
-                    new MetlinkNode(17329,provider), 
-                    new MetlinkNode(17330,provider), 
-                    new MetlinkNode(17331,provider), 
-                    new MetlinkNode(17332,provider), 
-                    new MetlinkNode(17333,provider), 
-                    new MetlinkNode(17334,provider), 
-                    new MetlinkNode(17335,provider), 
-                    new MetlinkNode(17868,provider), 
-                    new MetlinkNode(17869,provider), 
-                    new MetlinkNode(17871,provider), 
-                    new MetlinkNode(17872,provider), 
-                    new MetlinkNode(17873,provider), 
-                    new MetlinkNode(17874,provider), 
-                    new MetlinkNode(17875,provider), 
-                    new MetlinkNode(17876,provider), 
-                    new MetlinkNode(17877,provider)
+                    new PtvNode(17306,provider), 
+                    new PtvNode(17307,provider), 
+                    new PtvNode(17308,provider), 
+                    new PtvNode(17309,provider), 
+                    new PtvNode(17310,provider), 
+                    new PtvNode(17311,provider), 
+                    new PtvNode(17312,provider), 
+                    new PtvNode(17313,provider), 
+                    new PtvNode(17314,provider), 
+                    new PtvNode(17315,provider), 
+                    new PtvNode(17316,provider), 
+                    new PtvNode(17317,provider), 
+                    new PtvNode(17318,provider), 
+                    new PtvNode(17319,provider), 
+                    new PtvNode(17320,provider), 
+                    new PtvNode(17321,provider), 
+                    new PtvNode(17322,provider), 
+                    new PtvNode(17323,provider), 
+                    new PtvNode(17324,provider), 
+                    new PtvNode(17325,provider), 
+                    new PtvNode(17327,provider), 
+                    new PtvNode(17328,provider), 
+                    new PtvNode(17329,provider), 
+                    new PtvNode(17330,provider), 
+                    new PtvNode(17331,provider), 
+                    new PtvNode(17332,provider), 
+                    new PtvNode(17333,provider), 
+                    new PtvNode(17334,provider), 
+                    new PtvNode(17335,provider), 
+                    new PtvNode(17868,provider), 
+                    new PtvNode(17869,provider), 
+                    new PtvNode(17871,provider), 
+                    new PtvNode(17872,provider), 
+                    new PtvNode(17873,provider), 
+                    new PtvNode(17874,provider), 
+                    new PtvNode(17875,provider), 
+                    new PtvNode(17876,provider), 
+                    new PtvNode(17877,provider)
                 });
 
 
@@ -306,194 +306,194 @@ namespace RmitJourneyPlanner.CoreLibraries.Tests
            
             var tram19Down = new Route(19)
                 {
-                    new MetlinkNode(17850, provider),
-                    new MetlinkNode(17851, provider),
-                    new MetlinkNode(17852, provider),
-                    new MetlinkNode(17853, provider),
-                    new MetlinkNode(17854, provider),
-                    new MetlinkNode(17855, provider),
-                    new MetlinkNode(17856, provider),
-                    new MetlinkNode(17865, provider),
-                    new MetlinkNode(17866, provider),
-                    new MetlinkNode(17867, provider),
-                    new MetlinkNode(16736, provider),
-                    new MetlinkNode(16735, provider),
-                    new MetlinkNode(16734, provider),
-                    new MetlinkNode(16733, provider),
-                    new MetlinkNode(16732, provider),
-                    new MetlinkNode(16731, provider),
-                    new MetlinkNode(16730, provider),
-                    new MetlinkNode(16729, provider),
-                    new MetlinkNode(16728, provider),
-                    new MetlinkNode(16727, provider),
-                    new MetlinkNode(16726, provider),
-                    new MetlinkNode(16725, provider),
-                    new MetlinkNode(16724, provider),
-                    new MetlinkNode(16723, provider),
-                    new MetlinkNode(16722, provider),
-                    new MetlinkNode(16721, provider),
-                    new MetlinkNode(16720, provider),
-                    new MetlinkNode(16719, provider),
-                    new MetlinkNode(21961, provider),
-                    new MetlinkNode(16717, provider),
-                    new MetlinkNode(16716, provider),
-                    new MetlinkNode(16715, provider),
-                    new MetlinkNode(16714, provider),
-                    new MetlinkNode(16713, provider),
-                    new MetlinkNode(12777, provider),
-                    new MetlinkNode(2113, provider),
-                    new MetlinkNode(1784, provider),
-                    new MetlinkNode(1292, provider),
-                    new MetlinkNode(378, provider),
-                    new MetlinkNode(323, provider),
-                    new MetlinkNode(17306, provider)
+                    new PtvNode(17850, provider),
+                    new PtvNode(17851, provider),
+                    new PtvNode(17852, provider),
+                    new PtvNode(17853, provider),
+                    new PtvNode(17854, provider),
+                    new PtvNode(17855, provider),
+                    new PtvNode(17856, provider),
+                    new PtvNode(17865, provider),
+                    new PtvNode(17866, provider),
+                    new PtvNode(17867, provider),
+                    new PtvNode(16736, provider),
+                    new PtvNode(16735, provider),
+                    new PtvNode(16734, provider),
+                    new PtvNode(16733, provider),
+                    new PtvNode(16732, provider),
+                    new PtvNode(16731, provider),
+                    new PtvNode(16730, provider),
+                    new PtvNode(16729, provider),
+                    new PtvNode(16728, provider),
+                    new PtvNode(16727, provider),
+                    new PtvNode(16726, provider),
+                    new PtvNode(16725, provider),
+                    new PtvNode(16724, provider),
+                    new PtvNode(16723, provider),
+                    new PtvNode(16722, provider),
+                    new PtvNode(16721, provider),
+                    new PtvNode(16720, provider),
+                    new PtvNode(16719, provider),
+                    new PtvNode(21961, provider),
+                    new PtvNode(16717, provider),
+                    new PtvNode(16716, provider),
+                    new PtvNode(16715, provider),
+                    new PtvNode(16714, provider),
+                    new PtvNode(16713, provider),
+                    new PtvNode(12777, provider),
+                    new PtvNode(2113, provider),
+                    new PtvNode(1784, provider),
+                    new PtvNode(1292, provider),
+                    new PtvNode(378, provider),
+                    new PtvNode(323, provider),
+                    new PtvNode(17306, provider)
                 };
 
             var tram55down = new Route(55)
                 {
-                    new MetlinkNode(18221, provider),
-                    new MetlinkNode(18222, provider),
-                    new MetlinkNode(18223, provider),
-                    new MetlinkNode(18233, provider),
-                    new MetlinkNode(18234, provider),
-                    new MetlinkNode(18450, provider),
-                    new MetlinkNode(18465, provider),
-                    new MetlinkNode(18466, provider),
-                    new MetlinkNode(18467, provider),
-                    new MetlinkNode(18469, provider),
-                    new MetlinkNode(18199, provider),
-                    new MetlinkNode(18200, provider),
-                    new MetlinkNode(18201, provider),
-                    new MetlinkNode(18202, provider),
-                    new MetlinkNode(18206, provider),
-                    new MetlinkNode(18203, provider),
-                    new MetlinkNode(20493, provider),
-                    new MetlinkNode(20490, provider),
-                    new MetlinkNode(19591, provider),
-                    new MetlinkNode(19699, provider),
-                    new MetlinkNode(19592, provider),
-                    new MetlinkNode(19593, provider),
-                    new MetlinkNode(19594, provider),
-                    new MetlinkNode(18542, provider),
-                    new MetlinkNode(18543, provider),
-                    new MetlinkNode(18544, provider),
-                    new MetlinkNode(18545, provider),
-                    new MetlinkNode(18546, provider),
-                    new MetlinkNode(18547, provider),
-                    new MetlinkNode(18548, provider),
-                    new MetlinkNode(18549, provider),
-                    new MetlinkNode(18550, provider),
-                    new MetlinkNode(18551, provider),
-                    new MetlinkNode(18552, provider),
-                    new MetlinkNode(18553, provider),
-                    new MetlinkNode(18554, provider),
-                    new MetlinkNode(18555, provider),
-                    new MetlinkNode(18556, provider),
-                    new MetlinkNode(18557, provider),
-                    new MetlinkNode(18558, provider),
-                    new MetlinkNode(18559, provider),
-                    new MetlinkNode(18560, provider),
-                    new MetlinkNode(18561, provider),
-                    new MetlinkNode(18562, provider),
-                    new MetlinkNode(18563, provider),
-                    new MetlinkNode(18564, provider),
-                    new MetlinkNode(18565, provider),
-                    new MetlinkNode(18086, provider)
+                    new PtvNode(18221, provider),
+                    new PtvNode(18222, provider),
+                    new PtvNode(18223, provider),
+                    new PtvNode(18233, provider),
+                    new PtvNode(18234, provider),
+                    new PtvNode(18450, provider),
+                    new PtvNode(18465, provider),
+                    new PtvNode(18466, provider),
+                    new PtvNode(18467, provider),
+                    new PtvNode(18469, provider),
+                    new PtvNode(18199, provider),
+                    new PtvNode(18200, provider),
+                    new PtvNode(18201, provider),
+                    new PtvNode(18202, provider),
+                    new PtvNode(18206, provider),
+                    new PtvNode(18203, provider),
+                    new PtvNode(20493, provider),
+                    new PtvNode(20490, provider),
+                    new PtvNode(19591, provider),
+                    new PtvNode(19699, provider),
+                    new PtvNode(19592, provider),
+                    new PtvNode(19593, provider),
+                    new PtvNode(19594, provider),
+                    new PtvNode(18542, provider),
+                    new PtvNode(18543, provider),
+                    new PtvNode(18544, provider),
+                    new PtvNode(18545, provider),
+                    new PtvNode(18546, provider),
+                    new PtvNode(18547, provider),
+                    new PtvNode(18548, provider),
+                    new PtvNode(18549, provider),
+                    new PtvNode(18550, provider),
+                    new PtvNode(18551, provider),
+                    new PtvNode(18552, provider),
+                    new PtvNode(18553, provider),
+                    new PtvNode(18554, provider),
+                    new PtvNode(18555, provider),
+                    new PtvNode(18556, provider),
+                    new PtvNode(18557, provider),
+                    new PtvNode(18558, provider),
+                    new PtvNode(18559, provider),
+                    new PtvNode(18560, provider),
+                    new PtvNode(18561, provider),
+                    new PtvNode(18562, provider),
+                    new PtvNode(18563, provider),
+                    new PtvNode(18564, provider),
+                    new PtvNode(18565, provider),
+                    new PtvNode(18086, provider)
                 };
 
             var tram55up = new Route(55)
                 {
-                    new MetlinkNode(18086, provider),
-                    new MetlinkNode(18085, provider),
-                    new MetlinkNode(18084, provider),
-                    new MetlinkNode(18083, provider),
-                    new MetlinkNode(18082, provider),
-                    new MetlinkNode(18081, provider),
-                    new MetlinkNode(18080, provider),
-                    new MetlinkNode(18079, provider),
-                    new MetlinkNode(18078, provider),
-                    new MetlinkNode(18077, provider),
-                    new MetlinkNode(18076, provider),
-                    new MetlinkNode(18075, provider),
-                    new MetlinkNode(18074, provider),
-                    new MetlinkNode(18073, provider),
-                    new MetlinkNode(18072, provider),
-                    new MetlinkNode(18071, provider),
-                    new MetlinkNode(18069, provider),
-                    new MetlinkNode(18068, provider),
-                    new MetlinkNode(18067, provider),
-                    new MetlinkNode(18066, provider),
-                    new MetlinkNode(18065, provider),
-                    new MetlinkNode(18064, provider),
-                    new MetlinkNode(18063, provider),
-                    new MetlinkNode(18062, provider),
-                    new MetlinkNode(19256, provider),
-                    new MetlinkNode(19255, provider),
-                    new MetlinkNode(19254, provider),
-                    new MetlinkNode(19253, provider),
-                    new MetlinkNode(19252, provider),
-                    new MetlinkNode(18204, provider),
-                    new MetlinkNode(18205, provider),
-                    new MetlinkNode(18207, provider),
-                    new MetlinkNode(18208, provider),
-                    new MetlinkNode(18209, provider),
-                    new MetlinkNode(18210, provider),
-                    new MetlinkNode(18211, provider),
-                    new MetlinkNode(18212, provider),
-                    new MetlinkNode(18213, provider),
-                    new MetlinkNode(18214, provider),
-                    new MetlinkNode(18215, provider),
-                    new MetlinkNode(18216, provider),
-                    new MetlinkNode(18217, provider),
-                    new MetlinkNode(18218, provider),
-                    new MetlinkNode(18219, provider),
-                    new MetlinkNode(18220, provider)
+                    new PtvNode(18086, provider),
+                    new PtvNode(18085, provider),
+                    new PtvNode(18084, provider),
+                    new PtvNode(18083, provider),
+                    new PtvNode(18082, provider),
+                    new PtvNode(18081, provider),
+                    new PtvNode(18080, provider),
+                    new PtvNode(18079, provider),
+                    new PtvNode(18078, provider),
+                    new PtvNode(18077, provider),
+                    new PtvNode(18076, provider),
+                    new PtvNode(18075, provider),
+                    new PtvNode(18074, provider),
+                    new PtvNode(18073, provider),
+                    new PtvNode(18072, provider),
+                    new PtvNode(18071, provider),
+                    new PtvNode(18069, provider),
+                    new PtvNode(18068, provider),
+                    new PtvNode(18067, provider),
+                    new PtvNode(18066, provider),
+                    new PtvNode(18065, provider),
+                    new PtvNode(18064, provider),
+                    new PtvNode(18063, provider),
+                    new PtvNode(18062, provider),
+                    new PtvNode(19256, provider),
+                    new PtvNode(19255, provider),
+                    new PtvNode(19254, provider),
+                    new PtvNode(19253, provider),
+                    new PtvNode(19252, provider),
+                    new PtvNode(18204, provider),
+                    new PtvNode(18205, provider),
+                    new PtvNode(18207, provider),
+                    new PtvNode(18208, provider),
+                    new PtvNode(18209, provider),
+                    new PtvNode(18210, provider),
+                    new PtvNode(18211, provider),
+                    new PtvNode(18212, provider),
+                    new PtvNode(18213, provider),
+                    new PtvNode(18214, provider),
+                    new PtvNode(18215, provider),
+                    new PtvNode(18216, provider),
+                    new PtvNode(18217, provider),
+                    new PtvNode(18218, provider),
+                    new PtvNode(18219, provider),
+                    new PtvNode(18220, provider)
                 };
 			
 			//var route1 = new Route(-1)
 			//{
-				//new MetlinkNode(0,provider)					
+				//new PtvNode(0,provider)					
 				
 			//};
 
              */
             var expressTest = new Route(-1)
                 {
-                    new MetlinkNode(19975, this.provider), 
-                    new MetlinkNode(19974, this.provider), 
-                    new MetlinkNode(20019, this.provider), 
-                    new MetlinkNode(20017, this.provider), 
-                    new MetlinkNode(20016, this.provider), 
-                    new MetlinkNode(20015, this.provider), 
-                    new MetlinkNode(20014, this.provider), 
-                    new MetlinkNode(20013, this.provider)
+                    new PtvNode(19975, this.provider), 
+                    new PtvNode(19974, this.provider), 
+                    new PtvNode(20019, this.provider), 
+                    new PtvNode(20017, this.provider), 
+                    new PtvNode(20016, this.provider), 
+                    new PtvNode(20015, this.provider), 
+                    new PtvNode(20014, this.provider), 
+                    new PtvNode(20013, this.provider)
                 };
 
             /*
 		    var bigTest = new Route(-1)
 		        {
-		            new MetlinkNode(19965, provider),
-		            new MetlinkNode(19966, provider),
-		            new MetlinkNode(19967, provider),
-		            new MetlinkNode(19968, provider),
-		            new MetlinkNode(19969, provider),
-		            new MetlinkNode(19970, provider),
-		            new MetlinkNode(45656, provider),
-		            new MetlinkNode(45657, provider),
-		            new MetlinkNode(45658, provider),
-		            new MetlinkNode(45659, provider),
-		            new MetlinkNode(45660, provider),
-		            new MetlinkNode(45661, provider),
-		            new MetlinkNode(4531, provider),
-		            new MetlinkNode(4530, provider),
-		            new MetlinkNode(20391, provider),
-		            new MetlinkNode(4529, provider),
-		            new MetlinkNode(20390, provider),
-		            new MetlinkNode(4528, provider),
-		            new MetlinkNode(18778, provider),
-		            new MetlinkNode(7961, provider),
-		            new MetlinkNode(3218, provider),
-		            new MetlinkNode(20039, provider)
+		            new PtvNode(19965, provider),
+		            new PtvNode(19966, provider),
+		            new PtvNode(19967, provider),
+		            new PtvNode(19968, provider),
+		            new PtvNode(19969, provider),
+		            new PtvNode(19970, provider),
+		            new PtvNode(45656, provider),
+		            new PtvNode(45657, provider),
+		            new PtvNode(45658, provider),
+		            new PtvNode(45659, provider),
+		            new PtvNode(45660, provider),
+		            new PtvNode(45661, provider),
+		            new PtvNode(4531, provider),
+		            new PtvNode(4530, provider),
+		            new PtvNode(20391, provider),
+		            new PtvNode(4529, provider),
+		            new PtvNode(20390, provider),
+		            new PtvNode(4528, provider),
+		            new PtvNode(18778, provider),
+		            new PtvNode(7961, provider),
+		            new PtvNode(3218, provider),
+		            new PtvNode(20039, provider)
 		        };
              * 
 

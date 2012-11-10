@@ -187,11 +187,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                 FROM tblStopInformation si
                 INNER JOIN tblModes m
                 ON si.StopModeID=m.StopModeID");
-                int nodeCount = 0;
                 foreach (DataRow row in nodeData.Rows)
                 {
                     /*
-                    var node = new MetlinkNode
+                    var node = new PtvNode
                     {
                         Id = (int)row["MetlinkStopID"],
                         TransportType = row["StopModeName"].ToString(),
@@ -209,7 +208,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
                         mode = TransportMode.Unknown;
                     }
 
-                    var node = new MetlinkNode(
+                    var node = new PtvNode(
                         (int)row["MetlinkStopID"], 
                         mode, 
                         row["StopSpecName"].ToString(), 
@@ -221,7 +220,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink
 
                     // Console.SetCursorPosition(0, Console.CursorTop);
                     // Console.Write("{0,10:f2}%", 100.0 * ((double)count++ / (Double)nodeData.Rows.Count));
-                    this.list[node.Id] = new List<MetlinkNode> { node };
+                    this.list[node.Id] = new List<PtvNode> { node };
 
                     // Logger.Log(this,"-->Adding node (id: {0}) ({2}/{3})... [{1} s]", node.Id, stopwatch.ElapsedMilliseconds / 1000.0,nodeCount++,nodeData.Rows.Count);
                 }
@@ -314,8 +313,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                     int linkCount = 0;
 
-                    // var nakedNodes = new List<MetlinkNode>();
-                    var cycleNodes = new List<MetlinkNode>();
+                    // var nakedNodes = new List<PtvNode>();
+                    var cycleNodes = new List<PtvNode>();
                     int count = 0;
                     foreach (DataRow node in nodeData.Rows)
                     {
@@ -326,15 +325,15 @@ ORDER BY sr.RouteID, sr.StopOrder;
                         Logger.UpdateProgress(this, (int)progress);
 
                         ////TODO: Make scan distance variable.
-                        MetlinkNode metlinkNode = this.list[id][0];
+                        PtvNode ptvNode = this.list[id][0];
                         var nodes = this.GetNodesAtLocation(
-                            new Location(metlinkNode.Latitude, metlinkNode.Longitude), 0.5);
+                            new Location(ptvNode.Latitude, ptvNode.Longitude), 0.5);
 
                         foreach (var closeNode in nodes)
                         {
                             closeNode.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                                metlinkNode.Latitude, 
-                                metlinkNode.Longitude, 
+                                ptvNode.Latitude, 
+                                ptvNode.Longitude, 
                                 closeNode.Node.Latitude, 
                                 closeNode.Node.Longitude);
                         }
@@ -344,17 +343,17 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                         foreach (var closeNode in nodes.OrderBy(n => n.EuclidianDistance))
                         {
-                            if (!this.InSameLine(closeNode.Node, metlinkNode) && closeNode.Node.Id != metlinkNode.Id
+                            if (!this.InSameLine(closeNode.Node, ptvNode) && closeNode.Node.Id != ptvNode.Id
                                 && !vistedRoutes.Contains(Convert.ToInt32(closeNode.CurrentRoute)))
                             {
                                 vistedRoutes.Add(Convert.ToInt32(closeNode.CurrentRoute));
                                 if (!this.list[id].Contains(this.list[Convert.ToInt32(closeNode.Node.Id)][0]))
                                 {
-                                    // Logger.Log(this,"-->Adding proximity link: id1: {0} id2: {1}... [{2} s]", MetlinkNode.Id, closeNode.Id, stopwatch.ElapsedMilliseconds / 1000.0);
+                                    // Logger.Log(this,"-->Adding proximity link: id1: {0} id2: {1}... [{2} s]", PtvNode.Id, closeNode.Id, stopwatch.ElapsedMilliseconds / 1000.0);
                                     this.list[id].Add(this.list[Convert.ToInt32(closeNode.Node.Id)][0]);
                                     totalLinks++;
 
-                                    // list[Convert.ToInt32(closeNode.Id)].Add(MetlinkNode);
+                                    // list[Convert.ToInt32(closeNode.Id)].Add(PtvNode);
                                     linkCount++;
                                 }
                             }
@@ -378,7 +377,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     {
                         Logger.Log(this, "Warning: There are {0} naked nodes.", nakedNodes.Count);
                         Logger.Log(this, "Resolving... [{0} s]");
-                        foreach (MetlinkNode nakedNode in nakedNodes)
+                        foreach (PtvNode nakedNode in nakedNodes)
                         {
                             double distance = 1.0;
                             var nodes = new List<INetworkNode>();
@@ -413,10 +412,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     Logger.Log(this, "Saving cache file...");
                     using (var writer = new StreamWriter("AdjacencyCache.dat", false))
                     {
-                        foreach (KeyValuePair<int, List<MetlinkNode>> kvp in this.list)
+                        foreach (KeyValuePair<int, List<PtvNode>> kvp in this.list)
                         {
                             var sb = new StringBuilder();
-                            foreach (MetlinkNode node in kvp.Value)
+                            foreach (PtvNode node in kvp.Value)
                             {
                                 sb.Append(node.Id.ToString(CultureInfo.InvariantCulture) + ",");
                             }
@@ -577,7 +576,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// </returns>
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
-            List<MetlinkNode> adjacentNodes = this.list[node.Id];
+            List<PtvNode> adjacentNodes = this.list[node.Id];
             var outputNodes = new List<INetworkNode>(this.list[node.Id].Count);
             for (int i = 2; i < adjacentNodes.Count; i++)
             {
@@ -615,7 +614,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// </returns>
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node, int routeId)
         {
-            List<MetlinkNode> adjacent = this.list[node.Id];
+            List<PtvNode> adjacent = this.list[node.Id];
             var valid = new List<INetworkNode>();
             for (int i = 1; i < adjacent.Count; i++)
             {
@@ -636,7 +635,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// </returns>
         public Type GetAssociatedType()
         {
-            return typeof(MetlinkNode);
+            return typeof(PtvNode);
         }
 
         /// <summary>
@@ -699,12 +698,6 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 {
                     continue;
                 }
-
-                if (departure.departureTime == -1 && departure.arrivalTime == -1)
-                {
-                    string ohGod = "dfdf";
-                }
-
                 if (arrival.arrivalTime < departure.departureTime)
                 {
                     arrival.arrivalTime += 2400;
@@ -1056,7 +1049,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// </param>
         /// <returns>
         /// </returns>
-        public MetlinkNode GetNodeFromName(string stopSpecName)
+        public PtvNode GetNodeFromName(string stopSpecName)
         {
             string query = string.Format(
                 @"SELECT MetlinkStopID FROM tblStopInformation WHERE StopSpecName='{0}';", stopSpecName);
@@ -1098,7 +1091,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// <returns>
         /// A list of <see cref="INetworkNode"/> objects that are in the specified area. 
         /// </returns>
-        public List<NodeWrapper<MetlinkNode>> GetNodesAtLocation(Location location, double radius)
+        public List<NodeWrapper<PtvNode>> GetNodesAtLocation(Location location, double radius)
         {
             Location topLeft = GeometryHelper.Travel(location, 315.0, radius);
             Location bottomRight = GeometryHelper.Travel(location, 135.0, radius);
@@ -1127,10 +1120,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
             DataTable table = this.database.GetDataSet(query);
 
-            var nodes = new List<NodeWrapper<MetlinkNode>>();
+            var nodes = new List<NodeWrapper<PtvNode>>();
             foreach (DataRow row in table.Rows)
             {
-                var node = new NodeWrapper<MetlinkNode>(this.list[(int)row["MetlinkStopID"]][0]);
+                var node = new NodeWrapper<PtvNode>(this.list[(int)row["MetlinkStopID"]][0]);
 
                 node.CurrentRoute = (int)row["RouteID"];
                 if (node.CurrentRoute == -1)
@@ -1204,7 +1197,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// <returns>
         /// The in same line.
         /// </returns>
-        public bool InSameLine(MetlinkNode node1, MetlinkNode node2)
+        public bool InSameLine(PtvNode node1, PtvNode node2)
         {
             string query =
                 string.Format(
@@ -1237,7 +1230,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// </param>
         public object[] QueryStops(string query)
         {
-            // List<MetlinkNode> stops = new List<MetlinkNode>();
+            // List<PtvNode> stops = new List<PtvNode>();
             string sqlQuery =
                 string.Format(
                     @"SELECT StopSpecName,CONCAT(TravelSTName,' ',TravelSTType,'/',COALESCE(CrossSTName,''),' ',COALESCE(CrossSTType,'')), 
