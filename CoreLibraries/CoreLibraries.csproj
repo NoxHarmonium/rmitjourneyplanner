@@ -119,7 +119,7 @@
     <Compile Include="RoutePlanners\Evolutionary\Tools.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Breeders\StandardBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\Mutators\StandardMutator.cs" />
-    <Compile Include="RoutePlanners\Events.cs" />
+    <Compile Include="RoutePlanners\NextIterationEventArgs.cs" />
     <Compile Include="RoutePlanners\IRoutePlanner.cs" />
     <Compile Include="Positioning\GeometryHelper.cs" />
     <Compile Include="Positioning\Location.cs" />
@@ -147,7 +147,6 @@
     <Compile Include="Types\TransportMode.cs" />
     <Compile Include="Types\TransportTimeSpan.cs" />
     <Compile Include="Random.cs" />
-    <Compile Include="Tests\TestFitnessFunction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings.xml" />
