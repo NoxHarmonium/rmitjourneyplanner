@@ -125,7 +125,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         #region Public Methods and Operators
 
         /// <summary>
-        /// Parses a comma delimted latitude and longitude string and returns a corrosponding location object.
+        /// Parses a comma delimited latitude and longitude string and returns a corresponding location object.
         /// </summary>
         /// <param name="locationString">
         /// The location string to parse to a location. 

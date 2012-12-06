@@ -23,7 +23,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
         #region Public Methods and Operators
 
         /// <summary>
-        /// Gets the distance between 2 points calculcated with the curvature of the earth.
+        /// Gets the distance between 2 points calculated with the curvature of the earth.
         /// </summary>
         /// <param name="latitude1">
         /// The latitude of the first point. 
@@ -77,13 +77,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
              * 
              * */
             const double R = 6371; // Mean radius of the earth in KM
-            double dLat = ToRads(locationB.Latitude - locationA.Latitude);
-            double dLon = ToRads(locationB.Longitude - locationA.Longitude);
+            double dlat = ToRads(locationB.Latitude - locationA.Latitude);
+            double dlon = ToRads(locationB.Longitude - locationA.Longitude);
             double lat1 = ToRads(locationA.Latitude);
             double lat2 = ToRads(locationB.Latitude);
 
-            double a = (Math.Sin(dLat / 2.0) * Math.Sin(dLat / 2.0))
-                       + (Math.Sin(dLon / 2.0) * Math.Sin(dLon / 2.0) * Math.Cos(lat1) * Math.Cos(lat2));
+            double a = (Math.Sin(dlat / 2.0) * Math.Sin(dlat / 2.0))
+                       + (Math.Sin(dlon / 2.0) * Math.Sin(dlon / 2.0) * Math.Cos(lat1) * Math.Cos(lat2));
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
             return R * c;
@@ -146,15 +146,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Positioning
             double lon1 = ToRads(initial.Longitude);
             double lat2 =
                 Math.Asin(
-                    Math.Sin(lat1) * Math.Cos(distance / R)
-                    + Math.Cos(lat1) * Math.Sin(distance / R) * Math.Cos(bearing));
+                    (Math.Sin(lat1) * Math.Cos(distance / R))
+                    + (Math.Cos(lat1) * Math.Sin(distance / R) * Math.Cos(bearing)));
             double lon2 = lon1
                           +
                           Math.Atan2(
                               Math.Sin(bearing) * Math.Sin(distance / R) * Math.Cos(lat1), 
-                              Math.Cos(distance / R) - Math.Sin(lat1) * Math.Sin(lat2));
+                              Math.Cos(distance / R) - (Math.Sin(lat1) * Math.Sin(lat2)));
 
-            lon2 = (lon2 + 3.0 * Math.PI) % (2 * Math.PI) - Math.PI;
+            lon2 = ((lon2 + (3.0 * Math.PI)) % (2 * Math.PI)) - Math.PI;
 
             return new Location(ToDegs(lat2), ToDegs(lon2));
         }
