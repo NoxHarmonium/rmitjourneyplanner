@@ -1,7 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MetlinkDataProvider.cs" company="RMIT University">
-//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
-// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+// <copyright file="PtvDataProvider.cs" company="RMIT University">
+//   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
 //   Providers data on the TransNET database.
@@ -15,7 +14,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -40,7 +38,8 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         #region Constants and Fields
 
         /// <summary>
-        ///   The ammount of records to read in at any given time.
+        ///   The amount of records to read in at any given time.
+        ///   TODO: Make RecordChunk a property or dynamically determined.
         /// </summary>
         private const int RecordChunk = 10000000;
 
@@ -93,6 +92,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         /// </summary>
         public PtvDataProvider()
         {
+            //// TODO: Rework the constructor for ptv data provider.
             try
             {
                 this.database.Open();
@@ -100,8 +100,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
             catch (Exception e)
             {
                 Logger.Log(this, "Error opening database: " + e.Message);
-                throw e;
+                throw;
             }
+
             {
                 // try
                 var nonNumericCharacters = new Regex(@"[^\d^\.]");
@@ -109,21 +110,12 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
 
                 Logger.Log(this, "Building node-route map...");
                 Logger.Log(this, "-->Querying this.database...");
-                DataTable nodeData = null;
+                DataTable nodeData;
                 int i = 0;
                 do
                 {
                     Logger.Log(this, "Reading records {0}-{1}", i * RecordChunk, RecordChunk);
 
-                    /*
-					nodeData = this.database.GetDataSet(
-                        String.Format(@"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.Sequence 
-                            FROM tblServices s
-                            INNER JOIN tblServiceTimes st
-                            ON s.ServiceID=st.ServiceID
-                            ORDER BY RouteID, s.ServiceID,ArrivalTime
-							LIMIT {0}, {1};",i *1000, (i*1000) + 1000));\
-					*/
                     nodeData =
                         this.database.GetDataSet(
                             string.Format(
@@ -189,18 +181,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                 ON si.StopModeID=m.StopModeID");
                 foreach (DataRow row in nodeData.Rows)
                 {
-                    /*
-                    var node = new PtvNode
-                    {
-                        Id = (int)row["MetlinkStopID"],
-                        TransportType = row["StopModeName"].ToString(),
-                        Latitude = Convert.ToSingle(row["GPSLat"]),
-                        Longitude = Convert.ToSingle(row["GPSLong"]),
-                    
-                     * StopSpecName = row["StopSpecName"].ToString()
-                    };*/
-                    var stopwatch = Stopwatch.StartNew();
-
                     TransportMode mode;
                     bool success = Enum.TryParse(row["StopModeName"].ToString(), out mode);
                     if (!success)
@@ -326,16 +306,12 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                         ////TODO: Make scan distance variable.
                         PtvNode ptvNode = this.list[id][0];
-                        var nodes = this.GetNodesAtLocation(
-                            new Location(ptvNode.Latitude, ptvNode.Longitude), 0.5);
+                        var nodes = this.GetNodesAtLocation(new Location(ptvNode.Latitude, ptvNode.Longitude), 0.5);
 
                         foreach (var closeNode in nodes)
                         {
                             closeNode.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                                ptvNode.Latitude, 
-                                ptvNode.Longitude, 
-                                closeNode.Node.Latitude, 
-                                closeNode.Node.Longitude);
+                                ptvNode.Latitude, ptvNode.Longitude, closeNode.Node.Latitude, closeNode.Node.Longitude);
                         }
 
                         // nodes.Sort(n => n.EuclidianDistance);
@@ -425,8 +401,6 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     }
                 }
 
-                var craigAdg = this.list[20035];
-
                 Logger.Log(this, "\nAdjacency data structure loaded successfully in {0} seconds.");
 
                 Logger.Log(this, "Starting experimental timetable code...");
@@ -434,7 +408,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 if (!File.Exists("TimetableCache.dat"))
                 {
                     Logger.Log(this, "Timetable cache non existant. Rebuilding...");
-                    DataTable timetableData = new DataTable();
+                    var timetableData = new DataTable();
 
                     i = 0;
 
@@ -503,28 +477,6 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 }
 
                 Logger.Log(this, "Ending experimental timetable code...");
-
-                /*
-                int sstCount = Convert.ToInt32(this.database.GetDataSet("SELECT count(*) FROM tblSST").Rows[0][0]);
-                if (sstCount == 0)
-                {
-                    Logger.Log(this, "Services timetable is empty. Populating...");
-                    this.database.RunQuery(
-                        @"TRUNCATE tblSST;
-                        INSERT INTO tblSST
-                        SELECT
-                        `tblservicearcs`.`ServiceID`,
-                        `tblservicearcs`.`SourceID`,
-                        `tblservicearcs`.`RouteID`,
-                        `tblservicearcs`.`DepartTime`,
-                        `tblservicearcs`.`ArriveTime`,
-                        `tblservicearcs`.`DOW`,
-                        `tblservicearcs`.`DestID`
-                        FROM tblServiceArcs;
-                        ");
-
-                }
-				 */
             }
 
             // catch (Exception e)
@@ -559,6 +511,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// Cleans up the resources used by this object.
         /// </summary>
         /// <param name="disposing">
+        /// True if called by dispose, false if called by the finalizer.
         /// </param>
         public void Dispose(bool disposing)
         {
@@ -585,15 +538,6 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     throw new Exception("The node is adjacent to itself!");
                 }
 
-                /*
-                List<int> routes = this.routeMap[this.list[node.Id][i].Id];
-                for (int j = 0; j < routes.Count; j++)
-                {
-                    INetworkNode subNode = (INetworkNode)this.list[node.Id][i].Clone();
-                    subNode.RouteId = routes[j];
-                    outputNodes.Add(subNode);
-                }
-                 */
                 outputNodes.Add(adjacentNodes[i]);
             }
 
@@ -658,14 +602,14 @@ ORDER BY sr.RouteID, sr.StopOrder;
             Assert.That(!departureTime.Equals(default(DateTime)), "Departure time is default. Something is wrong.");
 
             var arcs = new List<Arc>();
-            int dow = (int)departureTime.DayOfWeek;
+            var dow = (int)departureTime.DayOfWeek;
 
             if (dow < 1)
             {
                 dow = 7;
             }
 
-            int dowFilter = 1 << 7 - dow;
+            int dowFilter = 1 << (7 - dow);
 
             int flatDepartureTime = Convert.ToInt32(departureTime.ToString("Hmm"));
 
@@ -698,6 +642,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 {
                     continue;
                 }
+
                 if (arrival.arrivalTime < departure.departureTime)
                 {
                     arrival.arrivalTime += 2400;
@@ -709,27 +654,12 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 int travelTime = this.SubtractTimes(arrival.arrivalTime, departure.departureTime);
 
                 TransportTimeSpan output = default(TransportTimeSpan);
-                output.WaitingTime = this.parseSpan(waitingTime);
-                output.TravelTime = this.parseSpan(travelTime);
+                output.WaitingTime = this.ParseSpan(waitingTime);
+                output.TravelTime = this.ParseSpan(travelTime);
                 if (output.TravelTime.Ticks < 0 || output.WaitingTime.Ticks < 0)
                 {
                     // throw new Exception("Negitive time span detected.");
                     Assert.Fail("Negitive time span");
-                    Logger.Log(this, "WARNING: Negitive timespan between nodes detected!");
-                    Logger.Log(
-                        this, 
-                        "Total: {0}, Travel: {1}, Waiting: {2}", 
-                        output.TotalTime, 
-                        output.TravelTime, 
-                        output.WaitingTime);
-                    Logger.Log(
-                        this, 
-                        "departTime: {0}, departureTime: {1}, arrivalTime: {2}", 
-                        departureTime, 
-                        departure.departureTime, 
-                        arrival.arrivalTime);
-
-                    // return default(TransportTimeSpan);
                 }
 
                 arcs.Add(
@@ -747,118 +677,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets the shortest distance between nodes.
-        /// </summary>
-        /// <param name="source">
-        /// The source node. 
-        /// </param>
-        /// <param name="destination">
-        /// The destination node. 
-        /// </param>
-        /// <param name="departureTime">
-        /// The optimum time of departure. 
-        /// </param>
-        /// <param name="routeId">
-        /// The route to calculate the distance for. 
-        /// </param>
-        /// <returns>
-        /// A list of <see cref="Arc"/> objects that represent the multiple ways to get between the 2 points. 
-        /// </returns>
-        public TransportTimeSpan GetDistanceBetweenNodes(
-            INetworkNode source, INetworkNode destination, DateTime departureTime, int routeId)
-        {
-            throw new NotImplementedException();
-
-            /*
-            int dow = (int)departureTime.DayOfWeek;
-            
-
-            if (dow < 1)
-            {
-                dow = 7;
-            }
-            int dowFilter = 1 << 7 - dow;
-            int flatDepartureTime = Convert.ToInt32(
-                departureTime.ToString("Hmm"));
-            var departures = timetable.GetDepartures(source.Id, dowFilter, flatDepartureTime);
-            
-            
-            Departure departure = departures.FirstOrDefault(departure1 => departure1.routeId == routeId && !departure1.Equals(default(Departure)));
-            
-            Console.WriteLine("Chosen departure: {0}", departure);
-           // Departure arrival = de
-
-
-            if (!departure.Equals(default(Departure)))
-            {
-
-                int actualDepature = departure.departureTime;
-                //Departure departure = 
-                DateTime departTime = this.ParseDate(departure.departureTime.ToString(CultureInfo.InvariantCulture));
-
-                 var arrivals = timetable.GetArrivals(
-                destination.Id,departure.serviceId);
-                
-               
-                var arrival = arrivals.FirstOrDefault(arrival1 => arrival1.routeId == routeId && arrival1.serviceId == departure.serviceId);
-                if (arrival.arrivalTime == 0)
-                {
-                    arrival.arrivalTime = arrival.departureTime;
-                }
-                Console.WriteLine("Chosen arrival: {0}", arrival);
-
-                 if (arrival.order <= departure.order)
-                 {
-                     Logger.Log(this,"Backwards service: Returning empty.");
-                     return default(TransportTimeSpan);
-                 }
-
-                if (arrival.Equals(default (Departure)))
-                {
-                    Logger.Log(this, "No arrival: Returning empty.");
-                    return default(TransportTimeSpan);
-                }
-
-                DateTime arrivalTime = this.ParseDate(arrival.arrivalTime.ToString(CultureInfo.InvariantCulture)); ;
-                //Normalize dates
-                arrivalTime += departureTime.Date - default(DateTime).Date;
-                departTime += departureTime.Date - default(DateTime).Date;
-
-                if (arrival.arrivalTime < actualDepature)
-                {
-                    arrival.arrivalTime += 1200;
-                }
-
-                int waitingTime = actualDepature - flatDepartureTime;
-                int travelTime = arrival.arrivalTime - actualDepature;
-
-                TransportTimeSpan output = default(TransportTimeSpan);
-                output.WaitingTime = this.parseSpan(waitingTime);
-                output.TravelTime = this.parseSpan(travelTime) ;
-                if (output.TravelTime.Ticks < 0 || output.WaitingTime.Ticks < 0)
-                {
-                    // throw new Exception("Negitive time span detected.");
-
-                    Logger.Log(this,"WARNING: Negitive timespan between nodes detected!");
-                    Logger.Log(this,"Total: {0}, Travel: {1}, Waiting: {2}",output.TotalTime,output.TravelTime,output.WaitingTime);
-                    Logger.Log(this,"departTime: {0}, departureTime: {1}, arrivalTime: {2}",departTime,departureTime,arrivalTime);
-                    //return default(TransportTimeSpan);
-                }
-
-                return output;
-            }
-            Logger.Log(this,"WARNING: Null timespan between nodes detected!");
-            return default(TransportTimeSpan);
-            */
-        }
-
-        /// <summary>
-        /// The get line nodes.
+        /// Returns a list of nodes that form a specified line.
         /// </summary>
         /// <param name="lineId">
         /// The line id.
         /// </param>
         /// <returns>
+        /// A list of nodes forming a specified line.
         /// </returns>
         public List<INetworkNode> GetLineNodes(int lineId)
         {
@@ -868,56 +693,6 @@ ORDER BY sr.RouteID, sr.StopOrder;
             var nodes = new List<INetworkNode>(result.Rows.Count);
             nodes.AddRange(from DataRow row in result.Rows select this.list[Convert.ToInt32(row["MetlinkStopID"])][0]);
             return nodes;
-        }
-
-        /// <summary>
-        /// Gets the network node that is closest to the specified point on the specified route.
-        /// </summary>
-        /// <param name="destination">
-        /// The node to measure the distance to. 
-        /// </param>
-        /// <param name="routeId">
-        /// The route to take the nodes from. 
-        /// </param>
-        /// <returns>
-        /// A network node 
-        /// </returns>
-        public INetworkNode GetNodeClosestToPoint(INetworkNode destination, int routeId)
-        {
-            if (routeId == -1)
-            {
-                return null;
-            }
-
-            string query =
-                string.Format(
-                    @"
-                            SELECT si.MetlinkStopID, si.GPSLat, si.GPSLong, si.StopModeID, sr.StopOrder FROM tblStopRoutes sr
-                            INNER JOIN tblStopInformation si ON sr.MetlinkStopID=si.MetlinkStopID
-                           
-                    ", 
-                    routeId);
-
-            // WHERE RouteID={0}
-            DataTable result = this.database.GetDataSet(query);
-            List<NodeWrapper<INetworkNode>> nodes =
-                (from DataRow row in result.Rows
-                 select new NodeWrapper<INetworkNode>(this.list[(int)row["MetlinkStopID"]][0])).ToList();
-            double minDistance = double.MaxValue;
-            NodeWrapper<INetworkNode> minNode = null;
-
-            foreach (var node in nodes)
-            {
-                node.EuclidianDistance = GeometryHelper.GetStraightLineDistance(
-                    (Location)node.Node, (Location)destination);
-                if (node.EuclidianDistance < minDistance)
-                {
-                    minDistance = node.EuclidianDistance;
-                    minNode = node;
-                }
-            }
-
-            return minNode.Node;
         }
 
         /// <summary>
@@ -933,6 +708,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// The distance to look around the source point. 
         /// </param>
         /// <param name="allowTransfer">
+        /// Determines whether nodes from different lines to the source are considered.
         /// </param>
         /// <returns>
         /// The <see cref="INetworkNode"/> object that is the closest to the destination inside the radius. 
@@ -1012,10 +788,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// Gets a datatable filled with data related to this stop.
         /// </summary>
         /// <param name="metlinkStopId">
-        /// The Metlink stop identifier. 
+        /// The PTV stop identifier. 
         /// </param>
         /// <returns>
-        /// A <see cref="DataTable"/> filled with relivant data. 
+        /// A <see cref="DataTable"/> filled with relevant data. 
         /// </returns>
         public DataTable GetNodeData(int metlinkStopId)
         {
@@ -1042,12 +818,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// The get node from name.
+        /// Gets a node from its name.
         /// </summary>
         /// <param name="stopSpecName">
         /// The stop spec name.
         /// </param>
         /// <returns>
+        /// The node that the name corresponds to, or null if no matches were found.
         /// </returns>
         public PtvNode GetNodeFromName(string stopSpecName)
         {
@@ -1123,9 +900,11 @@ ORDER BY sr.RouteID, sr.StopOrder;
             var nodes = new List<NodeWrapper<PtvNode>>();
             foreach (DataRow row in table.Rows)
             {
-                var node = new NodeWrapper<PtvNode>(this.list[(int)row["MetlinkStopID"]][0]);
+                var node = new NodeWrapper<PtvNode>(this.list[(int)row["MetlinkStopID"]][0])
+                    {
+                       CurrentRoute = (int)row["RouteID"] 
+                    };
 
-                node.CurrentRoute = (int)row["RouteID"];
                 if (node.CurrentRoute == -1)
                 {
                     throw new Exception("null route encountered!");
@@ -1136,19 +915,6 @@ ORDER BY sr.RouteID, sr.StopOrder;
             }
 
             return nodes;
-        }
-
-        /// <summary>
-        /// Returns a random integer that corrosponds to a stop in the Metlink database. 
-        ///   Use for debugging.
-        /// </summary>
-        /// <returns>
-        /// A Metlink stop ID.
-        /// </returns>
-        public int GetRandomNodeId()
-        {
-            string query = "SELECT MetlinkStopID FROM tblStopInformation ORDER BY rand() LIMIT 1;";
-            return (int)this.database.GetDataSet(query).Rows[0][0];
         }
 
         /// <summary>
@@ -1178,7 +944,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// The stop mode identifier. 
         /// </param>
         /// <returns>
-        /// The corrosponding string. 
+        /// The corresponding string. 
         /// </returns>
         public string GetStopMode(string stopModeId)
         {
@@ -1186,16 +952,16 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// The in same line.
+        /// Returns whether two nodes are part of the same line.
         /// </summary>
         /// <param name="node1">
-        /// The node 1.
+        /// The first node.
         /// </param>
         /// <param name="node2">
-        /// The node 2.
+        /// The second node.
         /// </param>
         /// <returns>
-        /// The in same line.
+        /// True if the two nodes are in the same line, false if not.
         /// </returns>
         public bool InSameLine(PtvNode node1, PtvNode node2)
         {
@@ -1226,7 +992,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// The stops that match the query.
         /// </returns>
         /// <param name="query">
-        /// The query. i.e. 'Cob' -&gt; Coburg Station
+        /// The query. i.e. 'Cob' = Coburg Station
         /// </param>
         public object[] QueryStops(string query)
         {
@@ -1238,7 +1004,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 											WHERE StopSpecName LIKE '%{0}%' ORDER BY sm.StopModeID DESC", 
                     query);
             var data = this.database.GetDataSet(sqlQuery);
-            object[] stops = new object[data.Rows.Count];
+            var stops = new object[data.Rows.Count];
 
             for (int i = 0; i < data.Rows.Count; i++)
             {
@@ -1287,108 +1053,15 @@ ORDER BY sr.RouteID, sr.StopOrder;
         #region Methods
 
         /// <summary>
-        /// The parse date.
-        /// </summary>
-        /// <param name="date">
-        /// The date. 
-        /// </param>
-        /// <returns>
-        /// </returns>
-        private DateTime ParseDate(string date)
-        {
-            try
-            {
-                if (date == "9999")
-                {
-                    throw new Exception("Invalid time");
-                }
-
-                int minutes = Convert.ToInt32(string.Format("{0:d4}", Convert.ToInt32(date)).Substring(2, 2));
-                int hours = Convert.ToInt32(string.Format("{0:d4}", Convert.ToInt32(date)).Substring(0, 2));
-                var dt = new DateTime();
-                int days = 0;
-                if (hours >= 24)
-                {
-                    days = 1;
-                    hours -= 24;
-                }
-
-                dt = dt.Add(new TimeSpan(days, hours, minutes, 0));
-
-                /*
-                if (!DateTime.TryParseExact(date, "Hmm", null, DateTimeStyles.None, out dt))
-                {
-                    if (date.Substring(0, 2) == "24")
-                    {
-                        date = "00" + date.Substring(2, 2);
-                        if (!DateTime.TryParseExact(date, "Hmm", null, DateTimeStyles.None, out dt))
-                        {
-                            throw new Exception("Time parsing error");
-                        }
-                    }
-                }
-                */
-                return dt;
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Warning, bogus depart/arrive time detected in parser.");
-                throw;
-
-                // return new DateTime().Add(new TimeSpan(10, 0, 0, 0));
-            }
-        }
-
-        /// <summary>
-        /// The round up.
-        /// </summary>
-        /// <param name="dt">
-        /// The dt.
-        /// </param>
-        /// <param name="d">
-        /// The d.
-        /// </param>
-        /// <returns>
-        /// </returns>
-        private DateTime RoundUp(DateTime dt, TimeSpan d)
-        {
-            return new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks);
-        }
-
-        /// <summary>
-        /// The subtract times.
-        /// </summary>
-        /// <param name="a">
-        /// The a.
-        /// </param>
-        /// <param name="b">
-        /// The b.
-        /// </param>
-        /// <returns>
-        /// The subtract times.
-        /// </returns>
-        private int SubtractTimes(int a, int b)
-        {
-            int ha = a / 100;
-            int hb = b / 100;
-            int ma = a - (ha * 100);
-            int mb = b - (hb * 100);
-
-            int md = ma - mb;
-            int hd = ha - hb;
-
-            return (hd * 60) + md;
-        }
-
-        /// <summary>
-        /// The parse date.
+        /// Parses an integer in the format 'HHmm' into a <see cref="TimeSpan"/> object.
         /// </summary>
         /// <param name="timespan">
-        /// The timespan.
+        /// An integer representing a span of time in the format 'HHmm'.
         /// </param>
         /// <returns>
+        /// A <see cref="TimeSpan"/> object parsed from the input integer.
         /// </returns>
-        private TimeSpan parseSpan(int timespan)
+        private TimeSpan ParseSpan(int timespan)
         {
             try
             {
@@ -1405,6 +1078,32 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                 // return TimeSpan.MaxValue;
             }
+        }
+
+        /// <summary>
+        /// Subtracts two time integers in the format 'HHmm' from each other.
+        ///   This function is needed so that the minutes wrap around 60 properly.
+        /// </summary>
+        /// <param name="a">
+        /// Time integer a.
+        /// </param>
+        /// <param name="b">
+        /// Time integer b.
+        /// </param>
+        /// <returns>
+        /// The result of the subtraction.
+        /// </returns>
+        private int SubtractTimes(int a, int b)
+        {
+            int ha = a / 100;
+            int hb = b / 100;
+            int ma = a - (ha * 100);
+            int mb = b - (hb * 100);
+
+            int md = ma - mb;
+            int hd = ha - hb;
+
+            return (hd * 60) + md;
         }
 
         #endregion

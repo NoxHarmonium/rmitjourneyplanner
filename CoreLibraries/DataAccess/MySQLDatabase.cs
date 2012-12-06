@@ -1,7 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="MySQLDatabase.cs" company="RMIT University">
-//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
-// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+//   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
 //   Represents a MySQL database.
@@ -67,7 +66,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// <param name="database">
         /// The database. 
         /// </param>
-        [Obsolete("You can no longer initialise this object by passing a database name. You must define the connection string property in the Settings class. This constructor ignores the database parameter.")]
+        [Obsolete(
+            "You can no longer initialise this object by passing a database name. You must define the connection string property in the Settings class. This constructor ignores the database parameter."
+            )]
         public MySqlDatabase(string database)
         {
             this.connectionString = Settings.Entries["ConnectionString"];

@@ -1,7 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ALFitnessFunction.cs" company="RMIT University">
-//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
-// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+//   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
 //   The al fitness function.
@@ -19,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
     using NUnit.Framework;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
-    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
     using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -143,7 +142,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                     route[i].Node.RetrieveData();
 
-                    // Console.Write("{0:00000}[{1}]: ", route[i].Id,((MetlinkNode)route[i]).StopSpecName);
+                    // Console.Write("{0:00000}[{1}]: ", route[i].Id,((PtvNode)route[i]).StopSpecName);
                     closedRoutesIndex.Add(new List<ClosedRoute>());
                     routes = provider.GetRoutesForNode(route[i].Node);
 
@@ -291,8 +290,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 fitness.JourneyLegs.Add(
                     new JourneyLeg(
                         mode, 
-                        (MetlinkNode)bestArc.Source, 
-                        (MetlinkNode)bestArc.Destination, 
+                        (PtvNode)bestArc.Source, 
+                        (PtvNode)bestArc.Destination, 
                         departTime, 
                         bestArc.Time.TotalTime, 
                         bestArc.RouteId.ToString()));

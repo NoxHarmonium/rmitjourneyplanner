@@ -1,7 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Tools.cs" company="RMIT University">
-//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
-// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+//   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
 //   A collection of static tools for use by the evolutionary route planner.
@@ -17,7 +16,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     using System.IO;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
-    using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
@@ -95,7 +94,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                             latlng, 
                             key, 
                             time.ToString(), 
-                            ((MetlinkNode)properties.NetworkDataProviders[0].GetNodeFromId(key)).StopSpecName);
+                            ((PtvNode)properties.NetworkDataProviders[0].GetNodeFromId(key)).StopSpecName);
                 }
 
                 using (var sw = new StreamWriter(file, false))
@@ -147,11 +146,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 if (prev == null)
                 {
                     prev = newNode;
-                    prev.Parent = null;
                 }
                 else
                 {
-                    newNode.Parent = prev;
                     prev = newNode;
                 }
             }

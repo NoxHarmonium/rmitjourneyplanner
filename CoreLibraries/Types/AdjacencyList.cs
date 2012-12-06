@@ -1,7 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="AdjacencyList.cs" company="RMIT University">
-//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
-// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+//   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
 //   TODO: Update summary.
@@ -15,7 +14,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     using System.Collections;
     using System.Collections.Generic;
 
-    using Ptv;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
 
     #endregion
 
@@ -51,9 +50,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Indexers
 
         /// <summary>
-        ///   The this.
+        ///   Gets a list of adjacent nodes to the specified id.
         /// </summary>
-        /// <param name = "id"> The id. </param>
+        /// <param name = "id"> The node id. </param>
+        /// <returns>A list of adjacent nodes to the specified id.</returns>
         public List<PtvNode> this[int id]
         {
             get

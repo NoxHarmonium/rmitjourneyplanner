@@ -1,10 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="PtvNode.cs" company="RMIT University">
-//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
-// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+//   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
-//   Represents a stop in the Metlink network.
+//   Represents a stop in the PTV network.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -28,7 +27,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         #region Constants and Fields
 
         /// <summary>
-        ///   The PTV stop identifer for this stop.
+        ///   The PTV stop identifier for this stop.
         /// </summary>
         private readonly int id;
 
@@ -46,7 +45,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         ///   The line identifiers.
         /// </summary>
         private int[] lineIds;
-       
+
         /// <summary>
         ///   The user friendly name of this node.
         /// </summary>
@@ -101,13 +100,16 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         /// Initializes a new instance of the <see cref="PtvNode"/> class. Sets the location of this node to position.
         /// </summary>
         /// <param name="id">
-        /// The tramtracker Id. 
+        /// The node identifier.
         /// </param>
         /// <param name="transportType">
+        /// The transport type associated with this node.
         /// </param>
         /// <param name="latitude">
+        /// The latitude value associated with this node.
         /// </param>
         /// <param name="longitude">
+        /// The longitude value associated with this node.
         /// </param>
         /// <param name="provider">
         /// The NetworkProvider that contains this tram stop. 
@@ -131,13 +133,16 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         /// The tramtracker Id. 
         /// </param>
         /// <param name="transportType">
+        /// The transport type associated with this node.
         /// </param>
         /// <param name="stopSpecName">
         /// The short name of the node.
         /// </param>
         /// <param name="latitude">
+        /// The latitude value associated with this node.
         /// </param>
         /// <param name="longitude">
+        /// The longitude value associated with this node.
         /// </param>
         /// <param name="provider">
         /// The NetworkProvider that contains this tram stop. 
@@ -213,7 +218,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         public int RouteId { get; set; }
 
         /// <summary>
-        ///   The user friendly name of this node.
+        ///   Gets the user friendly name of this node.
         /// </summary>
         public string StopSpecName
         {
@@ -232,26 +237,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
 
         #region Explicit Interface Properties
 
-        /// <summary>
-        ///   Gets or sets Parent.
-        /// </summary>
-        /// <exception cref = "NotImplementedException">
-        /// </exception>
-        /// <exception cref = "NotImplementedException">
-        /// </exception>
-        INode INode.Parent
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         #endregion
 
         #region Public Methods and Operators
@@ -267,15 +252,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         {
             var newNode = new PtvNode(this.id, this.provider, this)
                 {
-                    // EuclidianDistance = this.EuclidianDistance,
-                    // TotalTime = this.TotalTime,
-                    // RouteId = this.RouteId,
                     TransportType = this.TransportType, 
                     stopSpecName = this.StopSpecName, 
                     Latitude = this.Latitude, 
                     Longitude = this.Longitude, 
                     Parent = this.Parent, 
-                    // stopData = this.stopData,
                     lineIds = this.lineIds
                 };
 
@@ -303,13 +284,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         }
 
         /// <summary>
-        /// The equals.
+        /// Returns if this object is equal to another object.
         /// </summary>
         /// <param name="obj">
-        /// The obj.
+        /// The object to compare this object with.
         /// </param>
         /// <returns>
-        /// The equals.
+        /// True if this object is equal to the specified object, otherwise false.
         /// </returns>
         public override bool Equals(object obj)
         {
@@ -323,10 +304,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         }
 
         /// <summary>
-        /// The get hash code.
+        /// Gets the hash code of this object.
         /// </summary>
         /// <returns>
-        /// The get hash code.
+        /// The hash code for this object.
         /// </returns>
         public override int GetHashCode()
         {
@@ -337,6 +318,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         /// Sets the internal parameters of this node from a data table.
         /// </summary>
         /// <param name="data">
+        /// A datatable from the database that matches the correct schema.
         /// </param>
         public void LoadData(DataTable data)
         {
@@ -348,14 +330,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                 this.stopSpecName = data.Rows[0]["StopSpecName"].ToString();
                 TransportMode mode;
                 bool success = Enum.TryParse(data.Rows[0]["StopModeName"].ToString(), out mode);
-                if (!success)
-                {
-                    this.TransportType = TransportMode.Unknown;
-                }
-                else
-                {
-                    this.TransportType = mode;
-                }
+                this.TransportType = !success ? TransportMode.Unknown : mode;
             }
         }
 
@@ -378,7 +353,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         }
 
         /// <summary>
-        /// Returns the Metlink ID of this node.
+        /// Returns the PTV ID of this node.
         /// </summary>
         /// <returns>
         /// The ID. 
@@ -398,13 +373,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         #region Explicit Interface Methods
 
         /// <summary>
-        /// The equals.
+        /// Returns if this object is equal to another <see cref="INetworkNode"/>.
         /// </summary>
         /// <param name="other">
-        /// The other.
+        /// The other node.
         /// </param>
         /// <returns>
-        /// The equals.
+        /// True if they are equal, otherwise false.
         /// </returns>
         bool IEquatable<INetworkNode>.Equals(INetworkNode other)
         {

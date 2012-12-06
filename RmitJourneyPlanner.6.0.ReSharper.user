@@ -1,75 +1,75 @@
 <Configuration>
   <RecentFiles>
     <RecentFiles>
-      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:CritterExporter.cs" caret="1003" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:NPack/f:MersenneTwister.cs" caret="9873" fromTop="11" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:RouteGenerators/f:DFSRoutePlanner.cs" caret="4551" fromTop="26" />
-      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:JourneyOptimiser.cs" caret="12450" fromTop="61" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:MySQLDatabase.cs" caret="5595" fromTop="3" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Timetable.cs" caret="8745" fromTop="25" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/f:INetworkNode.cs" caret="485" fromTop="11" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:NodeWrapper.cs" caret="1603" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:PTUniformCostSearch.cs" caret="1309" fromTop="19" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:PTGreedySearch.cs" caret="1110" fromTop="29" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="13161" fromTop="31" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:PTDepthFirstSearch.cs" caret="2547" fromTop="21" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Metlink/f:MetlinkNode.cs" caret="9831" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/f:INetworkDataProvider.cs" caret="5922" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:PTAStarSearch.cs" caret="2925" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EARoutePlanner.cs" caret="16780" fromTop="25" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:Mutators/f:StandardMutator.cs" caret="2668" fromTop="34" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:Tools.cs" caret="5117" fromTop="32" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:Breeders/f:TimeBlendBreeder.cs" caret="3946" fromTop="70" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EvolutionaryProperties.cs" caret="1242" fromTop="9" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Population.cs" caret="7520" fromTop="23" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Critter.cs" caret="3811" fromTop="23" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Fitness.cs" caret="12615" fromTop="20" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="7597" fromTop="12" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="28518" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Metlink/f:MetlinkDataProvider.cs" caret="41757" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="4317" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:FitnessFunctions/f:ALFitnessFunction.cs" caret="5320" fromTop="0" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="9252" fromTop="77" />
-      <File id="D2CE21E3-4152-473F-B4AC-99B068367D64/f:TestMatrix.txt/s:..?TestMatrix.txt" caret="875" fromTop="15" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/f:INetworkDataProvider.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/f:INetworkNode.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Timetable.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Population.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Google/f:DrivingDataProvider.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:Breeders/f:TimeBlendBreeder.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:Breeders/f:StandardBreeder.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:NPack/f:MersenneTwister.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:MySQLDatabase.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Google/f:WalkingDataProvider.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:IFitnessFunction.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:XMLRequester.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:GoogleApiException.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:ISQLDatabase.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:SOAP.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:TramTrackerAPI.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:Urls.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:NamespaceDoc.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:RequestType.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:GeocodingAPI.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:DistanceAPI.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:ConnectionInfo.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:IBreeder.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EvolutionaryProperties.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EARoutePlanner.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Random.cs" caret="0" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="10" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="839" fromTop="12" />
     </RecentFiles>
     <RecentEdits>
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="10245" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="22985" fromTop="24" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="23427" fromTop="20" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="20174" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="20721" fromTop="29" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="21871" fromTop="19" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="7546" fromTop="18" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="4723" fromTop="2" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="6246" fromTop="22" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="5791" fromTop="17" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="30696" fromTop="27" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="14551" fromTop="22" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="9322" fromTop="9" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="15184" fromTop="28" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="11792" fromTop="28" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="12391" fromTop="38" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="12663" fromTop="17" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:FitnessFunctions/f:ALFitnessFunction.cs" caret="6801" fromTop="30" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:FitnessFunctions/f:ALFitnessFunction.cs" caret="10311" fromTop="14" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:FitnessFunctions/f:ALFitnessFunction.cs" caret="11692" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Tests/f:TestFitnessFunction.cs" caret="7402" fromTop="9" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="11638" fromTop="12" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Fitness.cs" caret="10322" fromTop="3" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Fitness.cs" caret="11574" fromTop="27" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Fitness.cs" caret="13526" fromTop="27" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="31927" fromTop="24" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="32034" fromTop="28" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="9028" fromTop="15" />
-      <File id="D2CE21E3-4152-473F-B4AC-99B068367D64/f:TestMatrix.txt/s:..?TestMatrix.txt" caret="637" fromTop="19" />
-      <File id="D2CE21E3-4152-473F-B4AC-99B068367D64/f:TestMatrix.txt/s:..?TestMatrix.txt" caret="637" fromTop="28" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="10" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="17" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="13" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="10" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="13" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="8" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="14" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="12" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="12" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="12" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="18" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="15" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="25" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="13" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="10" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="13" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="17" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="0" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="29" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="574" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="13" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="11" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="46463" fromTop="10" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="12974" fromTop="10" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="12974" fromTop="7" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="12974" fromTop="10" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="12974" fromTop="17" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="12974" fromTop="11" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="12974" fromTop="13" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvNode.cs" caret="12974" fromTop="3" />
     </RecentEdits>
   </RecentFiles>
   <CompletionStatisticsManager>
     <ItemStatistics item="CSharpCodeCompletionContext">
-      <Item value="string" priority="1566" />
+      <Item value="string" priority="1630" />
       <Item value="flagStopNo" priority="31" />
-      <Item value="public" priority="479" />
+      <Item value="public" priority="543" />
       <Item value="void" priority="159" />
       <Item value="using" priority="31" />
       <Item value="new" priority="2463" />
@@ -80,14 +80,14 @@
       <Item value="ResourceManager" priority="28" />
       <Item value="ResourceManager`0" priority="31" />
       <Item value="RmitJourneyPlanner" priority="63" />
-      <Item value="CoreLibraries" priority="149" />
+      <Item value="CoreLibraries" priority="176" />
       <Item value="Resources`0" priority="26" />
       <Item value="INetworkDataProvider`0" priority="63" />
       <Item value="MetlinkDataProvider`0" priority="159" />
       <Item value="ISqlDatabase`0" priority="31" />
       <Item value="MetlinkDatabase`0" priority="31" />
       <Item value="private" priority="447" />
-      <Item value="const" priority="95" />
+      <Item value="const" priority="127" />
       <Item value="System" priority="63" />
       <Item value="Data" priority="26" />
       <Item value="AcceptRejectRule`0" priority="26" />
@@ -105,20 +105,20 @@
       <Item value="Provider" priority="31" />
       <Item value="provider" priority="447" />
       <Item value="database" priority="351" />
-      <Item value="String`0" priority="318" />
+      <Item value="String`0" priority="350" />
       <Item value="metlinkStopId" priority="31" />
-      <Item value="if" priority="2015" />
+      <Item value="if" priority="2047" />
       <Item value="StopData" priority="127" />
-      <Item value="this" priority="1571" />
+      <Item value="this" priority="1635" />
       <Item value="DataTable`0" priority="159" />
       <Item value="LoadData`0" priority="31" />
       <Item value="data" priority="223" />
       <Item value="base" priority="95" />
       <Item value="Convert`0" priority="255" />
-      <Item value="return" priority="1055" />
+      <Item value="return" priority="1151" />
       <Item value="id" priority="63" />
       <Item value="CurrentRoute" priority="127" />
-      <Item value="null" priority="223" />
+      <Item value="null" priority="383" />
       <Item value="newNode" priority="127" />
       <Item value="other" priority="63" />
       <Item value="is" priority="95" />
@@ -174,7 +174,7 @@
       <Item value="CultureInfo`0" priority="31" />
       <Item value="dt" priority="127" />
       <Item value="Exception`0" priority="95" />
-      <Item value="try" priority="31" />
+      <Item value="try" priority="95" />
       <Item value="override" priority="63" />
       <Item value="Planner" priority="63" />
       <Item value="IRoutePlanner`0" priority="31" />
@@ -185,7 +185,7 @@
       <Item value="while" priority="63" />
       <Item value="Route" priority="116" />
       <Item value="Guid`0" priority="31" />
-      <Item value="true" priority="255" />
+      <Item value="true" priority="287" />
       <Item value="EvolutionaryRoutePlanner`0" priority="26" />
       <Item value="FitnessFunctions" priority="26" />
       <Item value="StandardFitnessFunction`0" priority="26" />
@@ -196,7 +196,7 @@
       <Item value="hours" priority="95" />
       <Item value="minutes" priority="95" />
       <Item value="TimeSpan" priority="145" />
-      <Item value="TimeSpan`0" priority="224" />
+      <Item value="TimeSpan`0" priority="256" />
       <Item value="IFormatProvider`0" priority="95" />
       <Item value="origin" priority="63" />
       <Item value="StringArrayConverter`0" priority="30" />
@@ -206,7 +206,7 @@
       <Item value="else" priority="287" />
       <Item value="startTime" priority="31" />
       <Item value="position" priority="95" />
-      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="25" />
+      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="77" />
       <Item value="int" priority="508" />
       <Item value="days" priority="31" />
       <Item value="TransportType" priority="98" />
@@ -214,7 +214,7 @@
       <Item value="InvalidCastException`0" priority="31" />
       <Item value="switch" priority="63" />
       <Item value="stopModeID" priority="95" />
-      <Item value="case" priority="159" />
+      <Item value="case" priority="191" />
       <Item value="break" priority="255" />
       <Item value="Dictionary" priority="156" />
       <Item value="Dictionary&lt;string,string&gt;" priority="28" />
@@ -245,7 +245,7 @@
       <Item value="ToString`0" priority="31" />
       <Item value="calls" priority="31" />
       <Item value="nonTransferNodes" priority="31" />
-      <Item value="DataAccess" priority="26" />
+      <Item value="DataAccess" priority="90" />
       <Item value="MySqlDatabase" priority="28" />
       <Item value="MySqlDataAdapter`0" priority="31" />
       <Item value="MySqlDataAdapter" priority="28" />
@@ -268,7 +268,7 @@
       <Item value="y" priority="31" />
       <Item value="oldNodes" priority="95" />
       <Item value="newNodes" priority="63" />
-      <Item value="bool" priority="255" />
+      <Item value="bool" priority="287" />
       <Item value="false" priority="223" />
       <Item value="same" priority="63" />
       <Item value="repeat" priority="63" />
@@ -310,7 +310,7 @@
       <Item value="FormatException`0" priority="31" />
       <Item value="NodeWrapper" priority="30" />
       <Item value="nodesInCommon2" priority="95" />
-      <Item value="n" priority="63" />
+      <Item value="n" priority="127" />
       <Item value="node2" priority="63" />
       <Item value="KeyValuePair&lt;NodeWrapper&lt;INetworkNode&gt;,NodeWrapper&lt;INetworkNode&gt;&gt;" priority="28" />
       <Item value="linkedNodes" priority="63" />
@@ -335,7 +335,7 @@
       <Item value="otherCurrent" priority="31" />
       <Item value="a" priority="191" />
       <Item value="b" priority="64" />
-      <Item value="long" priority="129" />
+      <Item value="long" priority="161" />
       <Item value="deltaTicks" priority="31" />
       <Item value="_AppDomain`0" priority="63" />
       <Item value="firstService" priority="63" />
@@ -378,6 +378,17 @@
       <Item value="Stopwatch`0" priority="31" />
       <Item value="fakeLegs" priority="31" />
       <Item value="DiversityMetric" priority="65" />
+      <Item value="response" priority="63" />
+      <Item value="GetDescription`0" priority="31" />
+      <Item value="Urls`0" priority="31" />
+      <Item value="&lt;see cref=&quot;&quot;/&gt;" priority="155" />
+      <Item value="DataProviders" priority="58" />
+      <Item value="suppressFinalizer" priority="31" />
+      <Item value="disposing" priority="31" />
+      <Item value="MySqlDataReader`0" priority="31" />
+      <Item value="GetDataSet`0" priority="31" />
+      <Item value="RunQuery`0" priority="31" />
+      <Item value="&lt;returns&gt;&lt;/returns&gt;" priority="25" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@RmitJourneyPlanner.CoreLibraries.Properties.Settings">
       <Item value="Default" priority="53" />
@@ -395,7 +406,7 @@
       <Item value="GetDataSet`0" priority="80" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.String">
-      <Item value="Format`0" priority="242" />
+      <Item value="Format`0" priority="269" />
       <Item value="Empty" priority="109" />
       <Item value="Join`0" priority="26" />
     </ItemStatistics>
@@ -461,13 +472,16 @@
       <Item value="Insert`0" priority="26" />
       <Item value="ToArray`0" priority="26" />
       <Item value="Any`1" priority="53" />
+      <Item value="OrderBy`2" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Object">
       <Item value="ToString`0" priority="243" />
     </ItemStatistics>
     <ItemStatistics item="Doc Comment tags">
-      <Item value="&lt;see cref=&quot;&quot;/&gt;" priority="4" />
-      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="4" />
+      <Item value="&lt;see cref=&quot;&quot;/&gt;" priority="49" />
+      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="14" />
+      <Item value="&lt;seealso cref=&quot;&quot;/&gt;" priority="10" />
+      <Item value="&lt;returns&gt;&lt;/returns&gt;" priority="4" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.DateTime">
       <Item value="DayOfWeek" priority="26" />
@@ -731,6 +745,7 @@
     <ItemStatistics item="Qualified:RmitJourneyPlanner.CoreLibraries.TreeAlgorithms.NodeWrapper`1">
       <Item value="Node" priority="323" />
       <Item value="CurrentRoute" priority="109" />
+      <Item value="EuclidianDistance" priority="53" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.IRouteGenerator">
       <Item value="Generate`0" priority="26" />
@@ -784,6 +799,15 @@
     <ItemStatistics item="Qualified:System.Diagnostics.Stopwatch">
       <Item value="ElapsedMilliseconds" priority="26" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:RmitJourneyPlanner.CoreLibraries.DataAccess.GoogleApiException">
+      <Item value="errorCode" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@RmitJourneyPlanner.CoreLibraries.DataAccess.Urls">
+      <Item value="GoogleApiGeocodingHelp" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:RmitJourneyPlanner.CoreLibraries.Types.Timetable">
+      <Item value="optimised" priority="26" />
+    </ItemStatistics>
   </CompletionStatisticsManager>
   <NAntValidationSettings>
     <NAntPath value="" />
@@ -804,7 +828,7 @@
     </boolean>
   </SettingsComponent>
   <Bookmarks>
-    <Bookmark owner="NumberedBookmarkManager" id="Bookmark9" file-id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Metlink/f:MetlinkDataProvider.cs" coords="(Doc Ln 124 Col 73)" />
+    <Bookmark owner="NumberedBookmarkManager" id="Bookmark9" file-id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" coords="(Doc Ln 124 Col 73)" />
   </Bookmarks>
   <UnitTestSessions>
     <Session>

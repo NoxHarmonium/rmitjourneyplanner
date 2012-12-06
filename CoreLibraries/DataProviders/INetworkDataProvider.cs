@@ -1,10 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="INetworkDataProvider.cs" company="RMIT University">
-//   This code is currently owned by RMIT by default until permission is recieved to licence it under a more liberal licence. 
-// Except as provided by the Copyright Act 1968, no part of this publication may be reproduced, stored in a retrieval system or transmitted in any form or by any means without the prior written permission of the publisher.
+//   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
-//   A NetworkDataProvider is a plugable class that is used to provide information on networks such a train or bus network.
+//   A class that is used to provide information on networks such a train or bus network and can be plugged into journey planners.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -24,7 +23,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
     #endregion
 
     /// <summary>
-    /// A NetworkDataProvider is a class that is used to provide information on networks such a train or bus network and can be plugged into journey planners.
+    /// A class that is used to provide information on networks such a train or bus network and can be plugged into journey planners.
     /// </summary>
     public interface INetworkDataProvider
     {
@@ -81,41 +80,6 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime departureTime);
 
         /// <summary>
-        /// Gets the shortest distance between nodes for a specific route.
-        /// </summary>
-        /// <param name="source">
-        /// The source node. 
-        /// </param>
-        /// <param name="destination">
-        /// The destination node. 
-        /// </param>
-        /// <param name="departureTime">
-        /// The optimum time of departure. 
-        /// </param>
-        /// <param name="routeId">
-        /// The route ID to measure the distance on. 
-        /// </param>
-        /// <returns>
-        /// A list of <see cref="Arc"/> objects that represent the multiple ways to get between the 2 points. 
-        /// </returns>
-        TransportTimeSpan GetDistanceBetweenNodes(
-            INetworkNode source, INetworkNode destination, DateTime departureTime, int routeId);
-
-        /// <summary>
-        /// Gets the network node that is closest to the specified point on the specified route.
-        /// </summary>
-        /// <param name="destination">
-        /// The node to measure the distance to. 
-        /// </param>
-        /// <param name="routeId">
-        /// The route to take the nodes from. 
-        /// </param>
-        /// <returns>
-        /// A network node 
-        /// </returns>
-        INetworkNode GetNodeClosestToPoint(INetworkNode destination, int routeId);
-
-        /// <summary>
         /// Gets the network nodes that are located within radius distance to the specified location.
         /// </summary>
         /// <param name="source">
@@ -128,6 +92,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
         /// The distance to look around the source point. 
         /// </param>
         /// <param name="allowTransfer">
+        /// Determines whether nodes that are of a different line are considered.
         /// </param>
         /// <returns>
         /// The <see cref="INetworkNode"/> object that is the closest to the destination inside the radius. 
@@ -136,12 +101,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders
             INetworkNode source, INetworkNode destination, double radius, bool allowTransfer);
 
         /// <summary>
-        /// Gets a DataTable containing data relating to the specified node id
+        /// Gets a DataTable containing data relating to the specified node id.
         /// </summary>
         /// <param name="id">
         /// The id.
         /// </param>
         /// <returns>
+        /// A DataTable containing data relating to the specified node id.
         /// </returns>
         DataTable GetNodeData(int id);
 
