@@ -52,6 +52,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         /// Register a network data provider to use with the route planning.
         /// </summary>
         /// <param name="provider">
+        /// The <see cref="INetworkDataProvider"/> that provides the data for the route planning.
         /// </param>
         void RegisterNetworkDataProvider(INetworkDataProvider provider);
 
@@ -59,16 +60,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         /// Register a point to point data provider for use with the route planning.
         /// </summary>
         /// <param name="provider">
+        /// The <see cref="IPointDataProvider"/> that provides the data for the route planning.
         /// </param>
         void RegisterPointDataProvider(IPointDataProvider provider);
 
         /// <summary>
         /// Solve the next iteration of the algorithm.
         /// </summary>
-        /// <returns>
-        /// The solve step. 
-        /// </returns>
-        bool SolveStep();
+        void SolveStep();
 
         /// <summary>
         /// Start solving a route

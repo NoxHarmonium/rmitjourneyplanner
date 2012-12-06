@@ -33,6 +33,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         #region Constants and Fields
 
         /// <summary>
+        ///   The maximum difference between two floating point numbers to
+        /// be considered the same.
+        /// </summary>
+        private const double Epsilon = 0.0001;
+
+        /// <summary>
         ///   The properties.
         /// </summary>
         private readonly EvolutionaryProperties properties;
@@ -41,11 +47,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         ///   The routes used.
         /// </summary>
         private readonly List<int> routesUsed = new List<int>();
-
-        /// <summary>
-        ///   The epsilon.
-        /// </summary>
-        private double EPSILON = 0.0001;
 
         #endregion
 
@@ -67,7 +68,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         #region Public Properties
 
         /// <summary>
-        ///   The routes traversed when calculating the fitness.
+        ///  Gets the routes traversed when calculating the fitness.
         /// </summary>
         public List<int> RoutesUsed
         {
@@ -82,12 +83,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         #region Public Methods and Operators
 
         /// <summary>
-        /// The get fitness.
+        /// Gets the fitness of the specified route.
         /// </summary>
         /// <param name="route">
-        /// The route.
+        /// A route.
         /// </param>
         /// <returns>
+        /// A <see cref="Fitness"/> object representing the fitness of the specified route.
         /// </returns>
         public Fitness GetFitness(Route route)
         {
@@ -95,19 +97,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
         }
 
         /// <summary>
-        /// The get fitness.
+        /// Gets the fitness of the specified route for a specified departure time.
         /// </summary>
         /// <param name="route">
-        /// The route. 
+        /// A route.
         /// </param>
         /// <param name="initialDepart">
-        /// The initial Depart.
+        /// The departure time of the journey you are measuring the fitness of.
         /// </param>
         /// <returns>
-        /// The get fitness. 
+        /// A <see cref="Fitness"/> object representing the fitness of the specified route and departure time.
         /// </returns>
-        /// <exception cref="Exception">
-        /// </exception>
         public Fitness GetFitness(Route route, DateTime initialDepart)
         {
             restart:
@@ -231,8 +231,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 var bestArcs =
                     t.Select(
                         cr =>
-                        provider.GetDistanceBetweenNodes(route[cr.start].Node, route[cr.end].Node, departTime).
-                            FirstOrDefault()).ToList();
+                        provider.GetDistanceBetweenNodes(route[cr.start].Node, route[cr.end].Node, departTime).FirstOrDefault()).ToList();
 
                 bestArcs = (from arc in bestArcs where arc != default(Arc) select arc).ToList();
 
@@ -258,7 +257,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                 bestArcs =
                     (from a in bestArcs
-                     where Math.Abs(a.Distance - bestArcs.Max(i => i.Distance)) < this.EPSILON
+                     where Math.Abs(a.Distance - bestArcs.Max(i => i.Distance)) < this.Epsilon
                      select a).ToList();
 
                 var bestArc =

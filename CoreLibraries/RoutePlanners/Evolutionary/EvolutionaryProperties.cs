@@ -42,7 +42,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets whether route generation should be bi-directional or not.
+        ///   Gets or sets a value indicating whether route generation should be bi-directional or not.
         /// </summary>
         public bool Bidirectional { get; set; }
 
@@ -87,7 +87,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         public double MaxDistance { get; set; }
 
         /// <summary>
-        ///   Gets or sers the maximum number of iterations that the journey optimisation can run for.
+        ///   Gets or sets the maximum number of iterations that the journey optimisation can run for.
         /// </summary>
         public int MaxIterations { get; set; }
 
@@ -142,12 +142,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         public int PopulationSize { get; set; }
 
         /// <summary>
-        ///   Gets or sets the probabiliy that a node that is closest to the goal will be chosen when initalizing routes.
+        ///   Gets or sets the probability that a node that is closest to the goal will be chosen when initializing routes.
         /// </summary>
         public double ProbMinDistance { get; set; }
 
         /// <summary>
-        ///   Gets or sets probability that a node of a different route will be chosen when initilizing routes.
+        ///   Gets or sets probability that a node of a different route will be chosen when initializing routes.
         /// </summary>
         public double ProbMinTransfers { get; set; }
 

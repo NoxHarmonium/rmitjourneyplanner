@@ -104,7 +104,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
-        ///   Gets Fronts.
+        ///   Gets the fronts that are a result of the non-dominated sorting.
         /// </summary>
         public List<List<Critter>> Fronts
         {
@@ -115,7 +115,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        ///   The current iteration of the optimisation.
+        ///   Gets the current iteration of the optimisation.
         /// </summary>
         public int Iteration
         {
@@ -137,7 +137,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        ///   The population of the evolutionary algorithm.
+        ///   Gets the population of the evolutionary algorithm.
         /// </summary>
         public Population Population
         {
@@ -159,7 +159,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        ///   Contains the state of the evolutionary route planner.
+        ///   Gets the <see cref="EvolutionaryProperties"/> object associated with this journey planner.
         /// </summary>
         public EvolutionaryProperties Properties
         {
@@ -170,7 +170,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        ///   The result of each iteration.
+        ///   Gets the result of each iteration.
         /// </summary>
         public Result Result
         {
@@ -199,11 +199,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// Returns if a critter dominates another critter.
         /// </summary>
         /// <param name="c1">
+        /// The first critter under comparison.
         /// </param>
         /// <param name="c2">
+        /// The second critter under comparison.
         /// </param>
         /// <returns>
-        /// The dominates.
+        /// True if c1 dominates c2, otherwise false.
         /// </returns>
         public bool Dominates(Critter c1, Critter c2)
         {
@@ -253,55 +255,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        /// Repairs a route by taking out duplicates and loops.
-        /// </summary>
-        /// <param name="route">
-        /// The route to repair 
-        /// </param>
-        [Obsolete]
-        public Route RepairRoute(Route route)
-        {
-            /*
-			var newNodes = new List<INetworkNode>();
-            List<INetworkNode> oldNodes = route;
-            for (int i = 0; i < oldNodes.Count; i++)
-            {
-                int count = 0;
-                int index = -1;
-                for (int j = 0; j < oldNodes.Count; j++)
-                {
-                    INetworkNode node = oldNodes[j];
-                    if (node.Equals(oldNodes[i]))
-                    {
-                        index = j;
-                        count++;
-                    }
-                }
-
-                if (count > 1)
-                {
-                    newNodes.Add(oldNodes[i]);
-                    if (index == -1)
-                    {
-                        throw new Exception("Houston we have a problem!");
-                    }
-
-                    i = index;
-                }
-                else
-                {
-                    newNodes.Add(oldNodes[i]);
-                }
-            }
-
-            var newRoute = new Route(route.Id);
-            newRoute.AddRange(newNodes);
-            return newRoute;
-            */
-            throw new NotSupportedException("This method is depricated.");
-        }
-
-        /// <summary>
         /// Solve the next iteration of the algorithm.
         /// </summary>
         /// <returns>
@@ -309,8 +262,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </returns>
         public bool SolveStep()
         {
-            this.checkPopDupes();
-
             if (this.properties.Objectives.Length < 1)
             {
                 throw new Exception("You cannot optimise with 0 objectives.");
@@ -396,7 +347,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 // c.Distance = 0;
             }
 
-            this.nonDominatedSort(r);
+            this.NonDominatedSort(r);
 
             /*
             var ranks = r.GroupBy(g => g.Rank);
@@ -416,7 +367,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             this.population[0] = new Population();
 
             int j = 0;
-            int nCarryOver = 0;
+            int numCarryOver = 0;
 
             foreach (var front in this.Fronts)
             {
@@ -428,11 +379,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                         this.Properties.PopulationSize
                         * ((1 - reductionRate) / (1 - Math.Pow(reductionRate, this.Fronts.Count)))
                         * Math.Pow(reductionRate, j));
-                maxN += nCarryOver;
+                maxN += numCarryOver;
 
                 if (maxN > front.Count)
                 {
-                    nCarryOver = maxN - front.Count;
+                    numCarryOver = maxN - front.Count;
                     maxN = front.Count;
                 }
 
@@ -514,9 +465,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
            
             var q = new List<Critter>(this.Properties.PopulationSize);
-            foreach (var x in f)
+            foreach (var c1 in f)
             {
-                x.Clear();
+                c1.Clear();
             }
             f.Clear();
          
@@ -593,7 +544,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             //this.crowdingDistanceAssignment(r);
 
-            this.nonDominatedSort(r);
+            this.NonDominatedSort(r);
 
             foreach (var front in Fronts)
             {
@@ -665,9 +616,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
            
             this.Fronts[j].Sort(CompareCritters);
             /*
-            this.Fronts[j].Sort((x, y) =>
+            this.Fronts[j].Sort((c1, y) =>
                 {
-                    if (x.Rank < y.Rank || (x.Rank == y.Rank && x.Distance > y.Distance))
+                    if (c1.Rank < y.Rank || (c1.Rank == y.Rank && c1.Distance > y.Distance))
                     {
                         return 1;
                     }
@@ -690,7 +641,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             
 
             /*
-            this.nonDominatedSort(this.population);
+            this.NonDominatedSort(this.population);
 
             var ranks = this.population.GroupBy(g => g.Rank);
             foreach (var rank in ranks)
@@ -798,39 +749,39 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Methods
 
         /// <summary>
-        /// The compare critters.
+        /// A utility function to compare two critters.
         /// </summary>
-        /// <param name="x">
-        /// The x.
+        /// <param name="c1">
+        /// The first critter under comparison.
         /// </param>
-        /// <param name="y">
-        /// The y.
+        /// <param name="c2">
+        /// The second critter under comparison.
         /// </param>
         /// <returns>
-        /// The compare critters.
+        /// The standard integer values used by sorting functions.
         /// </returns>
-        private static int CompareCritters(Critter x, Critter y)
+        private static int CompareCritters(Critter c1, Critter c2)
         {
-            if (x == y)
+            if (c1 == c2)
             {
                 return 0;
             }
 
-            if (x == null)
+            if (c1 == null)
             {
-                if (y == null)
+                if (c2 == null)
                 {
-                    // If x is null and y is null, they're
+                    // If c1 is null and y is null, they're
                     // equal. 
                     return 0;
                 }
 
-                // If x is null and y is not null, y
+                // If c1 is null and y is not null, y
                 // is greater. 
                 return 1;
             }
 
-            if (x.Rank < y.Rank || (x.Rank == y.Rank && x.Distance > y.Distance))
+            if (c1.Rank < c2.Rank || (c1.Rank == c2.Rank && c1.Distance > c2.Distance))
             {
                 return 1;
             }
@@ -861,8 +812,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                             (Route)
                             this.Properties.RouteGenerator.Generate(
                                 (INetworkNode)this.Properties.Origin.Clone(), 
-                                (INetworkNode)this.Properties.Destination.Clone(), 
-                                this.Properties.DepartureTime).Clone();
+                                (INetworkNode)this.Properties.Destination.Clone()).Clone();
                     }
 
                     var critter = new Critter(route, new Fitness());
@@ -920,12 +870,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        /// The tournament select.
+        /// Performs a binary tournament selection on the specified population.
         /// </summary>
         /// <param name="p">
-        /// The p.
+        /// The list of Critters on which to perform the tournament selection on.
         /// </param>
         /// <returns>
+        /// The critter that wins the tournament.
         /// </returns>
         private Critter TournamentSelect(List<Critter> p)
         {
@@ -954,65 +905,13 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        /// The check pop dupes.
-        /// </summary>
-        private void checkPopDupes()
-        {
-            /*
-            
-            for (int p = 0; p < 2; p++)
-            {
-                for (int i = 0; i < this.population[p].Count; i++)
-                {
-                    for (int j = 0; j < this.population[p].Count; j++)
-                    {
-                        if (i == j) continue;
-
-                        Assert.That(!ReferenceEquals(this.population[p][i], this.population[p][j]));
-                    }
-
-                }
-            }
-            */
-        }
-
-        /// <summary>
-        /// The crowding distance assignment.
-        /// </summary>
-        /// <param name="X">
-        /// The x.
-        /// </param>
-        private void crowdingDistanceAssignment(List<Critter> X)
-        {
-            int l = X.Count;
-            foreach (var x in X)
-            {
-                x.Distance = 0;
-            }
-
-            for (int i = 0; i < this.properties.Objectives.Length; i++)
-            {
-                X.Sort(
-                    (x, y) =>
-                    x.Fitness[(int)this.properties.Objectives[i]].CompareTo(
-                        y.Fitness[(int)this.properties.Objectives[i]]));
-                X[0].Distance = double.PositiveInfinity;
-                X[l - 1].Distance = double.PositiveInfinity;
-                for (int j = 1; j < l - 1; j++)
-                {
-                    X[j].Distance += X[j + 1].Fitness[(int)this.properties.Objectives[i]]
-                                     - X[j - 1].Fitness[(int)this.properties.Objectives[i]];
-                }
-            }
-        }
-
-        /// <summary>
-        /// The non dominated sort.
+        /// Performs a non-dominated sort on the specified list of critters and 
+        /// stores the results in the <see cref="Fronts"/> property.
         /// </summary>
         /// <param name="r">
-        /// The r.
+        /// The population to sort.
         /// </param>
-        private void nonDominatedSort(List<Critter> r)
+        private void NonDominatedSort(List<Critter> r)
         {
             var s = new Dictionary<Critter, List<Critter>>();
             this.f = new List<List<Critter>> { new List<Critter>(), new List<Critter>() };
@@ -1052,7 +951,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             while (this.f[i].Any())
             {
-                var Q = new List<Critter>();
+                var newFront = new List<Critter>();
                 foreach (var p in this.f[i])
                 {
                     foreach (var q in s[p])
@@ -1061,14 +960,14 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                         if (q.N == 0)
                         {
                             q.Rank = i + 1;
-                            Q.Add(q);
+                            newFront.Add(q);
                         }
                     }
                 }
 
                 i++;
                 this.f.Add(new List<Critter>());
-                this.f[i] = Q;
+                this.f[i] = newFront;
             }
 
             this.f.RemoveAt(0);

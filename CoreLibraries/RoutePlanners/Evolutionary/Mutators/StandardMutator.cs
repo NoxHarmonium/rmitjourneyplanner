@@ -71,9 +71,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
             double u2 = rand.NextDouble();
             double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); // random no
 
-            int xOverWeight = (int)Tools.Clamp(10 * randStdNormal, -30, 30);
+            int crossoverWeight = (int)Tools.Clamp(10 * randStdNormal, -30, 30);
 
-            child.departureTime = this.properties.DepartureTime.AddMinutes(xOverWeight);
+            child.departureTime = this.properties.DepartureTime.AddMinutes(crossoverWeight);
             Assert.That(child.departureTime != default(DateTime));
 
             var random = Random.GetInstance();
@@ -88,7 +88,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
             NodeWrapper<INetworkNode> begin = nodes[startIndex];
             NodeWrapper<INetworkNode> end = nodes[endIndex];
             Route newSegment = this.properties.RouteGenerator.Generate(
-                begin.Node, end.Node, this.properties.DepartureTime + begin.TotalTime);
+                begin.Node, end.Node);
             var newRoute = new Route(Guid.NewGuid().GetHashCode());
             newRoute.AddRange(nodes.GetRange(0, startIndex));
             newRoute.AddRange(newSegment);

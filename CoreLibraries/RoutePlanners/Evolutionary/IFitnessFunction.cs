@@ -25,26 +25,27 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Methods and Operators
 
         /// <summary>
-        /// Returns a value representing the fitness of the route.
+        /// Gets the fitness of the specified route.
         /// </summary>
         /// <param name="route">
-        /// The route the is to be evaluated. 
+        /// A route.
         /// </param>
         /// <returns>
-        /// A double value representing the fitness. 
+        /// A <see cref="Fitness"/> object representing the fitness of the specified route.
         /// </returns>
         Fitness GetFitness(Route route);
 
         /// <summary>
-        /// The get fitness.
+        /// Gets the fitness of the specified route for a specified departure time.
         /// </summary>
         /// <param name="route">
-        /// The route.
+        /// A route.
         /// </param>
         /// <param name="initialDeparture">
-        /// The initial departure.
+        /// The departure time of the journey you are measuring the fitness of.
         /// </param>
         /// <returns>
+        /// A <see cref="Fitness"/> object representing the fitness of the specified route and departure time.
         /// </returns>
         Fitness GetFitness(Route route, DateTime initialDeparture);
 

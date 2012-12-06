@@ -20,48 +20,50 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
 
     #endregion
 
+    ////TODO: Rename A* search methods to improved greedy.
+
     /// <summary>
     /// The search type.
     /// </summary>
     public enum SearchType
     {
         /// <summary>
-        ///   The r w_ standard.
+        ///   The random walk unidirectional method.
         /// </summary>
         RW_Standard, 
 
         /// <summary>
-        ///   The r w_ bi dir.
+        ///   The random walk bidirectional method.
         /// </summary>
         RW_BiDir, 
 
         /// <summary>
-        ///   The df s_ standard.
+        ///   The stochastic depth first search unidirectional method.
         /// </summary>
         DFS_Standard, 
 
         /// <summary>
-        ///   The df s_ bi dir.
+        ///   The stochastic depth first search bidirectional method.
         /// </summary>
         DFS_BiDir, 
 
         /// <summary>
-        ///   The greedy_ standard.
+        ///    The stochastic greedy search unidirectional method.
         /// </summary>
         Greedy_Standard, 
 
         /// <summary>
-        ///   The greedy_ bi dir.
+        ///   The stochastic greedy search bidirectional method.
         /// </summary>
         Greedy_BiDir, 
 
         /// <summary>
-        ///   The a_ star_ standard.
+        ///  The stochastic A* search unidirectional method.
         /// </summary>
         A_Star_Standard, 
 
         /// <summary>
-        ///   The a_ star_ bi dir.
+        ///   The stochastic A* search bidirectional method.
         /// </summary>
         A_Star_BiDir
     }
@@ -103,22 +105,21 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
         #region Public Methods and Operators
 
         /// <summary>
-        /// The generate.
+        /// Generates a route between a source and destination.
         /// </summary>
         /// <param name="source">
-        /// The source.
+        /// The source node.
         /// </param>
         /// <param name="destination">
-        /// The destination.
-        /// </param>
-        /// <param name="startTime">
-        /// The start time.
+        /// The destination node.
         /// </param>
         /// <returns>
+        /// A route between the origin and destination.
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the <see cref="searchType"/> field is invalid.
         /// </exception>
-        public Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime)
+        public Route Generate(INetworkNode source, INetworkNode destination)
         {
             this.searchType = this.properties.SearchType;
             if (source.Id == -1)
@@ -163,15 +164,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGener
                     break;
                 case SearchType.RW_Standard:
                     searchAlgorithm = new PTDepthFirstSearch(
-                        false, this.properties.NetworkDataProviders[0], source, destination) {
-                                                                                                UseVisited = false 
-                                                                                             };
+                        false, this.properties.NetworkDataProviders[0], source, destination) 
+                        {
+                            UseVisited = false 
+                        };
                     break;
                 case SearchType.RW_BiDir:
                     searchAlgorithm = new PTDepthFirstSearch(
-                        true, this.properties.NetworkDataProviders[0], source, destination) {
-                                                                                               UseVisited = false 
-                                                                                            };
+                        true, this.properties.NetworkDataProviders[0], source, destination) 
+                        {
+                            UseVisited = false 
+                        };
                     break;
 
                 default:

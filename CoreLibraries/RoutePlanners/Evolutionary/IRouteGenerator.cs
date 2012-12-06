@@ -11,8 +11,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 {
     #region Using Directives
 
-    using System;
-
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
@@ -34,12 +32,10 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <param name="destination">
         /// The destination node. 
         /// </param>
-        /// <param name="startTime">
-        /// The time the route is being generated at. 
-        /// </param>
         /// <returns>
+        /// The generated route.
         /// </returns>
-        Route Generate(INetworkNode source, INetworkNode destination, DateTime startTime);
+        Route Generate(INetworkNode source, INetworkNode destination);
 
         #endregion
     }

@@ -115,9 +115,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
             double u2 = rand.NextDouble();
             double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); // random no
 
-            double xOverWeight = Tools.Clamp(0.5 + 0.5 * randStdNormal);
+            double crossOverWeight = Tools.Clamp(0.5 + (0.5 * randStdNormal));
             long difference = Math.Abs(first.departureTime.Ticks - second.departureTime.Ticks);
-            long diffTime = (long)(difference * xOverWeight);
+            long diffTime = (long)(difference * crossOverWeight);
             var newDepart = new DateTime(Math.Min(first.departureTime.Ticks, second.departureTime.Ticks) + diffTime);
 
             output[0].departureTime = newDepart;
