@@ -18,7 +18,7 @@ namespace RmitJourneyPlanner.CoreLibraries
     #endregion
 
     /// <summary>
-    /// Wraps <see cref="System.Random"/> to be thread safe. Initializes one random object per thread.
+    /// Wraps <see cref="MersenneTwister"/> to be thread safe. Initializes one random object per thread.
     /// </summary>
     public class Random
     {
@@ -35,9 +35,10 @@ namespace RmitJourneyPlanner.CoreLibraries
         #region Public Methods and Operators
 
         /// <summary>
-        /// Returns a thread safe version of the <see cref="System.Random"/> class.
+        /// Returns a thread safe version of the <see cref="MersenneTwister"/> class.
         /// </summary>
         /// <returns>
+        /// An instance of the <see cref="MersenneTwister"/> class.
         /// </returns>
         public static MersenneTwister GetInstance()
         {

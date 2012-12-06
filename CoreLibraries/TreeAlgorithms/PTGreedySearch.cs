@@ -86,12 +86,14 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         #region Methods
 
         /// <summary>
-        /// The order children.
+        /// Returns the specified nodes sorted stochastically according to
+        /// their Euclidian distance value only.
         /// </summary>
         /// <param name="nodes">
-        /// The nodes.
+        /// The nodes to be sorted.
         /// </param>
         /// <returns>
+        /// The nodes stochastically sorted.
         /// </returns>
         protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {

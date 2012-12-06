@@ -257,10 +257,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         /// Solve the next iteration of the algorithm.
         /// </summary>
-        /// <returns>
-        /// The solve step. 
-        /// </returns>
-        public bool SolveStep()
+        public void SolveStep()
         {
             // checkPopDupes();
             if (this.properties.Objectives.Length < 1)
@@ -671,7 +668,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             // this.BestNode = Tools.ToLinkedNodes(this.Population[0].Route);
 
             // Console.WriteLine("Average fitness: {0}", this.result.MinimumFitness);
-            return false;
+            // return false;
         }
 
         /// <summary>

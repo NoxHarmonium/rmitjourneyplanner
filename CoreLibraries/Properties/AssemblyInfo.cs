@@ -47,5 +47,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("0.0.0.4")]
 
 // Assembly marked as compliant.
-
 [assembly: CLSCompliant(true)]

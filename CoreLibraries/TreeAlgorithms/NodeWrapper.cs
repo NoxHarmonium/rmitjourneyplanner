@@ -18,9 +18,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
     /// <summary>
     /// Represents a generic node for use in route searches. 
-    ///   Basically a wrapper for a generic type to give it a unique address for referencing.
+    ///   Basically a wrapper for a generic type to give it a unique address for referencing in searches.
     /// </summary>
     /// <typeparam name="T">
+    /// The object type you want to wrap,.
     /// </typeparam>
     public class NodeWrapper<T> : ICloneable
     {
@@ -59,8 +60,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         ///   Creates a new instance of the NodeWrapper class.
         /// </summary>
         /// <param name="node">
+        /// The object that is to be wrapped.
         /// </param>
         /// <param name="cost">
+        /// The cost parameter associated with the object.
         /// </param>
         public NodeWrapper(T node, double cost)
         {
@@ -109,10 +112,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         #region Public Methods and Operators
 
         /// <summary>
-        /// The clone.
+        /// Returns a clone of this object.
         /// </summary>
         /// <returns>
-        /// The clone.
+        /// A <see cref="NodeWrapper{T}"/> object that has the same parameters as this object.
         /// </returns>
         public object Clone()
         {
@@ -120,10 +123,10 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         }
 
         /// <summary>
-        /// The to string.
+        /// Returns the string representation of this object.
         /// </summary>
         /// <returns>
-        /// The to string.
+        /// The string representation of this object.
         /// </returns>
         public override string ToString()
         {

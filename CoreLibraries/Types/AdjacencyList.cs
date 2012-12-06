@@ -18,8 +18,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
     #endregion
 
+    //// TODO: Make this generic so that you can have different kinds of nodes.
+
     /// <summary>
-    /// TODO: Update summary.
+    /// A class that handles adjacency relationships between <see cref="PtvNode"/> objects.
     /// </summary>
     public class AdjacencyList : IEnumerable
     {
@@ -72,13 +74,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Methods and Operators
 
         /// <summary>
-        /// The degree.
+        /// Returns the number of adjacent nodes to the specified node ID.
         /// </summary>
         /// <param name="id">
-        /// The id. 
+        /// The node id. 
         /// </param>
         /// <returns>
-        /// The degree. 
+        /// The number of adjacent nodes to the specified node ID.
         /// </returns>
         public int Degree(int id)
         {

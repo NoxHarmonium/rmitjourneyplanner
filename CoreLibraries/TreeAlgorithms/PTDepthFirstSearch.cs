@@ -85,39 +85,37 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         #region Methods
 
         /// <summary>
-        /// The get children.
+        /// Gets the child nodes for the specified <see cref="INetworkNode"/>.
         /// </summary>
         /// <param name="node">
-        /// The node.
+        /// The node that you wish to find the children of.
         /// </param>
         /// <returns>
+        /// A list of child nodes.
         /// </returns>
         protected override NodeWrapper<INetworkNode>[] GetChildren(NodeWrapper<INetworkNode> node)
         {
-            if (node.CurrentRoute >= 20000)
-            {
-                return new NodeWrapper<INetworkNode>[0];
-            }
-
             List<INetworkNode> nodes = this.provider.GetAdjacentNodes(node.Node);
 
             var wrappers = new NodeWrapper<INetworkNode>[nodes.Count];
 
             for (int i = 0; i < nodes.Count; i++)
             {
-                wrappers[i] = new NodeWrapper<INetworkNode>(nodes[i]) { CurrentRoute = node.CurrentRoute + 1 };
+                wrappers[i] = new NodeWrapper<INetworkNode>(nodes[i]);
             }
 
             return wrappers;
         }
 
         /// <summary>
-        /// The order children.
+        /// Returns the specified nodes stochastically sorted on no
+        /// parameter (shuffled).
         /// </summary>
         /// <param name="nodes">
-        /// The nodes.
+        /// The nodes to be sorted.
         /// </param>
         /// <returns>
+        /// The nodes stochastically sorted.
         /// </returns>
         protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {

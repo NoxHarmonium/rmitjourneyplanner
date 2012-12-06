@@ -123,12 +123,14 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         #region Methods
 
         /// <summary>
-        /// The order children.
+        /// Returns the specified nodes sorted stochastically according to
+        /// their Euclidian distance value with a penalty for node changes.
         /// </summary>
         /// <param name="nodes">
-        /// The nodes.
+        /// The nodes to be sorted.
         /// </param>
         /// <returns>
+        /// The nodes stochastically sorted.
         /// </returns>
         protected override NodeWrapper<INetworkNode>[] OrderChildren(NodeWrapper<INetworkNode>[] nodes)
         {
@@ -140,7 +142,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                 wrapper.EuclidianDistance = GeometryHelper.GetStraightLineDistance((Location)wrapper.Node, target);
 
                 // wrapper.EuclidianDistance = 1;
-                if (((PtvDataProvider)this.provider).RoutesIntersect(wrapper.Node, this.current[0].Node))
+                if (((PtvDataProvider)this.provider).RoutesIntersect(wrapper.Node, this.Current[0].Node))
                 {
                     // wrapper.EuclidianDistance *= 0.5; //best
                     wrapper.EuclidianDistance *= 0.5;

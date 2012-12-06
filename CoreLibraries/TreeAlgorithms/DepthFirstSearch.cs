@@ -24,288 +24,357 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
     /// Performs a depth first search on a graph.
     /// </summary>
     /// <typeparam name="T">
+    /// The object type to search with that must implement <see cref="IEquatable{T}"/>.
     /// </typeparam>
-    public abstract class DepthFirstSearch<T>
+    public abstract class DepthFirstSearch<T> where T : IEquatable<T>
     {
-        #region Constants and Fields
+    #region Constants and Fields
 
-        /// <summary>
-        ///   The depth limit.
-        /// </summary>
-        protected int DepthLimit = 16;
+    /// <summary>
+    ///   The map.
+    /// </summary>
+    private readonly Dictionary<NodeWrapper<T>, NodeWrapper<T>> map = new Dictionary<NodeWrapper<T>, NodeWrapper<T>>();
 
-        /// <summary>
-        ///   The provider.
-        /// </summary>
-        protected INetworkDataProvider Provider;
+    /// <summary>
+    ///   The bidirectional.
+    /// </summary>
+    private bool bidirectional;
 
-        /// <summary>
-        ///   The visited.
-        /// </summary>
-        protected HashSet<T>[] Visited = new HashSet<T>[2];
+    /// <summary>
+    ///   The current.
+    /// </summary>
+    private NodeWrapper<T>[] current = new NodeWrapper<T>[2];
 
-        /// <summary>
-        ///   The current.
-        /// </summary>
-        protected NodeWrapper<T>[] current = new NodeWrapper<T>[2];
+    /// <summary>
+    ///   The current index.
+    /// </summary>
+    private int currentIndex;
 
-        /// <summary>
-        ///   The results.
-        /// </summary>
-        protected T[][] results = new T[2][];
+    /// <summary>
+    ///   The depth limit.
+    /// </summary>
+    private int depthLimit = 16;
 
-        /// <summary>
-        ///   The map.
-        /// </summary>
-        private readonly Dictionary<NodeWrapper<T>, NodeWrapper<T>> map =
-            new Dictionary<NodeWrapper<T>, NodeWrapper<T>>();
+    /// <summary>
+    ///   The destination.
+    /// </summary>
+    private T destination;
 
-        /// <summary>
-        ///   The bidirectional.
-        /// </summary>
-        private bool bidirectional;
+    /// <summary>
+    ///   The entropy.
+    /// </summary>
+    private double entropy = 0.8;
 
-        /// <summary>
-        ///   The current index.
-        /// </summary>
-        private int currentIndex;
+    /// <summary>
+    ///   The iterations.
+    /// </summary>
+    private int iterations;
 
-        /// <summary>
-        ///   The destination.
-        /// </summary>
-        private T destination;
+    /// <summary>
+    ///   The origin.
+    /// </summary>
+    private T origin;
 
-        /// <summary>
-        ///   The entropy.
-        /// </summary>
-        private double entropy = 0.8;
+    /// <summary>
+    ///   The results.
+    /// </summary>
+    private T[][] results = new T[2][];
 
-        /// <summary>
-        ///   The iterations.
-        /// </summary>
-        private int iterations;
+    /// <summary>
+    ///   The start time.
+    /// </summary>
+    private DateTime startTime;
 
-        /// <summary>
-        ///   The origin.
-        /// </summary>
-        private T origin;
+    /// <summary>
+    ///   The use visited.
+    /// </summary>
+    private bool useVisited = true;
 
-        /// <summary>
-        ///   The start time.
-        /// </summary>
-        private DateTime startTime;
+    /// <summary>
+    ///   The visited.
+    /// </summary>
+    private HashSet<T>[] visited = new HashSet<T>[2];
 
-        /// <summary>
-        ///   The use visited.
-        /// </summary>
-        private bool useVisited = true;
+    #endregion
 
-        #endregion
+    #region Constructors and Destructors
 
-        #region Constructors and Destructors
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DepthFirstSearch{T}"/> class.
+    /// </summary>
+    /// <param name="depth">
+    /// The depth.
+    /// </param>
+    /// <param name="bidirectional">
+    /// The bidirectional.
+    /// </param>
+    /// <param name="origin">
+    /// The origin.
+    /// </param>
+    /// <param name="goal">
+    /// The goal.
+    /// </param>
+    protected DepthFirstSearch(int depth, bool bidirectional, T origin, T goal)
+        : this(bidirectional, origin, goal)
+    {
+        this.DepthLimit = depth;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DepthFirstSearch{T}"/> class.
-        /// </summary>
-        /// <param name="depth">
-        /// The depth.
-        /// </param>
-        /// <param name="bidirectional">
-        /// The bidirectional.
-        /// </param>
-        /// <param name="origin">
-        /// The origin.
-        /// </param>
-        /// <param name="goal">
-        /// The goal.
-        /// </param>
-        protected DepthFirstSearch(int depth, bool bidirectional, T origin, T goal)
-            : this(bidirectional, origin, goal)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DepthFirstSearch{T}"/> class.
+    /// </summary>
+    /// <param name="bidirectional">
+    /// Determines whether the search is bidirectional or not.
+    /// </param>
+    /// <param name="origin">
+    /// The origin node.
+    /// </param>
+    /// <param name="destination">
+    /// The destination node.
+    /// </param>
+    protected DepthFirstSearch(bool bidirectional, T origin, T destination)
+    {
+        this.origin = origin;
+        this.destination = destination;
+        this.bidirectional = bidirectional;
+    }
+
+    #endregion
+
+    #region Public Properties
+
+    /// <summary>
+    ///   Gets or sets a value indicating whether Bidirectional.
+    /// </summary>
+    public bool Bidirectional
+    {
+        get
         {
-            this.DepthLimit = depth;
+            return this.bidirectional;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DepthFirstSearch{T}"/> class. 
-        ///   Instantiates a new instance of the DepthFirstSerch class.
-        /// </summary>
-        /// <param name="bidirectional">
-        /// </param>
-        /// <param name="origin">
-        /// The origin node.
-        /// </param>
-        /// <param name="destination">
-        /// The destination node.
-        /// </param>
-        protected DepthFirstSearch(bool bidirectional, T origin, T destination)
+        set
         {
-            this.origin = origin;
-            this.destination = destination;
-            this.bidirectional = bidirectional;
+            this.bidirectional = value;
+        }
+    }
+
+    /// <summary>
+    ///   Gets CurrentIndex.
+    /// </summary>
+    public int CurrentIndex
+    {
+        get
+        {
+            return this.currentIndex;
+        }
+    }
+
+    /// <summary>
+    ///   Gets or sets Destination.
+    /// </summary>
+    public T Destination
+    {
+        get
+        {
+            return this.destination;
         }
 
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        ///   Gets or sets a value indicating whether Bidirectional.
-        /// </summary>
-        public bool Bidirectional
+        set
         {
-            get
-            {
-                return this.bidirectional;
-            }
+            this.destination = value;
+        }
+    }
 
-            set
-            {
-                this.bidirectional = value;
-            }
+    /// <summary>
+    ///   Gets or sets Entropy.
+    /// </summary>
+    public double Entropy
+    {
+        get
+        {
+            return this.entropy;
         }
 
-        /// <summary>
-        ///   Gets CurrentIndex.
-        /// </summary>
-        public int CurrentIndex
+        set
         {
-            get
-            {
-                return this.currentIndex;
-            }
+            this.entropy = value;
+        }
+    }
+
+    /// <summary>
+    ///   Gets Iterations.
+    /// </summary>
+    public int Iterations
+    {
+        get
+        {
+            return this.iterations;
+        }
+    }
+
+    /// <summary>
+    ///   Gets or sets Origin.
+    /// </summary>
+    public T Origin
+    {
+        get
+        {
+            return this.origin;
         }
 
-        /// <summary>
-        ///   Gets or sets Destination.
-        /// </summary>
-        public T Destination
+        set
         {
-            get
-            {
-                return this.destination;
-            }
+            this.origin = value;
+        }
+    }
 
-            set
-            {
-                this.destination = value;
-            }
+    /// <summary>
+    ///   Gets or sets a value indicating whether the algorithm keeps track of visited nodes.
+    /// </summary>
+    public bool UseVisited
+    {
+        get
+        {
+            return this.useVisited;
         }
 
-        /// <summary>
-        ///   Gets or sets Entropy.
-        /// </summary>
-        public double Entropy
+        set
         {
-            get
-            {
-                return this.entropy;
-            }
+            this.useVisited = value;
+        }
+    }
 
-            set
-            {
-                this.entropy = value;
-            }
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    ///   Gets or sets the current node/s in the search.
+    /// </summary>
+    protected NodeWrapper<T>[] Current
+    {
+        get
+        {
+            return this.current;
         }
 
-        /// <summary>
-        ///   Gets Iterations.
-        /// </summary>
-        public int Iterations
+        set
         {
-            get
-            {
-                return this.iterations;
-            }
+            this.current = value;
+        }
+    }
+
+    /// <summary>
+    ///   Gets or sets the depth limit of the search.
+    /// </summary>
+    protected int DepthLimit
+    {
+        get
+        {
+            return this.depthLimit;
         }
 
-        /// <summary>
-        ///   Gets or sets Origin.
-        /// </summary>
-        public T Origin
+        set
         {
-            get
-            {
-                return this.origin;
-            }
+            this.depthLimit = value;
+        }
+    }
 
-            set
-            {
-                this.origin = value;
-            }
+    ////TODO: Check if INetworkDataProvider reference should be in this generic class.
+
+    /// <summary>
+    ///   Gets or sets the <see cref="INetworkDataProvider"/> associated with the search.
+    /// </summary>
+    protected INetworkDataProvider Provider { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the results of the search.
+    /// </summary>
+    protected T[][] Results
+    {
+        get
+        {
+            return this.results;
         }
 
-        /// <summary>
-        ///   Determines if the algorithm keeps track of visited nodes.
-        /// </summary>
-        public bool UseVisited
+        set
         {
-            get
-            {
-                return this.useVisited;
-            }
+            this.results = value;
+        }
+    }
 
-            set
-            {
-                this.useVisited = value;
-            }
+    /// <summary>
+    ///   Gets or sets the visited set of the search.
+    /// </summary>
+    protected HashSet<T>[] Visited
+    {
+        get
+        {
+            return this.visited;
         }
 
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The run.
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        public T[] Run()
+        set
         {
-            if (this.origin.Equals(this.destination))
-            {
-                return new[] { this.origin };
-            }
+            this.visited = value;
+        }
+    }
 
-            this.map.Clear();
-            this.iterations = 0;
-            this.startTime = DateTime.Now;
+    #endregion
 
-            this.Visited[0] = new HashSet<T>();
+    #region Public Methods and Operators
 
-            var stack = new Stack<NodeWrapper<T>>[2];
-            stack[0] = new Stack<NodeWrapper<T>>();
-            T[] goal = new T[2];
-            goal[0] = this.destination;
-            this.current[0] = new NodeWrapper<T>(this.origin);
-            this.current[0].CurrentRoute = 0;
+    /// <summary>
+    /// Runs the search algorithm.
+    /// </summary>
+    /// <returns>
+    /// An array of <see cref="T"/> objects in order of the final search path.
+    /// </returns>
+    public T[] Run()
+    {
+        if (this.origin.Equals(this.destination))
+        {
+            return new[] { this.origin };
+        }
 
-            if (this.bidirectional)
-            {
-                this.Visited[1] = new HashSet<T>();
-                stack[1] = new Stack<NodeWrapper<T>>();
-                stack[1].Push(new NodeWrapper<T>(this.destination));
-                goal[1] = this.origin;
-                this.current[1] = new NodeWrapper<T>(this.destination);
-                this.current[1].CurrentRoute = 0;
-            }
+        this.map.Clear();
+        this.iterations = 0;
+        this.startTime = DateTime.Now;
 
-            stack[0].Push(new NodeWrapper<T>(this.origin));
+        this.Visited[0] = new HashSet<T>();
 
-            this.current[0] = default(NodeWrapper<T>);
-            while ((Equals(this.current[0], default(T)) || (stack[0].Any() && !this.current[0].Node.Equals(goal[0])))
-                   &&
-                   (!this.bidirectional
-                    ||
-                    (this.bidirectional
-                     &&
-                     (Equals(this.current[1], default(T))
-                      ||
-                      stack[1].Any() && !this.current[1].Node.Equals(goal[1])
-                      && !this.Visited[0].Intersect(this.Visited[1]).Any()))))
-            {
-                // while (Equals(current[0], default(T)) || (stack[0].Any() && !current[0].Node.Equals(goal[0])))
-                // Update debug info
-                this.iterations++;
+        var stack = new Stack<NodeWrapper<T>>[2];
+        stack[0] = new Stack<NodeWrapper<T>>();
+        T[] goal = new T[2];
+        goal[0] = this.destination;
+        this.Current[0] = new NodeWrapper<T>(this.origin);
+
+        if (this.bidirectional)
+        {
+            this.Visited[1] = new HashSet<T>();
+            stack[1] = new Stack<NodeWrapper<T>>();
+            stack[1].Push(new NodeWrapper<T>(this.destination));
+            goal[1] = this.origin;
+            this.Current[1] = new NodeWrapper<T>(this.destination);
+        }
+
+        stack[0].Push(new NodeWrapper<T>(this.origin));
+
+        this.Current[0] = default(NodeWrapper<T>);
+        while (this.Current[0].Node.Equals(default(T)) || (stack[0].Any() && !this.Current[0].Node.Equals(goal[0]))
+               &&
+               (!this.bidirectional
+                ||
+                (this.bidirectional
+                 &&
+                 (this.Current[1].Node.Equals(default(T))
+                  ||
+                  stack[1].Any() && !this.Current[1].Node.Equals(goal[1])
+                  && !this.Visited[0].Intersect(this.Visited[1]).Any()))))
+        {
+            // while (Equals(current[0], default(T)) || (stack[0].Any() && !current[0].Node.Equals(goal[0])))
+            // Update debug info
+            this.iterations++;
 #if (VERBOSE_DEBUG)
 
                if (iterations % 10000 == 0)
@@ -318,96 +387,96 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
                }
 #endif
-                for (int i = 0; i < (this.bidirectional ? 2 : 1); i++)
+            for (int i = 0; i < (this.bidirectional ? 2 : 1); i++)
+            {
+                this.currentIndex = i;
+
+                // Update goals
+                if (this.bidirectional)
                 {
-                    this.currentIndex = i;
+                    goal[i] = this.Current[i == 0 ? 1 : 0].Node;
+                }
+                else
+                {
+                    goal[i] = this.destination;
+                }
 
-                    // Update goals
-                    if (this.bidirectional)
-                    {
-                        goal[i] = this.current[i == 0 ? 1 : 0].Node;
-                    }
-                    else
-                    {
-                        goal[i] = this.destination;
-                    }
+                // Update currents
+                do
+                {
+                    this.Current[i] = stack[i].Pop();
+                }
+                while (this.Visited[i].Contains(this.Current[i].Node));
 
-                    // Update currents
-                    do
-                    {
-                        this.current[i] = stack[i].Pop();
-                    }
-                    while (this.Visited[i].Contains(this.current[i].Node));
+                if (this.useVisited)
+                {
+                    this.Visited[i].Add(this.Current[i].Node);
+                }
 
-                    if (this.useVisited)
-                    {
-                        this.Visited[i].Add(this.current[i].Node);
-                    }
+                NodeWrapper<T>[] children = this.OrderChildren(this.GetChildren(this.Current[i]));
 
-                    NodeWrapper<T>[] children = this.OrderChildren(this.GetChildren(this.current[i]));
-
-                    foreach (NodeWrapper<T> child in children)
+                foreach (NodeWrapper<T> child in children)
+                {
+                    if (!child.Node.Equals(this.Current[i].Node))
                     {
-                        if (!child.Node.Equals(this.current[i].Node))
-                        {
-                            this.map[child] = this.current[i];
-                            stack[i].Push(child);
-                        }
+                        this.map[child] = this.Current[i];
+                        stack[i].Push(child);
                     }
                 }
             }
+        }
 
-            if (stack[0].Count == 0 || (this.bidirectional && stack[1].Count == 0))
+        if (stack[0].Count == 0 || (this.bidirectional && stack[1].Count == 0))
+        {
+            Logger.Log(this, "Warning: Stack was empty on break. Path may be incomplete.");
+        }
+
+        var path = new List<T>();
+
+        NodeWrapper<T> v = this.Current[0];
+
+        while (!v.Node.Equals(this.origin))
+        {
+            path.Add(v.Node);
+            v = this.map[v];
+        }
+
+        path.Add(v.Node);
+
+        if (this.bidirectional)
+        {
+            var path2 = new List<T>();
+
+            v = this.Current[1];
+            while (!v.Node.Equals(this.destination))
             {
-                Logger.Log(this, "Warning: Stack was empty on break. Path may be incomplete.");
-            }
-
-            var path = new List<T>();
-
-            NodeWrapper<T> v = this.current[0];
-
-            while (!v.Node.Equals(this.origin))
-            {
-                path.Add(v.Node);
+                path2.Add(v.Node);
                 v = this.map[v];
             }
 
-            path.Add(v.Node);
+            path2.Add(v.Node);
 
-            if (this.bidirectional)
+            var intersection = path.Intersect(path2).ToList();
+            int intersectionCount = intersection.Count();
+            if (intersectionCount > 0)
             {
-                var path2 = new List<T>();
-
-                v = this.current[1];
-                while (!v.Node.Equals(this.destination))
-                {
-                    path2.Add(v.Node);
-                    v = this.map[v];
-                }
-
-                path2.Add(v.Node);
-
-                var intersection = path.Intersect(path2).ToList();
-                int iCount = intersection.Count();
-                if (iCount > 0)
-                {
-                    var iNode = intersection.First();
-                    int i1 = path.IndexOf(iNode);
-                    int i2 = path2.IndexOf(iNode);
-                    path.RemoveRange(0, i1 + 1);
-                    path2.RemoveRange(0, i2);
-                }
-
-                path.Reverse();
-                path.AddRange(path2);
+                var intersectionNode = intersection.First();
+                int i1 = path.IndexOf(intersectionNode);
+                int i2 = path2.IndexOf(intersectionNode);
+                path.RemoveRange(0, i1 + 1);
+                path2.RemoveRange(0, i2);
             }
 
-            return path.ToArray();
+            path.Reverse();
+            path.AddRange(path2);
         }
 
-        #endregion
+        return path.ToArray();
+    }
 
-        /*
+    #endregion
+
+    /*
         /// <summary>
         /// Executes the Depth First Search.
         /// </summary>
@@ -562,28 +631,33 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             return path;
         }
     */
-        #region Methods
 
-        /// <summary>
-        /// The get children.
-        /// </summary>
-        /// <param name="node">
-        /// The node.
-        /// </param>
-        /// <returns>
-        /// </returns>
-        protected abstract NodeWrapper<T>[] GetChildren(NodeWrapper<T> node);
+    #region Methods
 
-        /// <summary>
-        /// The order children.
-        /// </summary>
-        /// <param name="nodes">
-        /// The nodes.
-        /// </param>
-        /// <returns>
-        /// </returns>
-        protected abstract NodeWrapper<T>[] OrderChildren(NodeWrapper<T>[] nodes);
+    /// <summary>
+    /// Returns the children of a specified node. Override this function
+    ///   to allow the children of a node to be determined.
+    /// </summary>
+    /// <param name="node">
+    /// The node to find the children nodes of.
+    /// </param>
+    /// <returns>
+    /// The child nodes of the specified node.
+    /// </returns>
+    protected abstract NodeWrapper<T>[] GetChildren(NodeWrapper<T> node);
 
-        #endregion
-    }
+    /// <summary>
+    /// Returns a set of nodes in a certain order. Override this function 
+    ///   to set the order of child nodes.
+    /// </summary>
+    /// <param name="nodes">
+    /// Nodes to be sorted.
+    /// </param>
+    /// <returns>
+    /// The specified nodes in a specific order.
+    /// </returns>
+    protected abstract NodeWrapper<T>[] OrderChildren(NodeWrapper<T>[] nodes);
+
+    #endregion
+}
 }

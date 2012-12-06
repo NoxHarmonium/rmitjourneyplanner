@@ -102,7 +102,9 @@
     <Compile Include="DataProviders\Ptv\PtvNode.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="NPack\MersenneTwister.cs" />
+    <Compile Include="NPack\MersenneTwister.cs">
+		 <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+	</Compile>
     <Compile Include="RoutePlanners\Evolutionary\Breeders\TimeBlendBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\EARoutePlanner.cs" />
     <Compile Include="RoutePlanners\Evolutionary\MOEARoutePlanner.cs" />
@@ -129,7 +131,6 @@
     <Compile Include="TreeAlgorithms\PTAStarSearch.cs" />
     <Compile Include="TreeAlgorithms\PTDepthFirstSearch.cs" />
     <Compile Include="TreeAlgorithms\PTGreedySearch.cs" />
-    <Compile Include="TreeAlgorithms\PTUniformCostSearch.cs" />
     <Compile Include="Types\AdjacencyList.cs" />
     <Compile Include="Types\Arc.cs" />
     <Compile Include="Types\ClosedRoute.cs" />

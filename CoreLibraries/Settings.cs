@@ -25,7 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         #region Constants and Fields
 
         /// <summary>
-        ///   The dictionary that faciliates InternalEntries.
+        ///   The dictionary that facilitates InternalEntries.
         /// </summary>
         private static readonly Dictionary<string, string> InternalEntries;
 
@@ -63,7 +63,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         #region Public Properties
 
         /// <summary>
-        ///   Gets the dictionary that faciliates InternalEntries.
+        ///   Gets the dictionary that facilitates InternalEntries.
         /// </summary>
         public static Dictionary<string, string> Entries
         {

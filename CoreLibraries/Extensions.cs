@@ -11,6 +11,7 @@ namespace RmitJourneyPlanner.CoreLibraries
 {
     #region Using Directives
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -27,7 +28,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         #region Constants and Fields
 
         /// <summary>
-        ///   The rnd.
+        ///   The shared <see cref="System.Random"/> instance which is used by this class.
         /// </summary>
         private static readonly System.Random Rnd;
 
@@ -40,6 +41,8 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// </summary>
         static Extensions()
         {
+            //// TODO: Use global Random (Mersenne Twister) 
+            
             Rnd = Random.GetInstance();
         }
 
@@ -51,12 +54,16 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// Concatenates 2 arrays and returns the result.
         /// </summary>
         /// <typeparam name="T">
+        /// The type of array to concatenate.
         /// </typeparam>
         /// <param name="arrayA">
+        /// The first array.
         /// </param>
         /// <param name="arrayB">
+        /// The second array.
         /// </param>
         /// <returns>
+        /// The 2 arrays concatenated.
         /// </returns>
         public static T[] Concatenate<T>(this T[] arrayA, T[] arrayB)
         {
@@ -85,8 +92,10 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// Shuffles a list of nodes so that they are placed in random order in the list.
         /// </summary>
         /// <typeparam name="T">
+        /// The type of objects to shuffle.
         /// </typeparam>
         /// <param name="list">
+        /// The list of objects to shuffle.
         /// </param>
         public static void Shuffle<T>(this List<T> list)
         {
@@ -105,6 +114,7 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// Sorts nodes probabilistically so they are in a rough order.
         /// </summary>
         /// <param name="list">
+        /// The list of nodes to sort stochastically.
         /// </param>
         public static void StochasticSort(this ICollection<NodeWrapper<INetworkNode>> list)
         {
@@ -115,12 +125,15 @@ namespace RmitJourneyPlanner.CoreLibraries
         /// Sorts nodes probabilistically so they are in a rough order.
         /// </summary>
         /// <param name="list">
+        /// The list of nodes to sort stochastically.
         /// </param>
         /// <param name="randomness">
+        /// A number which can affect how random the sort is. Usually a value between 0.0 and 1.0 
+        /// is best where 0.0 is a standard sort without any randomness and 1.0 is very random.
         /// </param>
         public static void StochasticSort(this ICollection<NodeWrapper<INetworkNode>> list, double randomness)
         {
-            var pDict = new Dictionary<NodeWrapper<INetworkNode>, double>();
+            var probDict = new Dictionary<NodeWrapper<INetworkNode>, double>();
 
             // List<INetworkNode> nodes = new List<INetworkNode>(list.Count);
             double totalHeuristic = 0;
@@ -142,7 +155,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                 double pr = (double.IsNaN(dPr) || double.IsInfinity(dPr) ? 1 : dPr)
                             + (double.IsNaN(tPr) || double.IsInfinity(tPr) ? 1 : tPr);
 
-                pDict.Add(t, pr);
+                probDict.Add(t, pr);
                 totalPr += pr;
             }
 
@@ -152,7 +165,7 @@ namespace RmitJourneyPlanner.CoreLibraries
                 probabilities[i] /= totalPr;
             }
             */
-            var pairs = (from entry in pDict orderby entry.Value descending select entry).ToList();
+            var pairs = (from entry in probDict orderby entry.Value descending select entry).ToList();
 
             var newNodes = new List<NodeWrapper<INetworkNode>>();
             var usedNodes = new List<NodeWrapper<INetworkNode>>();
@@ -183,19 +196,19 @@ namespace RmitJourneyPlanner.CoreLibraries
                 pairs.RemoveAt(i);
             }
 
-            var lArray = list as NodeWrapper<INetworkNode>[];
-            if (lArray != null)
+            var listArray = list as NodeWrapper<INetworkNode>[];
+            if (listArray != null)
             {
-                for (int i = 0; i < lArray.Length; i++)
+                for (int i = 0; i < listArray.Length; i++)
                 {
-                    lArray[i] = newNodes[i];
+                    listArray[i] = newNodes[i];
                 }
             }
             else
             {
-                var lList = (List<NodeWrapper<INetworkNode>>)list;
-                lList.Clear();
-                lList.AddRange(newNodes);
+                var newList = (List<NodeWrapper<INetworkNode>>)list;
+                newList.Clear();
+                newList.AddRange(newNodes);
             }
         }
 

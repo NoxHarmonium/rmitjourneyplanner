@@ -257,7 +257,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
 
                 bestArcs =
                     (from a in bestArcs
-                     where Math.Abs(a.Distance - bestArcs.Max(i => i.Distance)) < this.Epsilon
+                     where Math.Abs(a.Distance - bestArcs.Max(i => i.Distance)) < Epsilon
                      select a).ToList();
 
                 var bestArc =
