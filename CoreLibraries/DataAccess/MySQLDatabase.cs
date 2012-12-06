@@ -67,8 +67,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataAccess
         /// The database. 
         /// </param>
         [Obsolete(
-            "You can no longer initialise this object by passing a database name. You must define the connection string property in the Settings class. This constructor ignores the database parameter."
-            )]
+            "You can no longer initialise this object by passing a database name. You must define the connection string property in the Settings class. This constructor ignores the database parameter.")]
         public MySqlDatabase(string database)
         {
             this.connectionString = Settings.Entries["ConnectionString"];
