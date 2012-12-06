@@ -1,0 +1,46 @@
+<StyleCopSettings Version="105">
+  <GlobalSettings>
+    <CollectionProperty Name="RecognizedWords">
+      <Value>API</Value>
+      <Value>Coburg</Value>
+      <Value>datatable</Value>
+      <Value>emt</Value>
+      <Value>en</Value>
+      <Value>es</Value>
+      <Value>finalizer</Value>
+      <Value>GUID</Value>
+      <Value>jp</Value>
+      <Value>Mersenne</Value>
+      <Value>mutator</Value>
+      <Value>optimisation</Value>
+      <Value>optimise</Value>
+      <Value>sci</Value>
+      <Value>SQL</Value>
+      <Value>Tramtracker</Value>
+      <Value>Yarra</Value>
+    </CollectionProperty>
+  </GlobalSettings>
+  <Analyzers>
+    <Analyzer AnalyzerId="StyleCop.CSharp.DocumentationRules">
+      <Rules>
+        <Rule Name="FileHeaderMustHaveSummary">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">True</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+      <AnalyzerSettings>
+        <StringProperty Name="CompanyName">RMIT University</StringProperty>
+        <StringProperty Name="Copyright">Copyright RMIT University 2012.</StringProperty>
+      </AnalyzerSettings>
+    </Analyzer>
+    <Analyzer AnalyzerId="StyleCop.CSharp.NamingRules">
+      <AnalyzerSettings>
+        <CollectionProperty Name="Hungarian">
+          <Value>jt</Value>
+          <Value>tt</Value>
+        </CollectionProperty>
+      </AnalyzerSettings>
+    </Analyzer>
+  </Analyzers>
+</StyleCopSettings>
