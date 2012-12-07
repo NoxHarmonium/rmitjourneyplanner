@@ -89,7 +89,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoeaRoutePlanner"/> class. 
-        ///   Initializes a new instance of the <see cref="EvolutionaryRoutePlanner"/> class.
         /// </summary>
         /// <param name="properties">
         /// The <see cref="EvolutionaryProperties"/> object containing the properties of the run. 

@@ -58,15 +58,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   Gets the population of the previous iteration.
+        ///   Gets or sets the population of the previous iteration.
         /// </summary>
-        public Population Population
-        {
-            get
-            {
-                return this.population;
-            }
-        }
+        public Population Population { get; set; }
 
         /// <summary>
         ///   Gets or sets the total time to execute the iteration.

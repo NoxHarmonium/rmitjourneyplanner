@@ -122,7 +122,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The greater than operator for a <see cref="TransportTimeSpanr"/> object.
+        ///   The greater than operator for a <see cref="TransportTimeSpan"/> object.
         /// </summary>
         /// <param name = "c1">
         ///   The object on the left side of the statement.
@@ -156,7 +156,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The less than operator for a <see cref="TransportTimeSpanr"/> object.
+        ///   The less than operator for a <see cref="TransportTimeSpan"/> object.
         /// </summary>
         /// <param name = "c1">
         ///   The object on the left side of the statement.

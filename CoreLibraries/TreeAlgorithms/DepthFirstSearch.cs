@@ -330,7 +330,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         /// Runs the search algorithm.
         /// </summary>
         /// <returns>
-        /// An array of <see cref="T"/> objects in order of the final search path.
+        /// An array of objects in order of the final search path.
         /// </returns>
         public T[] Run()
         {
@@ -498,8 +498,6 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         /// </returns>
         protected bool IsFinished(Stack<NodeWrapper<T>>[] stack, T[] goal)
         {
-            bool finished = false;
-
             for (int i = 0; i < (this.bidirectional ? 2 : 1); i++)
             {
                 if (!stack[i].Any())
@@ -532,6 +530,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                      (stack[1].Any() && !this.Current[1].Node.Equals(goal[1]))
                      && !this.Visited[0].Intersect(this.Visited[1]).Any())));
              */
+            return false;
         }
 
         /// <summary>
