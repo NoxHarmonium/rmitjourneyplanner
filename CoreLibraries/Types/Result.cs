@@ -23,24 +23,55 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Constants and Fields
 
         /// <summary>
-        ///   The amount of unique journeys in the iteration.
+        ///   The population of the previous iteration.
         /// </summary>
-        public int Cardinality;
+        private readonly Population population = new Population();
 
         /// <summary>
         ///   The hypervolume of the iteration.
         /// </summary>
-        public double Hypervolume = double.NaN;
+        private double hypervolume = double.NaN;
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
-        ///   The population of the previous iteration.
+        ///   Gets or sets the amount of unique journeys in the iteration.
         /// </summary>
-        public Population Population = new Population();
+        public int Cardinality { get; set; }
 
         /// <summary>
-        ///   The total time to execute the iteration.
+        ///   Gets or sets the hypervolume value of this iteration.
         /// </summary>
-        public TimeSpan Totaltime;
+        public double Hypervolume
+        {
+            get
+            {
+                return this.hypervolume;
+            }
+
+            set
+            {
+                this.hypervolume = value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets the population of the previous iteration.
+        /// </summary>
+        public Population Population
+        {
+            get
+            {
+                return this.population;
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the total time to execute the iteration.
+        /// </summary>
+        public TimeSpan Totaltime { get; set; }
 
         #endregion
 

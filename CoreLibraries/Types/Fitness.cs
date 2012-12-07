@@ -22,7 +22,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     public enum FitnessParameter
     {
         /// <summary>
-        ///   Gets the non-normalised journey time in fractional minutes.
+        ///   Gets the non normalised journey time in fractional minutes.
         /// </summary>
         TotalJourneyMinutes, 
 
@@ -37,7 +37,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         TotalJourneyTime, 
 
         /// <summary>
-        ///   The non normalise changes.
+        ///   The non normalised changes.
         /// </summary>
         Changes, 
 
@@ -62,7 +62,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         PercentTrains, 
 
         /// <summary>
-        ///   The co 2 emmissions.
+        ///   The normalised CO2 emissions.
         /// </summary>
         Co2Emmissions, 
 
@@ -118,7 +118,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Properties
 
         /// <summary>
-        ///   Returns the amount of fitness parameters available.
+        ///   Gets the amount of fitness parameters available.
         /// </summary>
         public static int ParameterCount
         {
@@ -129,12 +129,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The amount of mode changes of the journey.
+        ///   Gets or sets the amount of mode changes of the journey.
         /// </summary>
         public int Changes { get; set; }
 
         /// <summary>
-        ///   The amount of CO2 emmitted in this journey.
+        ///   Gets or sets the amount of CO2 emitted in this journey.
         /// </summary>
         public double Co2Emmissions { get; set; }
 
@@ -144,12 +144,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public double DiversityMetric { get; set; }
 
         /// <summary>
-        ///   The list of legs that make up a journey.
+        ///   Gets or sets the list of legs that make up a journey.
         /// </summary>
         public List<JourneyLeg> JourneyLegs { get; set; }
 
         /// <summary>
-        ///   Returns the amount of fitness parameters available.
+        ///   Gets the amount of fitness parameters available.
         /// </summary>
         public int Length
         {
@@ -160,57 +160,57 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   Gets or sets NormalisedChanges.
+        ///   Gets or sets the normalised changes value.
         /// </summary>
         public double NormalisedChanges { get; set; }
 
         /// <summary>
-        ///   The normalised journey time of the leg (0.0-1.0).
+        ///   Gets or sets the normalised journey time of the leg (0.0-1.0).
         /// </summary>
         public double NormalisedJourneyTime { get; set; }
 
         /// <summary>
-        ///   The normalised travel time of the leg (0.0-1.0).
+        ///   Gets or sets the normalised travel time of the leg (0.0-1.0).
         /// </summary>
         public double NormalisedTravelTime { get; set; }
 
         /// <summary>
-        ///   The percent of the journey that uses buses. (0.0 - 1.0)
+        ///   Gets or sets the percent of the journey that uses buses. (0.0 - 1.0)
         /// </summary>
         public double PercentBuses { get; set; }
 
         /// <summary>
-        ///   The percent of the journey that is accessable for disabled passengers. (0.0 - 1.0)
+        ///   Gets or sets the percent of the journey that is accessible for disabled passengers. (0.0 - 1.0)
         /// </summary>
         public double PercentDisableFriendly { get; set; }
 
         /// <summary>
-        ///   The percent of the journey that uses trains. (0.0 - 1.0)
+        ///   Gets or sets the percent of the journey that uses trains. (0.0 - 1.0)
         /// </summary>
         public double PercentTrains { get; set; }
 
         /// <summary>
-        ///   The percent of the journey that uses trams. (0.0 - 1.0)
+        ///   Gets or sets the percent of the journey that uses trams. (0.0 - 1.0)
         /// </summary>
         public double PercentTrams { get; set; }
 
         /// <summary>
-        ///   Gets or sets TotalDistance.
+        ///   Gets or sets the total distance of the journey.
         /// </summary>
         public double TotalDistance { get; set; }
 
         /// <summary>
-        ///   The total time of the whole journey.
+        ///   Gets or sets the total time of the whole journey.
         /// </summary>
         public TimeSpan TotalJourneyTime { get; set; }
 
         /// <summary>
-        ///   The total time spent on a service in the journey.
+        ///   Gets or sets the total time spent on a service in the journey.
         /// </summary>
         public TimeSpan TotalTravelTime { get; set; }
 
         /// <summary>
-        ///   The total time spent waiting for a service in the journey.
+        ///   Gets or sets the total time spent waiting for a service in the journey.
         /// </summary>
         public TimeSpan TotalWaitingTime { get; set; }
 
@@ -224,9 +224,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Indexers
 
         /// <summary>
-        ///   References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
+        ///   References the different fitness parameters with a <see cref = "FitnessParameter" /> enumeration. The parameters are all returned so that they suit a minimization problem. (Lower is better).
         /// </summary>
-        /// <param name = "i">The index of the parameter. <see cref = "FitnessParameter" /></param>
+        /// <param name = "fitnessParameter">The <see cref = "FitnessParameter" /> value corresponding to a fitness parameter.</param>
+        /// <returns>
+        ///   The value of the specified fitness parameter.
+        /// </returns>
         public double this[FitnessParameter fitnessParameter]
         {
             get
@@ -239,7 +242,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         ///   References the different fitness parameters with an index. The parameters are all returned so that they suit a minimization problem. (Lower is better).
         /// </summary>
         /// <param name = "i">The index of the parameter. <see cref = "FitnessParameter" /></param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown if a index is refereced that is out of range.</exception>
+        /// <returns>
+        ///   The value of the specified fitness parameter.
+        /// </returns>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown if a index is referenced that is out of range.</exception>
         public double this[int i]
         {
             get
@@ -302,14 +308,15 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         #endregion
 
+        //// TODO: Do we need the addition and division operators for the Fitness object?
         #region Public Methods and Operators
 
         /// <summary>
         ///   Adds 2 fitness objects together
         /// </summary>
-        /// <param name = "c1"></param>
-        /// <param name = "c2"></param>
-        /// <returns></returns>
+        /// <param name = "c1">The first <see cref = "Fitness" /> object.</param>
+        /// <param name = "c2">The second <see cref = "Fitness" /> object.</param>
+        /// <returns>The result of the addition.</returns>
         public static Fitness operator +(Fitness c1, Fitness c2)
         {
             var fitness = new Fitness
@@ -331,9 +338,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   Divides all the internal values by the specified double.
         /// </summary>
-        /// <param name = "c1"></param>
-        /// <param name = "c2"></param>
-        /// <returns></returns>
+        /// <param name = "c1">The <see cref = "Fitness" /> object.</param>
+        /// <param name = "c2">The coefficient for the division.</param>
+        /// <returns>The result of the division.</returns>
         public static Fitness operator /(Fitness c1, double c2)
         {
             var fitness = new Fitness
@@ -353,15 +360,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The ==.
+        ///   The equality operator for a <see cref = "Fitness" /> object.
         /// </summary>
         /// <param name = "left">
-        ///   The left.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "right">
-        ///   The right.
+        ///   The object on the right side of the statement.
         /// </param>
         /// <returns>
+        ///   If the two objects are equal by value.
         /// </returns>
         public static bool operator ==(Fitness left, Fitness right)
         {
@@ -369,15 +377,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The !=.
+        ///   The inequality operator for a <see cref = "Fitness" /> object.
         /// </summary>
         /// <param name = "left">
-        ///   The left.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "right">
-        ///   The right.
+        ///   The object on the right side of the statement.
         /// </param>
         /// <returns>
+        ///   If the two objects are equal by value.
         /// </returns>
         public static bool operator !=(Fitness left, Fitness right)
         {
@@ -385,10 +394,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The clone.
+        /// Returns a copy of this <see cref="Fitness"/> object.
         /// </summary>
         /// <returns>
-        /// The clone.
+        /// The a new instance of the <see cref="Fitness"/> class with the same properties as this one.
         /// </returns>
         public object Clone()
         {
@@ -408,19 +417,11 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     WalkingTime = this.WalkingTime, 
                     TotalWaitingTime = this.TotalWaitingTime, 
                     DiversityMetric = this.DiversityMetric
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    // TotalJourneyTime,TotalTravelTime,NormalisedChanges
                 };
         }
 
         /// <summary>
-        /// Indicates whether the current object is equal to another object of the same type.
+        /// Indicates whether the current object is equal to another object of the same type according to value.
         /// </summary>
         /// <returns>
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
@@ -430,25 +431,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </param>
         public bool Equals(Fitness other)
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return other.TotalTravelTime.Equals(this.TotalTravelTime)
-                   && other.TotalWaitingTime.Equals(this.TotalWaitingTime) && other.WalkingTime.Equals(this.WalkingTime)
-                   && other.Changes == this.Changes && other.Co2Emmissions.Equals(this.Co2Emmissions)
-                   && other.PercentTrains.Equals(this.PercentTrains) && other.PercentBuses.Equals(this.PercentBuses)
-                   && other.PercentTrams.Equals(this.PercentTrams)
-                   && other.NormalisedJourneyTime.Equals(this.NormalisedJourneyTime)
-                   && other.NormalisedChanges.Equals(this.NormalisedChanges)
-                   && other.PercentDisableFriendly.Equals(this.PercentDisableFriendly)
-                   && other.TotalJourneyTime.Equals(this.TotalJourneyTime);
+            return this.Equals(this, other);
         }
 
         /// <summary>
@@ -482,20 +465,38 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The equals.
+        /// Returns if the two specified <see cref="Fitness"/> objects are equal according to value.
         /// </summary>
-        /// <param name="x">
-        /// The x.
+        /// <param name="c1">
+        /// The first object under comparison.
         /// </param>
-        /// <param name="y">
-        /// The y.
+        /// <param name="c2">
+        /// The second object under comparison.
         /// </param>
         /// <returns>
-        /// The equals.
+        /// True if the objects are equal, otherwise false.
         /// </returns>
-        public bool Equals(Fitness x, Fitness y)
+        public bool Equals(Fitness c1, Fitness c2)
         {
-            return this.Equals(x, y);
+            if (ReferenceEquals(null, c1) || ReferenceEquals(null, c2))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(c1, c2))
+            {
+                return true;
+            }
+
+            return c1.TotalTravelTime.Equals(c2.TotalTravelTime)
+                   && c1.TotalWaitingTime.Equals(c2.TotalWaitingTime) && c1.WalkingTime.Equals(c2.WalkingTime)
+                   && c1.Changes == c2.Changes && c1.Co2Emmissions.Equals(c2.Co2Emmissions)
+                   && c1.PercentTrains.Equals(c2.PercentTrains) && c1.PercentBuses.Equals(c2.PercentBuses)
+                   && c1.PercentTrams.Equals(c2.PercentTrams)
+                   && c1.NormalisedJourneyTime.Equals(c2.NormalisedJourneyTime)
+                   && c1.NormalisedChanges.Equals(c2.NormalisedChanges)
+                   && c1.PercentDisableFriendly.Equals(c2.PercentDisableFriendly)
+                   && c1.TotalJourneyTime.Equals(c2.TotalJourneyTime);
         }
 
         /// <summary>
@@ -526,13 +527,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The get hash code.
+        /// Returns the hash code of a <see cref="Fitness"/> object.
         /// </summary>
         /// <param name="obj">
-        /// The obj.
+        /// The <see cref="Fitness"/> object to get the hash code of.
         /// </param>
         /// <returns>
-        /// The get hash code.
+        /// The hash code of the specified object.
         /// </returns>
         public int GetHashCode(Fitness obj)
         {

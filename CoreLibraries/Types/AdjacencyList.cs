@@ -88,9 +88,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The get enumerator.
+        /// Gets an enumerator to enumerate over all the node in the adjacency list.
         /// </summary>
         /// <returns>
+        /// A enumerator for use in for loops.
         /// </returns>
         public IEnumerator GetEnumerator()
         {

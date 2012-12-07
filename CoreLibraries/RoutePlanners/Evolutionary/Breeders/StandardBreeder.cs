@@ -109,11 +109,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
                     new Critter((Route)secondChild.Clone(), new Fitness())
                 };
 
-            output[0].departureTime = second.departureTime;
-            output[1].departureTime = first.departureTime;
+            output[0].DepartureTime = second.DepartureTime;
+            output[1].DepartureTime = first.DepartureTime;
 
-            Assert.That(output[0].departureTime != default(DateTime));
-            Assert.That(output[1].departureTime != default(DateTime));
+            Assert.That(output[0].DepartureTime != default(DateTime));
+            Assert.That(output[1].DepartureTime != default(DateTime));
 
             if (output == null || output[0] == null || output[1] == null)
             {

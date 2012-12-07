@@ -48,7 +48,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The travel time component.
+        ///   Gets or sets the travel time component.
         /// </summary>
         public TimeSpan TravelTime
         {
@@ -64,7 +64,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The waiting time component.
+        ///   Gets or sets the waiting time component.
         /// </summary>
         public TimeSpan WaitingTime
         {
@@ -84,15 +84,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Methods and Operators
 
         /// <summary>
-        ///   The +.
+        ///   The addition operator of the <see cref="TransportTimeSpan"/> class.
         /// </summary>
         /// <param name = "c1">
-        ///   The c 1.
+        ///   The first object to be added.
         /// </param>
         /// <param name = "c2">
-        ///   The c 2.
+        ///   The second object to be added.
         /// </param>
         /// <returns>
+        /// The result of the addition.
         /// </returns>
         public static TransportTimeSpan operator +(TransportTimeSpan c1, TransportTimeSpan c2)
         {
@@ -104,15 +105,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The ==.
+        ///   The equality operator for a <see cref="TransportTimeSpan"/> object.
         /// </summary>
         /// <param name = "c1">
-        ///   The c 1.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "c2">
-        ///   The c 2.
+        ///  The object on the right side of the statement.
         /// </param>
         /// <returns>
+        /// True if <paramref name="c1"/> equals <paramref name="c2"/>, otherwise false.
         /// </returns>
         public static bool operator ==(TransportTimeSpan c1, TransportTimeSpan c2)
         {
@@ -120,15 +122,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The &gt;.
+        ///   The greater than operator for a <see cref="TransportTimeSpanr"/> object.
         /// </summary>
         /// <param name = "c1">
-        ///   The c 1.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "c2">
-        ///   The c 2.
+        ///  The object on the right side of the statement.
         /// </param>
         /// <returns>
+        /// True if <paramref name="c1"/> is greater than <paramref name="c2"/>, otherwise false.
         /// </returns>
         public static bool operator >(TransportTimeSpan c1, TransportTimeSpan c2)
         {
@@ -136,15 +139,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The !=.
+        ///   The equality operator for a <see cref="TransportTimeSpan"/> object.
         /// </summary>
         /// <param name = "c1">
-        ///   The c 1.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "c2">
-        ///   The c 2.
+        ///  The object on the right side of the statement.
         /// </param>
         /// <returns>
+        /// True if <paramref name="c1"/> does not equal <paramref name="c2"/>, otherwise false.
         /// </returns>
         public static bool operator !=(TransportTimeSpan c1, TransportTimeSpan c2)
         {
@@ -152,15 +156,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The &lt;.
+        ///   The less than operator for a <see cref="TransportTimeSpanr"/> object.
         /// </summary>
         /// <param name = "c1">
-        ///   The c 1.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "c2">
-        ///   The c 2.
+        ///  The object on the right side of the statement.
         /// </param>
         /// <returns>
+        /// True if <paramref name="c1"/> is less than <paramref name="c2"/>, otherwise false.
         /// </returns>
         public static bool operator <(TransportTimeSpan c1, TransportTimeSpan c2)
         {

@@ -19,16 +19,16 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
     #endregion
 
     /// <summary>
-    /// Represents a member of a population in an evolutionary algorithm.
+    /// Represents a member of a population (a journey) in an evolutionary algorithm.
     /// </summary>
     public class Critter : ICloneable, IEquatable<Critter>
     {
         #region Constants and Fields
 
         /// <summary>
-        ///   The departure time.
+        ///   The departure time of the journey.
         /// </summary>
-        public DateTime departureTime;
+        private DateTime departureTime;
 
         /// <summary>
         ///   The route.
@@ -122,40 +122,60 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// </value>
         public double UnifiedFitnessScore { get; set; }
 
+        /// <summary>
+        ///   Gets or sets the departure time of the the journey.
+        /// </summary>
+        public DateTime DepartureTime
+        {
+            get
+            {
+                return this.departureTime;
+            }
+
+            set
+            {
+                this.departureTime = value;
+            }
+        }
+
         #endregion
 
         #region Public Methods and Operators
 
+        //// TODO: Are the Critter overloaded operators for equality even used or even correct to use?
+
         /// <summary>
-        ///   The ==.
+        ///   The equality operator for a <see cref="Critter"/> object.
         /// </summary>
         /// <param name = "left">
-        ///   The left.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "right">
-        ///   The right.
+        ///  The object on the right side of the statement.
         /// </param>
         /// <returns>
+        /// If the two objects are equal by value.
         /// </returns>
         public static bool operator ==(Critter left, Critter right)
         {
-            return Equals(left, right);
+            return Critter.Equals(left, right);
         }
 
         /// <summary>
-        ///   The !=.
+        ///   The inequality operator for a <see cref="Critter"/> object.
         /// </summary>
         /// <param name = "left">
-        ///   The left.
+        ///   The object on the left side of the statement.
         /// </param>
         /// <param name = "right">
-        ///   The right.
+        ///  The object on the right side of the statement.
         /// </param>
         /// <returns>
+        /// If the two objects are equal by value.
         /// </returns>
         public static bool operator !=(Critter left, Critter right)
         {
-            return !Equals(left, right);
+            return !Critter.Equals(left, right);
         }
 
         /// <summary>
@@ -246,10 +266,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The to string.
+        /// Returns the string representation of this object.
         /// </summary>
         /// <returns>
-        /// The to string.
+        /// A string which provides human readable information on this object.
         /// </returns>
         public override string ToString()
         {

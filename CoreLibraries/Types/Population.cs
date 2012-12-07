@@ -63,6 +63,46 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
         #region Public Methods and Operators
 
+        //// TODO: Remove dodgy hypervolume code?
+
+        /*
+         *      BASED ON CODE WITH THE FOLLOWING HEADER. (I can't find the source
+         *      page)
+         * 
+        /*---------------------------------------------------------------------------*/
+        /* Approximation of the Least Contributor                                    */
+        /*---------------------------------------------------------------------------*/
+        /* This program calculates for a given set of points in R^d a point, which   */
+        /* has a hypervolume contribution very close to the minimal contribution of  */
+        /* any point. In [BF09] we prove that for given delta,epsilon>0, the         */
+        /* returned solution has a contribution at most (1+epsilon) times the        */
+        /* minimal contribution with probability at least (1-delta).  More details   */
+        /* can be found in [BF09].                                                   */
+        /* This implementation may use the exact hypervolume algorithms HSO          */
+        /* by Zitzler (available at                                                  */
+        /* ftp://ftp.tik.ee.ethz.ch/pub/people/zitzler/hypervol.c) and BR by         */
+        /* Beume and Rudolph (available upon request from the two) to speed up on    */
+        /* small subcases.                                                           */
+        /* If you do not use HSO and/or BR, you should disable the flags             */
+        /* USE_EXACT_HSO and/or USE_EXACT_BR.                                        */
+        /* Also note that the algorithm assumes that no point is dominated by        */
+        /* another, meaning that you should run a test for domination before         */
+        /* invocing the algorithm.                                                   */
+        /* [BF09] K. Bringmann, T. Friedrich.  Approximating the least hypervolume   */
+        /*        contributor: NP-hard in general, but fast in practice.             */
+        /*        Proc. of the 5th International Conference on Evolutionary          */
+        /*        Multi-Criterion Optimization (EMO 2009), Nantes, France,           */
+        /*        Vol. 5467 of Lecture Notes in Computer Science, pages 6-20,        */
+        /*        Springer-Verlag, 2009.                                             */
+        /*---------------------------------------------------------------------------*/
+        /* Karl Bringmann                                                            */
+        /* Saarland University, Germany                                              */
+        /* and                                                                       */
+        /* Tobias Friedrich                                                          */
+        /* Max-Planck-Institut für Informatik, Saarbrücken, Germany                  */
+        /* (c)2010                                                                   */
+        /*---------------------------------------------------------------------------*/
+
         /// <summary>
         /// Returns the hypervolume of the specified objectives.
         /// </summary>
@@ -70,10 +110,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// An array of objectives to use to calculate the hypervolume.
         /// </param>
         /// <param name="referencePoint">
-        /// The reference point of the hypervolume.
+        /// The reference point to use to calculate the hypervolume.
         /// </param>
         /// <returns>
-        /// The hypervolume.
+        /// The hypervolume value.
         /// </returns>
         public double CalculateHyperVolume(FitnessParameter[] objectives, double[] referencePoint)
         {
@@ -172,10 +212,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// Returns a new set of critters that have all been cloned from this list.
+        /// Returns a new <see cref="Population"/>  which contains members that have all been cloned from this object.
         /// </summary>
+        /// <remarks>
+        /// Be careful with this method as the memory usage can increase significantly as each object within the population is
+        /// is also cloned rather than just this object.</remarks>
         /// <returns>
-        /// The clone.
+        /// The cloned <see cref="Population"/> object.
         /// </returns>
         public object Clone()
         {
@@ -189,19 +232,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Methods
 
         /// <summary>
-        /// The dominates.
+        /// Returns if one critter dominates another according to the specified objectives.
         /// </summary>
         /// <param name="objectives">
-        /// The objectives.
+        /// The objectives to use to determine domination.
         /// </param>
         /// <param name="c1">
-        /// The c 1.
+        /// The first critter under comparison.
         /// </param>
         /// <param name="c2">
-        /// The c 2.
+        /// The second critter under comparison.
         /// </param>
         /// <returns>
-        /// The dominates.
+        /// True if <paramref name="c1"/> dominates <paramref name="c2"/>, otherwise false.
         /// </returns>
         private bool Dominates(FitnessParameter[] objectives, Critter c1, Critter c2)
         {
@@ -228,28 +271,28 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The recurse calc hyper volume.
+        /// Recursively calculates hypervolume.
         /// </summary>
         /// <param name="points">
-        /// The points.
+        /// The set of points for hypervolume calculation.
         /// </param>
         /// <param name="n">
-        /// The n.
+        /// The n parameter.
         /// </param>
         /// <param name="dims">
-        /// The dims.
+        /// The number of dimensions.
         /// </param>
         /// <param name="sign">
-        /// The sign.
+        /// The sign value.
         /// </param>
         /// <param name="took">
-        /// The took.
+        /// The took value.
         /// </param>
         /// <param name="bounds">
-        /// The bounds.
+        /// The bounds value.
         /// </param>
         /// <returns>
-        /// The recurse calc hyper volume.
+        /// The hypervolume value calculated recursively.
         /// </returns>
         private double RecurseCalcHyperVolume(double[][] points, int n, int dims, int sign, int took, double[] bounds)
         {

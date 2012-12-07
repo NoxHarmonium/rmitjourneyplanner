@@ -41,7 +41,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The total distance in Km of the arc. 
         /// </param>
         /// <param name="departureTime">
-        /// The departure time of this arc. Set to default(DateTime) if departure time is not relivant. 
+        /// The departure time of this arc. Set to default(DateTime) if departure time is not relevant. 
         /// </param>
         /// <param name="transportMode">
         /// Sets the transport id used in the arc. 
@@ -73,7 +73,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The total distance in Km of the arc. 
         /// </param>
         /// <param name="departureTime">
-        /// The departure time of this arc. Set to default(DateTime) if departure time is not relivant. 
+        /// The departure time of this arc. Set to default(DateTime) if departure time is not relevant. 
         /// </param>
         /// <param name="transportMode">
         /// Sets the transport id used in the arc. 

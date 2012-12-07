@@ -166,7 +166,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                     if (!routes.Contains(openRoute))
                     {
                         closedRoutes.Add(openRoute);
-                        var cr = new ClosedRoute { end = i - 1, id = openRoute, start = routeIndex[openRoute] };
+                        var cr = new ClosedRoute(openRoute, routeIndex[openRoute], i - 1);
 
                         if (cr.Length >= 1)
                         {
@@ -231,7 +231,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                 var bestArcs =
                     t.Select(
                         cr =>
-                        provider.GetDistanceBetweenNodes(route[cr.start].Node, route[cr.end].Node, departTime).FirstOrDefault()).ToList();
+                        provider.GetDistanceBetweenNodes(route[cr.Start].Node, route[cr.End].Node, departTime).FirstOrDefault()).ToList();
 
                 bestArcs = (from arc in bestArcs where arc != default(Arc) select arc).ToList();
 
@@ -251,7 +251,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFun
                         // Calculate the walking disance
                         bestArcs.Add(
                             this.properties.PointDataProviders[0].EstimateDistance(
-                                (Location)route[longest.start].Node, (Location)route[longest.end].Node));
+                                (Location)route[longest.Start].Node, (Location)route[longest.End].Node));
                     }
                 }
 

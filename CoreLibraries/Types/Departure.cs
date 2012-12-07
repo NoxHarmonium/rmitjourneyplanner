@@ -3,48 +3,48 @@
 //   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
-//   Represents a departure from a stop.
+//   Represents a departure from a stop in the timetable.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     /// <summary>
-    /// Represents a departure from a stop.
+    /// Represents a departure from a stop in the timetable.
     /// </summary>
     public struct Departure
     {
-        #region Constants and Fields
+        #region Public Properties
 
         /// <summary>
-        ///   The arrival time.
+        ///   Gets or sets the arrival time.
         /// </summary>
-        public int arrivalTime;
+        public int ArrivalTime { get; set; }
 
         /// <summary>
-        ///   The departure time.
+        ///   Gets or sets the departure time.
         /// </summary>
-        public int departureTime;
+        public int DepartureTime { get; set; }
 
         /// <summary>
-        ///   The order.
+        ///   Gets or sets the order parameter.
         /// </summary>
-        public int order;
+        public int Order { get; set; }
 
         /// <summary>
-        ///   The route id.
+        ///   Gets or sets the route identifier.
         /// </summary>
-        public int routeId;
+        public int RouteId { get; set; }
 
         /// <summary>
-        ///   The service id.
+        ///   Gets or sets the service identifier.
         /// </summary>
-        public int serviceId;
+        public int ServiceId { get; set; }
 
         /// <summary>
-        ///   The stop id.
+        ///   Gets or sets the stop identifier.
         /// </summary>
-        public int stopId;
+        public int StopId { get; set; }
 
         #endregion
 
@@ -62,12 +62,12 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             return
                 string.Format(
                     "StopId: {0}, RouteId: {1}, ArrivalTime: {2}, DepartureTime: {3}, ServiceId: {4}, Order: {5}", 
-                    this.stopId, 
-                    this.routeId, 
-                    this.arrivalTime, 
-                    this.departureTime, 
-                    this.serviceId, 
-                    this.order);
+                    this.StopId, 
+                    this.RouteId, 
+                    this.ArrivalTime, 
+                    this.DepartureTime, 
+                    this.ServiceId, 
+                    this.Order);
         }
 
         #endregion

@@ -105,10 +105,13 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// Returns a new route as a combination of 2 routes joined from the end nodes.
         /// </summary>
         /// <param name="route1">
+        /// The first route to be combined.
         /// </param>
         /// <param name="route2">
+        /// The second route to be combined.
         /// </param>
         /// <returns>
+        /// The two routes combined.
         /// </returns>
         public static Route Glue(Route route1, Route route2)
         {
@@ -145,10 +148,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// The to string.
+        /// Returns the string representation of this object.
         /// </summary>
         /// <returns>
-        /// The to string.
+        /// A human readable string representing this object.
         /// </returns>
         public override string ToString()
         {

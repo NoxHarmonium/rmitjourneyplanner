@@ -27,7 +27,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// <summary>
         ///   The route ID of the leg.
         /// </summary>
-        private readonly string RouteId;
+        private readonly string routeId;
 
         /// <summary>
         ///   The departure time of the leg.
@@ -92,7 +92,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
             this.destination = destination;
             this.departureTime = departureTime;
             this.totalTime = totalTime;
-            this.RouteId = routeId;
+            this.routeId = routeId;
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Properties
 
         /// <summary>
-        ///   The departure time of the leg.
+        ///   Gets the departure time of the leg.
         /// </summary>
         public DateTime DepartureTime
         {
@@ -111,7 +111,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The node at the end of the leg.
+        ///   Gets the node at the end of the leg.
         /// </summary>
         public PtvNode Destination
         {
@@ -122,7 +122,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The node at the beginning of the leg.
+        ///   Gets the node at the beginning of the leg.
         /// </summary>
         public PtvNode Origin
         {
@@ -133,18 +133,18 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The route ID of the leg.
+        ///   Gets the route ID of the leg.
         /// </summary>
         public string RouteId1
         {
             get
             {
-                return this.RouteId;
+                return this.routeId;
             }
         }
 
         /// <summary>
-        ///   The total time of the leg.
+        ///   Gets the total time of the leg.
         /// </summary>
         public TimeSpan TotalTime
         {
@@ -155,7 +155,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   The transport mode of the leg.
+        ///   Gets the transport mode of the leg.
         /// </summary>
         public TransportMode TransportMode
         {

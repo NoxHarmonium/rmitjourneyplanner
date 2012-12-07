@@ -424,7 +424,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 var first = this.TournamentSelect(this.population[0]);
                 var second = this.TournamentSelect(this.population[0]);
 
-                Assert.That(first.departureTime != default(DateTime) && second.departureTime != default(DateTime));
+                Assert.That(first.DepartureTime != default(DateTime) && second.DepartureTime != default(DateTime));
 
                 bool doCrossover = this.random.NextDouble() <= this.Properties.CrossoverRate;
                 bool doMutation = this.random.NextDouble() <= this.Properties.MutationRate;
@@ -439,19 +439,19 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
 
                 Assert.That(
-                    children[0].departureTime != default(DateTime) && children[1].departureTime != default(DateTime));
+                    children[0].DepartureTime != default(DateTime) && children[1].DepartureTime != default(DateTime));
 
                 if (doCrossover || doMutation)
                 {
                     children[0].Fitness = this.Properties.FitnessFunction.GetFitness(
-                        children[0].Route, children[0].departureTime);
+                        children[0].Route, children[0].DepartureTime);
                     children[1].Fitness = this.Properties.FitnessFunction.GetFitness(
-                        children[1].Route, children[1].departureTime);
+                        children[1].Route, children[1].DepartureTime);
                 }
 
                 // var ff = (AlFitnessFunction)this.properties.FitnessFunction;
                 Assert.That(
-                    children[0].departureTime != default(DateTime) && children[1].departureTime != default(DateTime));
+                    children[0].DepartureTime != default(DateTime) && children[1].DepartureTime != default(DateTime));
 
                 this.population[1].AddRange(children);
 
@@ -813,11 +813,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     }
 
                     var critter = new Critter(route, new Fitness());
-                    critter.departureTime =
+                    critter.DepartureTime =
                         this.properties.DepartureTime.AddMinutes((Random.GetInstance().NextDouble() * 30.0) - 15.0);
 
-                    critter.Fitness = this.Properties.FitnessFunction.GetFitness(route, critter.departureTime);
-                    Assert.That(critter.departureTime != default(DateTime));
+                    critter.Fitness = this.Properties.FitnessFunction.GetFitness(route, critter.DepartureTime);
+                    Assert.That(critter.DepartureTime != default(DateTime));
 
                     Logger.Log(
                         this, 

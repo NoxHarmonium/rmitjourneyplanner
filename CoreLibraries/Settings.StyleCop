@@ -9,11 +9,14 @@
       <Value>es</Value>
       <Value>finalizer</Value>
       <Value>GUID</Value>
+      <Value>hypervolume</Value>
       <Value>jp</Value>
       <Value>Mersenne</Value>
       <Value>mutator</Value>
+      <Value>normalised</Value>
       <Value>optimisation</Value>
       <Value>optimise</Value>
+      <Value>optimised</Value>
       <Value>sci</Value>
       <Value>SQL</Value>
       <Value>Tramtracker</Value>

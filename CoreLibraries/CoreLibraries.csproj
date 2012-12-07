@@ -103,8 +103,8 @@
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="NPack\MersenneTwister.cs">
-		 <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-	</Compile>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="RoutePlanners\Evolutionary\Breeders\TimeBlendBreeder.cs" />
     <Compile Include="RoutePlanners\Evolutionary\EARoutePlanner.cs" />
     <Compile Include="RoutePlanners\Evolutionary\MOEARoutePlanner.cs" />

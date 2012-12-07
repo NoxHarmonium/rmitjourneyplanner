@@ -33,7 +33,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         ///   The index number of the route Id in the entries list.
         /// </summary>
         [DataMember(Order = 2)]
-        private const int RouteIDIndex = 1;
+        private const int RouteIdIndex = 1;
 
         /// <summary>
         ///   The index number of the stop Id in the entries list.
@@ -45,36 +45,36 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         ///   The index number of the arrival time in the entries list.
         /// </summary>
         [DataMember(Order = 4)]
-        private const int arrivalTimeIndex = 3;
+        private const int ArrivalTimeIndex = 3;
 
         /// <summary>
         ///   The index number of the day of week in the entries list.
         /// </summary>
         [DataMember(Order = 3)]
-        private const int dayOfWeekIndex = 2;
+        private const int DayOfWeekIndex = 2;
 
         /// <summary>
         ///   The index number of the departure time in the entries list.
         /// </summary>
         [DataMember(Order = 5)]
-        private const int departureTimeIndex = 4;
+        private const int DepartureTimeIndex = 4;
 
         /// <summary>
         ///   The index number of the order in the entries list.
         /// </summary>
         [DataMember(Order = 7)]
-        private const int orderIndex = 6;
+        private const int OrderIndex = 6;
 
         /// <summary>
         ///   The total number of parameters used in the timetable.
         /// </summary>
-        private const int paramCount = 7;
+        private const int ParamCount = 7;
 
         /// <summary>
         ///   The index number of the serviceId in the entries list.
         /// </summary>
         [DataMember(Order = 6)]
-        private const int serviceIdIndex = 5;
+        private const int ServiceIdIndex = 5;
 
         /// <summary>
         ///   The data structure containing the timetable data.
@@ -105,7 +105,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Properties
 
         /// <summary>
-        ///   A value representing if the timetable has been optimised or not.
+        ///   Gets a value indicating whether the timetable has been optimised or not.
         /// </summary>
         public bool Optimised
         {
@@ -150,18 +150,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// Gets a list of arrival times given a
-        ///   stop identifier, a day of the week and a current time.
+        /// Returns a <see cref="Departure"/> object representing the arrival for 
+        /// specified service and stop.
         /// </summary>
         /// <param name="stopId">
-        /// The stop to query for.
+        /// The stop the departure is from.
         /// </param>
         /// <param name="serviceId">
-        /// The service Id.
+        /// The service ID of the departure.
         /// </param>
         /// <returns>
+        /// The <see cref="Departure"/> object representing the service departure at the given stop.
         /// </returns>
-        public Departure GetArrivals(int stopId, int serviceId)
+        public Departure GetArrival(int stopId, int serviceId)
         {
             var service = this.serviceIndex[serviceId];
 
@@ -174,26 +175,26 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
             return new Departure
                 {
-                    arrivalTime = minTime[arrivalTimeIndex], 
-                    departureTime = minTime[departureTimeIndex], 
-                    routeId = minTime[RouteIDIndex], 
-                    stopId = stopId, 
-                    serviceId = serviceId, 
-                    order = minTime[orderIndex]
+                    ArrivalTime = minTime[ArrivalTimeIndex], 
+                    DepartureTime = minTime[DepartureTimeIndex], 
+                    RouteId = minTime[RouteIdIndex], 
+                    StopId = stopId, 
+                    ServiceId = serviceId, 
+                    Order = minTime[OrderIndex]
                 };
 
             // return departures.OrderBy(t => t.departureTime).ToArray();
         }
 
         /// <summary>
-        /// Gets a list of arrival and departure times given a
+        /// Gets an array of arrival and departure times given a
         ///   stop identifier, a day of the week and a current time.
         /// </summary>
         /// <param name="stopId">
-        /// The stop to query for.
+        /// The ID of the origin.
         /// </param>
         /// <param name="destID">
-        /// The dest ID.
+        /// The ID of the destination.
         /// </param>
         /// <param name="dayOfWeek">
         /// The binary representation of what day of the week it is.
@@ -202,6 +203,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The minimum departure time.
         /// </param>
         /// <returns>
+        /// An array of arrival and departure times.
         /// </returns>
         public Departure[] GetDepartures(int stopId, int destID, int dayOfWeek, int time)
         {
@@ -222,7 +224,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                     where (dow.Key & dayOfWeek) != 0 
                     let times = dow.Value 
                     let minTime = times.First(timePair => timePair.Key > time) 
-                    select new Departure { arrivalTime = minTime.Key, 
+                    select new Departure { ArrivalTime = minTime.Key, 
                         departureTime = minTime.Value, 
                         routeId = route.Key, 
                         stopId = stopId }
@@ -251,27 +253,28 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                         departures.Add(
                             new Departure
                                 {
-                                    arrivalTime = minTime[0], 
-                                    departureTime = minTime[1], 
-                                    routeId = route.Key, 
-                                    stopId = stopId, 
-                                    serviceId = minTime[2], 
-                                    order = minTime[3]
+                                    ArrivalTime = minTime[0], 
+                                    DepartureTime = minTime[1], 
+                                    RouteId = route.Key, 
+                                    StopId = stopId, 
+                                    ServiceId = minTime[2], 
+                                    Order = minTime[3]
                                 });
                     }
                 }
             }
 
-            return departures.OrderBy(t => t.departureTime).ToArray();
+            return departures.OrderBy(t => t.DepartureTime).ToArray();
         }
 
         /// <summary>
-        /// Gets the route identifiers associated with the specified
-        ///   stop.
+        /// Gets the route identifiers associated with the specified stop.
         /// </summary>
         /// <param name="stopId">
+        /// The stop identifier for the stop you want to find the routes for.
         /// </param>
         /// <returns>
+        /// An array of routes associated with the specified stop.
         /// </returns>
         public int[] GetRoutes(int stopId)
         {
@@ -279,9 +282,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// Loads unoptimised data from a cached text file.
+        /// Loads un optimised data from a binary cache file.
         /// </summary>
         /// <param name="filename">
+        /// The filename of the file to load the data from.
         /// </param>
         public void Load(string filename)
         {
@@ -294,9 +298,9 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 this.entries = new List<int[]>(length + 1);
                 byte[] row;
 
-                while ((row = reader.ReadBytes(paramCount * sizeof(int))).Length > 0)
+                while ((row = reader.ReadBytes(ParamCount * sizeof(int))).Length > 0)
                 {
-                    var intArray = new int[paramCount];
+                    var intArray = new int[ParamCount];
                     Buffer.BlockCopy(row, 0, intArray, 0, intArray.Length * sizeof(int));
                     this.entries.Add(intArray);
                     count++;
@@ -320,8 +324,8 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         public void Optimise()
         {
             int currentStopId = this.entries[0][StopIdIndex];
-            int currentRouteId = this.entries[0][RouteIDIndex];
-            int currentDOW = this.entries[0][dayOfWeekIndex];
+            int currentRouteId = this.entries[0][RouteIdIndex];
+            int currentDOW = this.entries[0][DayOfWeekIndex];
 
             var times = new List<int[]>();
             var dowToTimes = new Dictionary<int, List<int[]>>();
@@ -340,19 +344,19 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 
                 var entry = this.entries[index];
 
-                if (currentDOW != entry[dayOfWeekIndex] || currentRouteId != entry[RouteIDIndex]
+                if (currentDOW != entry[DayOfWeekIndex] || currentRouteId != entry[RouteIdIndex]
                     || currentStopId != entry[StopIdIndex])
                 {
                     dowToTimes.Add(currentDOW, times);
                     times = new List<int[]>();
-                    currentDOW = entry[dayOfWeekIndex];
+                    currentDOW = entry[DayOfWeekIndex];
                 }
 
-                if (currentRouteId != entry[RouteIDIndex] || currentStopId != entry[StopIdIndex])
+                if (currentRouteId != entry[RouteIdIndex] || currentStopId != entry[StopIdIndex])
                 {
                     routeToDOW.Add(currentRouteId, dowToTimes);
                     dowToTimes = new Dictionary<int, List<int[]>>();
-                    currentRouteId = entry[RouteIDIndex];
+                    currentRouteId = entry[RouteIdIndex];
                 }
 
                 if (currentStopId != entry[StopIdIndex])
@@ -365,10 +369,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 times.Add(
                     new[]
                         {
-                           entry[arrivalTimeIndex], entry[departureTimeIndex], entry[serviceIdIndex], entry[orderIndex] 
+                           entry[ArrivalTimeIndex], entry[DepartureTimeIndex], entry[ServiceIdIndex], entry[OrderIndex] 
                         });
 
-                int serviceId = entry[serviceIdIndex];
+                int serviceId = entry[ServiceIdIndex];
                 if (!this.serviceIndex.ContainsKey(serviceId))
                 {
                     this.serviceIndex.Add(serviceId, new LinkedList<int[]>());
@@ -384,9 +388,10 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        /// Saves the unoptimised data to a text file for caching.
+        /// Saves the un optimised data to a binary file for caching.
         /// </summary>
         /// <param name="filename">
+        /// The filename of the file you want to save the data to.
         /// </param>
         public void Save(string filename)
         {

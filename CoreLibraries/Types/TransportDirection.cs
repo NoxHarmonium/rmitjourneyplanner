@@ -25,7 +25,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         FromCity = 1, 
 
         /// <summary>
-        ///   The direction of the transport relitive to the city is unknown.
+        ///   The direction of the transport relative to the city is unknown.
         /// </summary>
         Unknown = 3
     }

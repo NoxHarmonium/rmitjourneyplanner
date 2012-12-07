@@ -161,13 +161,13 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                {
                    var sourceRoute = (int)row["RouteID"];
                    var nodeId = (int)row["MetlinkStopID"];
-                   var order = (int)row["Sequence"];
+                   var Order = (int)row["Sequence"];
                    if (!this.routePathMap.ContainsKey(sourceRoute))
                    {
                        this.routePathMap[sourceRoute] = new Dictionary<int, int>();
                    }
 
-                   this.routePathMap[sourceRoute][nodeId] = order;
+                   this.routePathMap[sourceRoute][nodeId] = Order;
                }
                 */
                 Logger.Log(this, "Reading nodes into structure...");
@@ -625,33 +625,33 @@ ORDER BY sr.RouteID, sr.StopOrder;
             // Departure departure = 
             foreach (var departure in departures)
             {
-                var arrival = this.timetable.GetArrivals(destination.Id, departure.serviceId);
+                var arrival = this.timetable.GetArrival(destination.Id, departure.ServiceId);
 
                 if (arrival.Equals(default(Departure)))
                 {
                     continue;
                 }
 
-                if (arrival.order <= departure.order)
+                if (arrival.Order <= departure.Order)
                 {
                     // Logger.Log(this,"Backwards service: No route");
                     continue;
                 }
 
-                if (departure.departureTime == 0 && Math.Abs(departure.departureTime - arrival.arrivalTime) > 30.0)
+                if (departure.DepartureTime == 0 && Math.Abs(departure.DepartureTime - arrival.ArrivalTime) > 30.0)
                 {
                     continue;
                 }
 
-                if (arrival.arrivalTime < departure.departureTime)
+                if (arrival.ArrivalTime < departure.DepartureTime)
                 {
-                    arrival.arrivalTime += 2400;
+                    arrival.ArrivalTime += 2400;
                 }
 
-                // int waitingTime = departure.departureTime - flatDepartureTime;
-                // int travelTime = arrival.arrivalTime - departure.departureTime;
-                int waitingTime = this.SubtractTimes(departure.departureTime, flatDepartureTime);
-                int travelTime = this.SubtractTimes(arrival.arrivalTime, departure.departureTime);
+                // int waitingTime = departure.DepartureTime - flatDepartureTime;
+                // int travelTime = arrival.ArrivalTime - departure.DepartureTime;
+                int waitingTime = this.SubtractTimes(departure.DepartureTime, flatDepartureTime);
+                int travelTime = this.SubtractTimes(arrival.ArrivalTime, departure.DepartureTime);
 
                 TransportTimeSpan output = default(TransportTimeSpan);
                 output.WaitingTime = this.ParseSpan(waitingTime);
@@ -670,7 +670,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                         GeometryHelper.GetStraightLineDistance((Location)source, (Location)destination), 
                         departureTime, 
                         "Unknown", 
-                        departure.routeId));
+                        departure.RouteId));
             }
 
             return arcs.OrderBy(arc => arc.Time.TotalTime).ToList();

@@ -80,7 +80,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The total distance in Km of the arc. 
         /// </param>
         /// <param name="departureTime">
-        /// The departure time of this arc. Set to default(DateTime) if departure time is not relivant. 
+        /// The departure time of this arc. Set to default(DateTime) if departure time is not relevant. 
         /// </param>
         /// <param name="transportMode">
         /// Sets the transport id used in the arc. 
@@ -117,7 +117,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// The total distance in Km of the arc. 
         /// </param>
         /// <param name="departureTime">
-        /// The departure time of this arc. Set to default(DateTime) if departure time is not relivant. 
+        /// The departure time of this arc. Set to default(DateTime) if departure time is not relevant. 
         /// </param>
         /// <param name="transportMode">
         /// Sets the transport id used in the arc. 
@@ -148,7 +148,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         #region Public Properties
 
         /// <summary>
-        ///   Gets the departure time of this arc. If the departure time is equal to default(DateTime) then departure time is irrelivant.
+        ///   Gets the departure time of this arc. If the departure time is equal to default(DateTime) then departure time is irrelevant.
         /// </summary>
         public DateTime DepartureTime
         {
@@ -203,7 +203,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         }
 
         /// <summary>
-        ///   Gets the time between the 2 points using the specfied transport mode.
+        ///   Gets the time between the 2 points using the specified transport mode.
         /// </summary>
         public TransportTimeSpan Time
         {
@@ -259,7 +259,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
         /// Returns the hash code for this arc.
         /// </summary>
         /// <returns>
-        /// A unique (idealy) hash code representing this arc. 
+        /// A unique (ideally) hash code representing this arc. 
         /// </returns>
         public override int GetHashCode()
         {

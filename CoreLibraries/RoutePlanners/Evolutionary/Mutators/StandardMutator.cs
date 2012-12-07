@@ -73,8 +73,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
 
             int crossoverWeight = (int)Tools.Clamp(10 * randStdNormal, -30, 30);
 
-            child.departureTime = this.properties.DepartureTime.AddMinutes(crossoverWeight);
-            Assert.That(child.departureTime != default(DateTime));
+            child.DepartureTime = this.properties.DepartureTime.AddMinutes(crossoverWeight);
+            Assert.That(child.DepartureTime != default(DateTime));
 
             var random = Random.GetInstance();
             List<NodeWrapper<INetworkNode>> nodes = child.Route;
@@ -94,7 +94,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators
             newRoute.AddRange(newSegment);
             newRoute.AddRange(nodes.GetRange(endIndex + 1, nodes.Count - 1 - endIndex));
 
-            return new Critter((Route)newRoute.Clone(), new Fitness()) { departureTime = child.departureTime };
+            return new Critter((Route)newRoute.Clone(), new Fitness()) { DepartureTime = child.DepartureTime };
 
             // return child;
         }
