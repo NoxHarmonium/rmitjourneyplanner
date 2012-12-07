@@ -13,7 +13,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
 {
     #region Using Directives
 
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.FitnessFunctions;
 
     #endregion
 

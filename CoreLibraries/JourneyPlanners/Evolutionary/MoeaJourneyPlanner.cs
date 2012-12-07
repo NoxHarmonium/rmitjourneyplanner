@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EARoutePlanner.cs" company="RMIT University">
+// <copyright file="MOEARoutePlanner.cs" company="RMIT University">
 //   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
+namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary
 {
     #region Using Directives
 
@@ -21,8 +21,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     using NUnit.Framework;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.FitnessFunctions;
     using RmitJourneyPlanner.CoreLibraries.Logging;
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     using Random = RmitJourneyPlanner.CoreLibraries.Random;
@@ -30,12 +30,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
     #endregion
 
     // 1/(e^x²)
-    //// TODO: Take out all the multiobjective references.
-    
+
     /// <summary>
     /// Finds the best route between nodes using evolutionary algorithms.
     /// </summary>
-    public class EaRoutePlanner : IRoutePlanner
+    public class MoeaJourneyPlanner : IJourneyPlanner
     {
         #region Constants and Fields
 
@@ -89,12 +88,12 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EaRoutePlanner"/> class.
+        /// Initializes a new instance of the <see cref="MoeaJourneyPlanner"/> class. 
         /// </summary>
         /// <param name="properties">
         /// The <see cref="EvolutionaryProperties"/> object containing the properties of the run. 
         /// </param>
-        public EaRoutePlanner(EvolutionaryProperties properties)
+        public MoeaJourneyPlanner(EvolutionaryProperties properties)
         {
             this.properties = properties;
         }
@@ -104,7 +103,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
-        ///   Gets the fronts associated with non-dominated sorting.
+        ///   Gets the fronts that are a result of the non-dominated sorting.
         /// </summary>
         public List<List<Critter>> Fronts
         {
@@ -159,7 +158,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        ///   Gets the the object representing all the properties of this route planner./>
+        ///   Gets the <see cref="EvolutionaryProperties"/> object associated with this journey planner.
         /// </summary>
         public EvolutionaryProperties Properties
         {
@@ -181,7 +180,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        ///   Gets the target progress value.
+        ///   Gets TargetProgress.
         /// </summary>
         public int TargetProgress
         {
@@ -259,7 +258,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// </summary>
         public void SolveStep()
         {
-            // checkPopDupes();
             if (this.properties.Objectives.Length < 1)
             {
                 throw new Exception("You cannot optimise with 0 objectives.");
@@ -273,9 +271,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             var sw = Stopwatch.StartNew();
 
-            // var r = new Population(population[0].Union(population[1]));
+            var r = new Population(this.population[0].Union(this.population[1]));
 
-            /*
             foreach (var c in r)
             {
                 double totalDistance = 0.0;
@@ -285,64 +282,70 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                     totalDistance += Math.Max(Math.Max(Math.Abs(c.Fitness.PercentBuses - c2.Fitness.PercentBuses) ,
                                      Math.Abs(c.Fitness.PercentTrains - c2.Fitness.PercentTrains)) ,
                                      Math.Abs(c.Fitness.PercentTrams - c2.Fitness.PercentTrams));
-                    
-
-                    totalDistance += Math.Sqrt(Math.Pow(c.Fitness.PercentBuses - c2.Fitness.PercentBuses,2.0)+
-                                   Math.Pow(c.Fitness.PercentTrains - c2.Fitness.PercentTrains,2.0) +
-                                    Math.Pow(c.Fitness.PercentTrams - c2.Fitness.PercentTrams,2.0));
+                    */
+                    totalDistance +=
+                        Math.Sqrt(
+                            Math.Pow(c.Fitness.PercentBuses - c2.Fitness.PercentBuses, 2.0)
+                            + Math.Pow(c.Fitness.PercentTrains - c2.Fitness.PercentTrains, 2.0)
+                            + Math.Pow(c.Fitness.PercentTrams - c2.Fitness.PercentTrams, 2.0));
                 }
-                c.Fitness.DiversityMetric = totalDistance;
-            }
 
+                c.Fitness.DiversityMetric = totalDistance / r.Count;
+            }
 
             double jtMaxTime = r.Max(c => c.Fitness.TotalJourneyTime).TotalHours;
             double jtMinTime = r.Min(c => c.Fitness.TotalJourneyTime).TotalHours;
-            double ttMaxTime = r.Max(c => c.Fitness.TotalDistance);
-            double ttMinTime = r.Min(c => c.Fitness.TotalDistance);
+            double ttMaxTime = r.Max(c => c.Fitness.WalkingTime).TotalHours;
+            double ttMinTime = r.Min(c => c.Fitness.WalkingTime).TotalHours;
             double minDM = r.Min(c => c.Fitness.DiversityMetric);
             double maxDM = r.Max(c => c.Fitness.DiversityMetric);
             int maxChanges = r.Max(c => c.Fitness.Changes);
             int minChanges = r.Min(c => c.Fitness.Changes);
 
-           
-
-
             foreach (var c in r)
             {
-                c.Fitness.NormalisedJourneyTime = (c.Fitness.TotalJourneyTime.TotalHours-jtMinTime) / (jtMaxTime - jtMinTime);
-                c.Fitness.NormalisedChanges = (double)(c.Fitness.Changes-minChanges) / (maxChanges - minChanges);
-                c.Fitness.NormalisedTravelTime = (c.Fitness.TotalDistance-ttMinTime) / (ttMaxTime - ttMinTime);
-                c.Fitness.DiversityMetric = (c.Fitness.DiversityMetric-minDM)/(maxDM - minDM);
+                c.Fitness.NormalisedJourneyTime = (c.Fitness.TotalJourneyTime.TotalHours - jtMinTime)
+                                                  / (jtMaxTime - jtMinTime);
+                c.Fitness.NormalisedChanges = (double)(c.Fitness.Changes - minChanges) / (maxChanges - minChanges);
+                c.Fitness.NormalisedTravelTime = (c.Fitness.TotalWaitingTime.TotalHours - ttMinTime)
+                                                 / (ttMaxTime - ttMinTime);
+                c.Fitness.DiversityMetric = (c.Fitness.DiversityMetric - minDM) / (maxDM - minDM);
 
-                
-                
                 if (double.IsInfinity(c.Fitness.NormalisedChanges))
                 {
                     c.Fitness.NormalisedChanges = 0;
                 }
-                if ((double.IsInfinity(c.Fitness.NormalisedJourneyTime)))
+
+                if (double.IsInfinity(c.Fitness.NormalisedJourneyTime))
                 {
                     c.Fitness.NormalisedJourneyTime = 0;
                 }
-                if ((double.IsInfinity(c.Fitness.NormalisedTravelTime)))
+
+                if (double.IsInfinity(c.Fitness.NormalisedTravelTime))
                 {
                     c.Fitness.NormalisedTravelTime = 0;
                 }
 
-                   if ((double.IsInfinity(c.Fitness.DiversityMetric)))
+                if (double.IsInfinity(c.Fitness.DiversityMetric))
                 {
                     c.Fitness.DiversityMetric = 0;
                 }
-                 
-                Console.WriteLine("{0}, {1},{2},{3}", c.Fitness.NormalisedJourneyTime, c.Fitness.NormalisedChanges, c.Fitness.PercentBuses, c.Fitness.PercentTrains);
+
+                Console.WriteLine(
+                    "{0}, {1},{2},{3}", 
+                    c.Fitness.NormalisedJourneyTime, 
+                    c.Fitness.NormalisedChanges, 
+                    c.Fitness.PercentBuses, 
+                    c.Fitness.PercentTrains);
                 c.N = 0;
                 c.Rank = 0;
-                //c.Distance = 0;
+
+                // c.Distance = 0;
             }
 
+            this.NonDominatedSort(r);
 
-            this.nonDominatedSort(r);
-            
+            /*
             var ranks = r.GroupBy(g => g.Rank);
             foreach (var rank in ranks)
             {
@@ -357,12 +360,68 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             }
             */
+            this.population[0] = new Population();
+
+            int j = 0;
+            int numCarryOver = 0;
+
+            foreach (var front in this.Fronts)
+            {
+                double reductionRate = 0.65;
+
+                // double reductionRate = 0.2;
+                int maxN =
+                    Convert.ToInt32(
+                        this.Properties.PopulationSize
+                        * ((1 - reductionRate) / (1 - Math.Pow(reductionRate, this.Fronts.Count)))
+                        * Math.Pow(reductionRate, j));
+                maxN += numCarryOver;
+
+                if (maxN > front.Count)
+                {
+                    numCarryOver = maxN - front.Count;
+                    maxN = front.Count;
+                }
+
+                if (maxN + this.population[0].Count > this.properties.PopulationSize)
+                {
+                    maxN = this.properties.PopulationSize - this.population[0].Count;
+                }
+
+                for (int k = 0; k < maxN; k++)
+                {
+                    this.population[0].Add(this.TournamentSelect(front));
+                    if (this.population[0].Count >= this.properties.PopulationSize)
+                    {
+                        break;
+                    }
+                }
+
+                if (this.population[0].Count >= this.properties.PopulationSize)
+                {
+                    break;
+                }
+            }
+
+            /*
+            while (this.population[0].Count + this.Fronts[j].Count <= this.Properties.PopulationSize)
+            {
+                var front = this.Fronts[j];
+                this.crowdingDistanceAssignment(front);
+                this.population[0].AddRange(front);
+
+                j++;
+            }
+
+            this.Fronts[j].Sort(CompareCritters);
+            this.population[0].AddRange(this.Fronts[j].GetRange(0, this.Properties.PopulationSize - this.population[0].Count));
+            */
             this.population[1] = new Population();
 
             for (int i = 0; i < this.Properties.PopulationSize / 2; i++)
             {
-                var first = this.TournamentSelect();
-                var second = this.TournamentSelect();
+                var first = this.TournamentSelect(this.population[0]);
+                var second = this.TournamentSelect(this.population[0]);
 
                 Assert.That(first.DepartureTime != default(DateTime) && second.DepartureTime != default(DateTime));
 
@@ -481,7 +540,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             //this.crowdingDistanceAssignment(r);
 
-            this.nonDominatedSort(r);
+            this.NonDominatedSort(r);
 
             foreach (var front in Fronts)
             {
@@ -553,9 +612,9 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
            
             this.Fronts[j].Sort(CompareCritters);
             /*
-            this.Fronts[j].Sort((c1, c2) =>
+            this.Fronts[j].Sort((c1, y) =>
                 {
-                    if (c1.Rank < c2.Rank || (c1.Rank == c2.Rank && c1.Distance > c2.Distance))
+                    if (c1.Rank < y.Rank || (c1.Rank == y.Rank && c1.Distance > y.Distance))
                     {
                         return 1;
                     }
@@ -578,7 +637,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             
 
             /*
-            this.nonDominatedSort(this.population);
+            this.NonDominatedSort(this.population);
 
             var ranks = this.population.GroupBy(g => g.Rank);
             foreach (var rank in ranks)
@@ -651,7 +710,6 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             }
             */
-            this.population[0] = this.population[1];
             this.result.Population = (Population)this.population[0].Clone();
 
             // foreach (var critter in this.Population)
@@ -709,17 +767,17 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             {
                 if (c2 == null)
                 {
-                    // If c1 is null and c2 is null, they're
+                    // If c1 is null and y is null, they're
                     // equal. 
                     return 0;
                 }
 
-                // If c1 is null and c2 is not null, c2
+                // If c1 is null and y is not null, y
                 // is greater. 
                 return 1;
             }
 
-            if (c1.Fitness.TotalJourneyTime < c2.Fitness.TotalJourneyTime)
+            if (c1.Rank < c2.Rank || (c1.Rank == c2.Rank && c1.Distance > c2.Distance))
             {
                 return 1;
             }
@@ -738,7 +796,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
             this.targetProgress = this.Properties.PopulationSize;
 
-            for (int p = 0; p < 1; p++)
+            for (int p = 0; p < 2; p++)
             {
                 for (int i = 0; i < this.Properties.PopulationSize * 2; i++)
                 {
@@ -755,7 +813,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
                     var critter = new Critter(route, new Fitness());
                     critter.DepartureTime =
-                        this.properties.DepartureTime.AddMinutes((Random.GetInstance().NextDouble() * 60.0) - 30.0);
+                        this.properties.DepartureTime.AddMinutes((Random.GetInstance().NextDouble() * 30.0) - 15.0);
 
                     critter.Fitness = this.Properties.FitnessFunction.GetFitness(route, critter.DepartureTime);
                     Assert.That(critter.DepartureTime != default(DateTime));
@@ -785,6 +843,11 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
                 }
             }
 
+            // checkPopDupes();
+
+            // this.Population.Sort(new CritterComparer());
+
+            // checkPopDupes();
             sw.Stop();
             this.result.Totaltime = sw.Elapsed;
             this.result.Population = this.population[0];
@@ -803,17 +866,19 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         }
 
         /// <summary>
-        /// Performs a binary tournament selection on the current population.
+        /// Performs a binary tournament selection on the specified population.
         /// </summary>
+        /// <param name="p">
+        /// The list of Critters on which to perform the tournament selection on.
+        /// </param>
         /// <returns>
         /// The critter that wins the tournament.
         /// </returns>
-        private Critter TournamentSelect()
+        private Critter TournamentSelect(List<Critter> p)
         {
-            ////TODO: Make tournament select able to handle a larger tournament size (n>2) 
-            
-            var first = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
-            var second = (Critter)this.population[0][this.random.Next(this.population[0].Count - 1)].Clone();
+            // this.population[0]
+            var first = (Critter)p[this.random.Next(p.Count - 1)].Clone();
+            var second = (Critter)p[this.random.Next(p.Count - 1)].Clone();
 
             /*
             int attempts = 0;
@@ -833,6 +898,75 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
             }
 
             return second;
+        }
+
+        /// <summary>
+        /// Performs a non-dominated sort on the specified list of critters and 
+        /// stores the results in the <see cref="Fronts"/> property.
+        /// </summary>
+        /// <param name="r">
+        /// The population to sort.
+        /// </param>
+        private void NonDominatedSort(List<Critter> r)
+        {
+            var s = new Dictionary<Critter, List<Critter>>();
+            this.f = new List<List<Critter>> { new List<Critter>(), new List<Critter>() };
+
+            foreach (var p in r)
+            {
+                s[p] = new List<Critter>();
+                p.N = 0;
+                p.Rank = 0;
+                foreach (var q in r)
+                {
+                    // if (p == q)
+                    // continue;
+                    if (this.Dominates(p, q))
+                    {
+                        s[p].Add(q);
+                    }
+                    else if (this.Dominates(q, p))
+                    {
+                        p.N++;
+                    }
+
+                    Assert.That(!(this.Dominates(p, q) && this.Dominates(q, p)));
+                }
+
+                if (p.N != 0)
+                {
+                    continue;
+                }
+
+                p.Rank = 1;
+
+                this.f[1].Add(p);
+            }
+
+            int i = 1;
+
+            while (this.f[i].Any())
+            {
+                var newFront = new List<Critter>();
+                foreach (var p in this.f[i])
+                {
+                    foreach (var q in s[p])
+                    {
+                        q.N--;
+                        if (q.N == 0)
+                        {
+                            q.Rank = i + 1;
+                            newFront.Add(q);
+                        }
+                    }
+                }
+
+                i++;
+                this.f.Add(new List<Critter>());
+                this.f[i] = newFront;
+            }
+
+            this.f.RemoveAt(0);
         }
 
         #endregion

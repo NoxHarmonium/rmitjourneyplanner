@@ -15,8 +15,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Positioning;
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
 
     #endregion
 

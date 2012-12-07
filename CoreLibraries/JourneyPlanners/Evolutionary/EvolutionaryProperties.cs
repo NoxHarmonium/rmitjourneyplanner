@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
+namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary
 {
     #region Using Directives
 
@@ -15,7 +15,8 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
 
     using RmitJourneyPlanner.CoreLibraries.DataAccess;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.RouteGenerators;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -129,7 +130,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary
         /// <summary>
         ///   Gets or sets the route planner used to optimise the journey.
         /// </summary>
-        public IRoutePlanner Planner { get; set; }
+        public IJourneyPlanner Planner { get; set; }
 
         /// <summary>
         ///   Gets or sets a list of point to point data providers used to solve the route.

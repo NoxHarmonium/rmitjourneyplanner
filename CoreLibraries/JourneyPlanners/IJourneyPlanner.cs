@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IRoutePlanner.cs" company="RMIT University">
+// <copyright file="IJourneyPlanner.cs" company="RMIT University">
 //   Copyright RMIT University 2012.
 // </copyright>
 // <summary>
@@ -7,20 +7,20 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
+namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners
 {
     #region Using Directives
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
 
     /// <summary>
-    /// A route planner takes a list of nodes and joins them up using the provided transport networks.
+    /// A journey planner takes a list of nodes and joins them up using the provided transport networks.
     /// </summary>
-    public interface IRoutePlanner
+    public interface IJourneyPlanner
     {
         #region Public Properties
 
@@ -49,18 +49,18 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
         #region Public Methods and Operators
 
         /// <summary>
-        /// Register a network data provider to use with the route planning.
+        /// Register a network data provider to use with the journey planning.
         /// </summary>
         /// <param name="provider">
-        /// The <see cref="INetworkDataProvider"/> that provides the data for the route planning.
+        /// The <see cref="INetworkDataProvider"/> that provides the data for the journey planning.
         /// </param>
         void RegisterNetworkDataProvider(INetworkDataProvider provider);
 
         /// <summary>
-        /// Register a point to point data provider for use with the route planning.
+        /// Register a point to point data provider for use with the journey planning.
         /// </summary>
         /// <param name="provider">
-        /// The <see cref="IPointDataProvider"/> that provides the data for the route planning.
+        /// The <see cref="IPointDataProvider"/> that provides the data for the journey planning.
         /// </param>
         void RegisterPointDataProvider(IPointDataProvider provider);
 

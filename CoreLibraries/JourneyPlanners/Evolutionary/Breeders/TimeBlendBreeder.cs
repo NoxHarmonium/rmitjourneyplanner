@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
+namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Breeders
 {
     #region Using Directives
 
@@ -17,6 +17,7 @@ namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
     using NUnit.Framework;
 
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
     using RmitJourneyPlanner.CoreLibraries.Types;
 

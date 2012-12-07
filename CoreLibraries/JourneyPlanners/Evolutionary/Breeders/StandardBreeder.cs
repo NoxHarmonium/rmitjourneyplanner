@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders
+namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Breeders
 {
     #region Using Directives
 

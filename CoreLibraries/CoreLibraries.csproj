@@ -94,34 +94,40 @@
     <Compile Include="DataAccess\Urls.cs" />
     <Compile Include="DataAccess\XMLRequester.cs" />
     <Compile Include="DataProviders\Google\DrivingDataProvider.cs" />
+    <Compile Include="DataProviders\Google\NamespaceDoc.cs" />
     <Compile Include="DataProviders\INetworkDataProvider.cs" />
     <Compile Include="DataProviders\INetworkNode.cs" />
     <Compile Include="DataProviders\IPointDataProvider.cs" />
+    <Compile Include="DataProviders\NamespaceDoc.cs" />
+    <Compile Include="DataProviders\Ptv\NamespaceDoc.cs" />
     <Compile Include="DataProviders\Ptv\PtvDataProvider.cs" />
     <Compile Include="DataProviders\Ptv\PtvNode.cs" />
     <Compile Include="DataProviders\Google\WalkingDataProvider.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Logging\NamespaceDoc.cs" />
     <Compile Include="NPack\MersenneTwister.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="RoutePlanners\Evolutionary\Breeders\TimeBlendBreeder.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\EARoutePlanner.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\MOEARoutePlanner.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\RouteGenerators\DFSRoutePlanner.cs" />
+    <Compile Include="Positioning\NamespaceDoc.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\Breeders\TimeBlendBreeder.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\EaJourneyPlanner.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\MoeaJourneyPlanner.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\RouteGenerators\DFSRoutePlanner.cs" />
+    <Compile Include="JourneyPlanners\NamespaceDoc.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Logging\CallLog.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\EvolutionaryProperties.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\FitnessFunctions\ALFitnessFunction.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\IBreeder.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\IFitnessFunction.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\IMutator.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\IRouteGenerator.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\Tools.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\Breeders\StandardBreeder.cs" />
-    <Compile Include="RoutePlanners\Evolutionary\Mutators\StandardMutator.cs" />
-    <Compile Include="RoutePlanners\NextIterationEventArgs.cs" />
-    <Compile Include="RoutePlanners\IRoutePlanner.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\EvolutionaryProperties.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\FitnessFunctions\ALFitnessFunction.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\IBreeder.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\IFitnessFunction.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\IMutator.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\IRouteGenerator.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\Tools.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\Breeders\StandardBreeder.cs" />
+    <Compile Include="JourneyPlanners\Evolutionary\Mutators\StandardMutator.cs" />
+    <Compile Include="JourneyPlanners\NextIterationEventArgs.cs" />
+    <Compile Include="JourneyPlanners\IJourneyPlanner.cs" />
     <Compile Include="Positioning\GeometryHelper.cs" />
     <Compile Include="Positioning\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,7 +158,7 @@
     <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="RoutePlanners\Traditional\" />
+    <Folder Include="JourneyPlanners\Traditional\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

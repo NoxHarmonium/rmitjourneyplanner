@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions
+namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.FitnessFunctions
 {
     #region Using Directives
 

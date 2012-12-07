@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RmitJourneyPlanner.CoreLibraries.RoutePlanners
+namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners
 {
     #region Using Directives
 
