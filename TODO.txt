@@ -1,2 +1,0 @@
--Error on selecting null option (run selection)
--Proper enabling and disabling of combos in run selection
