@@ -1,16 +1,26 @@
-using System;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PropertyValues.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The property values.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace JRPCServer
 {
-	public class PropertyValues
-	{
-		
-		public PropertyValue[] Values
-		{
-			get;
-			set;
-		}
-		
-	}
-}
+    /// <summary>
+    /// The property values.
+    /// </summary>
+    public class PropertyValues
+    {
+        #region Public Properties
 
+        /// <summary>
+        /// Gets or sets Values.
+        /// </summary>
+        public PropertyValue[] Values { get; set; }
+
+        #endregion
+    }
+}

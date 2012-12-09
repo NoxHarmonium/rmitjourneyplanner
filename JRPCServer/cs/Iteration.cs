@@ -1,31 +1,35 @@
-using System;
-using RmitJourneyPlanner.CoreLibraries.Types;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Iteration.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The iteration.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace JRPCServer
 {
-	public class Iteration
-	{
-		/// <summary>
-		/// The population of the iteration.
-		/// </summary>
-		private Critter[] population;
-		
-		
-		/// <summary>
-		/// Gets or sets the population of this iteration.
-		/// </summary>
-		/// <value>
-		/// The population of this iteration.
-		/// </value>
-		public Critter[] Population {
-			get {
-				return this.population;
-			}
-			set {
-				population = value;
-			}
-		}
-		
-	}
-}
+    #region Using Directives
 
+    using RmitJourneyPlanner.CoreLibraries.Types;
+
+    #endregion
+
+    /// <summary>
+    /// The iteration.
+    /// </summary>
+    public class Iteration
+    {
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets or sets the population of this iteration.
+        /// </summary>
+        /// <value>
+        ///   The population of this iteration.
+        /// </value>
+        public Critter[] Population { get; set; }
+
+        #endregion
+    }
+}

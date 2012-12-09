@@ -1,18 +1,18 @@
 ﻿///
 /// Fields
 ///
-var oRefreshInterval = 1000; //ms
+var oRefreshInterval = 1000;
+//ms
 
 ///
 /// Events
 ///
-$('#btnJORefresh').click(function () {
+$('#btnJORefresh').click(function() {
     OptimiserRefresh();
 });
 
-$('#btnDelJourney').click(function ()
-{
-    RPCCall('DequeueJourney', { uuid: selectedJourneyUuid }, function (data) {
+$('#btnDelJourney').click(function() {
+    RPCCall('DequeueJourney', { uuid: selectedJourneyUuid }, function(data) {
         if (CheckForError(data)) {
             return;
         }
@@ -20,18 +20,8 @@ $('#btnDelJourney').click(function ()
     });
 });
 
-$('#btnJOEnqueue').click(function () {
-    RPCCall('EnqueueJourney', { uuid: selectedJourneyUuid, runs: $('#txtEnqRuns').val() }, function (data) {
-        if (CheckForError(data)) {
-            return;
-        }
-        setTimeout(OptimiserRefresh, oRefreshInterval);
-    });
-});
-
-
-$('#btnJOPause').click(function () {
-    RPCCall('PauseJourneyOptimiser', {}, function (data) {
+$('#btnJOEnqueue').click(function() {
+    RPCCall('EnqueueJourney', { uuid: selectedJourneyUuid, runs: $('#txtEnqRuns').val() }, function(data) {
         if (CheckForError(data)) {
             return;
         }
@@ -40,8 +30,8 @@ $('#btnJOPause').click(function () {
 });
 
 
-$('#btnJOResume').click(function () {
-    RPCCall('ResumeJourneyOptimiser', {}, function (data) {
+$('#btnJOPause').click(function() {
+    RPCCall('PauseJourneyOptimiser', { }, function(data) {
         if (CheckForError(data)) {
             return;
         }
@@ -50,8 +40,14 @@ $('#btnJOResume').click(function () {
 });
 
 
-
-
+$('#btnJOResume').click(function() {
+    RPCCall('ResumeJourneyOptimiser', { }, function(data) {
+        if (CheckForError(data)) {
+            return;
+        }
+        setTimeout(OptimiserRefresh, oRefreshInterval);
+    });
+});
 
 
 ///
@@ -72,7 +68,7 @@ $('#btnJOResume').click(function () {
 
 
 function OptimiserRefresh() {
-    RPCCall('GetOptimisationState', {}, function (data) {
+    RPCCall('GetOptimisationState', { }, function(data) {
         if (CheckForError(data)) {
             return;
         }
@@ -91,35 +87,34 @@ function OptimiserRefresh() {
                 || selectedJourneyUuid == null) {
 
             $('#btnJOEnqueue').attr('disabled', 'disabled');
-           
+
         } else {
             $('#btnJOEnqueue').removeAttr('disabled');
-         
+
         }
 
 
         switch (state) {
-            case "Waiting":
+        case "Waiting":
                 //Nothing
-                break;
-            case "Optimising":
-                $('#btnJOPause').removeAttr('disabled');
-                setTimeout(OptimiserRefresh, oRefreshInterval);
-                break;
-            case "Saving":
+            break;
+        case "Optimising":
+            $('#btnJOPause').removeAttr('disabled');
+            setTimeout(OptimiserRefresh, oRefreshInterval);
+            break;
+        case "Saving":
                 //Nothing
-                break;
-            case "Paused":
-                $('#btnJOResume').removeAttr('disabled');
-                break;
-            case "Cancelling":
+            break;
+        case "Paused":
+            $('#btnJOResume').removeAttr('disabled');
+            break;
+        case "Cancelling":
                 //Nothing
-                break;
-            case "Idle":
+            break;
+        case "Idle":
                 //Nothing
-                break;
-
-            default:
+            break;
+        default:
         }
 
 
@@ -135,12 +130,9 @@ function OptimiserRefresh() {
         $('#txtJOTotalIters').val(data.result.totalIterations);
         $('#prgJO>.bar').css('width', String(Math.round((data.result.currentIteration / data.result.totalIterations) * 100.0)) + "%");
         $('#txtJOCurrentJourney').val(data.result.currentJourney);
-
         
 
     });
-
-
 
 
 }

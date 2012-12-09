@@ -8,9 +8,9 @@ var selectedJourneyUuid;
 ///
 /// Functions
 ///
-function refresh()
-{
-    RPCCall("GetJourneys", {}, function (data) {
+
+function refresh() {
+    RPCCall("GetJourneys", { }, function(data) {
         if (CheckForError(data)) {
             return;
         }
@@ -19,7 +19,7 @@ function refresh()
         var sel = $('#selJourneyList');
         sel.html('');
 
-        $.each(journeys, function (index) {
+        $.each(journeys, function(index) {
             var newOpt = jQuery(document.createElement('option'));
             newOpt.attr('value', this.uuid);
             if (this.description == null) {
@@ -33,14 +33,13 @@ function refresh()
     });
 }
 
-function disableControls()
-{
-	$('#txtUuid').attr('value','');
-	$('#txtJourneyName').attr('value','');
-	$('#txtDescription').attr('value','');
-	
+function disableControls() {
+    $('#txtUuid').attr('value', '');
+    $('#txtJourneyName').attr('value', '');
+    $('#txtDescription').attr('value', '');
+
 	$('#txtJourneyName').disable();
-	$('#txtDescription').disable();
+    $('#txtDescription').disable();
 
 }
 
@@ -48,34 +47,32 @@ function disableControls()
 ///
 /// Event Handlers
 ///
-function jDetailChange()
-{
-	pendingChange = true;
+
+function jDetailChange() {
+    pendingChange = true;
 }
+
 $('#txtJourneyName').change(jDetailChange);
 $('#txtDescription').change(jDetailChange);
 
 
-
 $('#btnNewJourney').click(function() {
-	RPCCall("NewJourney",{ "shortName" : "NewJourney", "description" : null },function (data)
-	{
-		if (CheckForError(data))
-		{
-			return;		
+    RPCCall("NewJourney", { "shortName": "NewJourney", "description": null }, function(data) {
+        if (CheckForError(data)) {
+            return;
 		}
-		//alert("New journey created with UUID: " + data.result);
-		refresh();
-	});
+        //alert("New journey created with UUID: " + data.result);
+        refresh();
+    });
 
 });
 
-$('#btnCloneJourney').click(function () {
+$('#btnCloneJourney').click(function() {
     var selected = $('#selJourneyList>option:selected');
 
     if (selected.exists()) {
 
-        RPCCall("CloneJourney", { "journeyUuid": selected.attr('value') }, function (data) {
+        RPCCall("CloneJourney", { "journeyUuid": selected.attr('value') }, function(data) {
             if (CheckForError(data)) {
                 return;
             }
@@ -87,27 +84,28 @@ $('#btnCloneJourney').click(function () {
 });
 
 $('#btnDelJourney').click(function() {
-	
+
 	var selected = $('#selJourneyList>option:selected');
-	
-	if (selected.exists())
-	{
-	
-		RPCCall("DeleteJourney",{ "uuid" : selected.attr('value')  },function (data)
-		{
-			if (CheckForError(data))
-			{
-				return;		
+
+	if (selected.exists()) {
+
+		RPCCall("DeleteJourney", { "uuid": selected.attr('value') }, function(data) {
+    if (CheckForError(data)) {
+        return;
 			}
-			//alert("New journey created with UUID: " + data.result);
-			refresh();
-		});
+    //alert("New journey created with UUID: " + data.result);
+    refresh();
+});
+                                      
+
+	                                                    
+
 	}
 
 
 });
 
-$('#selJourneyList').change(function () {
+$('#selJourneyList').change(function() {
     var selected = $('#selJourneyList>option:selected');
     if (selected.exists()) {
         $('#txtJourneyName').enable();
@@ -119,8 +117,7 @@ $('#selJourneyList').change(function () {
         selectedJourneyUuid = selected.attr('value');
         GetProperties(selected.attr('value'));
 
-    }
-    else {
+    } else {
         disableControls();
     }
     OptimiserRefresh();
@@ -129,27 +126,24 @@ $('#selJourneyList').change(function () {
 
 });
 
-$('#txtJourneyName').bind('keyup', function() { 
+$('#txtJourneyName').bind('keyup', function() {
 	//alert('ff');
-	//currentOption.text($(this).attr('value'));
-	
-} );
+    //currentOption.text($(this).attr('value'));
+});
 
-$('#btnSaveJourneyName').click(function () {
-	var uuid = $('#txtUuid').attr('value');
-	var journeyName = $('#txtJourneyName').attr('value');
-	var description = $('#txtDescription').attr('value');
-	
-	RPCCall("SetJourneyName",{ "uuid" : uuid, "shortName" : journeyName, "description" : description },function (data)
-	{
-		if (CheckForError(data))
-		{
-			return;
-		}
-		
+$('#btnSaveJourneyName').click(function() {
+    var uuid = $('#txtUuid').attr('value');
+    var journeyName = $('#txtJourneyName').attr('value');
+    var description = $('#txtDescription').attr('value');
+
+	RPCCall("SetJourneyName", { "uuid": uuid, "shortName": journeyName, "description": description }, function(data) {
+        if (CheckForError(data)) {
+            return;
+        }
+
 		pendingChanges = false;
-		refresh();
-	    
+        refresh();
+
 	});
 });
 

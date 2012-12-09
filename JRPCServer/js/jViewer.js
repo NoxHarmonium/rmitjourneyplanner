@@ -1,12 +1,11 @@
-if (googleEnabled)
-{
+if (googleEnabled) {
 
     ///
     /// Fields
     ///
     var defaultBounds = new google.maps.LatLngBounds(
-			  new google.maps.LatLng(-36.536123, 143.074951),
-			  new google.maps.LatLng(-39.019184, 147.304688));
+        new google.maps.LatLng(-36.536123, 143.074951),
+        new google.maps.LatLng(-39.019184, 147.304688));
 
     var mapOptions = {
         bounds: defaultBounds,
@@ -30,33 +29,31 @@ if (googleEnabled)
     ///
     /// Custom functions
     ///    
-    refreshMap = function()
-    {
-	    map = new google.maps.Map(document.getElementById("map_canvas"),
+    refreshMap = function() {
+        map = new google.maps.Map(document.getElementById("map_canvas"),
             mapOptions);
-	};
+    };
 
 
+    function refreshViewerSlider() {
 
-	function refreshViewerSlider() {
-
-	    if (selectedJourneyUuid) {
-	        RPCCall("GetTotalIterations", { "journeyUuid": selectedJourneyUuid }, function (data) {
-	            if (CheckForError(data)) {
-	                return;
-	            }
-	            var iterations = data.result;
-	            for (var i = 0; i < iterations; i++ ) {
-	                var opt = jQuery(document.createElement('option'));
-	                opt.text(i);
-	                $('#selIterations').append(opt);
-	            }
+        if (selectedJourneyUuid) {
+            RPCCall("GetTotalIterations", { "journeyUuid": selectedJourneyUuid }, function(data) {
+                if (CheckForError(data)) {
+                    return;
+                }
+                var iterations = data.result;
+                for (var i = 0; i < iterations; i++) {
+                    var opt = jQuery(document.createElement('option'));
+                    opt.text(i);
+                    $('#selIterations').append(opt);
+                }
 
 
-	        });
-	    }      
-	    
-        
+            });
+        }
+
+
         //TODO: Fix slider
         /*
         if (selectedJourneyUuid) {
@@ -80,142 +77,139 @@ if (googleEnabled)
 	        });
 	    }       
         */
-       
 
-	}
 
-   function loadJourneyRuns() {
-       if (selectedJourneyUuid == undefined
+    }
+
+    function loadJourneyRuns() {
+        if (selectedJourneyUuid == undefined
             || selectedJourneyUuid == ""
                 || selectedJourneyUuid == null) {
 
-           $('#selJourneyRuns').attr('disabled', 'disabled');
-           $('#selPopulation').attr('disabled', 'disabled');
-           return;
+            $('#selJourneyRuns').attr('disabled', 'disabled');
+            $('#selPopulation').attr('disabled', 'disabled');
+            return;
 
-       } else {
-           $('#selJourneyRuns').removeAttr('disabled');
-           
-       }
-       
-       RPCCall("GetRuns", { "uuid": selectedJourneyUuid }, function (data) {
-           if (CheckForError(data)) {
-               return;
-           }    
+        } else {
+            $('#selJourneyRuns').removeAttr('disabled');
 
-           $('#selJourneyRuns').empty();
-           
-           //Add empty element for easy selection
-           var opt = jQuery(document.createElement('option'));
-           $('#selJourneyRuns').append(opt);
+        }
 
-           for (var i in data.result) {
+        RPCCall("GetRuns", { "uuid": selectedJourneyUuid }, function(data) {
+            if (CheckForError(data)) {
+                return;
+            }
 
-               var runUuid = data.result[i];
-               opt = jQuery(document.createElement('option'));
-               opt.text(runUuid);
-               $('#selJourneyRuns').append(opt);
+            $('#selJourneyRuns').empty();
+
+            //Add empty element for easy selection
+            var opt = jQuery(document.createElement('option'));
+            $('#selJourneyRuns').append(opt);
+
+            for (var i in data.result) {
+
+                var runUuid = data.result[i];
+                opt = jQuery(document.createElement('option'));
+                opt.text(runUuid);
+                $('#selJourneyRuns').append(opt);
 
 
-           }
+            }
 
-       });
-       
-       
-   }
-   
+        });
+
+
+    }
+
     ///
     /// Event triggers
     ///
-   $(document).ready(function () {
-       window.mapManager = new MapManager();
-   });
+    $(document).ready(function() {
+        window.mapManager = new MapManager();
+    });
 
 
+    $('#selJourneyRuns').change(function() {
+        if (!$(this).attr('disabled') && $(this).text() != "") {
+            $('#selPopulation').removeAttr('disabled');
+            window.mapManager.loadRun(selectedJourneyUuid, $(this).find(':selected').text());
+        } else {
+            $('#selPopulation').attr('disabled', 'disabled');
+        }
+        refreshMap();
 
-   $('#selJourneyRuns').change(function () {
-       if (!$(this).attr('disabled') && $(this).text() != "") {
-           $('#selPopulation').removeAttr('disabled');
-           window.mapManager.loadRun(selectedJourneyUuid, $(this).find(':selected').text());
-       } else {
-           $('#selPopulation').attr('disabled', 'disabled');
-       }
-       refreshMap();
 
+    });
 
-   });
-
-   $('#selIterations').change(function () {
+    $('#selIterations').change(function() {
         window.mapManager.loadIteration(parseInt($(this).find(':selected').text()));
     });
 
-    $('#txtMaxRank').change(function () {
+    $('#txtMaxRank').change(function() {
         window.mapManager.loadIteration();
     });
 
-   $('#selPopulation').change(function () {
-       var member = $(this).find(':selected').text();
-       window.mapManager.loadMember(member);
-       if(chart) {
-           chart.setSelection([{ row: member + 1, column: 1 }]);
-       }
+    $('#selPopulation').change(function() {
+        var member = $(this).find(':selected').text();
+        window.mapManager.loadMember(member);
+        if (chart) {
+            chart.setSelection([{ row: member + 1, column: 1 }]);
+        }
 
-   });
+    });
 
-   $('#selGraphObjectives').change(function () {
-       var members = $(this).find(':selected');
-       if (members.length > 1) {
+    $('#selGraphObjectives').change(function() {
+        var members = $(this).find(':selected');
+        if (members.length > 1) {
 
-           $('divGraph').empty();
-           var dataSet = new Array();
+            $('divGraph').empty();
+            var dataSet = new Array();
 
-           var labelA = $(members[0]).text();
-           var labelB = $(members[1]).text();
+            var labelA = $(members[0]).text();
+            var labelB = $(members[1]).text();
 
-           dataSet.push([labelA, labelB]);
-           var _currentData = window.mapManager.getData();
+            dataSet.push([labelA, labelB]);
+            var _currentData = window.mapManager.getData();
 
-           for (var i in _currentData.population) {
-               var maxRank = parseInt($("#txtMaxRank").val());
-               if (_currentData.population[i].Critter.Rank <= maxRank) {
-                   dataSet.push([_currentData.population[i].Critter.Fitness[labelA],
-                           _currentData.population[i].Critter.Fitness[labelB]]);
-               }
-
-
-
-           }
+            for (var i in _currentData.population) {
+                var maxRank = parseInt($("#txtMaxRank").val());
+                if (_currentData.population[i].Critter.Rank <= maxRank) {
+                    dataSet.push([_currentData.population[i].Critter.Fitness[labelA],
+                            _currentData.population[i].Critter.Fitness[labelB]]);
+                }
 
 
-           var data = google.visualization.arrayToDataTable(dataSet);
+            }
 
 
+            var data = google.visualization.arrayToDataTable(dataSet);
 
 
-           var options = {
-               title: 'Population Analysis',
-               hAxis: { title: labelA, minValue: 0, maxValue: 1 },
-               vAxis: { title: labelB, minValue: 0, maxValue: 1 },
-               legend: 'none'
-           };
+            var options = {
+                title: 'Population Analysis',
+                hAxis: { title: labelA, minValue: 0, maxValue: 1 },
+                vAxis: { title: labelB, minValue: 0, maxValue: 1 },
+                legend: 'none'
+            };
 
-           chart = new google.visualization.ScatterChart(document.getElementById('divGraph'));
-           google.visualization.events.addListener(chart, 'ready', function () {
+            chart = new google.visualization.ScatterChart(document.getElementById('divGraph'));
+            google.visualization.events.addListener(chart, 'ready', function() {
 
-               var iFrame = $('[id^=Drawing_Frame]');
-               var contents = iFrame.contents();
-               var canvas = contents.find('svg');
-               var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-               g.setAttribute("transform", "");
+                var iFrame = $('[id^=Drawing_Frame]');
+                var contents = iFrame.contents();
+                var canvas = contents.find('svg');
+                var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute("transform", "");
 
-               function scaleSize(n) {
-                   return (n * 247);
-               }
-               function scalePos(n) {
-                   return (n + 77);
-               }
+                function scaleSize(n) {
+                    return (n * 247);
+                }
 
-               /*
+                function scalePos(n) {
+                    return (n + 77);
+                }
+
+                /*
                for (var i in dataSet) {
                if (i == 0)
                continue;
@@ -247,78 +241,74 @@ if (googleEnabled)
                }
                canvas.append(g);
                */
-           });
+            });
 
-           google.visualization.events.addListener(chart, 'select', function () {
-               var sel = chart.getSelection()[0];
-               $('#selPopulation').val(String(sel.row));
-               window.mapManager.loadMember(sel.row);
-           });
+            google.visualization.events.addListener(chart, 'select', function() {
+                var sel = chart.getSelection()[0];
+                $('#selPopulation').val(String(sel.row));
+                window.mapManager.loadMember(sel.row);
+            });
 
-           chart.draw(data, options);
-
-
-       }
-
-   });
+            chart.draw(data, options);
 
 
+        }
+
+    });
    
 
-   ///
+    ///
    /// Helper functions
    ///
 
-   function GetNodeData(id, callback, customValue) {
-       var cacheData = nodeCache[id];
-       if (cacheData) {
-           callback(cacheData, customValue);
+    function GetNodeData(id, callback, customValue) {
+        var cacheData = nodeCache[id];
+        if (cacheData) {
+            callback(cacheData, customValue);
             return null;
-       }
+        }
 
-       return RPCCall("GetNodeData", { "id": id }, function (data) {
-           if (CheckForError(data)) {
-               return;
-           }
+        return RPCCall("GetNodeData", { "id": id }, function(data) {
+            if (CheckForError(data)) {
+                return;
+            }
 
-           nodeCache[id] = data.result;
-           callback(data.result,customValue);
-           
+            nodeCache[id] = data.result;
+            callback(data.result, customValue);
 
-       });
 
-   }
+        });
 
-   function parseTimeSpan(timeSpan) {
+    }
 
-       var split = String(timeSpan).split(":");
-       var hours = split[0];
-       var minutes = split[1];
-       var seconds = split[2];
+    function parseTimeSpan(timeSpan) {
 
-       if (!seconds) {
-           seconds = 0;
-       }
-       if (!minutes) {
-           minutes = 0;
-       }
-       if (!hours) {
-           hours = 0;
-       }
+        var split = String(timeSpan).split(":");
+        var hours = split[0];
+        var minutes = split[1];
+        var seconds = split[2];
 
-       return { "hours": hours, "minutes": minutes, "seconds": seconds };
+        if (!seconds) {
+            seconds = 0;
+        }
+        if (!minutes) {
+            minutes = 0;
+        }
+        if (!hours) {
+            hours = 0;
+        }
 
-   }
-    
+        return { "hours": hours, "minutes": minutes, "seconds": seconds };
+
+    }
+
     function trimSeconds(timeString) {
         var split = String(timeString).split(" ");
 
 
         return split[0].substring(0, split[0].length - 3) + " " + split[1];
 
-    }
-
-    
+    }    
 
 
     /**
@@ -341,32 +331,31 @@ if (googleEnabled)
     *   The <td>'s parent (<tr>) will be sorted instead
     *   of the <td> itself.
     */
-    jQuery.fn.sortElements = (function () {
+    jQuery.fn.sortElements = (function() {
 
         var sort = [].sort;
 
-        return function (comparator, getSortable) {
+        return function(comparator, getSortable) {
 
-            getSortable = getSortable || function () { return this; };
+            getSortable = getSortable || function() { return this; };
 
-            var placements = this.map(function () {
+            var placements = this.map(function() {
 
                 var sortElement = getSortable.call(this),
-                parentNode = sortElement.parentNode,
-
+                    parentNode = sortElement.parentNode,
                 // Since the element itself will change position, we have
                 // to have some way of storing its original position in
                 // the DOM. The easiest way is to have a 'flag' node:
-                nextSibling = parentNode.insertBefore(
-                    document.createTextNode(''),
-                    sortElement.nextSibling
+                    nextSibling = parentNode.insertBefore(
+                        document.createTextNode(''),
+                        sortElement.nextSibling
                 );
 
-                return function () {
+                return function() {
 
                     if (parentNode === this) {
                         throw new Error(
-                        "You can't sort elements if any one is a descendant of another."
+                            "You can't sort elements if any one is a descendant of another."
                     );
                     }
 
@@ -379,7 +368,7 @@ if (googleEnabled)
 
             });
 
-            return sort.call(this, comparator).each(function (i) {
+            return sort.call(this, comparator).each(function(i) {
                 placements[i].call(getSortable.call(this));
             });
 
@@ -388,10 +377,10 @@ if (googleEnabled)
     })();
 
 
-
     ///
     /// Main Class
     ///
+
     function MapManager() {
         var _iteration = 0;
         var _journeyUuid;
@@ -403,36 +392,36 @@ if (googleEnabled)
             return _currentData;
 
         };
-        this.generateLegDiv = function (leg, index) {
+        this.generateLegDiv = function(leg, index) {
 
             //"Legs":[{"Start":19965,"End":19842,"Mode":"Train","TotalTime":"00:45:00","Route":"111","DepartTime":"2012-09-03T14:00:50.5030000+10:00"}]
 
 
             var baseDiv = $(
-            '<div class="well well-jl"> ' +
-                '<ul> ' +
-                    '<li class="liJLTop"> ' +
-                        '<span class="divJLTime topSpan">6:45 AM</span> ' +
-                        '<img class="imgTransportIcon topSpan" src="img/transportIcons/Tram.png"> ' +
-                        '<span class="divStationName topSpan">Swanston St Stop 123</span> ' +
-                    '</li> ' +
-                    '<li class="liJLMiddle"> ' +
-                        '<span class="divJLTime midSpan">   </span> ' +
-                        '<img src="img/downArrow.png"  /> <span class="divTotTime">Walk (20 Mins)</span> ' +
-                    '</li> ' +
-                    '<li class="liJLBottom"> ' +
-                        '<span class="divJLTime botSpan">7:05 AM</span> ' +
-                        '<img class="imgTransportIcon botSpan" src="img/transportIcons/Train.png"> ' +
-                        '<span class="divStationName botSpan">Melbourne Central </span> ' +
-                    '</li> ' +
-                '</ul> ' +
-            '</div>');
+                '<div class="well well-jl"> ' +
+                    '<ul> ' +
+                        '<li class="liJLTop"> ' +
+                            '<span class="divJLTime topSpan">6:45 AM</span> ' +
+                                '<img class="imgTransportIcon topSpan" src="img/transportIcons/Tram.png"> ' +
+                                    '<span class="divStationName topSpan">Swanston St Stop 123</span> ' +
+                                        '</li> ' +
+                                            '<li class="liJLMiddle"> ' +
+                                                '<span class="divJLTime midSpan">   </span> ' +
+                                                    '<img src="img/downArrow.png"  /> <span class="divTotTime">Walk (20 Mins)</span> ' +
+                                                        '</li> ' +
+                                                            '<li class="liJLBottom"> ' +
+                                                                '<span class="divJLTime botSpan">7:05 AM</span> ' +
+                                                                    '<img class="imgTransportIcon botSpan" src="img/transportIcons/Train.png"> ' +
+                                                                        '<span class="divStationName botSpan">Melbourne Central </span> ' +
+                                                                            '</li> ' +
+                                                                                '</ul> ' +
+                                                                                    '</div>');
 
 
             GetNodeData(leg.Start,
-                function (originData) {
+                function(originData) {
                     GetNodeData(leg.End,
-                        function (destData) {
+                        function(destData) {
                             baseDiv.find('.divStationName.topSpan').text(originData.name);
                             baseDiv.find('.divStationName.topSpan').addClass(originData.mode.toLowerCase());
                             baseDiv.find('.divStationName.botSpan').text(destData.name);
@@ -445,7 +434,6 @@ if (googleEnabled)
                             var timeSpan = parseTimeSpan(leg.TotalTime);
 
                             var arriveTime = new Date(departTime.getTime() + ((timeSpan.hours * 60) + timeSpan.minutes) * 60000);
-
 
 
                             baseDiv.find('.divTotTime').text(leg.Mode + ' (' + leg.Route + ') ' + leg.TotalTime.split('.')[0]);
@@ -463,7 +451,7 @@ if (googleEnabled)
                             legsLoaded++;
 
                             if (legsLoaded == legsTotal) {
-                                $('.well-jl').sortElements(function (a, b) {
+                                $('.well-jl').sortElements(function(a, b) {
 
                                     var contentA = parseInt($(a).attr('data-order'));
                                     var contentB = parseInt($(b).attr('data-order'));
@@ -475,11 +463,7 @@ if (googleEnabled)
                         });
 
 
-
                 });
-
-
-
 
 
             /*
@@ -487,12 +471,9 @@ if (googleEnabled)
             */
 
 
-
-
-
         };
 
-        this.drawPolyLines = function () {
+        this.drawPolyLines = function() {
             if (mapPath) {
                 mapPath.setMap(null);
             }
@@ -504,29 +485,28 @@ if (googleEnabled)
             for (var r in _currentMember.Route) {
 
                 GetNodeData(_currentMember.Route[r],
-                    function (data, x) {
+                    function(data, x) {
                         points[x] = new google.maps.LatLng(data.latitude, data.longitude);
                         pointsLoaded++;
                         if (pointsLoaded == pointsTotal) {
                             mapPath = new google.maps.Polyline({
-                                path: points,
-                                strokeColor: "#FF0000",
-                                strokeOpacity: 1.0,
-                                strokeWeight: 1
-                            });
+                                    path: points,
+                                    strokeColor: "#FF0000",
+                                    strokeOpacity: 1.0,
+                                    strokeWeight: 1
+                                });
 
                             mapPath.setMap(map);
                         }
                     }, r);
 
 
-
             }
 
         };
-        
+
         //Loads a run file
-        this.loadRun = function (journeyUuid, runUuid) {
+        this.loadRun = function(journeyUuid, runUuid) {
             _iteration = 0;
             _journeyUuid = journeyUuid;
             _runUuid = runUuid;
@@ -537,22 +517,22 @@ if (googleEnabled)
         };
 
         // Loads a specific member from the loaded run.
-        this.loadMember = function (index) {
-   
+        this.loadMember = function(index) {
+
             _currentMember = _currentData.population[index].Critter;
             console.log("Loading member: " + index);
             window.mapManager.reDraw();
         };
 
         // Clears all generated content.
-        this.clear = function () {
+        this.clear = function() {
 
             $('#divJViewerL').empty();
         };
 
 
         // Generates the dynamic content from the data.
-        this.draw = function () {
+        this.draw = function() {
 
             legsLoaded = 0;
             legsTotal = _currentMember.Legs.length;
@@ -564,24 +544,22 @@ if (googleEnabled)
             this.drawPolyLines();
 
 
-
-
         };
-        
+
         // Clears all generated content and then generates.
-        this.reDraw = function () {
+        this.reDraw = function() {
             this.clear();
             this.draw();
         };
-        
-        
+
+
         //Load a specific iteration from the loaded run file.
-        this.loadIteration = function (iterationNum) {
+        this.loadIteration = function(iterationNum) {
 
             if (iterationNum)
                 _iteration = iterationNum;
 
-            RPCCall("GetIteration", { "journeyUuid": _journeyUuid, "runUuid": _runUuid, "iteration": _iteration }, function (data) {
+            RPCCall("GetIteration", { "journeyUuid": _journeyUuid, "runUuid": _runUuid, "iteration": _iteration }, function(data) {
                 if (CheckForError(data)) {
                     return;
                 }
@@ -609,19 +587,12 @@ if (googleEnabled)
                 }
 
 
-
-
-
-
-
             });
 
         };
 
     }
 
-}
-else
-{
-	$('#map_canvas').text('Google maps requires a connection to the internet and is disabled.');
+} else {
+    $('#map_canvas').text('Google maps requires a connection to the internet and is disabled.');
 }

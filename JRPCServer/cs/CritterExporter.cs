@@ -1,32 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
-using System.Web;
-using System.Web.SessionState;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using Jayrock.JsonRpc;
-using Jayrock.JsonRpc.Web;
-using RmitJourneyPlanner.CoreLibraries.DataProviders;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
-using System.Linq;
-using Jayrock.Json;
-using Jayrock.Json.Conversion;
-using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CritterExporter.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The critter exporter.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace JRPCServer
 {
+    #region Using Directives
+
+    using System;
+
+    using Jayrock.Json;
+    using Jayrock.Json.Conversion;
+
     using RmitJourneyPlanner.CoreLibraries.Types;
 
+    #endregion
+
+    /// <summary>
+    /// The critter exporter.
+    /// </summary>
     public class CritterExporter : IExporter
     {
+        #region Public Properties
+
+        /// <summary>
+        /// Gets InputType.
+        /// </summary>
+        public Type InputType
+        {
+            get
+            {
+                return typeof(Critter);
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The export.
+        /// </summary>
+        /// <param name="context">
+        /// The context.
+        /// </param>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        /// <param name="writer">
+        /// The writer.
+        /// </param>
         public void Export(ExportContext context, object value, JsonWriter writer)
         {
-           
             writer.WriteStartObject();
             writer.WriteMember("Critter");
             writer.WriteStartObject();
@@ -38,29 +67,26 @@ namespace JRPCServer
             writer.WriteMember("Rank");
             writer.WriteNumber(critter.Rank);
 
-            
             writer.WriteMember("Fitness");
             writer.WriteStartObject();
             int i = 0;
             foreach (var n in Enum.GetNames(typeof(FitnessParameter)))
             {
-                
                 writer.WriteMember(n);
                 writer.WriteNumber(critter.Fitness[i++]);
-
             }
-            writer.WriteEndObject();
-             
-            //writer.WriteMember("Fitness");
-//context.Export(critter.Fitness,writer);
-            
 
+            writer.WriteEndObject();
+
+            // writer.WriteMember("Fitness");
+            // context.Export(critter.Fitness,writer);
             writer.WriteMember("Route");
             writer.WriteStartArray();
             foreach (var node in critter.Route)
             {
                 writer.WriteNumber(node.Node.Id);
             }
+
             writer.WriteEndArray();
 
             writer.WriteMember("Legs");
@@ -76,35 +102,22 @@ namespace JRPCServer
                 writer.WriteString(leg.TransportMode.ToString());
                 writer.WriteMember("TotalTime");
                 context.Export(leg.TotalTime, writer);
-                //writer.WriteString(leg.TotalTime.ToString());
+
+                // writer.WriteString(leg.TotalTime.ToString());
                 writer.WriteMember("Route");
                 writer.WriteString(leg.RouteId1);
                 writer.WriteMember("DepartTime");
-                context.Export(leg.DepartureTime,writer);
+                context.Export(leg.DepartureTime, writer);
 
                 writer.WriteEndObject();
             }
+
             writer.WriteEndArray();
 
             writer.WriteEndObject();
             writer.WriteEndObject();
-
-            
-            
-            
-            
-
-
-            
         }
 
-        public Type InputType
-        {
-            get
-            {
-                return typeof(Critter);
-            }
-        }
+        #endregion
     }
 }
-
