@@ -12,7 +12,7 @@ namespace JRPCServer
     using Jayrock.Json;
     using Jayrock.Json.Conversion;
 
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     public enum OptimiserState
@@ -349,7 +349,7 @@ namespace JRPCServer
                     currentJourney = journey;
                     run.JourneyUuid = journey.Uuid;
                     run.TimeStarted = DateTime.Now;
-                    var planner = new MoeaRoutePlanner(journey.Properties);
+                    var planner = new MoeaJourneyPlanner(journey.Properties);
                     planner.Start();
                     var results = new List<Result>(journey.Properties.MaxIterations);
                     maxIterations = journey.Properties.MaxIterations;

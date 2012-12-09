@@ -65,10 +65,10 @@
       <HintPath>..\Libraries\Jayrock.Sandbox.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Security">
-      <HintPath>bin\Mono.Security.dll</HintPath>
+      <HintPath>..\Libraries\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="Mono.WebServer2">
-      <HintPath>bin\Mono.WebServer2.dll</HintPath>
+      <HintPath>..\Libraries\Mono.WebServer2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

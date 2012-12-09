@@ -3,14 +3,14 @@ using NUnit.Framework;
 
 using RmitJourneyPlanner.CoreLibraries.DataProviders;
 using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
 using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Breeders;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.FitnessFunctions;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Mutators;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.RouteGenerators;
 using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
 using RmitJourneyPlanner.CoreLibraries.DataAccess;
 using RmitJourneyPlanner.CoreLibraries.Types;
@@ -30,7 +30,7 @@ namespace JRPCServer
 
             j.RunUuids = new[] { "a", "b", "c" };
             var properties = j.Properties;
-            var provider = new MetlinkDataProvider();
+            var provider = new PtvDataProvider();
             ObjectCache.RegisterObject(provider);
             properties.NetworkDataProviders = new[] { provider };
             properties.PointDataProviders = new[] { new WalkingDataProvider() };
@@ -52,9 +52,9 @@ namespace JRPCServer
             properties.FitnessFunction = new AlFitnessFunction(properties);
             properties.Database = new MySqlDatabase();
             properties.SearchType = SearchType.Greedy_BiDir;
-            properties.Destination = new MetlinkNode(22180, provider);
-            properties.Origin = new MetlinkNode(19843, provider);
-            properties.Planner = new MoeaRoutePlanner(properties);
+            properties.Destination = new PtvNode(22180, provider);
+            properties.Origin = new PtvNode(19843, provider);
+            properties.Planner = new MoeaJourneyPlanner(properties);
             properties.MaxIterations = 25;
             properties.Objectives = new[]
                 { FitnessParameter.Changes, FitnessParameter.PercentTrains, FitnessParameter.PercentBuses };

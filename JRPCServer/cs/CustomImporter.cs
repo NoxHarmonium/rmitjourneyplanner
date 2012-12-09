@@ -1,5 +1,5 @@
 using System;
-using  RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+using  RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
 namespace JRPCServer
 {
 	public class CustomImporter<T> : Jayrock.Json.Conversion.IImporter

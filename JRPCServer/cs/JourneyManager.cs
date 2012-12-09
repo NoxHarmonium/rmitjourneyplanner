@@ -3,8 +3,8 @@ using System.IO;
 using System.Collections.Generic;
 using Jayrock.Json;
 using Jayrock.Json.Conversion;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
+using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
 using System.Linq;
 
 namespace JRPCServer

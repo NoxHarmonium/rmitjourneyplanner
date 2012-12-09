@@ -18,12 +18,12 @@ namespace JRPCServer
     using Jayrock.JsonRpc;
     using Jayrock.JsonRpc.Web;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
-	using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+	using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
     using System.Linq;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
 
     #endregion
 
@@ -94,9 +94,9 @@ namespace JRPCServer
             IPointDataProvider provider = new WalkingDataProvider();
             ObjectCache.RegisterObject(provider);
 
-           if (!ObjectCache.GetObjects<MetlinkDataProvider>().Any())
+           if (!ObjectCache.GetObjects<PtvDataProvider>().Any())
            {
-               ObjectCache.RegisterObject(new MetlinkDataProvider());
+               ObjectCache.RegisterObject(new PtvDataProvider());
            }
            if (!ObjectCache.GetObjects<EvolutionaryProperties>().Any())
            {
@@ -163,7 +163,7 @@ namespace JRPCServer
 					{
 						
 						value = "";
-						MetlinkNode node = (MetlinkNode) propertyInfos[i].GetValue(properties, null) ?? null;
+						PtvNode node = (PtvNode) propertyInfos[i].GetValue(properties, null) ?? null;
 						if (node != null)
 						{
 							value = node.StopSpecName + delimeter + node.Id;
@@ -351,8 +351,8 @@ namespace JRPCServer
 						switch (pType.Name)
 						{
 						    case "INetworkNode":
-								MetlinkDataProvider provider = ObjectCache.GetObjects<MetlinkDataProvider>()[0];
-								MetlinkNode node = (MetlinkNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value));//provider.GetNodeFromName(propVal.Value);
+								PtvDataProvider provider = ObjectCache.GetObjects<PtvDataProvider>()[0];
+								PtvNode node = (PtvNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value));//provider.GetNodeFromName(propVal.Value);
 								if (node == null)
 								{
 									throw new Exception("No matching node for supplied name.");	
@@ -498,7 +498,7 @@ namespace JRPCServer
 		[JsonRpcHelp("Returns an array of stop names from the query.")]
 		public object[] QueryStops(string query)
 		{
-			var provider = ObjectCache.GetObjects<MetlinkDataProvider>().First();
+			var provider = ObjectCache.GetObjects<PtvDataProvider>().First();
 			var stops = provider.QueryStops(query);
 			//var stopStrings = stops.Select(s => s.StopSpecName);
 			//return stopStrings.ToArray();
@@ -619,7 +619,7 @@ namespace JRPCServer
         [JsonRpcHelp("Returns basic information pertaining to the specified stop ID.")]
         public object GetNodeData(int id)
         {
-            var provider = ObjectCache.GetObject<MetlinkDataProvider>();
+            var provider = ObjectCache.GetObject<PtvDataProvider>();
             var data = provider.GetNodeData(id);
             string mode = data.Rows[0]["StopModeName"].ToString();
             if (mode != "Bus" &&

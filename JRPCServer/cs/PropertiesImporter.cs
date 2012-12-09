@@ -13,11 +13,11 @@
 	using Jayrock.Json;
 	using Jayrock.Json.Conversion;
     using RmitJourneyPlanner.CoreLibraries.DataProviders;
-	using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+	using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
     using System.Linq;
 
-    using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
 namespace JRPCServer
 {
     using RmitJourneyPlanner.CoreLibraries.Types;
@@ -127,8 +127,8 @@ namespace JRPCServer
 						switch (pType.Name)
 						{
 						case "INetworkNode":
-								MetlinkDataProvider provider = ObjectCache.GetObjects<MetlinkDataProvider>().First();
-								MetlinkNode node = (MetlinkNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value.Split(new[]{','})[1]));//provider.GetNodeFromName(propVal.Value);
+								PtvDataProvider provider = ObjectCache.GetObjects<PtvDataProvider>().First();
+								PtvNode node = (PtvNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value.Split(new[]{','})[1]));//provider.GetNodeFromName(propVal.Value);
 								if (node == null)
 								{
 									throw new Exception("No matching node for supplied name.");	

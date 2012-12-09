@@ -1,5 +1,5 @@
 using System;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
 using Jayrock.Json.Conversion;
 
 namespace JRPCServer

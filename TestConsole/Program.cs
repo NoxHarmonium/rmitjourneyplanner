@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using RmitJourneyPlanner.CoreLibraries.DataAccess;
 using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Breeders;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.FitnessFunctions;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.Mutators;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary.RouteGenerators;
+using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Breeders;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.FitnessFunctions;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Mutators;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.RouteGenerators;
 using RmitJourneyPlanner.CoreLibraries.Types;
 using System.IO.Compression;
 
@@ -95,7 +95,7 @@ namespace TestConsole
 
                 string runUUID = "None";
                 
-                MetlinkDataProvider provider = new MetlinkDataProvider();
+                PtvDataProvider provider = new PtvDataProvider();
      
                 try
                 {
@@ -156,24 +156,24 @@ namespace TestConsole
                                 properties.Breeder = new TimeBlendBreeder(properties);
                                 properties.FitnessFunction = new AlFitnessFunction(properties);
                                 properties.Database = new MySqlDatabase("20110606fordistributionforrmit");
-                                //properties.Destination = new MetlinkNode(628, provider);// kew
-                                //properties.Origin = new MetlinkNode(9601, provider);// reynard st
+                                //properties.Destination = new PtvNode(628, provider);// kew
+                                //properties.Origin = new PtvNode(9601, provider);// reynard st
 
-                                //properties.Origin = new MetlinkNode(18536, provider); //abbotsford interchange
-                                properties.Origin = new MetlinkNode(journey.Value.Key, provider); // Coburg
-                                properties.Destination = new MetlinkNode(journey.Value.Value, provider); //ascot vale
-                                //properties.Origin = new MetlinkNode(19036,provider); //Cotham (o)
-                                //properties.Destination = new MetlinkNode(19943, provider); // Caulfielsd
-                                //properties.Destination = new MetlinkNode(19933, provider); // Darebinor whateves
-                                //properties.Destination = new MetlinkNode(19394,provider); // other kew
-                                // properties.Destination = new MetlinkNode(4141, provider); // Jolimont
-                                //properties.Destination = new MetlinkNode(628,metlinkProvider);
+                                //properties.Origin = new PtvNode(18536, provider); //abbotsford interchange
+                                properties.Origin = new PtvNode(journey.Value.Key, provider); // Coburg
+                                properties.Destination = new PtvNode(journey.Value.Value, provider); //ascot vale
+                                //properties.Origin = new PtvNode(19036,provider); //Cotham (o)
+                                //properties.Destination = new PtvNode(19943, provider); // Caulfielsd
+                                //properties.Destination = new PtvNode(19933, provider); // Darebinor whateves
+                                //properties.Destination = new PtvNode(19394,provider); // other kew
+                                // properties.Destination = new PtvNode(4141, provider); // Jolimont
+                                //properties.Destination = new PtvNode(628,PtvProvider);
                                 // new TerminalNode(-1, destination);
-                                // metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
-                                //properties.Origin = new MetlinkNode(19965, metlinkProvider);//
-                                //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
+                                // PtvProvider.GetNodeClosestToPoint(new TerminalNode(-1, destination), 0);
+                                //properties.Origin = new PtvNode(19965, PtvProvider);//
+                                //PtvProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
 
-                                //metlinkProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
+                                //PtvProvider.GetNodeClosestToPoint(new TerminalNode(-1, origin), 0);
 
                                 properties.Destination.RetrieveData();
                                 properties.Origin.RetrieveData();
@@ -187,7 +187,7 @@ namespace TestConsole
                                 //properties.DataStructures = new DataStructures(properties);
 
                                 Stopwatch sw = Stopwatch.StartNew();
-                                properties.Planner = new MoeaRoutePlanner(properties);
+                                properties.Planner = new MoeaJourneyPlanner(properties);
 
                                 properties.Planner.Start();
 
@@ -209,7 +209,7 @@ namespace TestConsole
                                         foreach (var node in member.Route)
                                         {
                                             nodeIds += node.Node.Id.ToString() + "|";
-                                            nodeNames += ((MetlinkNode) node.Node).StopSpecName + "|";
+                                            nodeNames += ((PtvNode) node.Node).StopSpecName + "|";
                                             nodeCoords += node.Node.Latitude + "@" + node.Node.Longitude+ "|";
 
                                         }
@@ -254,7 +254,7 @@ namespace TestConsole
                                             foreach (var node in member.Route)
                                             {
                                                 nodeIds += node.Node.Id.ToString() + "|";
-                                                nodeNames += ((MetlinkNode) node.Node).StopSpecName + "|";
+                                                nodeNames += ((PtvNode) node.Node).StopSpecName + "|";
                                                 nodeCoords += node.Node.Latitude + "@" + node.Node.Longitude + "|";
 
                                             }
@@ -270,7 +270,7 @@ namespace TestConsole
 
                                             writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
                                                              count++, member.Rank, member.Distance,
-                                                             member.departureTime,
+                                                             member.DepartureTime,
                                                              member.Fitness.TotalJourneyTime.TotalMinutes,
                                                              member.Fitness.Changes, member.Fitness.DiversityMetric,
                                                              member.Fitness.TotalDistance, nodeIds, nodeNames,

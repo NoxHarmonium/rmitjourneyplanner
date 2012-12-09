@@ -294,10 +294,10 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         /// </returns>
         public override bool Equals(object obj)
         {
-            var metlinkNode = obj as PtvNode;
-            if (metlinkNode != null)
+            var PtvNode = obj as PtvNode;
+            if (PtvNode != null)
             {
-                return metlinkNode.id == this.id;
+                return PtvNode.id == this.id;
             }
 
             return this.Equals(obj);

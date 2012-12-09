@@ -11,12 +11,12 @@ using System.Web.UI.WebControls;
 using Jayrock.JsonRpc;
 using Jayrock.JsonRpc.Web;
 using RmitJourneyPlanner.CoreLibraries.DataProviders;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Metlink;
+using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
 using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
 using System.Linq;
 using Jayrock.Json;
 using Jayrock.Json.Conversion;
-using RmitJourneyPlanner.CoreLibraries.RoutePlanners.Evolutionary;
+using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
 
 namespace JRPCServer
 {

@@ -119,7 +119,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                     nodeData =
                         this.database.GetDataSet(
                             string.Format(
-                                @"SELECT LineID, MetlinkStopID 
+                                @"SELECT LineID, PtvStopID 
                             FROM tblLinesStops
                             LIMIT {0}, {1};", 
                                 i * RecordChunk, 
@@ -129,7 +129,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                     {
                         foreach (DataRow row in nodeData.Rows)
                         {
-                            var id = (int)row["MetlinkStopID"];
+                            var id = (int)row["PtvStopID"];
                             if (!this.routeMap.ContainsKey(id))
                             {
                                 this.routeMap[id] = new List<int>();
@@ -153,14 +153,14 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                 /*
                nodeData =
                    this.database.GetDataSet(
-                       @"SELECT RouteID, MetlinkStopID, StopOrder FROM tblStopRoutes
+                       @"SELECT RouteID, PtvStopID, StopOrder FROM tblStopRoutes
                    ORDER BY RouteID,StopOrder;
                    ");
                
                foreach (DataRow row in nodeData.Rows)
                {
                    var sourceRoute = (int)row["RouteID"];
-                   var nodeId = (int)row["MetlinkStopID"];
+                   var nodeId = (int)row["PtvStopID"];
                    var Order = (int)row["Sequence"];
                    if (!this.routePathMap.ContainsKey(sourceRoute))
                    {
@@ -175,7 +175,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                 Logger.Log(this, "Querying this.database...");
                 nodeData =
                     this.database.GetDataSet(
-                        @"SELECT si.MetlinkStopID, si.GPSLat, si.GPSLong, m.StopModeName, si.StopSpecName
+                        @"SELECT si.PtvStopID, si.GPSLat, si.GPSLong, m.StopModeName, si.StopSpecName
                 FROM tblStopInformation si
                 INNER JOIN tblModes m
                 ON si.StopModeID=m.StopModeID");
@@ -189,7 +189,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                     }
 
                     var node = new PtvNode(
-                        (int)row["MetlinkStopID"], 
+                        (int)row["PtvStopID"], 
                         mode, 
                         row["StopSpecName"].ToString(), 
                         Convert.ToDouble(row["GPSLat"]), 
@@ -236,7 +236,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                     Logger.Log(this, "Querying this.database...");
                     nodeData =
                           this.database.GetDataSet(
-                              @"SELECT s.ServiceID,s.RouteID, st.MetlinkStopID, st.DepartTime
+                              @"SELECT s.ServiceID,s.RouteID, st.PtvStopID, st.DepartTime
                             FROM tblServices s
                             INNER JOIN tblServiceTimes st
                             ON s.ServiceID=st.ServiceID
@@ -259,7 +259,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                         DataRow nextRow = nodeData.Rows[i + 1];
 
                         // var RouteID = (int)row["RouteID"];
-                        var rowId = (int)row["MetlinkStopID"];
+                        var rowId = (int)row["PtvStopID"];
                         var rowStopOrder =
                             Convert.ToInt32(nonNumericCharacters.Replace(row["StopOrder"].ToString(), string.Empty));
                         var rowServiceId = (int)row["RouteID"];
@@ -270,7 +270,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                             prevRowId = rowId;
                         }
 
-                        var nextId = (int)nextRow["MetlinkStopID"];
+                        var nextId = (int)nextRow["PtvStopID"];
                         var nextStopOrder =
                             Convert.ToInt32(nonNumericCharacters.Replace(nextRow["StopOrder"].ToString(), string.Empty));
                         var nextServiceId = (int)nextRow["RouteID"];
@@ -287,7 +287,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                     nodeData =
                         this.database.GetDataSet(
-                            @"SELECT MetlinkStopID 
+                            @"SELECT PtvStopID 
                     FROM tblStopInformation          
                     ");
 
@@ -300,7 +300,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     {
                         // Console.SetCursorPosition(0, Console.CursorTop);
                         // Console.Write("{0,10:f2}%", 100.0 * ((double)count++ / (Double)nodeData.Rows.Count));
-                        var id = (int)node["MetlinkStopID"];
+                        var id = (int)node["PtvStopID"];
                         double progress = (count++ / (double)nodeData.Rows.Count) * 100;
                         Logger.UpdateProgress(this, (int)progress);
 
@@ -423,10 +423,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
                         timetableData =
                             this.database.GetDataSet(
                                 string.Format(
-                                    @"SELECT st.MetlinkStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID,st.Sequence  FROM tblServiceTimes  st
+                                    @"SELECT st.PtvStopId, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID,st.Sequence  FROM tblServiceTimes  st
 	                                        INNER JOIN tblServices s
 											ON s.ServiceID = st.ServiceID 
-											ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime 
+											ORDER BY PtvStopID, RouteId,DOW,arrivaltime,departtime 
 											LIMIT {0},{1};", 
                                     i * RecordChunk, 
                                     RecordChunk));
@@ -481,7 +481,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
             // catch (Exception e)
             // {
-            // Logger.Log(this, "Error intitilizing MetlinkDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
+            // Logger.Log(this, "Error intitilizing PtvDataProvider: " + e.Message + "\n" + e.StackTrace + "\n");
             // throw;
             // }
         }
@@ -688,10 +688,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
         public List<INetworkNode> GetLineNodes(int lineId)
         {
             string query = string.Format(
-                "SELECT MetlinkStopID FROM tblLinesStops WHERE LineID={0} ORDER BY Sequence", lineId);
+                "SELECT PtvStopID FROM tblLinesStops WHERE LineID={0} ORDER BY Sequence", lineId);
             var result = this.database.GetDataSet(query);
             var nodes = new List<INetworkNode>(result.Rows.Count);
-            nodes.AddRange(from DataRow row in result.Rows select this.list[Convert.ToInt32(row["MetlinkStopID"])][0]);
+            nodes.AddRange(from DataRow row in result.Rows select this.list[Convert.ToInt32(row["PtvStopID"])][0]);
             return nodes;
         }
 
@@ -724,8 +724,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
             {
                 query =
                     string.Format(
-                        "SELECT sr.MetlinkStopID, sr.RouteID, si.GPSLat, si.GPSLong, si.StopModeID FROM tblStopInformation si "
-                        + "INNER JOIN tblStopRoutes sr " + "ON sr.MetlinkStopID=si.MetlinkStopID " + "WHERE "
+                        "SELECT sr.PtvStopID, sr.RouteID, si.GPSLat, si.GPSLong, si.StopModeID FROM tblStopInformation si "
+                        + "INNER JOIN tblStopRoutes sr " + "ON sr.PtvStopID=si.PtvStopID " + "WHERE "
                         + "si.GPSLat < {0} AND " + "si.GPSLong > {1} AND " + "si.GPSLat  > {2} AND "
                         + "si.GPSLong < {3};", 
                         topLeft.Latitude, 
@@ -737,8 +737,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
             {
                 query =
                     string.Format(
-                        "SELECT sr.MetlinkStopID, sr.RouteID, si.GPSLat, si.GPSLong, si.StopModeID FROM tblStopInformation si "
-                        + "INNER JOIN tblStopRoutes sr " + "ON sr.MetlinkStopID=si.MetlinkStopID " + "WHERE "
+                        "SELECT sr.PtvStopID, sr.RouteID, si.GPSLat, si.GPSLong, si.StopModeID FROM tblStopInformation si "
+                        + "INNER JOIN tblStopRoutes sr " + "ON sr.PtvStopID=si.PtvStopID " + "WHERE "
                         + "si.GPSLat < {0} AND " + "si.GPSLong > {1} AND " + "si.GPSLat  > {2} AND "
                         + "si.GPSLong < {3} AND sr.RouteID = {4};", 
                         topLeft.Latitude, 
@@ -750,7 +750,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
                 /*
                  * 
                  * 
-                 *    "ON sr.MetlinkStopID=si.MetlinkStopID " +
+                 *    "ON sr.PtvStopID=si.PtvStopID " +
                     "WHERE " + "si.GPSLat < {0} AND " + "si.GPSLong > {1} AND "
                     + "si.GPSLat  > {2} AND " + "si.GPSLong < {3};",
                     topLeft.Latitude,
@@ -765,7 +765,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
             var nodes =
                 (from DataRow row in table.Rows
-                 select new NodeWrapper<INetworkNode>(this.list[(int)row["MetlinkStopID"]][0])).ToList();
+                 select new NodeWrapper<INetworkNode>(this.list[(int)row["PtvStopID"]][0])).ToList();
 
             double minDistance = double.MaxValue;
             NodeWrapper<INetworkNode> minNode = null;
@@ -787,19 +787,19 @@ ORDER BY sr.RouteID, sr.StopOrder;
         /// <summary>
         /// Gets a datatable filled with data related to this stop.
         /// </summary>
-        /// <param name="metlinkStopId">
+        /// <param name="PtvStopId">
         /// The PTV stop identifier. 
         /// </param>
         /// <returns>
         /// A <see cref="DataTable"/> filled with relevant data. 
         /// </returns>
-        public DataTable GetNodeData(int metlinkStopId)
+        public DataTable GetNodeData(int PtvStopId)
         {
             return
                 this.database.GetDataSet(
                     string.Format(
-                        "SELECT * FROM tblStopInformation si INNER JOIN tblModes m on si.StopModeID = m.StopModeID WHERE MetlinkStopID = '{0}'", 
-                        metlinkStopId));
+                        "SELECT * FROM tblStopInformation si INNER JOIN tblModes m on si.StopModeID = m.StopModeID WHERE PtvStopID = '{0}'", 
+                        PtvStopId));
         }
 
         /// <summary>
@@ -829,7 +829,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         public PtvNode GetNodeFromName(string stopSpecName)
         {
             string query = string.Format(
-                @"SELECT MetlinkStopID FROM tblStopInformation WHERE StopSpecName='{0}';", stopSpecName);
+                @"SELECT PtvStopID FROM tblStopInformation WHERE StopSpecName='{0}';", stopSpecName);
             var data = this.database.GetDataSet(query);
             Assert.That(data.Rows.Count < 2, "StopSpecName should be unique.");
             if (data.Rows.Count == 1)
@@ -875,11 +875,11 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
             string query =
                 string.Format(
-                    @"SELECT DISTINCT si.MetlinkStopId, sr.RouteId, LineMainID, si.GPSLong, si.GPSLat, 
+                    @"SELECT DISTINCT si.PtvStopId, sr.RouteId, LineMainID, si.GPSLong, si.GPSLat, 
 	                    min(SQRT(POW(si.GPSLat - {4},2) + POW(si.GPSLong - {5},2))) AS distance 
 	                    FROM tblStopInformation si
                     INNER JOIN tblStopRoutes sr 
-                    ON sr.MetlinkStopID=si.MetlinkStopID
+                    ON sr.PtvStopID=si.PtvStopID
                     INNER JOIN tblLinesRoutes lr
                     ON sr.RouteID=lr.RouteID
                     INNER JOIN tblLines l
@@ -900,7 +900,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             var nodes = new List<NodeWrapper<PtvNode>>();
             foreach (DataRow row in table.Rows)
             {
-                var node = new NodeWrapper<PtvNode>(this.list[(int)row["MetlinkStopID"]][0])
+                var node = new NodeWrapper<PtvNode>(this.list[(int)row["PtvStopID"]][0])
                     {
                        CurrentRoute = (int)row["RouteID"] 
                     };
@@ -974,9 +974,9 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     ON ls2.LineID = ls2.LineID
                     INNER JOIN tblLines l2
                     ON l2.LineID = ls2.LineID
-                    WHERE ls1.MetlinkStopID = {0} 
+                    WHERE ls1.PtvStopID = {0} 
                     AND
-                    ls2.MetlinkStopID =  {1}
+                    ls2.PtvStopID =  {1}
                     AND l1.LineMainID = l2.LineMainID", 
                     node1.Id, 
                     node2.Id);
@@ -1000,7 +1000,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             string sqlQuery =
                 string.Format(
                     @"SELECT StopSpecName,CONCAT(TravelSTName,' ',TravelSTType,'/',COALESCE(CrossSTName,''),' ',COALESCE(CrossSTType,'')), 
-											StopModeName, MetlinkStopID FROM tblStopInformation si INNER JOIN tblModes sm ON sm.StopModeId=si.StopModeID 
+											StopModeName, PtvStopID FROM tblStopInformation si INNER JOIN tblModes sm ON sm.StopModeId=si.StopModeID 
 											WHERE StopSpecName LIKE '%{0}%' ORDER BY sm.StopModeID DESC", 
                     query);
             var data = this.database.GetDataSet(sqlQuery);
