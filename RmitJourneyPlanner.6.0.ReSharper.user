@@ -6,9 +6,6 @@
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Positioning/f:GeometryHelper.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Positioning/f:Location.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:Breeders/f:StandardBreeder.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:Breeders/f:TimeBlendBreeder.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EvolutionaryProperties.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Arc.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:ClosedRoute.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Critter.cs" caret="0" fromTop="0" />
@@ -26,8 +23,6 @@
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Properties/f:AssemblyInfo.cs" caret="1976" fromTop="17" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="1388" fromTop="23" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Random.cs" caret="1237" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EARoutePlanner.cs" caret="7367" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="7419" fromTop="13" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Settings.cs" caret="2281" fromTop="15" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="8419" fromTop="17" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:AdjacencyList.cs" caret="2479" fromTop="22" />
@@ -35,9 +30,6 @@
     <RecentEdits>
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="17098" fromTop="16" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="17098" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/d:FitnessFunctions/f:ALFitnessFunction.cs" caret="9613" fromTop="17" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EARoutePlanner.cs" caret="22242" fromTop="29" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="24468" fromTop="17" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="11891" fromTop="15" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="8612" fromTop="26" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="8419" fromTop="20" />
@@ -57,8 +49,6 @@
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Random.cs" caret="689" fromTop="4" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="1388" fromTop="23" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Random.cs" caret="1237" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:EARoutePlanner.cs" caret="7367" fromTop="13" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:RoutePlanners/d:Evolutionary/f:MOEARoutePlanner.cs" caret="7419" fromTop="13" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Settings.cs" caret="1022" fromTop="15" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Settings.cs" caret="2281" fromTop="15" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:AdjacencyList.cs" caret="2332" fromTop="15" />
