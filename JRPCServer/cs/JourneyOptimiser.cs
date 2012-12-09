@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="JourneyOptimiser.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The optimiser state.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace JRPCServer
 {
+    #region Using Directives
+
+    using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading;
 
     using Jayrock.Json;
@@ -15,118 +24,154 @@ namespace JRPCServer
     using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
+    #endregion
+
+    /// <summary>
+    /// The optimiser state.
+    /// </summary>
     public enum OptimiserState
     {
-        Waiting,
-        Optimising,
-        Saving,
-        Cancelling,
-        Idle,
+        /// <summary>
+        /// The waiting.
+        /// </summary>
+        Waiting, 
+
+        /// <summary>
+        /// The optimising.
+        /// </summary>
+        Optimising, 
+
+        /// <summary>
+        /// The saving.
+        /// </summary>
+        Saving, 
+
+        /// <summary>
+        /// The cancelling.
+        /// </summary>
+        Cancelling, 
+
+        /// <summary>
+        /// The idle.
+        /// </summary>
+        Idle, 
+
+        /// <summary>
+        /// The paused.
+        /// </summary>
         Paused
-
     }
-
 
     /// <summary>
     /// Optimises journeys in a first in first out manner.
     /// </summary>
     public class JourneyOptimiser
     {
-        /// <summary>
-        /// The queue of journeys to be optimised.
-        /// </summary>
-        private readonly ConcurrentQueue<string> optimiseQueue = new ConcurrentQueue<string>();
+        #region Constants and Fields
 
         /// <summary>
-        /// The wrapper to <see cref="optimiseQueue"/> that enables blocking access.
+        /// The queue file.
+        /// </summary>
+        private const string queueFile = "optimisationQueue.json";
+
+        /// <summary>
+        ///   The wrapper to <see cref = "optimiseQueue" /> that enables blocking access.
         /// </summary>
         private readonly BlockingCollection<string> bc;
 
         /// <summary>
-        /// The <see cref="CancellationTokenSource"/> used to cancel blocking access to the queue.
+        ///   The <see cref = "CancellationTokenSource" /> used to cancel blocking access to the queue.
         /// </summary>
         private readonly CancellationTokenSource cTokenSource;
 
         /// <summary>
-        /// The thread that handles optimisation operations.
+        ///   The list of directories used by the journey optimiser.
         /// </summary>
-        private readonly Thread optimisationThread;
+        // TODO: Make a better way to handle directories.
+        private readonly string[] directories = { "JSONStore", "JSONStore/Journeys" };
 
         /// <summary>
-        /// The system journey manager.
+        ///   The system journey manager.
         /// </summary>
         private readonly JourneyManager journeyManager;
 
         /// <summary>
-        /// Represents the state of the <see cref="JourneyOptimiser"/> instance.
+        ///   The thread that handles optimisation operations.
         /// </summary>
-        private OptimiserState state = OptimiserState.Idle;
+        private readonly Thread optimisationThread;
 
         /// <summary>
-        /// The current iteration the optimiser is up to.
+        ///   The queue of journeys to be optimised.
         /// </summary>
-        private int currentIteration = 0;
+        private readonly ConcurrentQueue<string> optimiseQueue = new ConcurrentQueue<string>();
 
         /// <summary>
-        /// The maximum iteration the optimiser will get to before progressing in the queue.
+        ///   Stores an exception thrown by the optimisation thread;
         /// </summary>
-        private int maxIterations = 0;
+        private readonly Exception thrownException;
 
         /// <summary>
-        /// A value which determines if the optimisation thread will end after the queue empties.
+        ///   The current iteration the optimiser is up to.
         /// </summary>
-        private bool exitThreadWhenQueueEmpty = false;
+        private int currentIteration;
 
         /// <summary>
-        /// Stores an exception thrown by the optimisation thread;
-        /// </summary>
-        private Exception thrownException = null;
-
-        /// <summary>
-        /// Stores the current journey that is being optimised.
+        ///   Stores the current journey that is being optimised.
         /// </summary>
         private Journey currentJourney;
 
         /// <summary>
-        /// Determines whether the optimiser is paused or not.
+        ///   A value which determines if the optimisation thread will end after the queue empties.
+        /// </summary>
+        private bool exitThreadWhenQueueEmpty;
+
+        /// <summary>
+        ///   The maximum iteration the optimiser will get to before progressing in the queue.
+        /// </summary>
+        private int maxIterations;
+
+        /// <summary>
+        ///   Determines whether the optimiser is paused or not.
         /// </summary>
         private bool paused;
 
-        private const string queueFile = "optimisationQueue.json";
-
         /// <summary>
-        /// The list of directories used by the journey optimiser.
+        ///   Represents the state of the <see cref = "JourneyOptimiser" /> instance.
         /// </summary>
-        //TODO: Make a better way to handle directories.
-        private readonly string[] directories = 
-		{
-			"JSONStore",	
-			"JSONStore/Journeys"	
-		};
+        private OptimiserState state = OptimiserState.Idle;
+
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="JourneyOptimiser"/> class. 
         /// Initialises a new instance of the <see cref="JourneyOptimiser"/> class with the specified <see cref="JourneyManager"/> instance.
         /// </summary>
-        /// <param name="journeyManager">The journey manager associated with this system.</param>
+        /// <param name="journeyManager">
+        /// The journey manager associated with this system.
+        /// </param>
         public JourneyOptimiser(JourneyManager journeyManager)
         {
             if (journeyManager == null)
             {
                 throw new NullReferenceException(Strings.ERR_JM_NULL);
             }
-            cTokenSource = new CancellationTokenSource();
+
+            this.cTokenSource = new CancellationTokenSource();
             this.journeyManager = journeyManager;
-            bc = new BlockingCollection<string>(optimiseQueue);
+            this.bc = new BlockingCollection<string>(this.optimiseQueue);
 
-            Load();
+            this.Load();
 
-            optimisationThread = new Thread(this.OptimisationLoop);
-            optimisationThread.Start();
+            this.optimisationThread = new Thread(this.OptimisationLoop);
+            this.optimisationThread.Start();
         }
 
         /// <summary>
-        /// Initialises a new instance of the <see cref="JourneyOptimiser"/> and automatically get
-        /// the <see cref="JourneyManager"/> from the <see cref="ObjectCache"/>.
+        /// Initializes a new instance of the <see cref="JourneyOptimiser"/> class. 
+        ///   Initialises a new instance of the <see cref="JourneyOptimiser"/> and automatically get
+        ///   the <see cref="JourneyManager"/> from the <see cref="ObjectCache"/>.
         /// </summary>
         public JourneyOptimiser()
             : this(ObjectCache.GetObject<JourneyManager>())
@@ -140,19 +185,12 @@ namespace JRPCServer
              * */
         }
 
-        /// <summary>
-        /// Represents the state of the <see cref="JourneyOptimiser"/> instance.
-        /// </summary>
-        public OptimiserState State
-        {
-            get
-            {
-                return this.state;
-            }
-        }
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
-        /// Gets the current iteration the optimiser is up to.
+        ///   Gets the current iteration the optimiser is up to.
         /// </summary>
         public int CurrentIteration
         {
@@ -163,29 +201,7 @@ namespace JRPCServer
         }
 
         /// <summary>
-        /// Gets the maximum iteration the optimiser will get to before progressing in the queue.
-        /// </summary>
-        public int MaxIterations
-        {
-            get
-            {
-                return this.maxIterations;
-            }
-        }
-
-        /// <summary>
-        /// Gets an exception thrown by the optimisation thread;
-        /// </summary>
-        public Exception ThrownException
-        {
-            get
-            {
-                return this.thrownException;
-            }
-        }
-
-        /// <summary>
-        /// Stores the current journey that is being optimised.
+        ///   Stores the current journey that is being optimised.
         /// </summary>
         public Journey CurrentJourney
         {
@@ -196,39 +212,95 @@ namespace JRPCServer
         }
 
         /// <summary>
-        /// Enqueues the journey in the optimisation queue.
+        ///   Gets the maximum iteration the optimiser will get to before progressing in the queue.
         /// </summary>
-        /// <param name="journey">The journey you wish to enqueue.</param>
-        /// <param name="runs">The amount of times to add the journey to the queue.</param>
-        public void EnqueueJourney(Journey journey, int runs)
+        public int MaxIterations
         {
-           EnqueueJourney(journey.Uuid,runs);
+            get
+            {
+                return this.maxIterations;
+            }
         }
 
         /// <summary>
-        /// Enqueues the journey in the optimisation queue.
+        ///   Represents the state of the <see cref = "JourneyOptimiser" /> instance.
         /// </summary>
-        /// <param name="journeyUuid">The UUID of the journey you wish to enqueue.</param>
-        /// <param name="runs">The amount of times to add the journey to the queue.</param>
-        public void EnqueueJourney(string journeyUuid, int runs)
+        public OptimiserState State
         {
-            for (int i = 0; i < runs; i++)
+            get
             {
-                //optimiseQueue.Enqueue(journey.Uuid);
-                bc.Add(journeyUuid);
+                return this.state;
             }
-            this.Save();
         }
+
+        /// <summary>
+        ///   Gets an exception thrown by the optimisation thread;
+        /// </summary>
+        public Exception ThrownException
+        {
+            get
+            {
+                return this.thrownException;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// Cancels the current job and halts the optimisation.
         /// </summary>
         public void Cancel()
         {
-            paused = false;
-            cTokenSource.Cancel();
+            this.paused = false;
+            this.cTokenSource.Cancel();
             this.state = OptimiserState.Cancelling;
-            
+        }
+
+        /// <summary>
+        /// Enqueues the journey in the optimisation queue.
+        /// </summary>
+        /// <param name="journey">
+        /// The journey you wish to enqueue.
+        /// </param>
+        /// <param name="runs">
+        /// The amount of times to add the journey to the queue.
+        /// </param>
+        public void EnqueueJourney(Journey journey, int runs)
+        {
+            EnqueueJourney(journey.Uuid, runs);
+        }
+
+        /// <summary>
+        /// Enqueues the journey in the optimisation queue.
+        /// </summary>
+        /// <param name="journeyUuid">
+        /// The UUID of the journey you wish to enqueue.
+        /// </param>
+        /// <param name="runs">
+        /// The amount of times to add the journey to the queue.
+        /// </param>
+        public void EnqueueJourney(string journeyUuid, int runs)
+        {
+            for (int i = 0; i < runs; i++)
+            {
+                // optimiseQueue.Enqueue(journey.Uuid);
+                this.bc.Add(journeyUuid);
+            }
+
+            this.Save();
+        }
+
+        /// <summary>
+        /// Gets the current optimiser queue.
+        /// </summary>
+        /// <returns>
+        /// An array of jounrney UUIDs.
+        /// </returns>
+        public string[] GetQueue()
+        {
+            return this.bc.ToArray();
         }
 
         /// <summary>
@@ -236,10 +308,10 @@ namespace JRPCServer
         /// </summary>
         public void Pause()
         {
-            if (state == OptimiserState.Optimising)
+            if (this.state == OptimiserState.Optimising)
             {
-                paused = true;
-                state = OptimiserState.Paused;
+                this.paused = true;
+                this.state = OptimiserState.Paused;
             }
         }
 
@@ -248,28 +320,35 @@ namespace JRPCServer
         /// </summary>
         public void Resume()
         {
-            if (state == OptimiserState.Paused)
+            if (this.state == OptimiserState.Paused)
             {
-                paused = false;
-                state = OptimiserState.Optimising;
+                this.paused = false;
+                this.state = OptimiserState.Optimising;
             }
         }
 
         /// <summary>
-        /// Saves the optimisation queue to a file.
+        /// Method used for debugging where the optimisation thread will be joined by
+        ///   the current thread. Also sets a property that causes the optimisation thread
+        ///   to abort when the queue is empty.
         /// </summary>
-        private void Save()
+        public void WaitOnOptimisation()
         {
-            string dir = directories[0] + "/";
-            using (var writer = new StreamWriter(dir + queueFile))
-            {
-                JsonConvert.Export(bc.ToArray(),new JsonTextWriter(writer));
-            }
+            Thread.Sleep(500);
+            this.exitThreadWhenQueueEmpty = true;
+            this.optimisationThread.Join();
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The load.
+        /// </summary>
         private void Load()
         {
-            string dir = directories[0] + "/";
+            string dir = this.directories[0] + "/";
             if (File.Exists(dir + queueFile))
             {
                 string[] values;
@@ -277,186 +356,167 @@ namespace JRPCServer
                 {
                     values = JsonConvert.Import<string[]>(reader);
                 }
-               
+
                 foreach (var value in values)
                 {
-                    bc.Add(value);
+                    this.bc.Add(value);
                 }
             }
-
         }
-
-
-        /// <summary>
-        /// Gets the current optimiser queue.
-        /// </summary>
-        /// <returns>An array of jounrney UUIDs.</returns>
-        public string[] GetQueue()
-        {
-            return bc.ToArray();
-
-      
-            
-        }
-        
-        /// <summary>
-        /// Method used for debugging where the optimisation thread will be joined by
-        /// the current thread. Also sets a property that causes the optimisation thread
-        /// to abort when the queue is empty.
-        /// </summary>
-        public void WaitOnOptimisation()
-        {
-            Thread.Sleep(500);
-            this.exitThreadWhenQueueEmpty = true;
-            optimisationThread.Join();
-        }
-
 
         /// <summary>
         /// Called internally to process the journey optimisation queue.
         /// </summary>
         private void OptimisationLoop()
         {
-
             var exportContext = JsonConvert.CreateExportContext();
             exportContext.Register(new CritterExporter());
-
-            //try
             {
-                while (!cTokenSource.IsCancellationRequested)
+                // try
+                while (!this.cTokenSource.IsCancellationRequested)
                 {
-                    string jUuid = String.Empty;
+                    string jUuid = string.Empty;
                     Run run = null;
                     try
                     {
+                        this.currentIteration = 0;
 
-                    
-                    currentIteration = 0;
-
-                    this.state = OptimiserState.Waiting;
-                    if (bc.Count == 0 && this.exitThreadWhenQueueEmpty)
-                    {
-                        return;
-                    }
-
-                    this.Save();
-                        
-                    jUuid = bc.Take(cTokenSource.Token);
-                    this.state = OptimiserState.Optimising;
-                    run = new Run();
-                    
-                    var journey = journeyManager.GetJourney(jUuid);
-                    currentJourney = journey;
-                    run.JourneyUuid = journey.Uuid;
-                    run.TimeStarted = DateTime.Now;
-                    var planner = new MoeaJourneyPlanner(journey.Properties);
-                    planner.Start();
-                    var results = new List<Result>(journey.Properties.MaxIterations);
-                    maxIterations = journey.Properties.MaxIterations;
-
-                    for (int i = 0; i < journey.Properties.MaxIterations; i++)
-                    {
-                        currentIteration++;
-                        planner.SolveStep();
-                        results.Add((Result)planner.IterationResult.Clone());
-                        while (paused)
+                        this.state = OptimiserState.Waiting;
+                        if (this.bc.Count == 0 && this.exitThreadWhenQueueEmpty)
                         {
-                            Thread.Sleep(100);
-                        }
-                        //results.Add(planner.re);
-                        if (cTokenSource.IsCancellationRequested)
-                        {
-                            break;
+                            return;
                         }
 
-                    }
-                    run.TimeFinished = DateTime.Now;
-                    var maxTT = results.Max(r => r.Population.Max(p => p.Fitness.TotalTravelTime)).TotalSeconds;
-                    var minTT = results.Min(r => r.Population.Min(p => p.Fitness.TotalTravelTime)).TotalSeconds;
-                    var maxJT = results.Max(r => r.Population.Max(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
-                    var minJT = results.Min(r => r.Population.Min(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
-                    var maxCh = results.Max(r => r.Population.Max(p => p.Fitness.Changes));
-                    var minCh = results.Min(r => r.Population.Min(p => p.Fitness.Changes));
+                        this.Save();
 
-                    foreach (var result in results)
-                    {
-                        foreach (var p in result.Population)
+                        jUuid = this.bc.Take(this.cTokenSource.Token);
+                        this.state = OptimiserState.Optimising;
+                        run = new Run();
+
+                        var journey = this.journeyManager.GetJourney(jUuid);
+                        this.currentJourney = journey;
+                        run.JourneyUuid = journey.Uuid;
+                        run.TimeStarted = DateTime.Now;
+                        var planner = new MoeaJourneyPlanner(journey.Properties);
+                        planner.Start();
+                        var results = new List<Result>(journey.Properties.MaxIterations);
+                        this.maxIterations = journey.Properties.MaxIterations;
+
+                        for (int i = 0; i < journey.Properties.MaxIterations; i++)
                         {
-                            p.Fitness.NormalisedChanges = Math.Min(1.0f, (p.Fitness.Changes) / (double)(maxCh - minCh));
-                            p.Fitness.NormalisedJourneyTime = Math.Max(1.0f, p.Fitness.TotalJourneyTime.TotalSeconds / (maxJT - minJT));
-                            p.Fitness.NormalisedTravelTime = Math.Max(1.0f, p.Fitness.TotalTravelTime.TotalSeconds/ (maxTT - minTT));
-                        }
-                    }
-
-                    if (!cTokenSource.IsCancellationRequested)
-                    {
-                        lock (journey.RunUuids)
-                        {
-                            //TODO: Make this more efficient/better coded
-                            var newList = new List<string>(journey.RunUuids);
-                            newList.Add(run.Uuid);
-                            journey.RunUuids = newList.ToArray();
-
-
-                            string dir = directories[1] + "/" + journey.Uuid + "/";
-                            Directory.CreateDirectory(dir + run.Uuid);
-                            using (var resultWriter = new StreamWriter(dir + run.Uuid + "/results.csv", false))
+                            this.currentIteration++;
+                            planner.SolveStep();
+                            results.Add((Result)planner.IterationResult.Clone());
+                            while (this.paused)
                             {
-                                resultWriter.Write("Iteration,Hypervolume,Cardinality,");
-                                foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
-                                {
-                                    resultWriter.Write("{0}, ", p.ToString());
-                                }
-                                resultWriter.WriteLine();
-                               
-                                for (int i = 0; i < results.Count; i++)
-                                {
-                                    using (var writer = new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
-                                    {
+                                Thread.Sleep(100);
+                            }
 
-                                        results[i].Hypervolume = 0.0;
+                            // results.Add(planner.re);
+                            if (this.cTokenSource.IsCancellationRequested)
+                            {
+                                break;
+                            }
+                        }
+
+                        run.TimeFinished = DateTime.Now;
+                        var maxTT = results.Max(r => r.Population.Max(p => p.Fitness.TotalTravelTime)).TotalSeconds;
+                        var minTT = results.Min(r => r.Population.Min(p => p.Fitness.TotalTravelTime)).TotalSeconds;
+                        var maxJT = results.Max(r => r.Population.Max(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
+                        var minJT = results.Min(r => r.Population.Min(p => p.Fitness.TotalJourneyTime)).TotalSeconds;
+                        var maxCh = results.Max(r => r.Population.Max(p => p.Fitness.Changes));
+                        var minCh = results.Min(r => r.Population.Min(p => p.Fitness.Changes));
+
+                        foreach (var result in results)
+                        {
+                            foreach (var p in result.Population)
+                            {
+                                p.Fitness.NormalisedChanges = Math.Min(
+                                    1.0f, p.Fitness.Changes / (double)(maxCh - minCh));
+                                p.Fitness.NormalisedJourneyTime = Math.Max(
+                                    1.0f, p.Fitness.TotalJourneyTime.TotalSeconds / (maxJT - minJT));
+                                p.Fitness.NormalisedTravelTime = Math.Max(
+                                    1.0f, p.Fitness.TotalTravelTime.TotalSeconds / (maxTT - minTT));
+                            }
+                        }
+
+                        if (!this.cTokenSource.IsCancellationRequested)
+                        {
+                            lock (journey.RunUuids)
+                            {
+                                // TODO: Make this more efficient/better coded
+                                var newList = new List<string>(journey.RunUuids);
+                                newList.Add(run.Uuid);
+                                journey.RunUuids = newList.ToArray();
+
+                                string dir = this.directories[1] + "/" + journey.Uuid + "/";
+                                Directory.CreateDirectory(dir + run.Uuid);
+                                using (var resultWriter = new StreamWriter(dir + run.Uuid + "/results.csv", false))
+                                {
+                                    resultWriter.Write("Iteration,Hypervolume,Cardinality,");
+                                    foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
+                                    {
+                                        resultWriter.Write("{0}, ", p);
+                                    }
+
+                                    resultWriter.WriteLine();
+
+                                    for (int i = 0; i < results.Count; i++)
+                                    {
+                                        using (
+                                            var writer = new StreamWriter(dir + run.Uuid + "/iteration." + i + ".json"))
+                                        {
+                                            results[i].Hypervolume = 0.0;
+
                                             /*results[i].Population.CalculateHyperVolume(
                                                 journey.Properties.Objectives,
                                                 new double[journey.Properties.Objectives.Length]);*/
-                                        exportContext.Export(results[i], new JsonTextWriter(writer));
-                                        resultWriter.Write("{0}, {1}, {2}, ", i, results[i].Hypervolume,results[i].Cardinality);
-                                        foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
-                                        {
-                                            resultWriter.Write("{0},",results[i].Population.Average(c => c.Fitness[(FitnessParameter)p]));
+                                            exportContext.Export(results[i], new JsonTextWriter(writer));
+                                            resultWriter.Write(
+                                                "{0}, {1}, {2}, ", i, results[i].Hypervolume, results[i].Cardinality);
+                                            foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
+                                            {
+                                                resultWriter.Write(
+                                                    "{0},", 
+                                                    results[i].Population.Average(c => c.Fitness[(FitnessParameter)p]));
+                                            }
+
+                                            resultWriter.WriteLine();
                                         }
-                                       resultWriter.WriteLine();
                                     }
+
+                                    using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
+                                    {
+                                        exportContext.Export(run, new JsonTextWriter(writer));
+                                    }
+
+                                    results.Clear();
                                 }
-                                using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
-                                {
-                                    exportContext.Export(run, new JsonTextWriter(writer));
-                                }
-                                results.Clear();
                             }
+
+                            this.journeyManager.Save();
                         }
-                        journeyManager.Save();
-                    }
-                    
 
-                    currentJourney = null;
-                    currentIteration = 0;
-                    maxIterations = 0;
-
+                        this.currentJourney = null;
+                        this.currentIteration = 0;
+                        this.maxIterations = 0;
                     }
                     catch (Exception e)
                     {
-
                         StreamWriter logWriter = new StreamWriter("Log.txt");
-                        logWriter.WriteLine("Exception: {0} jUUID: {1}, rUUID{2}, ST {3}\n\n",e.Message,jUuid,(run ?? new Run{ErrorCode = -1,JourneyUuid = jUuid}).Uuid,e.StackTrace);
+                        logWriter.WriteLine(
+                            "Exception: {0} jUUID: {1}, rUUID{2}, ST {3}\n\n", 
+                            e.Message, 
+                            jUuid, 
+                            (run ?? new Run { ErrorCode = -1, JourneyUuid = jUuid }).Uuid, 
+                            e.StackTrace);
                         logWriter.Close();
-                        //throw;
+
+                        // throw;
                     }
-                   
-
                 }
-
-                
             }
+
             /*
             catch (Exception e)
             {
@@ -468,10 +528,20 @@ namespace JRPCServer
                 this.state = OptimiserState.Idle;
             }
              * */
-          
         }
 
+        /// <summary>
+        /// Saves the optimisation queue to a file.
+        /// </summary>
+        private void Save()
+        {
+            string dir = this.directories[0] + "/";
+            using (var writer = new StreamWriter(dir + queueFile))
+            {
+                JsonConvert.Export(this.bc.ToArray(), new JsonTextWriter(writer));
+            }
+        }
 
-
+        #endregion
     }
 }

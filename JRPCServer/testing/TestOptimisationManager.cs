@@ -1,26 +1,45 @@
-﻿using System;
-using NUnit.Framework;
-
-using RmitJourneyPlanner.CoreLibraries.DataProviders;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
-using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
-using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
-using RmitJourneyPlanner.CoreLibraries.JourneyPlanners;
-using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
-using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Breeders;
-using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.FitnessFunctions;
-using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Mutators;
-using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.RouteGenerators;
-using RmitJourneyPlanner.CoreLibraries.TreeAlgorithms;
-using RmitJourneyPlanner.CoreLibraries.DataAccess;
-using RmitJourneyPlanner.CoreLibraries.Types;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TestOptimisationManager.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The test optimisation manager.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace JRPCServer
 {
+    #region Using Directives
+
+    using System;
+
+    using NUnit.Framework;
+
+    using RmitJourneyPlanner.CoreLibraries.DataAccess;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
+    using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Breeders;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.FitnessFunctions;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.Mutators;
+    using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary.RouteGenerators;
+    using RmitJourneyPlanner.CoreLibraries.Types;
+
+    #endregion
+
+    /// <summary>
+    /// The test optimisation manager.
+    /// </summary>
     [TestFixture]
     public class TestOptimisationManager
     {
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The test queue.
+        /// </summary>
+        /// <exception cref="Exception">
+        /// </exception>
         [Test]
         public void TestQueue()
         {
@@ -43,8 +62,9 @@ namespace JRPCServer
             properties.NumberToKeep = 25;
             properties.MutationRate = 0.1;
             properties.CrossoverRate = 0.7;
-            //properties.Bidirectional = bidir;
-            //properties.RouteGenerator = new AlRouteGenerator(properties);
+
+            // properties.Bidirectional = bidir;
+            // properties.RouteGenerator = new AlRouteGenerator(properties);
             properties.SearchType = SearchType.Greedy_BiDir;
             properties.RouteGenerator = new DFSRoutePlanner(properties);
             properties.Mutator = new StandardMutator(properties);
@@ -57,22 +77,22 @@ namespace JRPCServer
             properties.Planner = new MoeaJourneyPlanner(properties);
             properties.MaxIterations = 25;
             properties.Objectives = new[]
-                { FitnessParameter.Changes, FitnessParameter.PercentTrains, FitnessParameter.PercentBuses };
+                {
+                   FitnessParameter.Changes, FitnessParameter.PercentTrains, FitnessParameter.PercentBuses 
+                };
 
             JourneyManager jm = new JourneyManager();
             jm.Clean();
             jm.Add(j);
             JourneyOptimiser jo = new JourneyOptimiser(jm);
-            jo.EnqueueJourney(j.Uuid,2);
+            jo.EnqueueJourney(j.Uuid, 2);
             jo.WaitOnOptimisation();
             if (jo.ThrownException != null)
             {
                 throw jo.ThrownException;
             }
-
         }
+
+        #endregion
     }
-
-
-
 }
