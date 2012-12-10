@@ -32,6 +32,9 @@ if (googleEnabled) {
     refreshMap = function() {
         map = new google.maps.Map(document.getElementById("map_canvas"),
             mapOptions);
+		var h = $(window).height(),
+        offsetTop = 60; // Calculate the top offset
+		$('#map_canvas').css('height', (h - offsetTop));
     };
 
 
@@ -44,7 +47,11 @@ if (googleEnabled) {
         window.mapManager = new MapManager();
 		refreshMap();
 		//Enable resize of the left panel.
-		$('#divJViewerL').resizable();
+		//$('#divInfoPanel').resizable( {
+		//stop: function(e, ui) {
+        //    refreshMap();
+        //}
+		//});
     });
 
 
