@@ -43,6 +43,8 @@ if (googleEnabled) {
     $(document).ready(function() {
         window.mapManager = new MapManager();
 		refreshMap();
+		//Enable resize of the left panel.
+		$('#divJViewerL').resizable();
     });
 
 
