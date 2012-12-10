@@ -16,6 +16,7 @@
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="assets/css/bootstrap-override.css" rel="stylesheet">
+	<link href="assets/css/custom-divs.css" rel="stylesheet">
 	<link href="assets/css/google-maps.css" rel="stylesheet">
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css" rel="stylesheet"/>
 
@@ -42,27 +43,60 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">Project name</a>
+          
           <div class="nav-collapse collapse">
-            <ul class="nav">
+			
+		   <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
+		
           </div><!--/.nav-collapse -->
         </div>
+		
       </div>
+	<div class="subnav">
+		<div class="container">
+		
+			<div class="subnav-inner">
+			
+				<form class="form-horizontal">
+				
+				<fieldset>
+					<label class="control-label" for="lblSearchLegend"><img src="assets/img/logo.png"></img></label> 
+					<label id="lblSearchLegend" class="control-label" for="txtFrom">Type in your journey: </label> 
+					<div class="controls">
+						<input id="txtFrom" type="text" placeholder="From...">
+						<input type="text" placeholder="To...">
+						<button type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
+					</div>
+					
+					
+					
+				 </fieldset>
+				
+				
+				</form>
+			</div>
+		
+		
+		</div>
+	</div>
+	  
+	 
     </div>
 
-       <div class="container-fluid fill">
+       <div class="main-container" class="container-fluid fill">
         <div class="row-fluid">
-            <div class="span3">
-                <ul>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                </ul>
+            <div class="span3 infoPanel">
+                
+				<div id="divOrigin">
+				
+				
+				
+				
+				</div>				
             </div>
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="span9 filler">
@@ -70,7 +104,7 @@
             </div>
         </div>
         <!-- // End Content -->
-    </div>?
+    </div>
 
     <!-- Le javascript
     ================================================== -->

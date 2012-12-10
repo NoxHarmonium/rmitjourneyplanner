@@ -53,6 +53,10 @@ if (googleEnabled) {
         //}
 		//});
     });
+	
+	$(window).resize(function() {        
+		refreshMap();		
+    });
 
 
   

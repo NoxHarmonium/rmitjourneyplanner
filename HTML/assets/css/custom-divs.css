@@ -1,0 +1,68 @@
+
+/* The bit that hangs below the navbar   */
+.subnav
+{
+	background-color: #F1F1F1;
+	/*min-height: 30px;*/
+	
+}
+
+.subnav form
+{
+	margin: 0 0 0 0;
+}
+
+
+.subnav-inner
+{
+	display: inline;
+
+}
+
+.subnav-inner .control-label
+{
+	 vertical-align: middle;
+
+}
+
+.subnav-inner .btn
+{
+	margin-bottom: -6px;
+}
+
+.subnav-inner input
+{
+	margin-top: 12px;
+	margin-right: 6px;
+	
+}
+
+.subnav-inner label
+{
+	margin-top: 12px;
+	margin-right: 7px;
+}
+
+.subnav-inner img
+{
+	margin-top: -10px;
+	
+}
+
+/* The container the encompasses most of the website under the navbar */
+.main-container
+{
+	padding-top: 32px;
+	
+
+
+}
+
+/* The left side of the map screen that displays information on things */
+
+.infoPanel
+{
+	padding: 20px 30px 20px 20px;
+
+}
+
