@@ -102,6 +102,7 @@
     <Compile Include="cs\PropertiesExporter.cs" />
     <Compile Include="cs\PropertiesImporter.cs" />
     <Compile Include="cs\Run.cs" />
+    <Compile Include="cs\State.cs" />
     <Compile Include="cs\Strings.cs" />
     <Compile Include="JSONObjects\ObjectProperty.cs" />
     <Compile Include="JSONObjects\PropertyValue.cs" />
