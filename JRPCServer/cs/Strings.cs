@@ -64,8 +64,7 @@ namespace JRPCServer
         /// The validatio n_ success.
         /// </summary>
         public const string VALIDATION_SUCCESS = "Success";
-
-        [
+        
 
         #endregion
     }
