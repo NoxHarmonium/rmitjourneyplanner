@@ -41,6 +41,9 @@ namespace JRPCServer
         /// </param>
         public static void Main(string[] args)
         {
+
+            int port = 8000;
+            
             Console.WriteLine("RMIT Journey Planner Server");
             Console.WriteLine("Starting...");
 
@@ -51,10 +54,10 @@ namespace JRPCServer
                 var parameters = new[] { Directory.GetCurrentDirectory() + "\\..\\" };
                 parameters[0] = parameters[0].Replace("\\", "/");
                 ConfigurationManager.AppSettings["MonoServerRootDir"] = parameters[0];
-                ConfigurationManager.AppSettings["MonoServerPort"] = "8081";
+                ConfigurationManager.AppSettings["MonoServerPort"] = port.ToString();
 
                 server.RealMain(
-                    new[] { "--verbose", "--port", new Random().Next(8081, 8100).ToString() }, true, null, false);
+                    new[] { "--verbose", "--port", port.ToString() }, true, null, false);
             }
             else if (args[0] == "--collate")
             {
