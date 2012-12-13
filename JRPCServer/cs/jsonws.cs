@@ -64,6 +64,34 @@ namespace JRPCServer
 
         #region Public Methods and Operators
 
+        [JsonRpcMethod("RegisterUser", Idempotent = true)]
+        [JsonRpcHelp("Creates a new default journey for the given user.")]
+        public void RegisterUser(string newUuid)
+        {
+            var jm = ObjectCache.GetObject<JourneyManager>();
+            try
+            {
+                //Delete user if exist.
+                jm.DeleteJourney(newUuid);
+            }
+            catch (KeyNotFoundException e)
+            {
+                //No Uuid to delete.
+            }
+
+            try
+            {
+                this.CloneJourney("default", newUuid);
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new Exception(Strings.ERR_NO_DEFAULT,e);
+            }
+
+
+        }
+
+
         /// <summary>
         /// The clone journey.
         /// </summary>
@@ -84,6 +112,30 @@ namespace JRPCServer
             var jm = ObjectCache.GetObject<JourneyManager>();
             var j = jm.GetJourney(journeyUuid);
             jm.Add((Journey)j.Clone());
+        }
+
+        /// <summary>
+        /// The clone journey.
+        /// </summary>
+        /// <param name="journeyUuid">
+        /// The journey uuid.
+        /// </param>
+        /// <param name="newUuid"></param>
+        /// <exception cref="Exception">
+        /// </exception>
+        [JsonRpcMethod("CloneJourneyWithName", Idempotent = true)]
+        [JsonRpcHelp("Creates a clone of the specified journey with the specified new name.")]
+        public void CloneJourney(string journeyUuid, string newUuid)
+        {
+            if (journeyUuid == null)
+            {
+                throw new Exception(Strings.ERR_ANY_NULL);
+            }
+
+            var jm = ObjectCache.GetObject<JourneyManager>();
+            var j = jm.GetJourney(journeyUuid);
+            var newJ = new Journey(newUuid, j.Properties, newUuid, "");
+            jm.Add(newJ);
         }
 
         /// <summary>

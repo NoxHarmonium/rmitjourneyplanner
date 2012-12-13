@@ -57,10 +57,15 @@ namespace JRPCServer
         /// </summary>
         public const string ERR_UNSUPP_REFTYPE = "The property is a reference type that the parser cannot handle.";
 
+        public const string ERR_NO_DEFAULT =
+            "There is no default reference journey to clone off. Make sure there is a journey with the UUID 'default'.";
+
         /// <summary>
         /// The validatio n_ success.
         /// </summary>
         public const string VALIDATION_SUCCESS = "Success";
+
+        [
 
         #endregion
     }
