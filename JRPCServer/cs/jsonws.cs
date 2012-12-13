@@ -18,6 +18,8 @@ namespace JRPCServer
     using System.Reflection;
     using System.Web.SessionState;
 
+    using JRPCServer.cs;
+
     using Jayrock.Json;
     using Jayrock.JsonRpc;
     using Jayrock.JsonRpc.Web;
@@ -26,6 +28,7 @@ namespace JRPCServer
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Google;
     using RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv;
     using RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary;
+    using RmitJourneyPlanner.CoreLibraries.Logging;
     using RmitJourneyPlanner.CoreLibraries.Types;
 
     #endregion
@@ -42,6 +45,8 @@ namespace JRPCServer
         /// The log event created.
         /// </summary>
         private static bool LogEventCreated;
+
+        private const int MaxObjectNameLength = 20;
 
         #endregion
 
@@ -505,6 +510,17 @@ namespace JRPCServer
             IPointDataProvider provider = new WalkingDataProvider();
             ObjectCache.RegisterObject(provider);
 
+            if (!ObjectCache.GetObjects<State>().Any())
+            {
+                var state = new State();
+                Logger.LogEvent += new LogEventHandler(Logger_LogEvent);
+                state.LogEventHooked = true;
+                
+                ObjectCache.RegisterObject(state);
+                
+
+            }
+
             if (!ObjectCache.GetObjects<PtvDataProvider>().Any())
             {
                 ObjectCache.RegisterObject(new PtvDataProvider());
@@ -524,6 +540,17 @@ namespace JRPCServer
             {
                 ObjectCache.RegisterObject(new JourneyOptimiser());
             }
+        }
+
+        void Logger_LogEvent(object sender, string message)
+        {
+            string senderName = sender.GetType().Name;
+            //Truncate object names that are too long.
+            if (senderName.Length > MaxObjectNameLength)
+            {
+                senderName = senderName.Substring(0, MaxObjectNameLength);
+            }
+            Console.WriteLine(String.Format("[{0} ({1})]:{2}", senderName, DateTime.Now.ToShortTimeString(),message));
         }
 
         /// <summary>
