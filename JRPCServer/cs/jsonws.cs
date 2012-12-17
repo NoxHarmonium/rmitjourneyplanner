@@ -840,8 +840,23 @@ namespace JRPCServer
                         switch (pType.Name)
                         {
                             case "INetworkNode":
+
+                                if (propVal.Value == null)
+                                {
+                                    throw new Exception("This field cannot be blank.");
+                                }
+
                                 PtvDataProvider provider = ObjectCache.GetObjects<PtvDataProvider>()[0];
-                                PtvNode node = (PtvNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value));
+                                PtvNode node = null;
+                                try
+                                {
+                                    node = (PtvNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value));
+                                }
+                                catch (KeyNotFoundException e)
+                                {
+                                    throw new Exception("There is no such node with the given ID or name.");
+                                }
+                                
                                     
                                     // provider.GetNodeFromName(propVal.Value);
                                 if (node == null)
