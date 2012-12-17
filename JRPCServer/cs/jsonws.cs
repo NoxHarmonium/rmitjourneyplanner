@@ -675,6 +675,13 @@ namespace JRPCServer
 			 FORMAT:
 			 { "propVals" : [{ "propVal" : {"name":"CrossoverRate","value":"0.7"} }] }
 			 */
+
+            if (propVals == null)
+            {
+                throw new Exception(
+                    "Property value collection is null. Cannot proceed with validation. Please check your JSON syntax.");
+
+            }
             List<ValidationError> valErrors = new List<ValidationError>();
             foreach (var propVal in propVals)
             {
