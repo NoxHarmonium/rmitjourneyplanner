@@ -1,12 +1,6 @@
 <Configuration>
   <RecentFiles>
     <RecentFiles>
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Positioning/f:GeometryHelper.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Positioning/f:Location.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Arc.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:ClosedRoute.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Critter.cs" caret="0" fromTop="0" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Departure.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:Fitness.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:JourneyLeg.cs" caret="0" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:NetworkArc.cs" caret="0" fromTop="0" />
@@ -22,36 +16,23 @@
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Random.cs" caret="1237" fromTop="15" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Settings.cs" caret="2281" fromTop="15" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:TreeAlgorithms/f:DepthFirstSearch.cs" caret="8419" fromTop="17" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="14649" fromTop="15" />
-      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="414" fromTop="0" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Settings.xml" caret="205" fromTop="6" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataAccess/f:MySQLDatabase.cs" caret="6240" fromTop="20" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:AdjacencyList.cs" caret="1830" fromTop="35" />
       <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:JourneyOptimiser.cs" caret="19538" fromTop="15" />
       <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:testing/f:TestOptimisationManager.cs" caret="3234" fromTop="15" />
       <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:testing/f:TestJourneyManager.cs" caret="3286" fromTop="7" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="11152" fromTop="25" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:JourneyManager.cs" caret="2506" fromTop="17" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:Journey.cs" caret="4658" fromTop="5" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/f:jsonws.ashx" caret="0" fromTop="0" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:Strings.cs" caret="2452" fromTop="16" />
+      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="14649" fromTop="272" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:Program.cs" caret="1365" fromTop="11" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:State.cs" caret="627" fromTop="17" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="18226" fromTop="12" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:AdjacencyList.cs" caret="1830" fromTop="20" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="6631" fromTop="11" />
     </RecentFiles>
     <RecentEdits>
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="2906" fromTop="12" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="3498" fromTop="19" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="4143" fromTop="16" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="4310" fromTop="14" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="1971" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="1708" fromTop="6" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="6508" fromTop="23" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="6827" fromTop="20" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:NPack/f:MersenneTwister.cs" caret="3089" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Properties/f:AssemblyInfo.cs" caret="1976" fromTop="17" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Random.cs" caret="689" fromTop="4" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Extensions.cs" caret="1388" fromTop="23" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Random.cs" caret="1237" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Settings.cs" caret="1022" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/f:Settings.cs" caret="2281" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:AdjacencyList.cs" caret="2332" fromTop="15" />
-      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:Types/f:AdjacencyList.cs" caret="2084" fromTop="9" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="333" fromTop="9" />
-      <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="3941" fromTop="15" />
       <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="13381" fromTop="15" />
       <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="9316" fromTop="15" />
       <File id="A957658D-F294-43BE-B8A7-8A7088840B96/f:Program.cs" caret="14649" fromTop="15" />
@@ -60,19 +41,38 @@
       <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:testing/f:TestOptimisationManager.cs" caret="3234" fromTop="15" />
       <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:JourneyOptimiser.cs" caret="19538" fromTop="15" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="3501" fromTop="16" />
-      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="32785" fromTop="7" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="35393" fromTop="7" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="4222" fromTop="19" />
       <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="41117" fromTop="13" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="3654" fromTop="28" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="4096" fromTop="22" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="3982" fromTop="22" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="4521" fromTop="28" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="2480" fromTop="21" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="2904" fromTop="23" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:Strings.cs" caret="2293" fromTop="15" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="2904" fromTop="23" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="2289" fromTop="12" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:Program.cs" caret="1143" fromTop="6" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:Program.cs" caret="1798" fromTop="21" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:Strings.cs" caret="2452" fromTop="16" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:State.cs" caret="452" fromTop="14" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:State.cs" caret="627" fromTop="17" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="1559" fromTop="0" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="19435" fromTop="12" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="19210" fromTop="8" />
+      <File id="A96D1FA3-D5BE-40F7-A6BC-AB8AA96F939D/d:cs/f:jsonws.cs" caret="18226" fromTop="6" />
+      <File id="46404ACC-A772-4C69-9957-07D1F5D392AD/d:DataProviders/d:Ptv/f:PtvDataProvider.cs" caret="6756" fromTop="14" />
     </RecentEdits>
   </RecentFiles>
   <CompletionStatisticsManager>
     <ItemStatistics item="CSharpCodeCompletionContext">
-      <Item value="string" priority="1630" />
+      <Item value="string" priority="1758" />
       <Item value="flagStopNo" priority="31" />
-      <Item value="public" priority="543" />
+      <Item value="public" priority="607" />
       <Item value="void" priority="159" />
       <Item value="using" priority="31" />
-      <Item value="new" priority="2463" />
+      <Item value="new" priority="2623" />
       <Item value="StreamReader" priority="28" />
       <Item value="File`0" priority="31" />
       <Item value="Properties" priority="154" />
@@ -86,8 +86,8 @@
       <Item value="MetlinkDataProvider`0" priority="159" />
       <Item value="ISqlDatabase`0" priority="31" />
       <Item value="MetlinkDatabase`0" priority="31" />
-      <Item value="private" priority="447" />
-      <Item value="const" priority="127" />
+      <Item value="private" priority="479" />
+      <Item value="const" priority="159" />
       <Item value="System" priority="95" />
       <Item value="Data" priority="26" />
       <Item value="AcceptRejectRule`0" priority="26" />
@@ -105,11 +105,11 @@
       <Item value="Provider" priority="31" />
       <Item value="provider" priority="447" />
       <Item value="database" priority="351" />
-      <Item value="String`0" priority="350" />
+      <Item value="String`0" priority="414" />
       <Item value="metlinkStopId" priority="31" />
-      <Item value="if" priority="2047" />
+      <Item value="if" priority="2111" />
       <Item value="StopData" priority="127" />
-      <Item value="this" priority="1635" />
+      <Item value="this" priority="1667" />
       <Item value="DataTable`0" priority="159" />
       <Item value="LoadData`0" priority="31" />
       <Item value="data" priority="223" />
@@ -132,7 +132,7 @@
       <Item value="row" priority="384" />
       <Item value="node" priority="706" />
       <Item value="List" priority="626" />
-      <Item value="var" priority="575" />
+      <Item value="var" priority="671" />
       <Item value="routeIds" priority="31" />
       <Item value="GetNodeData`0" priority="31" />
       <Item value="Location" priority="115" />
@@ -144,7 +144,7 @@
       <Item value="result" priority="223" />
       <Item value="query" priority="63" />
       <Item value="serviceId" priority="63" />
-      <Item value="DateTime`0" priority="447" />
+      <Item value="DateTime`0" priority="479" />
       <Item value="rawTime" priority="63" />
       <Item value="route" priority="255" />
       <Item value="Arc`0" priority="127" />
@@ -165,7 +165,7 @@
       <Item value="GC`0" priority="31" />
       <Item value="IDisposable`0" priority="31" />
       <Item value="throw" priority="191" />
-      <Item value="Exception" priority="117" />
+      <Item value="Exception" priority="147" />
       <Item value="candidateNodes" priority="63" />
       <Item value="Route`0" priority="95" />
       <Item value="destRouteIds" priority="31" />
@@ -174,7 +174,7 @@
       <Item value="CultureInfo`0" priority="31" />
       <Item value="dt" priority="127" />
       <Item value="Exception`0" priority="95" />
-      <Item value="try" priority="95" />
+      <Item value="try" priority="159" />
       <Item value="override" priority="63" />
       <Item value="Planner" priority="63" />
       <Item value="IRoutePlanner`0" priority="31" />
@@ -185,7 +185,7 @@
       <Item value="while" priority="63" />
       <Item value="Route" priority="116" />
       <Item value="Guid`0" priority="31" />
-      <Item value="true" priority="287" />
+      <Item value="true" priority="319" />
       <Item value="EvolutionaryRoutePlanner`0" priority="26" />
       <Item value="FitnessFunctions" priority="26" />
       <Item value="StandardFitnessFunction`0" priority="26" />
@@ -206,8 +206,8 @@
       <Item value="else" priority="287" />
       <Item value="startTime" priority="31" />
       <Item value="position" priority="95" />
-      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="103" />
-      <Item value="int" priority="508" />
+      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="129" />
+      <Item value="int" priority="540" />
       <Item value="days" priority="31" />
       <Item value="TransportType" priority="98" />
       <Item value="current" priority="351" />
@@ -268,8 +268,8 @@
       <Item value="y" priority="31" />
       <Item value="oldNodes" priority="95" />
       <Item value="newNodes" priority="63" />
-      <Item value="bool" priority="287" />
-      <Item value="false" priority="223" />
+      <Item value="bool" priority="319" />
+      <Item value="false" priority="255" />
       <Item value="same" priority="63" />
       <Item value="repeat" priority="63" />
       <Item value="random" priority="128" />
@@ -286,7 +286,7 @@
       <Item value="Node`0" priority="31" />
       <Item value="northMelbourne" priority="31" />
       <Item value="foundCentral" priority="63" />
-      <Item value="Console`0" priority="95" />
+      <Item value="Console`0" priority="127" />
       <Item value="p" priority="31" />
       <Item value="Population" priority="28" />
       <Item value="LineID" priority="31" />
@@ -350,12 +350,12 @@
       <Item value="Assert`0" priority="31" />
       <Item value="ascending" priority="31" />
       <Item value="Reverse`1" priority="53" />
-      <Item value="Logger`0" priority="26" />
-      <Item value="message" priority="31" />
+      <Item value="Logger`0" priority="90" />
+      <Item value="message" priority="63" />
       <Item value="entries" priority="31" />
       <Item value="metlinkNode" priority="31" />
       <Item value="population" priority="31" />
-      <Item value="j" priority="31" />
+      <Item value="j" priority="63" />
       <Item value="IEnumerable" priority="31" />
       <Item value="Length" priority="53" />
       <Item value="maxN" priority="223" />
@@ -401,6 +401,15 @@
       <Item value="PtvNode`0" priority="31" />
       <Item value="MersenneTwister`0" priority="31" />
       <Item value="Ptv" priority="27" />
+      <Item value="Journey" priority="57" />
+      <Item value="newUuid" priority="31" />
+      <Item value="jm" priority="63" />
+      <Item value="KeyNotFoundException`0" priority="63" />
+      <Item value="ObjectCache`0" priority="31" />
+      <Item value="state" priority="31" />
+      <Item value="sender" priority="31" />
+      <Item value="senderName" priority="95" />
+      <Item value="MaxObjectNameLength" priority="31" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@RmitJourneyPlanner.CoreLibraries.Properties.Settings">
       <Item value="Default" priority="53" />
@@ -418,7 +427,7 @@
       <Item value="GetDataSet`0" priority="80" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.String">
-      <Item value="Format`0" priority="269" />
+      <Item value="Format`0" priority="296" />
       <Item value="Empty" priority="109" />
       <Item value="Join`0" priority="26" />
     </ItemStatistics>
@@ -488,17 +497,18 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Object">
       <Item value="ToString`0" priority="243" />
+      <Item value="GetType`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Doc Comment tags">
       <Item value="&lt;see cref=&quot;&quot;/&gt;" priority="139" />
-      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="19" />
+      <Item value="&lt;param name=&quot;&quot;&gt;&lt;/param&gt;" priority="24" />
       <Item value="&lt;seealso cref=&quot;&quot;/&gt;" priority="10" />
       <Item value="&lt;returns&gt;&lt;/returns&gt;" priority="4" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.DateTime">
       <Item value="DayOfWeek" priority="26" />
       <Item value="Hour" priority="26" />
-      <Item value="ToShortTimeString`0" priority="26" />
+      <Item value="ToShortTimeString`0" priority="53" />
       <Item value="ToString`0" priority="26" />
       <Item value="Date" priority="134" />
       <Item value="TimeOfDay" priority="26" />
@@ -512,9 +522,9 @@
       <Item value="ToString`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.String">
-      <Item value="Substring`0" priority="136" />
+      <Item value="Substring`0" priority="163" />
       <Item value="ToLower`0" priority="54" />
-      <Item value="Length" priority="54" />
+      <Item value="Length" priority="81" />
       <Item value="Trim`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerable`1">
@@ -529,7 +539,7 @@
       <Item value="ParseExact`0" priority="26" />
       <Item value="TryParse`0" priority="26" />
       <Item value="TryParseExact`0" priority="26" />
-      <Item value="Now" priority="80" />
+      <Item value="Now" priority="107" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@RmitJourneyPlanner.CoreLibraries.Positioning.GeometryHelper">
       <Item value="GetStraightLineDistance`0" priority="134" />
@@ -620,7 +630,7 @@
       <Item value="Destination" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Int32">
-      <Item value="ToString`0" priority="134" />
+      <Item value="ToString`0" priority="188" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Collections.Generic.Dictionary`2">
       <Item value="Add`0" priority="53" />
@@ -717,7 +727,7 @@
       <Item value="properties" priority="53" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Console">
-      <Item value="WriteLine`0" priority="80" />
+      <Item value="WriteLine`0" priority="107" />
       <Item value="ReadLine`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:RmitJourneyPlanner.CoreLibraries.Types.Fitness">
@@ -790,7 +800,7 @@
       <Item value="That`0" priority="26" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@RmitJourneyPlanner.CoreLibraries.Logging.Logger">
-      <Item value="LogEvent" priority="26" />
+      <Item value="LogEvent" priority="80" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:RmitJourneyPlanner.CoreLibraries.TreeAlgorithms.PTDepthFirstSearch">
       <Item value="Bidirectional" priority="26" />
@@ -822,6 +832,24 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:">
       <Item value="Equals`0" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:JRPCServer.Journey">
+      <Item value="Properties" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:JRPCServer.JourneyManager">
+      <Item value="DeleteJourney`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:JRPCServer.Jsonws">
+      <Item value="CloneJourney`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@JRPCServer.ObjectCache">
+      <Item value="RegisterObject`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:JRPCServer.cs.State">
+      <Item value="LogEventHooked" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Type">
+      <Item value="Name" priority="26" />
     </ItemStatistics>
   </CompletionStatisticsManager>
   <NAntValidationSettings>
