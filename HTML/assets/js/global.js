@@ -104,7 +104,7 @@ function RPCCall(method, params, callback) {
 
     //
     //$.post(url_service , $.toJSON(request), callback, "json");
-    return JSONPost(url_service + "/" + method+ "?jsonp=jsonCallback&callback=?" , $.toJSON(params), callback);
+    return JSONPost(url_service + "/" + method+ "?jsonp=jsonCallback&callback=?" , params, callback);
 }
 
 // Returns true if there is a JSON error object in the data object. Also displays the error
