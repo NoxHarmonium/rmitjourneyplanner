@@ -21,7 +21,7 @@
 
 .subnav-inner
 {
-	display: inline;
+	/*display: inline;*/
 	
 
 }
@@ -34,7 +34,7 @@
 
 .subnav-inner .btn
 {
-	margin-bottom: -1px;
+	margin-bottom: 8px;
 }
 
 .subnav-inner input
@@ -44,10 +44,23 @@
 	
 }
 
+.subnav-inner .checkbox 
+{
+	margin-top: 1px;
+	vertical-align: middle;
+}
+
+.checkbox .miniIcon
+{
+	margin-top:0px;
+}
+
 .subnav-inner label
 {
-	margin-top: 6px;
-	margin-right: 7px;
+	
+	margin-top: 8px;
+	/*margin-right: 7px;*/
+	
 }
 
 .subnav-inner img
@@ -59,7 +72,7 @@
 /* The container the encompasses most of the website under the navbar */
 .main-container
 {
-	padding-top: 32px;
+	/*padding-top: 32px;*/
 	
 
 
@@ -81,6 +94,7 @@
 .miniIcon
 {
 	width: 24px;
+	height: 27.75px;
 	vertical-align: middle;
 }
 
@@ -211,6 +225,10 @@
 	
 }
 
-
+/* Renders an element invisible */
+.invisible
+{
+	display: none;
+}
 
 
