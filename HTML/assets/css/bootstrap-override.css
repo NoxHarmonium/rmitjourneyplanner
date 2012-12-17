@@ -19,3 +19,10 @@ html, body {
     z-index: -1;  
 }
 
+
+.subnav-inner .close
+{
+	float: none;
+	margin-left: 17px;
+}
+
