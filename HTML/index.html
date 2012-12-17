@@ -66,8 +66,8 @@
 					
 					<div class="span8">
 						<label id="lblSearchLegend" class="control-label span1" for="txtFrom">Where? </label> 
-						<input class="locationInput" id="txtFrom" type="text" placeholder="From...">
-						<input class="locationInput" id="txtTo" type="text" placeholder="To...">
+						<input class="propertyField locationInput" id="txtFrom" type="text" placeholder="From..." propName="Origin">
+						<input class="propertyField locationInput" id="txtTo" type="text" placeholder="To..." propName="Destination">
 							<button  id="btnMore" type="button" class="btn btn-primary"><i class="icon-chevron-down icon-white"></i></button>
 						<button  id="btnSearch" type="button" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
 					
@@ -87,9 +87,8 @@
 					<div class="span2"></div>
 					
 					<div class="span3">
-						<label id="lblTimeSearchLegend" class="control-label span1" for="txtDate">When? </label> 
-						<input class="input-mini" id="txtDate" type="text" placeholder="Date...">	
-						<input class="input-mini" id="txtWhen" type="text" placeholder="At...">	
+						<label id="lblTimeSearchLegend" class="control-label span1" for="txtDate">When? </label> 						
+						<input class="input-medium propertyField" id="txtWhen" type="text" placeholder="At..." propName="DepartureTime">	
 					</div>
 					
 					

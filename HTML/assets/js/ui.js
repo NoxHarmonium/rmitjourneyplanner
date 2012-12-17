@@ -10,6 +10,36 @@ var dateTimeDivShown = false;
 // Functions
 //
 
+function displayValidationError(value) {
+    if (value != null) {
+        var input = $('input[propName="' + value.target + '"]');
+        if (input.length == 0) {
+            var input = $('select[propName="' + value.target + '"]');
+        }
+        var controls = input.parent();
+        var helpSpan = controls.find('.help-inline');
+        var controlGroup = input.parent().parent();
+        if (helpSpan.length == 0) {
+            helpSpan = controls.parent().find('.help-inline');
+            controlGroup = input.parent().parent().parent();
+        }
+
+		controlGroup.addClass('error');
+
+		if (value.message == validation_success) {
+		    helpSpan.text('');
+		    controlGroup.removeClass('error');
+
+		} else {
+		    helpSpan.text(value.message);
+		    controlGroup.addClass('error');   
+
+		}
+
+	}
+
+}
+
 function enableSearch()
 {
 	$('.subnav-inner input').enable();
