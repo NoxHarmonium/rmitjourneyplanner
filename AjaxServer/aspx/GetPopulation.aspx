@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GetPopulation.aspx.cs" Inherits="AjaxServer.aspx.GetPopulation" %>
