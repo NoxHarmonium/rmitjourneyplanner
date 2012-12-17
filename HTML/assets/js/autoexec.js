@@ -12,6 +12,8 @@ $(document).ready(function() {
 	$('#btnCloseDivHow').click(hideDateTimeDiv);
 	$('#btnSearch').click(search);
 	
+	$('.close').click(closeParent);
+	
 	
 });
 

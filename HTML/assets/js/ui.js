@@ -10,6 +10,11 @@ var dateTimeDivShown = false;
 // Functions
 //
 
+function closeParent()
+{
+	$(this).parent().hide();
+}
+
 function displayValidationError(value) {
     if (value != null) {
         var input = $('input[propName="' + value.target + '"]');

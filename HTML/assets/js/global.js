@@ -22,6 +22,8 @@ String.prototype.bool = function() {
     return ( /^True$/i ).test(this);
 };
 
+
+
 jQuery.fn.exists = function() { return this.length > 0; };
 
 jQuery.fn.disable = function() { return $(this).attr('disabled', 'disabled'); };
@@ -46,7 +48,7 @@ function showError(message) {
     $('#divError').show();
     //$('#frmParameters').hide();
     //$('#divInfo').hide();
-    $('#divError').html(nl2br(message));
+    $('#txtErrorText').html(nl2br(message));
 
 	//Scroll to error box to highlight error.
     $('html, body').animate({
@@ -55,6 +57,15 @@ function showError(message) {
 
 
 }
+
+window.onerror = function(message, url, lineNumber) {  
+  //save error and send to server for example.
+  if (url == '')
+  {
+	url = 'Unknown';
+  }
+  showError("<strong>Javascript Error</strong> " + message + "\nLine Number: " + lineNumber + " Url: " + url )
+};  
 
 
 //Callback for ajax errors.

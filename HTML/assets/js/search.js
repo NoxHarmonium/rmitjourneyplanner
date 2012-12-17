@@ -2,6 +2,18 @@
 // Search functionality
 //
 
+
+//
+// Fields
+//
+var selectedJourneyUuid = "default";
+
+
+//
+// Functions
+//
+
+
 function checkValidation(data) {
 
 
@@ -84,8 +96,8 @@ function startSearch()
 
 function endSearch()
 {
-	hideDateTimeDiv()	
-	disableSearch();
+	//showDateTimeDiv()	
+	enableSearch();
 }
 
 
