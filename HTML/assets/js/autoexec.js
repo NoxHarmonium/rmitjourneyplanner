@@ -3,6 +3,8 @@
 ///
 $(document).ready(function() {
     attachGeoAutoComplete();
+	var d = new Date();
+	$('#txtWhen').val(d.getHours()+ ":" + d.getMinutes());
 
 });
 

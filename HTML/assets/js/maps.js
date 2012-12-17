@@ -159,7 +159,7 @@ if (googleEnabled) {
 
 					cache[term] = data;
                         //if ( xhr === lastXhr ) {
-                        response(data.result);
+                    response(data.result);
                         //}
                     });
                 },
