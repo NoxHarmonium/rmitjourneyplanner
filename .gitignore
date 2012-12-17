@@ -28,3 +28,4 @@ _ReSharper*/
 *.vssscc
 $tf*/
 *Cache.dat
+Log.txt
