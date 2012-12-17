@@ -15,7 +15,11 @@ if (googleEnabled) {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-
+	///
+	/// Fields
+	///
+	var last_request = '';
+	var cache = { }, lastXhr;
     var map;
     var mapPath;
     var chart;
@@ -25,6 +29,8 @@ if (googleEnabled) {
     var pointsTotal;
     var legsLoaded = 0;
     var legsTotal = 0;
+	
+
 
     ///
     /// Custom functions
@@ -116,6 +122,72 @@ if (googleEnabled) {
 
     }    
 
+	function attachGeoAutoComplete() {
+    $('input.locationInput').each(function(index) {
+
+		/*
+		$(this).geo_autocomplete(new google.maps.Geocoder, {
+					mapkey: 'ABQIAAAAbnvDoAoYOSW2iqoXiGTpYBTIx7cuHpcaq3fYV4NM0BaZl8OxDxS9pQpgJkMv0RxjVl6cDGhDNERjaQ', 
+					selectFirst: false,
+					minChars: 3,
+					cacheLength: 50,
+					//width: 300,
+					mapwidth:25,
+					mapheight:25,
+					maptype: 'roadmap',
+					scroll: true,
+					scrollHeight: 330,	
+					geocoder_region: "Australia"		
+				});
+		*/
+
+	//.ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
+        //$(this).attr('value','');
+        $(this).autocomplete({
+                minLength: 3,
+                source: function(request, response) {
+                    var term = request.term;
+                    if (term in cache) {
+                        response(cache[term].result);
+                        return;
+                    }
+
+                    lastXhr = RPCCall("QueryStops", { "query": String(request.term) }, function(data, status, xhr) {
+                        if (CheckForError(data)) {
+                            return;
+                        }
+
+					cache[term] = data;
+                        //if ( xhr === lastXhr ) {
+                        response(data.result);
+                        //}
+                    });
+                },
+                focus: function(event, ui) {
+                    $(this).val(ui.item.label);
+                    return false;
+                },
+                select: function(event, ui) {
+                    $(this).attr('nodeid', ui.item.value);
+                    $(this).val(ui.item.label);
+                    $(this).attr('validid', 'true');
+                    //$( "#project-id" ).val( ui.item.value );
+                    //$( "#project-description" ).html( ui.item.desc );
+                    //$( "#project-icon" ).attr( "src", "images/" + ui.item.icon );
+
+                    return false;
+                }
+            }).data("autocomplete")._renderItem = function(ul, item) {
+                return $("<li></li>")
+                    .data("item.autocomplete", item)
+                    .append("<a><address><img class='imgTransportIcon' src='assets/img/transportIcons/" + item.stopMode + ".png' /><strong>" + item.label + "</strong><br>" + item.stopSpecName + "</address></a>")
+                    .appendTo(ul);
+            };
+        ;
+    });	
+
+
+}
 
     /**
     * jQuery.fn.sortElements

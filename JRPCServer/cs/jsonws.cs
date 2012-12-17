@@ -63,6 +63,7 @@ namespace JRPCServer
                 // (sender, message) => {Console.WriteLine("[{0}]: {1}",sender,message);};
                 LogEventCreated = true;
             }
+            this.LoadProviders();
         }
 
         #endregion

@@ -18,7 +18,7 @@
 	<link href="assets/css/bootstrap-override.css" rel="stylesheet">
 	<link href="assets/css/custom-divs.css" rel="stylesheet">
 	<link href="assets/css/google-maps.css" rel="stylesheet">
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css" rel="stylesheet"/>
+	<link href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet"/>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -67,8 +67,8 @@
 					<label class="control-label" for="lblSearchLegend"><img src="assets/img/logo.png"></img></label> 
 					<label id="lblSearchLegend" class="control-label" for="txtFrom">Type in your journey: </label> 
 					<div class="controls">
-						<input id="txtFrom" type="text" placeholder="From...">
-						<input type="text" placeholder="To...">
+						<input class="locationInput" id="txtFrom" type="text" placeholder="From...">
+						<input class="locationInput" type="text" placeholder="To...">
 						<button type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
 					</div>
 					
@@ -174,7 +174,8 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!--<script src="bootstrap/js/jquery.js"></script>-->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"> </script>	
+	<script src="http://code.jquery.com/jquery-1.8.3.js"> </script>	
+	<script src="assets/js/jQuery/jquery.json-2.4.min.js"></script>
     <script src="bootstrap/js/bootstrap-transition.js"></script>
     <script src="bootstrap/js/bootstrap-alert.js"></script>
     <script src="bootstrap/js/bootstrap-modal.js"></script>
@@ -189,13 +190,15 @@
     <script src="bootstrap/js/bootstrap-typeahead.js"></script>
 	 
 					
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js"></script>	 
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>	 
 	 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false&amp;location=-37.809784,144.972839&amp;radius=25000"> </script>
     </script>
 	
 	 <!-- Custom javascript -->
 	<script src="assets/js/global.js"></script>
 	<script src="assets/js/maps.js"></script>
+	
+	<script src="assets/js/autoexec.js"></script>
 
   </body>
 </html>

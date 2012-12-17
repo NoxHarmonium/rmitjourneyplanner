@@ -3,7 +3,7 @@
 ///
 /// Constants
 ///
-var url_service = '/jsonws.ashx';
+var url_service = 'http://localhost:8000/jsonws.ashx';
 var error_scroll_offset = -50;
 var error_scroll_time = 500;
 
@@ -76,10 +76,12 @@ function nl2br(str, is_xhtml) {
 function JSONPost(url, data, callback) {
     return $.ajax({
             url: url,
-            type: "POST",
+            type: "GET",
             data: data,
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
+            dataType: "jsonp",
+			 jsonpCallback: 'jsonCallback',
+			//crossDomain: true,
             success: callback,
             error: ajaxError
         });
@@ -90,19 +92,19 @@ function JSONPost(url, data, callback) {
 function RPCCall(method, params, callback) {
     last_request = method;
 
-    var request = { };
-    request.method = method;
-    request.params = params;
+    //var request = { };
+   // request.method = method;
+    //request.params = params;
     //request.params.CID = "45d0677d-a336-463b-ad99-c82137d03a00";
     //request.params.baseDN = "ou=people,dc=example,dc=com";
     //request.params.scope = "ONE";
     //request.params.filter = "(givenName=John)";
-    request.id = 1;
-    request.jsonrpc = "2.0";
+    //request.id = 1;
+    //request.jsonrpc = "2.0";
 
     //
     //$.post(url_service , $.toJSON(request), callback, "json");
-    return JSONPost(url_service, $.toJSON(request), callback);
+    return JSONPost(url_service + "/" + method+ "?jsonp=jsonCallback&callback=?" , $.toJSON(params), callback);
 }
 
 // Returns true if there is a JSON error object in the data object. Also displays the error
@@ -134,10 +136,3 @@ if (!window.google) {
 }
 
 
-///
-/// Initalisation Code
-///
-$(document).ready(function() {
-    
-
-});
