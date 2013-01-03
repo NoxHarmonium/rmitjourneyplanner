@@ -123,6 +123,7 @@
     <Content Include="html\assets\css\google-maps.css" />
     <Content Include="html\assets\img\arrow.png" />
     <Content Include="html\assets\img\hr.png" />
+    <Content Include="html\assets\img\loading.svg" />
     <Content Include="html\assets\img\logo.png" />
     <Content Include="html\assets\img\transportIcons\Bus.png" />
     <Content Include="html\assets\img\transportIcons\Ferry.png" />

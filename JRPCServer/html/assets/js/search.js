@@ -24,6 +24,7 @@ function checkValidation(data) {
             if (data.result[r].message != validation_success)
             {
                 showDateTimeDiv();
+                endSearch();
             }
         }
 
@@ -33,6 +34,7 @@ function checkValidation(data) {
         
         if (data.result.message != validation_success) {
             showDateTimeDiv();
+            endSearch();
         }
 		
 	}		
@@ -95,7 +97,18 @@ function submitSearch() {
 
 
 
+function progressCallback() {
 
+    RPCCall('GetStatus', { "userKey": userKey}, function (data) {
+        if (CheckForError(data)) {
+            return;
+        }
+
+        
+
+    });
+    
+}
 
 function startSearch()
 {
@@ -116,5 +129,5 @@ function search()
 {
 	startSearch();
 	submitSearch();
-	endSearch();
+	
 }
