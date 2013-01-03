@@ -3,7 +3,7 @@
 ///
 /// Constants
 ///
-var url_service = '/jsonws.ashx';
+var url_service = '/extendedjsonws.ashx';
 var error_scroll_offset = -50;
 var error_scroll_time = 500;
 
