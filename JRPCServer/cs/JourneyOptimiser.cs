@@ -339,6 +339,32 @@ namespace JRPCServer
             this.optimisationThread.Join();
         }
 
+        public void Remove(Journey journey)
+        {
+            if (!bc.Contains(journey.Uuid)) 
+                return;
+            
+            this.Pause();
+            
+            var journeys = new List<string>(bc.Count);
+            while (bc.Count > 0)
+            {
+                journeys.Add(bc.Take());
+            }
+
+            foreach (String j in journeys)
+            {
+                if (j != journey.Uuid)
+                {
+                    bc.Add(j);
+                }
+            }
+
+            this.Resume();
+            
+
+        }
+
         #endregion
 
         #region Methods

@@ -88,13 +88,16 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cs\SimpleJsonWs.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="cs\CritterExporter.cs" />
     <Compile Include="cs\CustomImporter.cs" />
     <Compile Include="cs\Iteration.cs" />
     <Compile Include="cs\Journey.cs" />
     <Compile Include="cs\JourneyManager.cs" />
     <Compile Include="cs\JourneyOptimiser.cs" />
-    <Compile Include="cs\JsonWsExtended.cs">
+    <Compile Include="cs\ExtendedJsonWs.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="cs\ObjectCache.cs" />
@@ -252,7 +255,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="jsonwsextended.ashx">
+    <None Include="simplejsonws.ashx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="extendedjsonws.ashx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="OldServer\less\datepicker.less" />
