@@ -403,7 +403,7 @@ namespace JRPCServer
                 {
                     string jUuid = string.Empty;
                     Run run = null;
-                    try
+                    //try
                     {
                         this.currentIteration = 0;
 
@@ -527,6 +527,7 @@ namespace JRPCServer
                         this.currentIteration = 0;
                         this.maxIterations = 0;
                     }
+                    /*
                     catch (Exception e)
                     {
                         StreamWriter logWriter = new StreamWriter("Log.txt");
@@ -540,6 +541,7 @@ namespace JRPCServer
 
                         // throw;
                     }
+                     */
                 }
             }
 

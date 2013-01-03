@@ -1,2 +1,2 @@
-﻿<%@ WebHandler Class="JRPCServer.Jsonws" Language="C#" CodeBehind="cs/JsonWsExtended.cs" %>
+﻿<%@ WebHandler Class="JRPCServer.SimpleJsonWs" Language="C#" CodeBehind="cs/SimpleJsonWs.cs" %>
 

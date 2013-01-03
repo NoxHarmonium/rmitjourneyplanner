@@ -6,7 +6,7 @@
 //
 // Fields
 //
-var selectedJourneyUuid = "default";
+var userKey = "abcdef";
 var validation_success = "Success";
 
 //
@@ -40,7 +40,7 @@ function checkValidation(data) {
 
 }
 
-function saveProperties() {
+function submitSearch() {
     var propVals = new Array();
     $('.propertyField').each(function(index) {
         //alert(index + ': ' + $(this).val());	
@@ -83,7 +83,7 @@ function saveProperties() {
     });
 
 
-    RPCCall('SetProperties', { "journeyUuid": selectedJourneyUuid, "propVals": propVals }, function(data) {
+    RPCCall('Search', { "userKey": userKey, "propVals": propVals }, function(data) {
         if (CheckForError(data)) {
             return;
         }
@@ -115,6 +115,6 @@ function endSearch()
 function search()
 {
 	startSearch();
-	saveProperties();
+	submitSearch();
 	endSearch();
 }

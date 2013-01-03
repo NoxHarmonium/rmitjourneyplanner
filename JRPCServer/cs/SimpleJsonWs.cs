@@ -63,12 +63,55 @@ namespace JRPCServer
                 // (sender, message) => {Console.WriteLine("[{0}]: {1}",sender,message);};
                 LogEventCreated = true;
             }
+            this.LoadProviders();
         }
 
         #endregion
 
         #region Public Methods and Operators
-        
+
+        [JsonRpcMethod("LoadProviders", Idempotent = true)]
+        [JsonRpcHelp("Initialises the data providers.")]
+        public void LoadProviders()
+        {
+            ObjectCache.DeregisterObjects(typeof(IPointDataProvider));
+
+            // this.DeregisterObjects(typeof(INetworkDataProvider));
+            IPointDataProvider provider = new WalkingDataProvider();
+            ObjectCache.RegisterObject(provider);
+
+            if (!ObjectCache.GetObjects<State>().Any())
+            {
+                var state = new State();
+                Logger.LogEvent += new LogEventHandler(Logger_LogEvent);
+                state.LogEventHooked = true;
+
+                ObjectCache.RegisterObject(state);
+
+
+            }
+
+            if (!ObjectCache.GetObjects<PtvDataProvider>().Any())
+            {
+                ObjectCache.RegisterObject(new PtvDataProvider());
+            }
+
+            if (!ObjectCache.GetObjects<EvolutionaryProperties>().Any())
+            {
+                ObjectCache.RegisterObject(new EvolutionaryProperties());
+            }
+
+            if (!ObjectCache.GetObjects<JourneyManager>().Any())
+            {
+                ObjectCache.RegisterObject(new JourneyManager());
+            }
+
+            if (!ObjectCache.GetObjects<JourneyOptimiser>().Any())
+            {
+                ObjectCache.RegisterObject(new JourneyOptimiser());
+            }
+        }
+
         /// <summary>
         /// The get node data.
         /// </summary>
@@ -117,7 +160,7 @@ namespace JRPCServer
         [JsonRpcHelp("Returns an array of stop names from the query.")]
         public object[] QueryStops(string query)
         {
-            var provider = ObjectCache.GetObjects<PtvDataProvider>().First();
+            var provider = ObjectCache.GetObjects<PtvDataProvider>().FirstOrDefault();
             var stops = provider.QueryStops(query);
 
             // var stopStrings = stops.Select(s => s.StopSpecName);
@@ -150,7 +193,14 @@ namespace JRPCServer
             Journey journey;
             try
             {
-                journey = journeyManager.GetJourney("default");
+                journey = (Journey)journeyManager.GetJourney("default").Clone();
+                journey.Uuid = userKey;
+                if (journeyManager.Contains(journey))
+                {
+                    journeyManager.DeleteJourney(userKey);
+                }
+                journeyManager.Add(journey);
+                journeyManager.Save();
             }
             catch (KeyNotFoundException e)
             {
@@ -196,7 +246,7 @@ namespace JRPCServer
                 var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
                 optimiser.Remove(journey);
                 optimiser.EnqueueJourney(journey,1);
-                
+                optimiser.Resume();
 
             }
            
@@ -498,5 +548,16 @@ namespace JRPCServer
         }
 
         #endregion
+
+        void Logger_LogEvent(object sender, string message)
+        {
+            string senderName = sender.GetType().Name;
+            //Truncate object names that are too long.
+            if (senderName.Length > MaxObjectNameLength)
+            {
+                senderName = senderName.Substring(0, MaxObjectNameLength);
+            }
+            Console.WriteLine(String.Format("[{0} ({1})]:{2}", senderName, DateTime.Now.ToShortTimeString(), message));
+        }
     }
 }

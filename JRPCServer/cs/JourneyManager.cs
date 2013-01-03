@@ -55,6 +55,18 @@ namespace JRPCServer
         #region Public Methods and Operators
 
         /// <summary>
+        /// Returns if this journey manager contains a journey with 
+        /// a matching UUID to the specified journey.
+        /// </summary>
+        /// <param name="journey">The journey which is used for comparison.</param>
+        /// <returns>True if the UUIDs match, otherwise false.</returns>
+        public bool Contains(Journey journey)
+        {
+            return this.journeyMap.ContainsKey(journey.Uuid);
+        }
+
+
+        /// <summary>
         /// Add the specified journey to the manager.
         /// </summary>
         /// <param name="journey">
