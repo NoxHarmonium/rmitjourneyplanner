@@ -94,7 +94,7 @@
     <Compile Include="cs\Journey.cs" />
     <Compile Include="cs\JourneyManager.cs" />
     <Compile Include="cs\JourneyOptimiser.cs" />
-    <Compile Include="cs\jsonws.cs">
+    <Compile Include="cs\JsonWsExtended.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="cs\ObjectCache.cs" />
@@ -115,28 +115,6 @@
     <Compile Include="testing\TestOptimisationManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="css\bootstrap-responsive.css" />
-    <Content Include="css\bootstrap-responsive.min.css" />
-    <Content Include="css\bootstrap.css" />
-    <Content Include="css\bootstrap.min.css" />
-    <Content Include="css\datepicker.css" />
-    <Content Include="css\style.css" />
-    <Content Include="css\timepicker.css" />
-    <Content Include="css\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_glass_100_f6f6f6_1x400.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_glass_100_fdf5ce_1x400.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <Content Include="css\ui-lightness\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
-    <Content Include="css\ui-lightness\images\ui-icons_222222_256x240.png" />
-    <Content Include="css\ui-lightness\images\ui-icons_228ef1_256x240.png" />
-    <Content Include="css\ui-lightness\images\ui-icons_ef8c08_256x240.png" />
-    <Content Include="css\ui-lightness\images\ui-icons_ffd27a_256x240.png" />
-    <Content Include="css\ui-lightness\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="css\ui-lightness\jquery-ui-1.8.23.custom.css" />
     <Content Include="html\assets\css\bootstrap-override.css" />
     <Content Include="html\assets\css\custom-divs.css" />
     <Content Include="html\assets\css\google-maps.css" />
@@ -173,73 +151,6 @@
     <Content Include="html\favicon.ico" />
     <Content Include="html\index.html" />
     <Content Include="humans.txt" />
-    <Content Include="img\downArrow.jpg" />
-    <Content Include="img\downArrow.png" />
-    <Content Include="img\glyphicons-halflings-white.png" />
-    <Content Include="img\glyphicons-halflings.png" />
-    <Content Include="img\rmitLogo.gif" />
-    <Content Include="img\transportIcons\Bus.png" />
-    <Content Include="img\transportIcons\Finish.png" />
-    <Content Include="img\transportIcons\Train.png" />
-    <Content Include="img\transportIcons\Tram.png" />
-    <Content Include="img\transportIcons\Unknown.png" />
-    <Content Include="img\transportIcons\Walking.png" />
-    <Content Include="js\bootstrap-button.js" />
-    <Content Include="js\bootstrap-datepicker.js" />
-    <Content Include="js\bootstrap-dropdown.js" />
-    <Content Include="js\bootstrap-timepicker.js" />
-    <Content Include="js\geo-autocomplete\demo\index.html" />
-    <Content Include="js\geo-autocomplete\demo\screenshot.png" />
-    <Content Include="js\geo-autocomplete\demo\screenshot_small.png" />
-    <Content Include="js\geo-autocomplete\demo\ui.demo.html" />
-    <Content Include="js\geo-autocomplete\geo_autocomplete.js" />
-    <Content Include="js\geo-autocomplete\lib\indicator.gif" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_glass_100_f6f6f6_1x400.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_glass_100_fdf5ce_1x400.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-icons_222222_256x240.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-icons_228ef1_256x240.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-icons_ef8c08_256x240.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-icons_ffd27a_256x240.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\css\ui-lightness\jquery-ui-1.8.5.custom.css" />
-    <Content Include="js\geo-autocomplete\lib\jquery-ui\js\jquery-ui-1.8.5.custom.min.js" />
-    <Content Include="js\geo-autocomplete\lib\jquery.autocomplete.css" />
-    <Content Include="js\geo-autocomplete\lib\jquery.autocomplete_geomod.js" />
-    <Content Include="js\geo-autocomplete\ui.geo_autocomplete.js" />
-    <Content Include="js\global.js" />
-    <Content Include="js\jEditor.js" />
-    <Content Include="js\jOptimiser.js" />
-    <Content Include="js\jquery-1.8.0.min.js" />
-    <Content Include="js\jquery-ui-1.8.23.custom.min.js" />
-    <Content Include="js\jquery.dateFormat-1.0.js" />
-    <Content Include="js\jSelector.js" />
-    <Content Include="js\jViewer.js" />
-    <Content Include="js\libs\bootstrap\alert.js" />
-    <Content Include="js\libs\bootstrap\bootstrap.js" />
-    <Content Include="js\libs\bootstrap\bootstrap.min.js" />
-    <Content Include="js\libs\bootstrap\button.js" />
-    <Content Include="js\libs\bootstrap\carousel.js" />
-    <Content Include="js\libs\bootstrap\collapse.js" />
-    <Content Include="js\libs\bootstrap\dropdown.js" />
-    <Content Include="js\libs\bootstrap\modal.js" />
-    <Content Include="js\libs\bootstrap\popover.js" />
-    <Content Include="js\libs\bootstrap\scrollspy.js" />
-    <Content Include="js\libs\bootstrap\tab.js" />
-    <Content Include="js\libs\bootstrap\tooltip.js" />
-    <Content Include="js\libs\bootstrap\transition.js" />
-    <Content Include="js\libs\bootstrap\typeahead.js" />
-    <Content Include="js\libs\jquery-1.7.1.min.js" />
-    <Content Include="js\libs\jquery.json-2.3.min.js" />
-    <Content Include="js\libs\modernizr-2.5.3-respond-1.1.0.min.js" />
-    <Content Include="js\navbar.js" />
-    <Content Include="js\plugins.js" />
     <Content Include="OldServer\404.html" />
     <Content Include="OldServer\crossdomain.xml" />
     <Content Include="OldServer\css\bootstrap-responsive.css" />
@@ -341,10 +252,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="jsonws.ashx">
+    <None Include="jsonwsextended.ashx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="less\datepicker.less" />
     <None Include="OldServer\less\datepicker.less" />
     <None Include="Web.config" />
   </ItemGroup>
