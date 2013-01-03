@@ -21,12 +21,20 @@ function checkValidation(data) {
     if ($.isArray(data.result)) {
         for (var r in data.result) {
             displayValidationError(data.result[r]);
+            if (data.result[r].message != validation_success)
+            {
+                showDateTimeDiv();
+            }
         }
-			showDateTimeDiv();
-			//$.each(data.result, displayValidationError); 
+
     } else {
+
         displayValidationError(data.result);
-		showDateTimeDiv();
+        
+        if (data.result.message != validation_success) {
+            showDateTimeDiv();
+        }
+		
 	}		
 
 
@@ -40,7 +48,6 @@ function saveProperties() {
         var value;
         //if ($(this).prop('disabled') == false)
         if (!$(this).is("select")) {
-            var value;
             if ($(this).hasClass('locationInput')) {
                 value = $(this).attr('nodeid');
             } else {
@@ -90,7 +97,7 @@ function saveProperties() {
 
 function startSearch()
 {
-	hideDateTimeDiv()	
+    hideDateTimeDiv();
 	disableSearch();
 }
 

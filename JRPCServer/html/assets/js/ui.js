@@ -83,13 +83,14 @@ function showDateTimeDiv()
 
 function hideDateTimeDiv()
 {
+    if (dateTimeDivShown) {
+        $('#btnMore i').addClass('icon-chevron-down');
+        $('#btnMore i').removeClass('icon-chevron-up');
+        //('#divWhen').addClass('invisible');
 
-	$('#btnMore i').addClass('icon-chevron-down');
-	$('#btnMore i').removeClass('icon-chevron-up');
-	//('#divWhen').addClass('invisible');
-	
-	$('#divWhen').slideUp('slow', function() {
-		dateTimeDivShown = false;
-  });
+        $('#divWhen').slideUp('slow', function() {
+            dateTimeDivShown = false;
+        });
+    }
 
 }
