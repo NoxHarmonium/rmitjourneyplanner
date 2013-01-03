@@ -95,6 +95,8 @@ function saveProperties() {
 
 
 
+
+
 function startSearch()
 {
     hideDateTimeDiv();

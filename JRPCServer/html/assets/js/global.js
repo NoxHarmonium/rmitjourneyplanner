@@ -3,7 +3,7 @@
 ///
 /// Constants
 ///
-var url_service = 'http://localhost:8000/jsonws.ashx';
+var url_service = 'http://localhost:8000/jsonwsextended.ashx';
 var error_scroll_offset = -50;
 var error_scroll_time = 500;
 

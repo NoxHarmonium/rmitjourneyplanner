@@ -37,7 +37,7 @@ namespace JRPCServer
     /// The jsonws.
     /// </summary>
     [JsonRpcHelp("This is a JSON-RPC service that exposes functionality related to the RMIT Journey Planner.")]
-    public class Jsonws : JsonRpcHandler, IRequiresSessionState
+    public class JsonWsExtended : JsonRpcHandler, IRequiresSessionState
     {
         #region Constants and Fields
 
@@ -53,9 +53,9 @@ namespace JRPCServer
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Jsonws"/> class.
+        /// Initializes a new instance of the <see cref="JsonWsExtended"/> class.
         /// </summary>
-        public Jsonws()
+        public JsonWsExtended()
         {
             if (!LogEventCreated)
             {
