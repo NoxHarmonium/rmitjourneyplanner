@@ -500,6 +500,11 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
         {
             for (int i = 0; i < (this.bidirectional ? 2 : 1); i++)
             {
+                if (this.current[i] == null)
+                {
+                    return false;
+                }
+                
                 if (!stack[i].Any())
                 {
                     return true;
