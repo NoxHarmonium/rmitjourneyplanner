@@ -168,11 +168,32 @@ namespace JRPCServer
             return stops.ToArray();
         }
 
-        
 
-        
-       
-  
+        [JsonRpcMethod("GetStatus", Idempotent = true)]
+        [JsonRpcHelp(
+            "Accepts a user key and returns the optimisation status related to it."
+            )]
+        public object GetStatus(string userKey)
+        {
+            var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
+            if (optimiser.CurrentJourney.Uuid == userKey)
+            {
+                return new { optimationStatus = "running", progress = (double)optimiser.CurrentIteration / (double)optimiser.MaxIterations };
+            }
+           
+            if (optimiser.GetQueue().Contains(userKey))
+            {
+                return new { optimationStatus = "queued", progress = 0.0 };
+            }
+            
+            return new { optimationStatus = "finished", progress = 100.0 };
+            
+        }
+
+
+
+
+
         [JsonRpcMethod("Search", Idempotent = true)]
         [JsonRpcHelp(
             "Accepts a user key and an array of property names and values and performs a search. Returns an array of validation errors."
