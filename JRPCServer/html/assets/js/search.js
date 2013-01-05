@@ -117,8 +117,11 @@ function progressCallback() {
         }
 
         //data.result
+        var d = data.result;
 
-        $('#mainProgressBar .bar').width(String(data.result.progress * 100.0) + "%");
+        setLoadingDivProgress(d.progress, d.iteration, d.totalIterations);
+
+        setLoadingDivMode(d.status);
 
 
     });
