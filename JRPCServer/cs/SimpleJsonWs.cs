@@ -178,7 +178,7 @@ namespace JRPCServer
             var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
             if (optimiser.CurrentJourney == null)
             {
-                return new { optimationStatus = "finished", progress = 100.0 };
+                return new { optimationStatus = "finished", progress = 1.0 };
             }
             if (optimiser.CurrentJourney.Uuid == userKey)
             {
