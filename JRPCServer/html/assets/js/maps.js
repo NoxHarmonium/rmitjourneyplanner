@@ -180,7 +180,7 @@ if (googleEnabled) {
             }).data("autocomplete")._renderItem = function(ul, item) {
                 return $("<li></li>")
                     .data("item.autocomplete", item)
-                    .append("<a><address><img class='imgTransportIcon' src='assets/img/transportIcons/" + item.stopMode + ".png' /><strong>" + item.label + "</strong><br>" + item.stopSpecName + "</address></a>")
+                    .append("<a><div class='autoCompleteEntry'><img class='imgTransportIcon' src='assets/img/transportIcons/" + item.stopMode + ".png' />&nbsp;&nbsp;<strong>" + item.label + "</strong><br>" + item.stopSpecName + "</div></a>")
                     .appendTo(ul);
             };
         ;
