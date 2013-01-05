@@ -6,6 +6,18 @@ var dateTimeDivShown = false;
 var loadingDivShown = false;
 var helpDivShown = true;
 
+//
+// Contants
+//
+
+var strQueuedMessage = 'Your journey planning request is currently queued. Please wait....';
+var strQueuedTitle = 'Queued...';
+var strOptimisingMessage = 'The journey planning engine is currently calculating possible journeys. Please wait....';
+var strOptimisingTitle = 'Optimising...';
+var strFinishedMessage = 'The optimisation process is finished. The results should display now....';
+var strFinishedTitle = 'Finished...';
+var strUnknownTitle = 'Unknown Status...';
+
 
 //
 // Functions
@@ -58,6 +70,48 @@ function disableSearch()
 	$('.subnav-inner checkbox').disable();
 }
 
+function setLoadingDivProgress(progress, iteration, totalIterations) {
+
+    $('#divLoading .progressNumerator').text(iteration);
+    $('#divLoading .progressDenominator').text(totalIterations);
+    $('#mainProgressBar .bar').width(String(progress * 100.0) + "%");
+    
+}
+
+function setLoadingDivMode(mode) {
+    $('#divLoading .progressHelp').show();
+    switch (mode) {
+        case "queued":
+
+            $('#divLoading H1').text(strQueuedTitle);
+            $('#divLoading .progressHelp').text(strQueuedMessage);
+            $('#divLoading .progressInfo').hide();
+            break;
+
+        case "optimising":
+            $('#divLoading H1').text(strOptimisingTitle);
+            $('#divLoading .progressHelp').text(strOptimisingMessage);
+            $('#divLoading .progressInfo').show();
+            
+            break;
+
+        case "finished":
+            $('#divLoading H1').text(strFinishedTitle);
+            $('#divLoading .progressHelp').text(strFinishedMessage);
+            $('#divLoading .progressInfo').hide();
+            break;
+
+        default:
+            $('#divLoading H1').text(strUnknownTitle);
+            $('#divLoading .progressHelp').hide();
+            $('#divLoading .progressInfo').hide();
+    }
+    
+    
+    
+}
+
+
 function showLoadingDiv() {
     if (!loadingDivShown) {
 
@@ -83,8 +137,6 @@ function showHelpDiv() {
         $('#divHelp').show();
         helpDivShown = true;
     }
-
-
 }
 
 function hideHelpDiv() {
