@@ -25,6 +25,7 @@ function checkValidation(data) {
             {
                 showDateTimeDiv();
                 endSearch();
+                return false;
             }
         }
 
@@ -35,10 +36,11 @@ function checkValidation(data) {
         if (data.result.message != validation_success) {
             showDateTimeDiv();
             endSearch();
+            return false;
         }
 		
-	}		
-
+	}
+    return true;
 
 }
 
@@ -85,26 +87,39 @@ function submitSearch() {
     });
 
 
-    RPCCall('Search', { "userKey": userKey, "propVals": propVals }, function(data) {
+
+    RPCCall('Search', { "userKey": userKey, "propVals": propVals }, function (data) {
         if (CheckForError(data)) {
             return;
         }
 
-		checkValidation(data);
+        if (checkValidation(data)) {
+            //If validation succeded, open progress bar.
+            showLoadingDiv();
+            hideHelpDiv();
+            setInterval(progressCallback, 500);
+            progressCallback();
+        }
 
-	});
+
+
+
+    });
 }
 
 
 
 function progressCallback() {
 
-    RPCCall('GetStatus', { "userKey": userKey}, function (data) {
+    RPCCall('GetStatus', { "userKey": userKey }, function (data) {
         if (CheckForError(data)) {
             return;
         }
 
-        
+        //data.result
+
+        $('#mainProgressBar .bar').width(String(data.result.progress * 100.0) + "%");
+
 
     });
     
@@ -119,7 +134,8 @@ function startSearch()
 function endSearch()
 {
 	//showDateTimeDiv()	
-	enableSearch();
+    enableSearch();
+    showHelpDiv();
 }
 
 

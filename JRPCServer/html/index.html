@@ -128,7 +128,7 @@
 				
 			
 			</div>
-			
+			         
 			
 		
 		
@@ -170,7 +170,30 @@
 
         <div class="row-fluid">
             <div class="span4">
-				<div class="infoTop">
+				<div id="divHelp" class="well well-large sideDiv ">
+                    <h1>Welcome! </h1>
+                    
+                    
+                    <p>The RMIT journey planner is an experimental public transport journey planner with a difference. 
+                    Using genetic algorithms this journey planner is designed with diversity in mind, not optimality.  </p>
+
+                    <a class="btn btn-primary btn-large" onclick="alert('not implimented!')">
+                      Learn more
+                    </a>
+                
+                </div>
+
+                <div id="divLoading" class="well well-large sideDiv" style="display: none;" >
+                    <h1>Optimising...</h1>
+                    <p>The journey planning engine is currently calculating possible journeys. Please wait....</p>    
+                    <div id="mainProgressBar" class="progress progress-striped active">
+                      <div class="bar" style="width: 20%;"></div>
+                    </div>
+                    <p>Iteration <strong>20</strong> out of <strong>100</strong></p>
+                
+                </div>
+                <div id="divTemplate" style="display: none;">
+                <div class="infoTop">
 					<table class="table table-bordered">
 						<tr>
 							<td>Journey 1  </td>
@@ -242,7 +265,7 @@
                     <div>
                         <a href="#myModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
                     </div>
-				
+				</div>
 				</div>
 			</div>
             <!-- Main hero unit for a primary marketing message or call to action -->

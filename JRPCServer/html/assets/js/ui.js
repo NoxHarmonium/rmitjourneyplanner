@@ -3,7 +3,8 @@
 //
 
 var dateTimeDivShown = false;
-
+var loadingDivShown = false;
+var helpDivShown = true;
 
 
 //
@@ -56,6 +57,45 @@ function disableSearch()
 	$('.subnav-inner button').disable();
 	$('.subnav-inner checkbox').disable();
 }
+
+function showLoadingDiv() {
+    if (!loadingDivShown) {
+
+        $('#divLoading').show();
+        dateTimeDivShown = true;
+    }
+
+
+}
+
+function hideLoadingDiv() {
+    if (loadingDivShown) {
+
+        $('#divLoading').hide();
+        dateTimeDivShown = false;
+    }
+
+}
+
+function showHelpDiv() {
+    if (!helpDivShown) {
+
+        $('#divHelp').show();
+        helpDivShown = true;
+    }
+
+
+}
+
+function hideHelpDiv() {
+    if (helpDivShown) {
+
+        $('#divHelp').hide();
+        helpDivShown = false;
+    }
+
+}
+
 
 function toggleDateTimeDiv()
 {
