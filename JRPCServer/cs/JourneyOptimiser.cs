@@ -424,9 +424,10 @@ namespace JRPCServer
                         run.JourneyUuid = journey.Uuid;
                         run.TimeStarted = DateTime.Now;
                         var planner = new MoeaJourneyPlanner(journey.Properties);
-                        planner.Start();
                         var results = new List<Result>(journey.Properties.MaxIterations);
                         this.maxIterations = journey.Properties.MaxIterations;
+                        planner.Start();
+                    
 
                         for (int i = 0; i < journey.Properties.MaxIterations; i++)
                         {
