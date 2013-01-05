@@ -241,4 +241,12 @@
 	display: none;
 }
 
-
+/*The divs that sit in the left panel */
+.sideDiv
+{
+    /*padding: 20px;
+    margin: 20px;
+background-color: #EEEEEE;*/
+    margin-top: 70px;
+    
+}
