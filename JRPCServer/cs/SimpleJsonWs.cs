@@ -176,26 +176,26 @@ namespace JRPCServer
         public object GetStatus(string userKey)
         {
             var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
-            if (optimiser.CurrentJourney == null)
+            if (optimiser.CurrentJourney != null)
             {
-                return new { optimationStatus = "finished", progress = 1.0 };
-            }
-            if (optimiser.CurrentJourney.Uuid == userKey)
-            {
-                double progress = optimiser.CurrentIteration / (double)optimiser.MaxIterations;
-                if (double.IsNaN(progress) || double.IsInfinity(progress))
+
+                if (optimiser.CurrentJourney.Uuid == userKey)
                 {
-                    progress = 0.0;
+                    double progress = optimiser.CurrentIteration / (double)optimiser.MaxIterations;
+                    if (double.IsNaN(progress) || double.IsInfinity(progress))
+                    {
+                        progress = 0.0;
+                    }
+                    return new { status = "optimising", progress, iteration = optimiser.CurrentIteration, totalIterations = optimiser.MaxIterations };
                 }
-                return new { optimationStatus = "running", progress };
+
+                if (optimiser.GetQueue().Contains(userKey))
+                {
+                    return new { status = "queued", progress = 0.0, iteration = 0, totalIterations = 0 };
+                }
             }
-           
-            if (optimiser.GetQueue().Contains(userKey))
-            {
-                return new { optimationStatus = "queued", progress = 0.0 };
-            }
-            
-            return new { optimationStatus = "finished", progress = 1.0 };
+            //Default message TODO: Maybe the default status shouldn't be 'finished'.
+            return new { status = "finished", progress = 1.0, iteration = 0, totalIterations = 0 };
             
         }
 
