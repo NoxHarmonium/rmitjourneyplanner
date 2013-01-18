@@ -510,6 +510,24 @@ namespace JRPCServer
 
                                             resultWriter.WriteLine();
                                         }
+
+                                        // For the last result entry, Save simplified file.
+                                        if (i == results.Count - 1)
+                                        {
+                                            using (
+                                           var writer = new StreamWriter(dir + run.Uuid + "/iteration." + i + ".simple.json"))
+                                            {
+                                                var simplified = from p in results[i].Population
+                                                                 group p by p.Route
+                                                                 into g select new { route = g.Key, 
+                                                                                        time = g.Min(c => c.Fitness.TotalJourneyTime)
+                                                                                       };
+
+                                                exportContext.Export(simplified.OrderBy(t => t.time), new JsonTextWriter(writer));
+
+                                            }
+
+                                        }
                                     }
 
                                     using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
