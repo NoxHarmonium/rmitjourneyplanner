@@ -130,6 +130,7 @@ namespace JRPCServer
         /// <value>
         ///   The run UUIDs assocated with this journey.
         /// </value>
+        /// //TODO: Why did I ever make this an array rather than a list or something?
         public string[] RunUuids
         {
             get
@@ -186,7 +187,8 @@ namespace JRPCServer
                 {
                     ShortName = this.shortName + " (Clone)", 
                     description = this.description, 
-                    properties = (EvolutionaryProperties)this.properties.Clone()
+                    properties = (EvolutionaryProperties)this.properties.Clone(),
+                    runUuids = this.runUuids
                 };
         }
 
