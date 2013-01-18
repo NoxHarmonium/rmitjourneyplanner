@@ -200,7 +200,18 @@ namespace JRPCServer
         }
 
 
+        public object GetJourneys(string userKey)
+        {
+            dynamic status = this.GetStatus(userKey);
+            // Check if optimisation finished.
+            if (status.status == "finished")
+            {
+                
 
+            }
+            return null;
+
+        }
 
 
         [JsonRpcMethod("Search", Idempotent = true)]
@@ -217,6 +228,8 @@ namespace JRPCServer
                 ObjectCache.RegisterObject(journeyManager);
             }
             
+            
+
             bool validationError = false;
 
             //Load the default journey
@@ -238,8 +251,9 @@ namespace JRPCServer
                    "No default journey to base this journey off. Please specify one using the control panel.");
                 
             }
-           
-            
+
+            journeyManager.Clean(journey);
+            journeyManager.Save();
 
             
             /*
