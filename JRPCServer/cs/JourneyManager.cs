@@ -88,6 +88,17 @@ namespace JRPCServer
         }
 
         /// <summary>
+        /// Deletes all runs associated with the specified journey.
+        /// </summary>
+        /// <param name="journey"></param>
+        public void Clean(Journey journey)
+        {
+            journey.RunUuids = new string[0];
+            new DirectoryInfo(string.Format("{0}\\{1}",this.directories[1],journey.Uuid)).Delete(true);
+
+        }
+
+        /// <summary>
         /// Deletes a journey from the journey manager.
         /// </summary>
         /// <param name="uuid">
