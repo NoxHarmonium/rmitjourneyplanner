@@ -16,7 +16,7 @@ $(document).ready(function() {
 	
 	//$('#example').tooltip();
 	//$('#example').tooltip('show');
-	
+	progressCallback();
 	
 });
 

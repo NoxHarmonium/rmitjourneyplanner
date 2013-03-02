@@ -265,12 +265,40 @@ if (googleEnabled) {
         var _runUuid;
         var _currentData;
         var _currentMember;
+        var _markers = [];
+        var _lines = [];
 
         this.getData = function() {
             return _currentData;
 
         };
         
+        this.addLine = function (line) {
+            _lines.push(line);
+            line.setMap(map);
+        }
+
+        this.clearLines = function (line) {
+            for (i in _lines) {
+                _lines[i].setMap(null);
+            }
+            _lines = [];
+        }
+
+        this.addMarker = function(marker)
+        {
+            _markers.push(marker);
+            marker.setMap(map);
+        }
+
+        this.clearMarkers = function ()
+        {
+            for (i in _markers)
+            {
+                _markers[i].setMap(null);
+            }
+            _markers = [];
+        }
           
         this.drawPolyLines = function() {
             if (mapPath) {

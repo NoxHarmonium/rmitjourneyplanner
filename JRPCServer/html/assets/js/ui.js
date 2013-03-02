@@ -14,8 +14,8 @@ var strQueuedMessage = 'Your journey planning request is currently queued. Pleas
 var strQueuedTitle = 'Queued...';
 var strOptimisingMessage = 'The journey planning engine is currently calculating possible journeys. Please wait....';
 var strOptimisingTitle = 'Optimising...';
-var strFinishedMessage = 'The optimisation process is finished. The results should display now....';
-var strFinishedTitle = 'Finished...';
+var strFinishedMessage = 'The results of the optimisation are shown below....';
+var strFinishedTitle = 'Results...';
 var strUnknownTitle = 'Unknown Status...';
 
 var strTransportImagePath = "assets/img/transportIcons/";
@@ -102,6 +102,7 @@ function setLoadingDivMode(mode) {
             $('#divLoading .title').text(strFinishedTitle);
             $('#divLoading .progressHelp').text(strFinishedMessage);
             $('#divLoading .progressInfo').hide();
+            $('#divLoading div.progress').hide();
             break;
 
         default:
@@ -119,7 +120,7 @@ function showLoadingDiv() {
     if (!loadingDivShown) {
 
         $('#divLoading').show();
-        dateTimeDivShown = true;
+        loadingDivShown = true;
     }
 
 
@@ -129,7 +130,7 @@ function hideLoadingDiv() {
     if (loadingDivShown) {
 
         $('#divLoading').hide();
-        dateTimeDivShown = false;
+        loadingDivShown = false;
     }
 
 }
@@ -198,6 +199,62 @@ function showResultsDiv() {
     $('#divJourneyList').show();
 }
 
+function selectJourney(e) {  
+    var sender = $(e.target).parents('tr');
+    $('.selectedJourney').removeClass('selectedJourney');
+    sender.addClass('selectedJourney');
+    var legs = sender.prop('jLegs');
+    mapManager.clearMarkers();
+    mapManager.clearLines();
+    for (i in legs)
+    {
+
+        
+        var leg = legs[i];
+
+        if (i == 0 || !(leg.Mode == "Walking" && legs[parseInt(i) - 1].Mode == "Walking")) {
+            mapManager.addMarker(new google.maps.Marker({
+                position: new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
+                icon: strTransportImagePath + leg.Mode + strTransportImageExt
+            }));
+        }
+
+        var lineColour;
+
+        switch (leg.Mode) {
+            case "Train":
+                lineColour = "#0000FF";
+                break;
+            case "Bus":
+                lineColour = "#B25800";
+                break;
+            case "Tram":
+                lineColor = "#00FF00";
+                break;
+            default:
+                lineColour = "#333333";
+                break;      
+        }
+
+        mapManager.addLine(new google.maps.Polyline({
+            path: [new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
+                    new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long)],
+            strokeColor: lineColour,
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        }));
+        
+        if (parseInt(i) == legs.length - 1) {
+            //Draw finish marker
+            mapManager.addMarker(new google.maps.Marker({
+                position: new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long),
+                icon: strTransportImagePath + "Finish" + strTransportImageExt
+            }));
+        }
+
+    }
+}
+
 function showResults(data) {
 
     var results = data.result;
@@ -211,21 +268,24 @@ function showResults(data) {
         var d = new Date(journey.Fitness.TotalJourneyMinutes * 60 * 1000);
         tdTime.text(d.getUTCHours() + 'h ' + d.getUTCMinutes() + 'm');
         var tdLegs = $('<td class="journeyModes"></td>');
-        for (var j in journey.Legs) {
+        for (var j in journey.Legs) {            
             var leg = journey.Legs[j];
-            //<img class="miniIcon" src="assets/img/transportIcons/Train.png" />
-            var imgLeg = $('<img class="miniIcon"/>');
-            imgLeg.attr('src', strTransportImagePath + leg.Mode + strTransportImageExt);
-            tdLegs.append(imgLeg);
+            if (j == 0 || !(leg.Mode == "Walking" && journey.Legs[parseInt(j) - 1].Mode == "Walking")) {
+                //<img class="miniIcon" src="assets/img/transportIcons/Train.png" />
+                var imgLeg = $('<img class="miniIcon"/>');
+                imgLeg.attr('src', strTransportImagePath + leg.Mode + strTransportImageExt);
+                tdLegs.append(imgLeg);
+            }
         }
+        trSummary.prop('jLegs', journey.Legs);
+        trSummary.click(selectJourney);
         
-
         trSummary.append(tdTitle);
         trSummary.append(tdTime);
         trSummary.append(tdLegs);
         tableSummary.append(trSummary);
     }
     showResultsDiv();
-
+ 
 
 }

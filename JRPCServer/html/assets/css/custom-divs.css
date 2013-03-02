@@ -92,17 +92,23 @@
 
 .infoTop
 {
-	margin-top: 50px;
-	margin-left: 20px;
+
 	padding: 0 0 0 0;
 	padding-top: 20px;
-	/*border: 1px solid #E5E5E5;*/
-    max-height: 250px;     
+	/*border: 1px solid #E5E5E5;*/       
+
+    
+}
+
+.infoTop table>tbody 
+{
+    height: 250px;  
+    max-height: 250px;  
     overflow-x: hidden;
+    display: block;
     /*overflow-y: scroll;*/
     -ms-overflow-x: hidden;
     /*-ms-overflow-y: scroll;*/
-    
 }
 
 /*Stuff for the infoTop panel */
@@ -266,10 +272,26 @@ background-color: #EEEEEE;*/
     
 }
 
+div.infoTop tr:hover {
+    background-color: #EFEFEF;
+}
+
+div.infoTop tr.selectedJourney {
+    
+    background-color: #c1e8fe;
+   
+}
+
+div.infoTop table td {
+    
+    width: 60px;
+   
+}
+
 td.journeyModes
 {
     overflow: hidden;
     text-overflow: ellipsis;
     /*white-space: nowrap;*/
-    max-width: 100px;
+    width: 65% !important;
 }

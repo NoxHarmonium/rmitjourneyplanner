@@ -536,9 +536,9 @@ namespace JRPCServer
                                                             minCrit = critter;
                                                         }
                                                     }
-                                                    candidates.Add(minCrit);
-                                                }
 
+                                                    candidates.Add(minCrit);                                                
+                                                }                                               
                                                 exportContext.Export(candidates.OrderBy(c => c.Fitness.TotalJourneyTime), new JsonTextWriter(writer));
                                             }
 

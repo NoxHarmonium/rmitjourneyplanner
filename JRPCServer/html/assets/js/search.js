@@ -94,10 +94,7 @@ function submitSearch() {
             return;
         }
 
-        if (checkValidation(data)) {
-            //If validation succeded, open progress bar.
-            showLoadingDiv();
-            hideHelpDiv();
+        if (checkValidation(data)) {         
             if (progress_callback_id != null) {
                 clearInterval(progress_callback_id);
             }
@@ -116,9 +113,8 @@ function getResults() {
     RPCCall('GetResult', { "userKey": userKey }, function (data) {
         if (CheckForError(data)) {
             return;
-        }
+        }       
         
-        hideLoadingDiv();
         showResults(data);
 
     });
@@ -133,6 +129,14 @@ function progressCallback() {
 
         //data.result
         var d = data.result;
+
+        if (d.status.toLowerCase() == "unknown") {
+            return;
+        }
+
+        //If validation succeded, open progress bar.
+        showLoadingDiv();
+        hideHelpDiv();
 
         setLoadingDivProgress(d.progress, d.iteration, d.totalIterations);
 
