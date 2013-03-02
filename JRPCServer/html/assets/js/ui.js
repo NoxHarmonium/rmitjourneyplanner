@@ -206,6 +206,9 @@ function selectJourney(e) {
     var legs = sender.prop('jLegs');
     mapManager.clearMarkers();
     mapManager.clearLines();
+
+    $('div.infoPanel').show();
+
     for (i in legs)
     {
 
@@ -250,7 +253,7 @@ function selectJourney(e) {
                 position: new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long),
                 icon: strTransportImagePath + "Finish" + strTransportImageExt
             }));
-        }
+        }       
 
     }
 }

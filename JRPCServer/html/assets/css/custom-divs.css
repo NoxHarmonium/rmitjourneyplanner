@@ -94,7 +94,8 @@
 {
 
 	padding: 0 0 0 0;
-	padding-top: 20px;
+
+    margin-left: 20px;
 	/*border: 1px solid #E5E5E5;*/       
 
     
@@ -103,7 +104,7 @@
 .infoTop table>tbody 
 {
     height: 250px;  
-    max-height: 250px;  
+    max-height: 150px;  
     overflow-x: hidden;
     display: block;
     /*overflow-y: scroll;*/
@@ -259,7 +260,7 @@
     /*padding: 20px;
     margin: 20px;
 background-color: #EEEEEE;*/
-    margin-top: 70px;
+    
     
 }
 
@@ -295,3 +296,22 @@ td.journeyModes
     /*white-space: nowrap;*/
     width: 65% !important;
 }
+
+.leftPanel
+{
+    max-width: 400px;
+    width: 400px;
+    float: left;
+    padding-right: 25px;
+    padding-top: 30px;
+}
+.rightPanel
+{
+
+}
+
+div#divLoading
+{
+    margin-left: 20px;
+}
+

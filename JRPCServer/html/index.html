@@ -168,8 +168,8 @@
                </div>
            </div>
 
-        <div class="row-fluid">
-            <div class="span4">
+        <div>
+            <div class="leftPanel">
 				<div id="divHelp" class="well well-large sideDiv ">
                     <h1>Welcome! </h1>
                     
@@ -201,40 +201,15 @@
 				    </div>                
                 </div>
 
-                <div id="divTemplate" style="display: none;">
-                <div class="infoTop">
-					<table class="table table-bordered">
-						<tr>
-							<td>Journey 1  </td>
-							<td>1hr 20m  </td>
-							<td><img class="miniIcon" src="assets/img/transportIcons/Bus.png" /> 
-							<img class="miniIcon" src="assets/img/transportIcons/Train.png" /> 
-							<img class="miniIcon" src="assets/img/transportIcons/Tram.png" /> </td>  
-						</tr>
-						<tr class="info">
-							<td>Journey 2  </td>
-							<td>1hr 11m  </td>
-							<td><img class="miniIcon" src="assets/img/transportIcons/Train.png" /> 
-								<img class="miniIcon" src="assets/img/transportIcons/Train.png" />
-							</td>  
-						</tr>
-						<tr>
-							<td>Journey 3  </td>
-							<td>40m  </td>
-							<td><img class="miniIcon" src="assets/img/transportIcons/Train.png" />
-								<img class="miniIcon" src="assets/img/transportIcons/Bus.png" />
-							</td>  
-						</tr>
-					</table>
-					
-				</div>
+                <div id="divTemplate">
+                
 				<!--<div class="infoArrow">
 					<img src="assets/img/arrow.png" />
 				</div>				-->
 				<div class="infoPanel"> 
 					<div class="startEnd">
 						<div><img src="assets/img/transportIcons/Start.png" /></div>
-						<div><address>
+						<div><address class="start">
 						  <strong>Coburg Railway Station</strong><br>
 						  118 Bell St<br>
 						  Coburg				  
@@ -263,7 +238,7 @@
 
 					<div class="startEnd">
 						<div><img src="assets/img/transportIcons/Finish.png" /></div>
-						<div><address>
+						<div><address class="end">
 						  <strong>Ascot Vale Railway Station</strong><br>
 						  31 The Crescent<br>
 						  Ascot Vale					  
@@ -278,7 +253,7 @@
 				</div>
 			</div>
             <!-- Main hero unit for a primary marketing message or call to action -->
-            <div class="span8 filler">
+            <div class="rightPanel">
                <div id="map_canvas"> </div>
             </div>
         </div>
