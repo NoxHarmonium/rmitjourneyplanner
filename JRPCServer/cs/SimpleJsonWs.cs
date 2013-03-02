@@ -34,11 +34,19 @@ namespace JRPCServer
     #endregion
 
     /// <summary>
-    /// The jsonws.
+    /// A JSON-RPC service that exposes functionality related to the RMIT Journey Planner.
     /// </summary>
     [JsonRpcHelp("This is a JSON-RPC service that exposes functionality related to the RMIT Journey Planner.")]
     public class SimpleJsonWs : JsonRpcHandler, IRequiresSessionState
     {
+        enum OptimisationStatus
+        {
+            Unknown,
+            Queued,
+            Optimising,
+            Finished
+        }
+        
         #region Constants and Fields
 
         /// <summary>
@@ -178,7 +186,6 @@ namespace JRPCServer
             var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
             if (optimiser.CurrentJourney != null)
             {
-
                 if (optimiser.CurrentJourney.Uuid == userKey)
                 {
                     double progress = optimiser.CurrentIteration / (double)optimiser.MaxIterations;
@@ -186,28 +193,35 @@ namespace JRPCServer
                     {
                         progress = 0.0;
                     }
-                    return new { status = "optimising", progress, iteration = optimiser.CurrentIteration, totalIterations = optimiser.MaxIterations };
+                    return new { status = OptimisationStatus.Optimising, progress, iteration = optimiser.CurrentIteration, totalIterations = optimiser.MaxIterations };
                 }
 
                 if (optimiser.GetQueue().Contains(userKey))
                 {
-                    return new { status = "queued", progress = 0.0, iteration = 0, totalIterations = 0 };
+                    return new { status = OptimisationStatus.Queued, progress = 0.0, iteration = 0, totalIterations = 0 };
                 }
             }
-            //Default message TODO: Maybe the default status shouldn't be 'finished'.
-            return new { status = "finished", progress = 1.0, iteration = 0, totalIterations = 0 };
-            
+
+            if (optimiser.GetJourneyResult(userKey) != null)
+            {
+                return new { status = OptimisationStatus.Finished, progress = 1.0, iteration = 0, totalIterations = 0 };
+            }
+           
+            return new { status = OptimisationStatus.Unknown, progress = 1.0, iteration = 0, totalIterations = 0 };
         }
 
-
-        public object GetJourneys(string userKey)
+        [JsonRpcMethod("GetResult", Idempotent = true)]
+        [JsonRpcHelp(
+            "Accepts a user key. Returns an array of journeys that was the result of the last optimisation for the specified user."
+            )]
+        public JsonArray GetResult(string userKey)
         {
             dynamic status = this.GetStatus(userKey);
             // Check if optimisation finished.
-            if (status.status == "finished")
+            if (status.status == OptimisationStatus.Finished)
             {
-                
-
+                var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
+                return optimiser.GetJourneyResult(userKey);
             }
             return null;
 
@@ -228,8 +242,6 @@ namespace JRPCServer
                 ObjectCache.RegisterObject(journeyManager);
             }
             
-            
-
             bool validationError = false;
 
             //Load the default journey
@@ -267,10 +279,8 @@ namespace JRPCServer
                     "Property value collection is null. Cannot proceed with validation. Please check your JSON syntax.");
 
             }
-
-           
-
-            List<ValidationError> valErrors = new List<ValidationError>();
+            
+            var valErrors = new List<ValidationError>();
             foreach (var propVal in propVals)
             {
                 var valError = this.SetProperty(journey, propVal);

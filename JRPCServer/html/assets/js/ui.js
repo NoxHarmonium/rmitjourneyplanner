@@ -80,7 +80,7 @@ function setLoadingDivProgress(progress, iteration, totalIterations) {
 
 function setLoadingDivMode(mode) {
     $('#divLoading .progressHelp').show();
-    switch (mode) {
+    switch (mode.toLowerCase()) {
         case "queued":
 
             $('#divLoading H1').text(strQueuedTitle);
@@ -185,4 +185,11 @@ function hideDateTimeDiv()
         });
     }
 
+}
+
+function showResults(data) {
+    
+    
+    
+    
 }

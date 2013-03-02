@@ -8,6 +8,7 @@
 //
 var userKey = "abcdef";
 var validation_success = "Success";
+var progress_callback_id = null;
 
 //
 // Functions
@@ -97,7 +98,10 @@ function submitSearch() {
             //If validation succeded, open progress bar.
             showLoadingDiv();
             hideHelpDiv();
-            setInterval(progressCallback, 500);
+            if (progress_callback_id != null) {
+                clearInterval(progress_callback_id);
+            }
+            progress_callback_id = setInterval(progressCallback, 500);
             progressCallback();
         }
 
@@ -107,7 +111,17 @@ function submitSearch() {
     });
 }
 
+function getResults() {
 
+    RPCCall('GetResult', { "userKey": userKey }, function (data) {
+        if (CheckForError(data)) {
+            return;
+        }
+        
+        showResults(data);
+
+    });
+}
 
 function progressCallback() {
 
@@ -122,6 +136,13 @@ function progressCallback() {
         setLoadingDivProgress(d.progress, d.iteration, d.totalIterations);
 
         setLoadingDivMode(d.status);
+
+        if (d.status.toLowerCase() == "finished") {
+            clearInterval(progress_callback_id);
+            progress_callback_id = null;
+            getResults();
+
+        }
 
 
     });

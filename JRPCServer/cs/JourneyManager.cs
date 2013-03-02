@@ -94,7 +94,11 @@ namespace JRPCServer
         public void Clean(Journey journey)
         {
             journey.RunUuids = new string[0];
-            new DirectoryInfo(string.Format("{0}\\{1}",this.directories[1],journey.Uuid)).Delete(true);
+            string runsDir = string.Format("{0}\\{1}", this.directories[1], journey.Uuid);
+            if (Directory.Exists(runsDir))
+            {
+                new DirectoryInfo(runsDir).Delete(true);
+            }
 
         }
 
