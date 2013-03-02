@@ -118,6 +118,7 @@ function getResults() {
             return;
         }
         
+        hideLoadingDiv();
         showResults(data);
 
     });
@@ -141,7 +142,6 @@ function progressCallback() {
             clearInterval(progress_callback_id);
             progress_callback_id = null;
             getResults();
-
         }
 
 
