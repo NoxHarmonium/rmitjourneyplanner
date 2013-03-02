@@ -600,15 +600,17 @@ namespace JRPCServer
         public JsonArray GetJourneyResult(string uuid)
         {
             string dir = this.directories[1] + "/" + uuid + "/";
-            var dirInfo = new DirectoryInfo(dir);
-            var latestDir = dirInfo.GetDirectories().OrderBy(d => d.CreationTime).FirstOrDefault();
-
-            if (latestDir == null)
+            string filename;
+            try
+            {
+                var dirInfo = new DirectoryInfo(dir);
+                var latestDir = dirInfo.GetDirectories().OrderBy(d => d.CreationTime).First();
+                filename = latestDir.FullName + "/simple.json";
+            }
+            catch (Exception)
             {
                 return null;
             }
-            
-            string filename = latestDir.FullName + "/simple.json";
 
             if (!File.Exists(filename))
             {
@@ -634,16 +636,19 @@ namespace JRPCServer
         public JsonArray GetJourneyResult(string uuid, int iteration)
         {
             string dir = this.directories[1] + "/" + uuid + "/";
-            var dirInfo = new DirectoryInfo(dir);
-            var latestDir = dirInfo.GetDirectories().OrderBy(d => d.CreationTime).FirstOrDefault();
+            string filename;
 
-            if (latestDir == null)
+            try
+            {
+                var dirInfo = new DirectoryInfo(dir);
+                var latestDir = dirInfo.GetDirectories().OrderBy(d => d.CreationTime).First();
+                filename = latestDir.FullName + "/iteration." + iteration + ".json";
+            }
+            catch (Exception)
             {
                 return null;
             }
-
-            string filename = latestDir.FullName + "/iteration." + iteration + ".json";
-
+           
             if (!File.Exists(filename))
             {
                 return null;
