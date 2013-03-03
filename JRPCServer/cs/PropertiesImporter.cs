@@ -242,7 +242,7 @@ namespace JRPCServer
                                     var strType = propVal.Value.Split(new[] { '@' })[1];
                                     pType = types.First(t => t.Name == strType);
                                 }
-                                catch (Exception e)
+                                catch (Exception)
                                 {
                                     throw new Exception("Cannot find type in assembly. (" + propVal.Value + ")");
                                 }
@@ -257,7 +257,7 @@ namespace JRPCServer
                                         // newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,new[] {properties});
                                         newObj = Activator.CreateInstance(pType, new[] { this.properties });
                                     }
-                                    catch (Exception e)
+                                    catch (Exception)
                                     {
                                         // newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,null);
                                         newObj = Activator.CreateInstance(pType);

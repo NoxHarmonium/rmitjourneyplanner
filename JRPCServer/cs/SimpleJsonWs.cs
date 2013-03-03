@@ -257,7 +257,7 @@ namespace JRPCServer
                 journeyManager.Add(journey);
                 journeyManager.Save();
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 throw new Exception(
                    "No default journey to base this journey off. Please specify one using the control panel.");
@@ -463,7 +463,7 @@ namespace JRPCServer
                                 {
                                     node = (PtvNode)provider.GetNodeFromId(Convert.ToInt32(propVal.Value));
                                 }
-                                catch (KeyNotFoundException e)
+                                catch (KeyNotFoundException)
                                 {
                                     throw new Exception("There is no such node with the given ID or name.");
                                 }
@@ -520,7 +520,7 @@ namespace JRPCServer
                                     var types = Assembly.GetAssembly(pType).GetTypes();
                                     pType = types.Where(t => t.Name == propVal.Value).First();
                                 }
-                                catch (Exception e)
+                                catch (Exception)
                                 {
                                     throw new Exception("Cannot find type in assembly. (" + propVal.Value + ")");
                                 }
@@ -535,7 +535,7 @@ namespace JRPCServer
                                         // newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,new[] {properties});
                                         newObj = Activator.CreateInstance(pType, new[] { properties });
                                     }
-                                    catch (Exception e)
+                                    catch (Exception)
                                     {
                                         // newObj = pType.InvokeMember("",BindingFlags.CreateInstance,null,null,null);
                                         newObj = Activator.CreateInstance(pType);
