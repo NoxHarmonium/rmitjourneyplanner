@@ -1,21 +1,7 @@
 ﻿###
 ****************************************************************
 *
-*   Class:       rmitjourneyplanner.client
-*   Description: The main class that ties everything together
-*   
-****************************************************************
-###
-class rmitjourneyplanner.client
-    constructor: () ->
-        @global = new rmitjourneyplanner.client.global(this)
-        @maps = new rmitjourneyplanner.client.maps(this)
-        @search = new rmitjourneyplanner.client.search(this)
-
-###
-****************************************************************
-*
-*   Class:       rmitjourneyplanner.client
+*   Class:       rmitjourneyplanner.client.global
 *   Description: Initialises the web application and contains 
 *                functions used globally.
 *   
@@ -139,8 +125,18 @@ class rmitjourneyplanner.client.global
 
 
 #
-# Contains the functionality to do with manipulating the Google Maps object.
+# 
 #
+
+###
+****************************************************************
+*
+*   Class:       rmitjourneyplanner.client.maps
+*   Description: Contains the functionality to do with 
+*                manipulating the Google Maps object.
+*   
+****************************************************************
+###
 class rmitjourneyplanner.client.maps
     
     # Fields
@@ -220,9 +216,15 @@ class rmitjourneyplanner.client.maps
                     .appendTo(ul);
 
 
-#
-# This class encapsulates the search functionality for this web application
-#
+###
+****************************************************************
+*
+*   Class:       rmitjourneyplanner.client.search
+*   Description: Contains the functionality to do with 
+*                manipulating the Google Maps object.
+*   
+****************************************************************
+###
 class rmitjourneyplanner.client.search
     
    
@@ -339,10 +341,15 @@ class rmitjourneyplanner.client.search
         startSearch();
         submitSearch();
 
-
-#
-# This class handles data access and caching of JSON 
-#
+###
+****************************************************************
+*
+*   Class:       rmitjourneyplanner.client
+*   Description: This class handles data access and caching 
+*                of JSON data sources.
+*   
+****************************************************************
+###
 class rmitjourneyplanner.client.dataManager
     @data = {}
     
@@ -588,3 +595,39 @@ class rmitjourneyplanner.client.ui
             tableSummary.append(trSummary)
             
         showResultsDiv()
+
+
+
+###
+****************************************************************
+*
+*   Class:       rmitjourneyplanner.client
+*   Description: The main class that ties everything together
+*   
+****************************************************************
+###
+class rmitjourneyplanner.client
+    constructor: () ->
+        @global = new rmitjourneyplanner.client.global(this)
+        @maps = new rmitjourneyplanner.client.maps(this)
+        @search = new rmitjourneyplanner.client.search(this)
+
+
+###
+    ///OLD AUTOEXEC CODE
+
+    attachGeoAutoComplete();
+	var d = new Date();
+	$('#txtWhen').val(d.getHours()+ ":" + d.getMinutes());
+
+	$('#btnMore').click(toggleDateTimeDiv);
+	$('#btnCloseDivHow').click(hideDateTimeDiv);
+	$('#btnSearch').click(search);
+	
+	$('.close').click(closeParent);
+	
+	//$('#example').tooltip();
+	//$('#example').tooltip('show');
+	progressCallback();
+
+###
