@@ -202,7 +202,7 @@ namespace JRPCServer
                 }
             }
 
-            if (optimiser.GetJourneyResult(userKey) != null)
+            if (optimiser.GetResult(userKey) != null)
             {
                 return new { status = OptimisationStatus.Finished, progress = 1.0, iteration = 0, totalIterations = 0 };
             }
@@ -221,10 +221,27 @@ namespace JRPCServer
             if (status.status == OptimisationStatus.Finished)
             {
                 var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
-                return optimiser.GetJourneyResult(userKey);
+                return optimiser.GetResult(userKey);
             }
             return null;
 
+        }
+
+        [JsonRpcMethod("GetDetails", Idempotent = true)]
+        [JsonRpcHelp(
+            "Accepts a user key and an index refering to a journey. Returns detailed information on the specified journey."
+            )]
+        public JsonObject GetDetails(string userKey, int journeyIndex)
+        {
+            dynamic statusObject = this.GetStatus(userKey);
+            // Check if optimisation finished.
+            if (statusObject.status == OptimisationStatus.Finished)
+            {
+                var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
+                int iterations = optimiser.GetIterationCount(userKey);
+                return (JsonObject)optimiser.GetDetailedResult(userKey,iterations-1)[journeyIndex];
+            }
+            return null;
         }
 
 

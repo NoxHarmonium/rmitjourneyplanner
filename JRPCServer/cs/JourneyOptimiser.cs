@@ -144,8 +144,7 @@ namespace JRPCServer
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JourneyOptimiser"/> class. 
+        /// <summary>        
         /// Initialises a new instance of the <see cref="JourneyOptimiser"/> class with the specified <see cref="JourneyManager"/> instance.
         /// </summary>
         /// <param name="journeyManager">
@@ -395,8 +394,10 @@ namespace JRPCServer
         /// </summary>
         private void OptimisationLoop()
         {
-            var exportContext = JsonConvert.CreateExportContext();
-            exportContext.Register(new CritterExporter());
+            var detailedExportContext = JsonConvert.CreateExportContext();
+            var summaryExportContext = JsonConvert.CreateExportContext();
+            detailedExportContext.Register(new CritterExporter(CritterExporter.ExportType.Expanded));
+            summaryExportContext.Register(new CritterExporter(CritterExporter.ExportType.Summary));
             {
                 // try
                 while (!this.cTokenSource.IsCancellationRequested)
@@ -498,7 +499,7 @@ namespace JRPCServer
                                             /*results[i].Population.CalculateHyperVolume(
                                                 journey.Properties.Objectives,
                                                 new double[journey.Properties.Objectives.Length]);*/
-                                            exportContext.Export(results[i], new JsonTextWriter(writer));
+                                            detailedExportContext.Export(results[i], new JsonTextWriter(writer));
                                             resultWriter.Write(
                                                 "{0}, {1}, {2}, ", i, results[i].Hypervolume, results[i].Cardinality);
                                             foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
@@ -514,32 +515,35 @@ namespace JRPCServer
                                         // For the last result entry, Save simplified file.
                                         if (i == results.Count - 1)
                                         {
-                                            using (
-                                           var writer = new StreamWriter(dir + run.Uuid + "/simple.json"))
-                                            {
-                                                var grouped = from p in results[i].Population
-                                                              group p by p.Route
-                                                                  into g
-                                                                  select g;
+                                            
+                                           using (var writer = new StreamWriter(dir + run.Uuid + "/simple.json"))
+                                           {
+                                               using (var jsonWriter = new JsonTextWriter(writer))
+                                               {
+                                                   var grouped = from p in results[i].Population
+                                                                 group p by p.Route
+                                                                     into g
+                                                                     select g;
 
-                                                var candidates = new List<Critter>();
-                                                foreach (var g in grouped)
-                                                {
-                                                    TimeSpan minTime = TimeSpan.MaxValue;
-                                                    Critter minCrit = null;
+                                                   var candidates = new List<Critter>();
+                                                   foreach (var g in grouped)
+                                                   {
+                                                       TimeSpan minTime = TimeSpan.MaxValue;
+                                                       Critter minCrit = null;
 
-                                                    foreach (var critter in g)
-                                                    {
-                                                        if (critter.Fitness.TotalJourneyTime < minTime)
-                                                        {
-                                                            minTime = critter.Fitness.TotalJourneyTime;
-                                                            minCrit = critter;
-                                                        }
-                                                    }
+                                                       foreach (var critter in g)
+                                                       {
+                                                           if (critter.Fitness.TotalJourneyTime < minTime)
+                                                           {
+                                                               minTime = critter.Fitness.TotalJourneyTime;
+                                                               minCrit = critter;
+                                                           }
+                                                       }
 
-                                                    candidates.Add(minCrit);                                                
-                                                }                                               
-                                                exportContext.Export(candidates.OrderBy(c => c.Fitness.TotalJourneyTime), new JsonTextWriter(writer));
+                                                       candidates.Add(minCrit);
+                                                   }
+                                                   summaryExportContext.Export(candidates.OrderBy(c => c.Fitness.TotalJourneyTime), jsonWriter);
+                                               }
                                             }
 
                                         }
@@ -547,7 +551,7 @@ namespace JRPCServer
 
                                     using (var writer = new StreamWriter(dir + run.Uuid + ".json"))
                                     {
-                                        exportContext.Export(run, new JsonTextWriter(writer));
+                                        detailedExportContext.Export(run, new JsonTextWriter(writer));
                                     }
 
                                     results.Clear();
@@ -593,11 +597,11 @@ namespace JRPCServer
         }
 
         /// <summary>
-        /// Get the <see cref="JsonObject"/> representing the simplified final result of the optimisation run.
+        /// Get the <see cref="JsonObject"/> representing the simplified result of the latest optimisation run.
         /// </summary>
         /// <param name="uuid">The UUID of the journey you wish to get the results for.</param>
         /// <returns>A <see cref="JsonObject"/> or null if the run has no matching result.</returns>
-        public JsonArray GetJourneyResult(string uuid)
+        public JsonArray GetResult(string uuid)
         {
             string dir = this.directories[1] + "/" + uuid + "/";
             string filename;
@@ -624,16 +628,16 @@ namespace JRPCServer
                     return JsonConvert.Import<JsonArray>(jsonReader);
                 }
             }
-        }
-
-
+        }        
+        
         /// <summary>
-        /// Get the <see cref="JsonObject"/> representing a specific iteration of the optimisation run.
+        /// Get the <see cref="JsonObject"/> representing the detailed result of a specific
+        /// iteration of the latest optimisation run.
         /// </summary>
         /// <param name="uuid">The UUID of the journey you wish to get the results for.</param>
         /// <param name="iteration">The iteration number you want to get the results from.</param>
         /// <returns>A <see cref="JsonObject"/> or null if the run has no matching result.</returns>
-        public JsonArray GetJourneyResult(string uuid, int iteration)
+        public JsonArray GetDetailedResult(string uuid, int iteration)
         {
             string dir = this.directories[1] + "/" + uuid + "/";
             string filename;
@@ -660,6 +664,26 @@ namespace JRPCServer
                 {
                     return JsonConvert.Import<JsonArray>(jsonReader);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of iterations that were executed for the latest optimisation run.
+        /// </summary>
+        /// <param name="uuid">The UUID of the journey you wish to get the results for.</param>
+        /// <returns>The number of iterations or 0 if there is an error.</returns>
+        public int GetIterationCount(string uuid)
+        {
+            string dir = this.directories[1] + "/" + uuid + "/";
+            try
+            {
+                var dirInfo = new DirectoryInfo(dir);
+                var latestDir = dirInfo.GetDirectories().OrderBy(d => d.CreationTime).First();
+                return latestDir.GetFiles("iteration.*.json").Length;
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
 

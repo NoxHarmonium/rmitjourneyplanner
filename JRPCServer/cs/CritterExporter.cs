@@ -25,10 +25,37 @@ namespace JRPCServer
     /// </summary>
     public class CritterExporter : IExporter
     {
+        /// <summary>
+        /// Specifies how many properties of the <see cref="Critter"/> object get 
+        /// exported to JSON.
+        /// </summary>
+        public enum ExportType
+        {
+            /// <summary>
+            /// Only a few essential properties are exported. 
+            /// Use this to export a journey summary to the web application.
+            /// </summary>
+            Summary,
+            /// <summary>
+            /// Important properties are exported.
+            /// </summary>
+            Simple,
+            /// <summary>
+            /// Most properties are exported.
+            /// </summary>
+            Expanded
+        }        
+        
+        #region Constants and Fields
+
+        private ExportType exportType;
+        
+        #endregion
+
         #region Public Properties
 
         /// <summary>
-        /// Gets InputType.
+        /// Gets the input type of the <see cref="CritterExporter"/> object.
         /// </summary>
         public Type InputType
         {
@@ -36,9 +63,22 @@ namespace JRPCServer
             {
                 return typeof(Critter);
             }
+        }    
+
+        #endregion     
+   
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initialises a new instance of the <see cref="CritterExporter"/> class with the specifed <see cref="ExportType"/>.
+        /// </summary>
+        /// <param name="exportType">An <see cref="ExportType"/> values the represents the required detail level of the export.</param>
+        public CritterExporter(ExportType exportType)
+        {
+            this.exportType = exportType;
         }
 
-        #endregion
+        #endregion      
 
         #region Public Methods and Operators
 
@@ -55,15 +95,21 @@ namespace JRPCServer
         /// The writer.
         /// </param>
         public void Export(ExportContext context, object value, JsonWriter writer)
-        {
+        {            
             writer.WriteStartObject();
             writer.WriteMember("Critter");
-            writer.WriteStartObject();
+
             var critter = (Critter)value;
-            writer.WriteMember("Age");
-            writer.WriteNumber(critter.Age);
-            writer.WriteMember("N");
-            writer.WriteNumber(critter.N);
+            writer.WriteStartObject();
+
+            if (exportType > ExportType.Expanded)
+            {
+                writer.WriteMember("Age");
+                writer.WriteNumber(critter.Age);
+                writer.WriteMember("N");
+                writer.WriteNumber(critter.N);             
+            }
+
             writer.WriteMember("Rank");
             writer.WriteNumber(critter.Rank);
 
@@ -80,48 +126,62 @@ namespace JRPCServer
 
             // writer.WriteMember("Fitness");
             // context.Export(critter.Fitness,writer);
-            writer.WriteMember("Route");
-            writer.WriteStartArray();
-            foreach (var node in critter.Route)
+            if (exportType > ExportType.Summary)
             {
-                writer.WriteNumber(node.Node.Id);
+                writer.WriteMember("Route");
+                writer.WriteStartArray();
+                foreach (var node in critter.Route)
+                {
+                    writer.WriteNumber(node.Node.Id);
+                }
+                writer.WriteEndArray();
             }
-
-            writer.WriteEndArray();
 
             writer.WriteMember("Legs");
             writer.WriteStartArray();
             foreach (var leg in critter.Fitness.JourneyLegs)
             {
                 writer.WriteStartObject();
-                writer.WriteMember("Start");
-                writer.WriteNumber(leg.Origin.Id);
-                writer.WriteMember("StartLocation");
-                writer.WriteStartObject();
-                writer.WriteMember("Lat");
-                writer.WriteNumber(leg.Origin.Latitude);
-                writer.WriteMember("Long");
-                writer.WriteNumber(leg.Origin.Longitude);
-                writer.WriteEndObject();        
-                writer.WriteMember("End");
-                writer.WriteNumber(leg.Destination.Id);
-                writer.WriteMember("EndLocation");
-                writer.WriteStartObject();
-                writer.WriteMember("Lat");
-                writer.WriteNumber(leg.Destination.Latitude);
-                writer.WriteMember("Long");
-                writer.WriteNumber(leg.Destination.Longitude);
-                writer.WriteEndObject();  
+
+                if (exportType > ExportType.Summary)
+                {
+                    writer.WriteMember("Start");
+                    writer.WriteNumber(leg.Origin.Id);
+                    writer.WriteMember("End");
+                    writer.WriteNumber(leg.Destination.Id);
+                    writer.WriteMember("Route");
+                    writer.WriteString(leg.RouteId1);
+
+                }
+
+                if (exportType > ExportType.Simple)
+                {
+                    writer.WriteMember("StartLocation");
+                    writer.WriteStartObject();
+                    writer.WriteMember("Lat");
+                    writer.WriteNumber(leg.Origin.Latitude);
+                    writer.WriteMember("Long");
+                    writer.WriteNumber(leg.Origin.Longitude);
+                    writer.WriteEndObject();                    
+                }
+
+                if (exportType > ExportType.Simple)
+                {
+                    writer.WriteMember("EndLocation");
+                    writer.WriteStartObject();
+                    writer.WriteMember("Lat");
+                    writer.WriteNumber(leg.Destination.Latitude);
+                    writer.WriteMember("Long");
+                    writer.WriteNumber(leg.Destination.Longitude);
+                    writer.WriteEndObject();
+                }
+
                 writer.WriteMember("Mode");
                 writer.WriteString(leg.TransportMode.ToString());
                 writer.WriteMember("TotalTime");
                 context.Export(leg.TotalTime, writer);
-
-                // writer.WriteString(leg.TotalTime.ToString());
-                writer.WriteMember("Route");
-                writer.WriteString(leg.RouteId1);
                 writer.WriteMember("DepartTime");
-                context.Export(leg.DepartureTime, writer);
+                context.Export(leg.DepartureTime, writer); 
 
                 writer.WriteEndObject();
             }
