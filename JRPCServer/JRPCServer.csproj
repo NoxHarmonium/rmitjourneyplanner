@@ -183,6 +183,12 @@
     <Content Include="html\assets\js\ui.controls\control.min.js">
       <DependentUpon>control.coffee</DependentUpon>
     </Content>
+    <Content Include="html\assets\js\ui.controls\hideable.js">
+      <DependentUpon>hideable.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\hideable.min.js">
+      <DependentUpon>hideable.coffee</DependentUpon>
+    </Content>
     <Content Include="html\assets\js\ui.controls\map.js">
       <DependentUpon>map.coffee</DependentUpon>
     </Content>
@@ -308,6 +314,7 @@
     <None Include="html\assets\js\ui.controls\alertbox.coffee" />
     <None Include="html\assets\js\ui.controls\autocomplete.coffee" />
     <None Include="html\assets\js\ui.controls\control.coffee" />
+    <None Include="html\assets\js\ui.controls\hideable.coffee" />
     <None Include="html\assets\js\ui.controls\map.coffee" />
     <None Include="simplejsonws.ashx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

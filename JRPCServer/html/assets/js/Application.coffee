@@ -23,7 +23,7 @@ class Application
         errorBox.setSuccess()
         errorBox.setTitle("Success!")
         errorBox.setMessage("The error box component works!")
-        errorBox.show()
+        errorBox.show("slide")
 
 
 $(window).ready ->

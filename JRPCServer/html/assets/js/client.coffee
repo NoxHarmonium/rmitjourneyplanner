@@ -623,6 +623,7 @@ class window.RmitJourneyPlanner
                 constructor: (source, @name, @message="", @stackTrace=""	) ->
                     super source, JRPCException.message
 
+
             class @::MissingDependencyException extends @::ClientException
                 this.message = "This control is missing a required dependency. Check that the required dependency is included in your web application. Dependency: "
 
