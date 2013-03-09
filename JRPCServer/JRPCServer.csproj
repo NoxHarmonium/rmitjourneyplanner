@@ -165,6 +165,12 @@
     <Content Include="html\assets\js\test.min.js">
       <DependentUpon>test.coffee</DependentUpon>
     </Content>
+    <Content Include="html\assets\js\ui.controls\AlertBox.js">
+      <DependentUpon>alertbox.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\AlertBox.min.js">
+      <DependentUpon>alertbox.coffee</DependentUpon>
+    </Content>
     <Content Include="html\assets\js\ui.controls\autocomplete.js">
       <DependentUpon>autocomplete.coffee</DependentUpon>
     </Content>
@@ -299,6 +305,7 @@
     <None Include="html\assets\js\client.coffee" />
     <None Include="html\assets\js\data.coffee" />
     <None Include="html\assets\js\test.coffee" />
+    <None Include="html\assets\js\ui.controls\alertbox.coffee" />
     <None Include="html\assets\js\ui.controls\autocomplete.coffee" />
     <None Include="html\assets\js\ui.controls\control.coffee" />
     <None Include="html\assets\js\ui.controls\map.coffee" />

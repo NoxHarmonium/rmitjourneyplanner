@@ -15,9 +15,15 @@ class Application
         client = new RmitJourneyPlanner::Client()
         datasource = new RmitJourneyPlanner::Data::DataSources::StopNameDataSource()
         $("input.locationInput").each ->
-            autocomplete = new RmitJourneyPlanner::UI::Controls::AutocompleteControl(client,                                                                   $(this),datasource);
+            autocomplete = new RmitJourneyPlanner::UI::Controls::Autocomplete(client,                                                                   $(this),datasource);
 
         map = new RmitJourneyPlanner::UI::Controls::MapControl(client, $("#map_canvas"))
+
+        errorBox = new RmitJourneyPlanner::UI::Controls::AlertBox(client, $("#divError")) 
+        errorBox.setSuccess()
+        errorBox.setTitle("Success!")
+        errorBox.setMessage("The error box component works!")
+        errorBox.show()
 
 
 $(window).ready ->

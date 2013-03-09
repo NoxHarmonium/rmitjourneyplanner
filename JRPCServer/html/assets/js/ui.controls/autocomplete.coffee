@@ -8,7 +8,7 @@
 ****************************************************************
 ###
 "use strict"
-class RmitJourneyPlanner::UI::Controls::AutocompleteControl extends RmitJourneyPlanner::UI::Controls::Control
+class RmitJourneyPlanner::UI::Controls::Autocomplete extends RmitJourneyPlanner::UI::Controls::Control
             #assets/img/transportIcons/" + item.stopMode + ".png             
             cache: []
             selectedItem:  null
