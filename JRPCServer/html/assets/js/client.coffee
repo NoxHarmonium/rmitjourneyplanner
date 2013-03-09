@@ -165,45 +165,8 @@ class window.RmitJourneyPlanner
                     mapOptions)
                 h = $(window).height()
                 offsetTop = 60 # Calculate the top offset
-                $('#' + @googleMapsId).css('height', (h - offsetTop))
-    
-    
-            #
-            # Initialises the autocomplete system
-            # TODO: Rewrite to be more readable
-            # 
-            attachGeoAutoComplete: () ->
-                $('input.locationInput').each (index) ->
-                    $(this).autocomplete( {
-                            minLength: 3,
-                            source: (request, response) ->
-                                term = request.term
-                                if (term in cache) 
-                                    response(cache[term].result)
-                                    return;                        
-                        
-                                @lastXhr = RPCCall "QueryStops", { "query": String(request.term) }, (data, status, xhr) ->
-                                    if CheckForError(data) 
-                                        return;
-                            
-                                    @cache[term] = data
-                                    response(data.result)
-                        
-                            focus: (event, ui) ->
-                                $(this).val(ui.item.label)
-                                return false
-                    
-                            select: (event, ui) ->
-                                $(this).attr('nodeid', ui.item.value)
-                                $(this).val(ui.item.label)
-                                $(this).attr('validid', 'true')     
-                                return false
-                            }
-                    ).data("autocomplete")._renderItem = (ul, item) ->
-                        return $("<li></li>")
-                            .data("item.autocomplete", item)
-                            .append("<a><div class='autoCompleteEntry'><img class='imgTransportIcon' src='assets/img/transportIcons/" + item.stopMode + ".png' />&nbsp;&nbsp;<strong>" + item.label + "</strong><br>" + item.stopSpecName + "</div></a>")
-                            .appendTo(ul);
+                $('#' + @googleMapsId).css('height', (h - offsetTop))  
+ 
 
 
         ###
