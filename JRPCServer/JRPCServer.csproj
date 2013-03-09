@@ -139,12 +139,11 @@
     <Content Include="html\assets\img\transportIcons\VLine_Train.png" />
     <Content Include="html\assets\img\transportIcons\Walking.png" />
     <Content Include="html\assets\js\Application.js">
-      <DependentUpon>Application.coffee</DependentUpon>
+      <DependentUpon>application.coffee</DependentUpon>
     </Content>
     <Content Include="html\assets\js\Application.min.js">
-      <DependentUpon>Application.coffee</DependentUpon>
+      <DependentUpon>application.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\autoexec.js" />
     <Content Include="html\assets\js\data.js">
       <DependentUpon>data.coffee</DependentUpon>
     </Content>
@@ -153,20 +152,18 @@
     </Content>
     <Content Include="html\assets\js\jQuery\jquery.json-2.4.min.js" />
     <Content Include="html\assets\js\jQuery\jquery.sortElements.js" />
-    <Content Include="html\assets\js\maps.js">
-      <DependentUpon>maps.coffee</DependentUpon>
+    <Content Include="html\assets\js\properties.js" />
+    <Content Include="html\assets\js\test.js">
+      <DependentUpon>test.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\maps.min.js">
-      <DependentUpon>maps.coffee</DependentUpon>
+    <Content Include="html\assets\js\test.min.js">
+      <DependentUpon>test.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\old\maps.js" />
-    <Content Include="html\assets\js\old\search.js" />
-    <Content Include="html\assets\js\old\ui.js" />
-    <Content Include="html\assets\js\search.js">
-      <DependentUpon>search.coffee</DependentUpon>
+    <Content Include="html\assets\js\ui.controls.js">
+      <DependentUpon>ui.controls.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\search.min.js">
-      <DependentUpon>search.coffee</DependentUpon>
+    <Content Include="html\assets\js\ui.controls.min.js">
+      <DependentUpon>ui.controls.coffee</DependentUpon>
     </Content>
     <Content Include="html\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="html\bootstrap\css\bootstrap-responsive.min.css" />
@@ -280,10 +277,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="html\assets\js\Application.coffee" />
+    <None Include="html\assets\js\application.coffee" />
     <None Include="html\assets\js\data.coffee" />
-    <None Include="html\assets\js\maps.coffee" />
-    <None Include="html\assets\js\search.coffee" />
+    <None Include="html\assets\js\test.coffee" />
+    <None Include="html\assets\js\ui.controls.coffee" />
     <None Include="simplejsonws.ashx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

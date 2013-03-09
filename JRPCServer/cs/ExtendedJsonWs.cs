@@ -607,7 +607,7 @@ namespace JRPCServer
 
             // var stopStrings = stops.Select(s => s.StopSpecName);
             // return stopStrings.ToArray();
-            return stops.ToArray();
+            return stops.Cast<object>().ToArray();
         }
 
         /// <summary>

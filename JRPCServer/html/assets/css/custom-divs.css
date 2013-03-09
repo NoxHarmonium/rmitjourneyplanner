@@ -265,7 +265,7 @@ background-color: #EEEEEE;*/
 }
 
 /* An entry in the address autocomplete module */
-.autoCompleteEntry
+.acEntry
 {
     font-size: small;
     margin-bottom: 10px;

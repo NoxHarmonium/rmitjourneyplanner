@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PtvDataProvider.cs" company="RMIT University">
-//   Copyright RMIT University 2012.
-// </copyright>
-// <summary>
-//   Providers data on the TransNET database.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
+﻿namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
 {
     #region Using Directives
 
@@ -31,40 +22,40 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
     #endregion
 
     /// <summary>
-    /// Providers data on the TransNET database.
+    ///     Providers data on the TransNET database.
     /// </summary>
     public sealed class PtvDataProvider : INetworkDataProvider, IDisposable
     {
         #region Constants and Fields
 
         /// <summary>
-        ///   The amount of records to read in at any given time.
-        ///   TODO: Make RecordChunk a property or dynamically determined.
+        ///     The amount of records to read in at any given time.
+        ///     TODO: Make RecordChunk a property or dynamically determined.
         /// </summary>
         private const int RecordChunk = 10000000;
 
         /// <summary>
-        ///   The stop mode table.
+        ///     The stop mode table.
         /// </summary>
         private static readonly Dictionary<string, string> StopModeTable = new Dictionary<string, string>();
 
         /// <summary>
-        ///   The PTV database object.
+        ///     The PTV database object.
         /// </summary>
         private readonly MySqlDatabase database = new MySqlDatabase();
 
         /// <summary>
-        ///   The list.
+        ///     The list.
         /// </summary>
         private readonly AdjacencyList list = new AdjacencyList();
 
         /// <summary>
-        ///   The route map.
+        ///     The route map.
         /// </summary>
         private readonly Dictionary<int, List<int>> routeMap = new Dictionary<int, List<int>>();
 
         /// <summary>
-        ///   The timetable
+        ///     The timetable
         /// </summary>
         private readonly Timetable timetable = new Timetable();
 
@@ -73,7 +64,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes static members of the <see cref = "PtvDataProvider" /> class.
+        ///     Initializes static members of the <see cref="PtvDataProvider" /> class.
         /// </summary>
         static PtvDataProvider()
         {
@@ -88,7 +79,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref = "PtvDataProvider" /> class.
+        ///     Initializes a new instance of the <see cref="PtvDataProvider" /> class.
         /// </summary>
         public PtvDataProvider()
         {
@@ -116,14 +107,9 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                 {
                     Logger.Log(this, "Reading records {0}-{1}", i * RecordChunk, RecordChunk);
 
-                    nodeData =
-                        this.database.GetDataSet(
-                            string.Format(
-                                @"SELECT LineID, MetlinkStopID 
+                    nodeData = this.database.GetDataSet(string.Format(@"SELECT LineID, MetlinkStopID 
                             FROM tblLinesStops
-                            LIMIT {0}, {1};", 
-                                i * RecordChunk, 
-                                RecordChunk));
+                            LIMIT {0}, {1};", i * RecordChunk, RecordChunk));
 
                     if (nodeData != null)
                     {
@@ -174,8 +160,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
 
                 Logger.Log(this, "Querying this.database...");
                 nodeData =
-                    this.database.GetDataSet(
-                        @"SELECT si.MetlinkStopID, si.GPSLat, si.GPSLong, m.StopModeName, si.StopSpecName
+                    this.database.GetDataSet(@"SELECT si.MetlinkStopID, si.GPSLat, si.GPSLong, m.StopModeName, si.StopSpecName
                 FROM tblStopInformation si
                 INNER JOIN tblModes m
                 ON si.StopModeID=m.StopModeID");
@@ -189,11 +174,11 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                     }
 
                     var node = new PtvNode(
-                        (int)row["MetlinkStopID"], 
-                        mode, 
-                        row["StopSpecName"].ToString(), 
-                        Convert.ToDouble(row["GPSLat"]), 
-                        Convert.ToDouble(row["GPSLong"]), 
+                        (int)row["MetlinkStopID"],
+                        mode,
+                        row["StopSpecName"].ToString(),
+                        Convert.ToDouble(row["GPSLat"]),
+                        Convert.ToDouble(row["GPSLong"]),
                         this);
 
                     // node.RetrieveData();
@@ -245,9 +230,7 @@ namespace RmitJourneyPlanner.CoreLibraries.DataProviders.Ptv
                     ");
                     */
                     Logger.Log(this, "Querying this.database...");
-                    nodeData =
-                        this.database.GetDataSet(
-                            @"SELECT * FROM tblStopRoutes sr
+                    nodeData = this.database.GetDataSet(@"SELECT * FROM tblStopRoutes sr
 ORDER BY sr.RouteID, sr.StopOrder;
                     ");
 
@@ -285,9 +268,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                     Logger.Log(this, "\nGenerating proximity links  ... (Third Pass)");
 
-                    nodeData =
-                        this.database.GetDataSet(
-                            @"SELECT MetlinkStopID 
+                    nodeData = this.database.GetDataSet(@"SELECT MetlinkStopID 
                     FROM tblStopInformation          
                     ");
 
@@ -415,21 +396,19 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     do
                     {
                         Logger.Log(
-                            this, 
-                            "Adding rows {0} to {1} of {2}...", 
-                            i * RecordChunk, 
-                            RecordChunk, 
+                            this,
+                            "Adding rows {0} to {1} of {2}...",
+                            i * RecordChunk,
+                            RecordChunk,
                             timetableData.Rows.Count);
                         timetableData =
-                            this.database.GetDataSet(
-                                string.Format(
-                                    @"SELECT st.MetlinkStopID, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID,st.Sequence  FROM tblServiceTimes  st
+                            this.database.GetDataSet(string.Format(@"SELECT st.MetlinkStopID, s.RouteID, s.DOW,  st.ArrivalTime, st.DepartTime,st.ServiceID,st.Sequence  FROM tblServiceTimes  st
 	                                        INNER JOIN tblServices s
 											ON s.ServiceID = st.ServiceID 
 											ORDER BY MetlinkStopID, RouteId,DOW,arrivaltime,departtime 
-											LIMIT {0},{1};", 
-                                    i * RecordChunk, 
-                                    RecordChunk));
+											LIMIT {0},{1};",
+                                i * RecordChunk,
+                                RecordChunk));
 
                         if (timetableData != null)
                         {
@@ -437,12 +416,12 @@ ORDER BY sr.RouteID, sr.StopOrder;
                             {
                                 // var serviceId = Convert.ToInt32(timetableData.Rows[0][6]);
                                 this.timetable.AddTimetableEntry(
-                                    Convert.ToInt32(row[0]), 
-                                    Convert.ToInt32(row[1]), 
-                                    Convert.ToInt32(row[2]), 
-                                    Convert.ToInt32(row[3]), 
-                                    Convert.ToInt32(row[4]), 
-                                    Convert.ToInt32(row[5]), 
+                                    Convert.ToInt32(row[0]),
+                                    Convert.ToInt32(row[1]),
+                                    Convert.ToInt32(row[2]),
+                                    Convert.ToInt32(row[3]),
+                                    Convert.ToInt32(row[4]),
+                                    Convert.ToInt32(row[5]),
                                     (int)Convert.ToDouble(nonNumericCharacters.Replace(row[6].ToString(), string.Empty)));
                             }
                         }
@@ -487,7 +466,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="PtvDataProvider"/> class.
+        ///     Finalizes an instance of the <see cref="PtvDataProvider" /> class.
         /// </summary>
         ~PtvDataProvider()
         {
@@ -499,7 +478,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
         #region Public Methods and Operators
 
         /// <summary>
-        /// Cleans up the resources used by this object.
+        ///     Cleans up the resources used by this object.
         /// </summary>
         public void Dispose()
         {
@@ -508,10 +487,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Cleans up the resources used by this object.
+        ///     Cleans up the resources used by this object.
         /// </summary>
         /// <param name="disposing">
-        /// True if called by dispose, false if called by the finalizer.
+        ///     True if called by dispose, false if called by the finalizer.
         /// </param>
         public void Dispose(bool disposing)
         {
@@ -519,13 +498,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets the network nodes that are adjacent to the specified node.
+        ///     Gets the network nodes that are adjacent to the specified node.
         /// </summary>
         /// <param name="node">
-        /// The specified node. 
+        ///     The specified node.
         /// </param>
         /// <returns>
-        /// A list of <see cref="INetworkNode"/> objects. 
+        ///     A list of <see cref="INetworkNode" /> objects.
         /// </returns>
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node)
         {
@@ -545,16 +524,16 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets the network nodes that are on the same route as the specified node.
+        ///     Gets the network nodes that are on the same route as the specified node.
         /// </summary>
         /// <param name="node">
-        /// The specified node. 
+        ///     The specified node.
         /// </param>
         /// <param name="routeId">
-        /// The route identifier. 
+        ///     The route identifier.
         /// </param>
         /// <returns>
-        /// A list of <see cref="INetworkNode"/> objects. 
+        ///     A list of <see cref="INetworkNode" /> objects.
         /// </returns>
         public List<INetworkNode> GetAdjacentNodes(INetworkNode node, int routeId)
         {
@@ -572,10 +551,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Returns the type of node that this provider services.
+        ///     Returns the type of node that this provider services.
         /// </summary>
         /// <returns>
-        /// A Type representing the type of node that this provider handles. 
+        ///     A Type representing the type of node that this provider handles.
         /// </returns>
         public Type GetAssociatedType()
         {
@@ -583,19 +562,19 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets the shortest distance between nodes for a specific route.
+        ///     Gets the shortest distance between nodes for a specific route.
         /// </summary>
         /// <param name="source">
-        /// The source node. 
+        ///     The source node.
         /// </param>
         /// <param name="destination">
-        /// The destination node. 
+        ///     The destination node.
         /// </param>
         /// <param name="departureTime">
-        /// The optimum time of departure. 
+        ///     The optimum time of departure.
         /// </param>
         /// <returns>
-        /// A list of <see cref="Arc"/> objects that represent the multiple ways to get between the 2 points. 
+        ///     A list of <see cref="Arc" /> objects that represent the multiple ways to get between the 2 points.
         /// </returns>
         public List<Arc> GetDistanceBetweenNodes(INetworkNode source, INetworkNode destination, DateTime departureTime)
         {
@@ -664,12 +643,12 @@ ORDER BY sr.RouteID, sr.StopOrder;
 
                 arcs.Add(
                     new Arc(
-                        (Location)source, 
-                        (Location)destination, 
-                        output, 
-                        GeometryHelper.GetStraightLineDistance((Location)source, (Location)destination), 
-                        departureTime, 
-                        "Unknown", 
+                        (Location)source,
+                        (Location)destination,
+                        output,
+                        GeometryHelper.GetStraightLineDistance((Location)source, (Location)destination),
+                        departureTime,
+                        "Unknown",
                         departure.RouteId));
             }
 
@@ -677,13 +656,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Returns a list of nodes that form a specified line.
+        ///     Returns a list of nodes that form a specified line.
         /// </summary>
         /// <param name="lineId">
-        /// The line id.
+        ///     The line id.
         /// </param>
         /// <returns>
-        /// A list of nodes forming a specified line.
+        ///     A list of nodes forming a specified line.
         /// </returns>
         public List<INetworkNode> GetLineNodes(int lineId)
         {
@@ -696,22 +675,22 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets the network nodes that are located within radius distance to the specified location.
+        ///     Gets the network nodes that are located within radius distance to the specified location.
         /// </summary>
         /// <param name="source">
-        /// The source point. 
+        ///     The source point.
         /// </param>
         /// <param name="destination">
-        /// The point that is the target of the search. 
+        ///     The point that is the target of the search.
         /// </param>
         /// <param name="radius">
-        /// The distance to look around the source point. 
+        ///     The distance to look around the source point.
         /// </param>
         /// <param name="allowTransfer">
-        /// Determines whether nodes from different lines to the source are considered.
+        ///     Determines whether nodes from different lines to the source are considered.
         /// </param>
         /// <returns>
-        /// The <see cref="INetworkNode"/> object that is the closest to the destination inside the radius. 
+        ///     The <see cref="INetworkNode" /> object that is the closest to the destination inside the radius.
         /// </returns>
         public INetworkNode GetNodeClosestToPointWithinArea(
             INetworkNode source, INetworkNode destination, double radius, bool allowTransfer)
@@ -727,10 +706,10 @@ ORDER BY sr.RouteID, sr.StopOrder;
                         "SELECT sr.MetlinkStopID, sr.RouteID, si.GPSLat, si.GPSLong, si.StopModeID FROM tblStopInformation si "
                         + "INNER JOIN tblStopRoutes sr " + "ON sr.MetlinkStopID=si.MetlinkStopID " + "WHERE "
                         + "si.GPSLat < {0} AND " + "si.GPSLong > {1} AND " + "si.GPSLat  > {2} AND "
-                        + "si.GPSLong < {3};", 
-                        topLeft.Latitude, 
-                        topLeft.Longitude, 
-                        bottomRight.Latitude, 
+                        + "si.GPSLong < {3};",
+                        topLeft.Latitude,
+                        topLeft.Longitude,
+                        bottomRight.Latitude,
                         bottomRight.Longitude);
             }
             else
@@ -740,11 +719,11 @@ ORDER BY sr.RouteID, sr.StopOrder;
                         "SELECT sr.MetlinkStopID, sr.RouteID, si.GPSLat, si.GPSLong, si.StopModeID FROM tblStopInformation si "
                         + "INNER JOIN tblStopRoutes sr " + "ON sr.MetlinkStopID=si.MetlinkStopID " + "WHERE "
                         + "si.GPSLat < {0} AND " + "si.GPSLong > {1} AND " + "si.GPSLat  > {2} AND "
-                        + "si.GPSLong < {3} AND sr.RouteID = {4};", 
-                        topLeft.Latitude, 
-                        topLeft.Longitude, 
-                        bottomRight.Latitude, 
-                        bottomRight.Longitude, 
+                        + "si.GPSLong < {3} AND sr.RouteID = {4};",
+                        topLeft.Latitude,
+                        topLeft.Longitude,
+                        bottomRight.Latitude,
+                        bottomRight.Longitude,
                         source.RouteId);
 
                 /*
@@ -785,31 +764,31 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets a datatable filled with data related to this stop.
+        ///     Gets a datatable filled with data related to this stop.
         /// </summary>
         /// <param name="MetlinkStopID">
-        /// The PTV stop identifier. 
+        ///     The PTV stop identifier.
         /// </param>
         /// <returns>
-        /// A <see cref="DataTable"/> filled with relevant data. 
+        ///     A <see cref="DataTable" /> filled with relevant data.
         /// </returns>
         public DataTable GetNodeData(int MetlinkStopID)
         {
             return
                 this.database.GetDataSet(
                     string.Format(
-                        "SELECT * FROM tblStopInformation si INNER JOIN tblModes m on si.StopModeID = m.StopModeID WHERE MetlinkStopID = '{0}'", 
+                        "SELECT * FROM tblStopInformation si INNER JOIN tblModes m on si.StopModeID = m.StopModeID WHERE MetlinkStopID = '{0}'",
                         MetlinkStopID));
         }
 
         /// <summary>
-        /// Returns a node from a given Id.
+        ///     Returns a node from a given Id.
         /// </summary>
         /// <param name="id">
-        /// The identifier of the node. 
+        ///     The identifier of the node.
         /// </param>
         /// <returns>
-        /// A node. 
+        ///     A node.
         /// </returns>
         public INetworkNode GetNodeFromId(int id)
         {
@@ -818,13 +797,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets a node from its name.
+        ///     Gets a node from its name.
         /// </summary>
         /// <param name="stopSpecName">
-        /// The stop spec name.
+        ///     The stop spec name.
         /// </param>
         /// <returns>
-        /// The node that the name corresponds to, or null if no matches were found.
+        ///     The node that the name corresponds to, or null if no matches were found.
         /// </returns>
         public PtvNode GetNodeFromName(string stopSpecName)
         {
@@ -841,32 +820,32 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Get the location of the node with the specified Id.
+        ///     Get the location of the node with the specified Id.
         /// </summary>
         /// <param name="id">
-        /// The unique node identifier. 
+        ///     The unique node identifier.
         /// </param>
         /// <returns>
-        /// The <see cref="Location"/> of the node. 
+        ///     The <see cref="Location" /> of the node.
         /// </returns>
         public Location GetNodeLocation(int id)
         {
             return new Location(
-                Convert.ToDouble(this.GetNodeData(id).Rows[0]["GPSLat"]), 
+                Convert.ToDouble(this.GetNodeData(id).Rows[0]["GPSLat"]),
                 Convert.ToDouble(this.GetNodeData(id).Rows[0]["GPSLong"]));
         }
 
         /// <summary>
-        /// Gets the network nodes that are located within radius distance to the specified location.
+        ///     Gets the network nodes that are located within radius distance to the specified location.
         /// </summary>
         /// <param name="location">
-        /// The center point for the search. 
+        ///     The center point for the search.
         /// </param>
         /// <param name="radius">
-        /// The distance to look around the center point. 
+        ///     The distance to look around the center point.
         /// </param>
         /// <returns>
-        /// A list of <see cref="INetworkNode"/> objects that are in the specified area. 
+        ///     A list of <see cref="INetworkNode" /> objects that are in the specified area.
         /// </returns>
         public List<NodeWrapper<PtvNode>> GetNodesAtLocation(Location location, double radius)
         {
@@ -887,12 +866,8 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     WHERE si.GPSLat < {0} and si.GPSLong > {1} AND
                     si.GPSLat > {2} AND si.GPSLong < {3}
                     GROUP BY LineMainID
-                    ORDER BY DISTANCE", 
-                    topLeft.Latitude, 
-                    topLeft.Longitude, 
-                    bottomRight.Latitude, 
-                    bottomRight.Longitude, 
-                    location.Latitude, 
+                    ORDER BY DISTANCE", topLeft.Latitude, topLeft.Longitude, bottomRight.Latitude, bottomRight.Longitude, location
+                        .Latitude,
                     location.Longitude);
 
             DataTable table = this.database.GetDataSet(query);
@@ -902,7 +877,7 @@ ORDER BY sr.RouteID, sr.StopOrder;
             {
                 var node = new NodeWrapper<PtvNode>(this.list[(int)row["MetlinkStopID"]][0])
                     {
-                       CurrentRoute = (int)row["RouteID"] 
+                        CurrentRoute = (int)row["RouteID"]
                     };
 
                 if (node.CurrentRoute == -1)
@@ -918,13 +893,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets a list of routes that this node passes through.
+        ///     Gets a list of routes that this node passes through.
         /// </summary>
         /// <param name="node">
-        /// The node you wish to query. 
+        ///     The node you wish to query.
         /// </param>
         /// <returns>
-        /// A list of routes that intersect this node. 
+        ///     A list of routes that intersect this node.
         /// </returns>
         public List<int> GetRoutesForNode(INetworkNode node)
         {
@@ -938,13 +913,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Gets the stop mode string for the specified ID.
+        ///     Gets the stop mode string for the specified ID.
         /// </summary>
         /// <param name="stopModeId">
-        /// The stop mode identifier. 
+        ///     The stop mode identifier.
         /// </param>
         /// <returns>
-        /// The corresponding string. 
+        ///     The corresponding string.
         /// </returns>
         public string GetStopMode(string stopModeId)
         {
@@ -952,22 +927,20 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Returns whether two nodes are part of the same line.
+        ///     Returns whether two nodes are part of the same line.
         /// </summary>
         /// <param name="node1">
-        /// The first node.
+        ///     The first node.
         /// </param>
         /// <param name="node2">
-        /// The second node.
+        ///     The second node.
         /// </param>
         /// <returns>
-        /// True if the two nodes are in the same line, false if not.
+        ///     True if the two nodes are in the same line, false if not.
         /// </returns>
         public bool InSameLine(PtvNode node1, PtvNode node2)
         {
-            string query =
-                string.Format(
-                    @"SELECT l1.LineMainID, l2.LineMainID FROM tblLinesStops ls1
+            string query = string.Format(@"SELECT l1.LineMainID, l2.LineMainID FROM tblLinesStops ls1
                     INNER JOIN tblLines l1
                     ON l1.LineID = ls1.LineID
                     INNER JOIN tblLinesStops ls2
@@ -977,61 +950,57 @@ ORDER BY sr.RouteID, sr.StopOrder;
                     WHERE ls1.MetlinkStopID = {0} 
                     AND
                     ls2.MetlinkStopID =  {1}
-                    AND l1.LineMainID = l2.LineMainID", 
-                    node1.Id, 
-                    node2.Id);
+                    AND l1.LineMainID = l2.LineMainID", node1.Id, node2.Id);
 
             return this.database.GetDataSet(query).Rows.Count > 0;
         }
 
         /// <summary>
-        /// Returns a list of stops that match the query. Currently the query is just a simple
-        ///   match string with wildcard.
+        ///     Returns a list of stops that match the query. Currently the query is just a simple
+        ///     match string with wildcard.
         /// </summary>
         /// <returns>
-        /// The stops that match the query.
+        ///     The stops that match the query.
         /// </returns>
         /// <param name="query">
-        /// The query. i.e. 'Cob' = Coburg Station
+        ///     The query. i.e. 'Cob' = Coburg Station
         /// </param>
-        public object[] QueryStops(string query)
+        public StopQueryResult[] QueryStops(string query)
         {
             // List<PtvNode> stops = new List<PtvNode>();
-            string sqlQuery =
-                string.Format(
-                    @"SELECT StopSpecName,CONCAT(TravelSTName,' ',TravelSTType,'/',COALESCE(CrossSTName,''),' ',COALESCE(CrossSTType,'')), 
+            var sqlQuery =
+                string.Format(@"SELECT StopSpecName,CONCAT(TravelSTName,' ',TravelSTType,'/',COALESCE(CrossSTName,''),' ',COALESCE(CrossSTType,'')), 
 											StopModeName, MetlinkStopID FROM tblStopInformation si INNER JOIN tblModes sm ON sm.StopModeId=si.StopModeID 
-											WHERE StopSpecName LIKE '%{0}%' ORDER BY sm.StopModeID DESC", 
+											WHERE StopSpecName LIKE '%{0}%' ORDER BY sm.StopModeID DESC LIMIT 25",
                     query);
             var data = this.database.GetDataSet(sqlQuery);
-            var stops = new object[data.Rows.Count];
+            var stops = new StopQueryResult[data.Rows.Count];
 
-            for (int i = 0; i < data.Rows.Count; i++)
+            for (var i = 0; i < data.Rows.Count; i++)
             {
-                stops[i] =
-                    new
-                        {
-                            label = data.Rows[i].ItemArray[0], 
-                            stopSpecName = data.Rows[i].ItemArray[1] + " (" + data.Rows[i].ItemArray[3] + ")", 
-                            stopMode = data.Rows[i].ItemArray[2], 
-                            value = data.Rows[i].ItemArray[3]
-                        };
+                stops[i] = new StopQueryResult
+                    {
+                        Name = data.Rows[i].ItemArray[0].ToString(),
+                        ShortDescription = data.Rows[i].ItemArray[1] + " (" + data.Rows[i].ItemArray[3] + ")",
+                        StopMode = data.Rows[i].ItemArray[2].ToString(),
+                        StopId = data.Rows[i].ItemArray[3].ToString()
+                    };
             }
 
             return stops;
         }
 
         /// <summary>
-        /// Returns true if there is at least 1 route common between the 2 nodes.
+        ///     Returns true if there is at least 1 route common between the 2 nodes.
         /// </summary>
         /// <param name="first">
-        /// The first node to test. 
+        ///     The first node to test.
         /// </param>
         /// <param name="second">
-        /// The second node to test. 
+        ///     The second node to test.
         /// </param>
         /// <returns>
-        /// A boolean value. 
+        ///     A boolean value.
         /// </returns>
         public bool RoutesIntersect(INetworkNode first, INetworkNode second)
         {
@@ -1053,13 +1022,13 @@ ORDER BY sr.RouteID, sr.StopOrder;
         #region Methods
 
         /// <summary>
-        /// Parses an integer in the format 'HHmm' into a <see cref="TimeSpan"/> object.
+        ///     Parses an integer in the format 'HHmm' into a <see cref="TimeSpan" /> object.
         /// </summary>
         /// <param name="timespan">
-        /// An integer representing a span of time in the format 'HHmm'.
+        ///     An integer representing a span of time in the format 'HHmm'.
         /// </param>
         /// <returns>
-        /// A <see cref="TimeSpan"/> object parsed from the input integer.
+        ///     A <see cref="TimeSpan" /> object parsed from the input integer.
         /// </returns>
         private TimeSpan ParseSpan(int timespan)
         {
@@ -1081,17 +1050,17 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         /// <summary>
-        /// Subtracts two time integers in the format 'HHmm' from each other.
-        ///   This function is needed so that the minutes wrap around 60 properly.
+        ///     Subtracts two time integers in the format 'HHmm' from each other.
+        ///     This function is needed so that the minutes wrap around 60 properly.
         /// </summary>
         /// <param name="a">
-        /// Time integer a.
+        ///     Time integer a.
         /// </param>
         /// <param name="b">
-        /// Time integer b.
+        ///     Time integer b.
         /// </param>
         /// <returns>
-        /// The result of the subtraction.
+        ///     The result of the subtraction.
         /// </returns>
         private int SubtractTimes(int a, int b)
         {
@@ -1107,5 +1076,35 @@ ORDER BY sr.RouteID, sr.StopOrder;
         }
 
         #endregion
+
+        /// <summary>
+        ///     A small data structure that contains the result from the <see cref="QueryStops" /> method.
+        /// </summary>
+        public struct StopQueryResult
+        {
+            #region Constants and Fields
+
+            /// <summary>
+            ///     The short name of the stop.
+            /// </summary>
+            public string Name;
+
+            /// <summary>
+            ///     A short human readable description of the stop.
+            /// </summary>
+            public string ShortDescription;
+
+            /// <summary>
+            ///     The unique stop identifier.
+            /// </summary>
+            public string StopId;
+
+            /// <summary>
+            ///     The transport mode of the stop.
+            /// </summary>
+            public string StopMode;
+
+            #endregion
+        }
     }
 }

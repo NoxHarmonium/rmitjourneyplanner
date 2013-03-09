@@ -169,11 +169,15 @@ namespace JRPCServer
         public object[] QueryStops(string query)
         {
             var provider = ObjectCache.GetObjects<PtvDataProvider>().FirstOrDefault();
-            var stops = provider.QueryStops(query);
-
-            // var stopStrings = stops.Select(s => s.StopSpecName);
-            // return stopStrings.ToArray();
-            return stops.ToArray();
+            object[] result = null;
+            if (provider != null)
+            {
+                var stops = provider.QueryStops(query);
+                // var stopStrings = stops.Select(s => s.StopSpecName);
+                // return stopStrings.ToArray();
+                result = stops.Select(s => new { title = s.Name, detail = s.ShortDescription, image = "assets/img/transportIcons/" + s.StopMode + ".png", value = s.StopId }).ToArray() ;
+            }
+            return result;
         }
 
 
