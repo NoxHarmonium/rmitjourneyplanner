@@ -1,19 +1,19 @@
-﻿###
-****************************************************************
-*
-*   Class:       rmitjourneyplanner.client.global
-*   Description: Initialises the web application and contains 
-*                functions used globally.
-*   
-****************************************************************
-###
+﻿
 "use strict"
 class window.RmitJourneyPlanner
     class @::Client
         class @::Properties
             this.JRPCUrl="http://localhost:8000/simplejsonws.ashx"
 
-
+        ###
+        ****************************************************************
+        *
+        *   Class:       Rmitjourneyplanner.Client.Global
+        *   Description: Initialises the web application and contains 
+        *                functions used globally.
+        *   
+        ****************************************************************
+        ###
         class @::Global
     
             # Constants
@@ -114,20 +114,13 @@ class window.RmitJourneyPlanner
                 request.id = 1
                 request.jsonrpc = "2.0"
         
-                return JSONPost url_service, ($.toJSON request), callback 
+                return JSONPost url_service, ($.toJSON request), callback     
     
-    
-
-
-
-        #
-        # 
-        #
 
         ###
         ****************************************************************
         *
-        *   Class:       rmitjourneyplanner.client.maps
+        *   Class:       Rmitjourneyplanner.Client.Maps
         *   Description: Contains the functionality to do with 
         *                manipulating the Google Maps object.
         *   
@@ -216,7 +209,7 @@ class window.RmitJourneyPlanner
         ###
         ****************************************************************
         *
-        *   Class:       rmitjourneyplanner.client.search
+        *   Class:       Rmitjourneyplanner.Client.Search
         *   Description: Contains the functionality to do with 
         *                manipulating the Google Maps object.
         *   
@@ -340,7 +333,7 @@ class window.RmitJourneyPlanner
         ###
         ****************************************************************
         *
-        *   Class:       rmitjourneyplanner.client
+        *   Class:       Rmitjourneyplanner.Client.DataManager
         *   Description: This class handles data access and caching 
         *                of JSON data sources.
         *   
@@ -360,7 +353,7 @@ class window.RmitJourneyPlanner
         ###
         ****************************************************************
         *
-        *   Class:       rmitjourneyplanner.ui
+        *   Class:       RmitJourneyPlanner.UI
         *   Description: This class handles the all the UI related 
         *                functions
         *   
@@ -605,7 +598,7 @@ class window.RmitJourneyPlanner
         ###
         ****************************************************************
         *
-        *   Class:       rmitjourneyplanner.client.exceptions
+        *   Class:       Rmitjourneyplanner.Client.Exceptions
         *   Description: Contains the exceptions used in this 
         *                application.
         *   
@@ -672,15 +665,5 @@ class window.RmitJourneyPlanner
 
                 constructor: (source, @dependency="") ->
                     super source, MissingDependencyException.message + @dependency
-
-
-
-$(document).ready ->
-    client = new RmitJourneyPlanner::Client()
-
-
-    datasource = new RmitJourneyPlanner::Client::Data::DataSources::StopNameDataSource()
-    $("input.locationInput").each ->
-        autocomplete = new RmitJourneyPlanner::Client::UI::Controls::AutocompleteControl(client,                                                                   $(this),datasource);
 
 
