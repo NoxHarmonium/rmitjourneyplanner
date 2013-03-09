@@ -1,35 +1,14 @@
-﻿"use strict"
-class RmitJourneyPlanner::Client::UI
-    class @::Controls
-        #Aliases
-        Exceptions = RmitJourneyPlanner::Client::Exceptions;
-    
-        class @::Control      
-            constructor: (
-                @client, 
-                @element,
-                @supportedElements = [], 
-                @supportsMultipleElements = false
-            ) ->
-                if (!@element?)
-                    throw new Exceptions::NullElementException(this)
-            
-                # Make sure the object is wrapped in jQuery.
-                @element = $(@element);
-
-                if (@element.length == 0)
-                    throw new Exceptions::NullElementException(this)
-
-                if (@element.length > 1 && !@supportsMultipleElements)
-                    throw new Exceptions::MultipleElementException(this)
-
-                for supportedElement in @supportedElements
-                    if (!@element.is(supportedElement))
-                        throw new Exceptions::InvalidElementException(this,supportedElement);
-
-
-
-        class @::AutocompleteControl extends @::Control
+﻿###
+****************************************************************
+*
+*   Class:       RmitJourneyPlanner.UI.AutocompleteControl
+*   Description: Adds autocomplete funtionality to an input
+*                element with the provided datasource.
+*   
+****************************************************************
+###
+"use strict"
+class RmitJourneyPlanner::UI::Controls::AutocompleteControl extends RmitJourneyPlanner::UI::Controls::Control
             #assets/img/transportIcons/" + item.stopMode + ".png             
             cache: []
             selectedItem:  null

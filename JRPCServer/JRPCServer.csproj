@@ -138,11 +138,17 @@
     <Content Include="html\assets\img\transportIcons\VLine_Coach.png" />
     <Content Include="html\assets\img\transportIcons\VLine_Train.png" />
     <Content Include="html\assets\img\transportIcons\Walking.png" />
-    <Content Include="html\assets\js\Application.js">
+    <Content Include="html\assets\js\application.js">
       <DependentUpon>application.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\Application.min.js">
+    <Content Include="html\assets\js\application.min.js">
       <DependentUpon>application.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\client.js">
+      <DependentUpon>client.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\client.min.js">
+      <DependentUpon>client.coffee</DependentUpon>
     </Content>
     <Content Include="html\assets\js\data.js">
       <DependentUpon>data.coffee</DependentUpon>
@@ -159,11 +165,23 @@
     <Content Include="html\assets\js\test.min.js">
       <DependentUpon>test.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\ui.controls.js">
-      <DependentUpon>ui.controls.coffee</DependentUpon>
+    <Content Include="html\assets\js\ui.controls\autocomplete.js">
+      <DependentUpon>autocomplete.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\ui.controls.min.js">
-      <DependentUpon>ui.controls.coffee</DependentUpon>
+    <Content Include="html\assets\js\ui.controls\autocomplete.min.js">
+      <DependentUpon>autocomplete.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\control.js">
+      <DependentUpon>control.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\control.min.js">
+      <DependentUpon>control.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\map.js">
+      <DependentUpon>map.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\map.min.js">
+      <DependentUpon>map.coffee</DependentUpon>
     </Content>
     <Content Include="html\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="html\bootstrap\css\bootstrap-responsive.min.css" />
@@ -278,9 +296,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="html\assets\js\application.coffee" />
+    <None Include="html\assets\js\client.coffee" />
     <None Include="html\assets\js\data.coffee" />
     <None Include="html\assets\js\test.coffee" />
-    <None Include="html\assets\js\ui.controls.coffee" />
+    <None Include="html\assets\js\ui.controls\autocomplete.coffee" />
+    <None Include="html\assets\js\ui.controls\control.coffee" />
+    <None Include="html\assets\js\ui.controls\map.coffee" />
     <None Include="simplejsonws.ashx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -1,7 +1,7 @@
 ﻿"use strict"
 RmitJourneyPlanner = window.RmitJourneyPlanner
-class RmitJourneyPlanner::Client::Data
-    class @::DataSources
+class RmitJourneyPlanner::Data
+    class @::DataSources 
         #Aliases
         Exceptions = RmitJourneyPlanner::Client::Exceptions;
 
@@ -19,7 +19,7 @@ class RmitJourneyPlanner::Client::Data
                 if (!data?)
                     throw new Exceptions::NullDataException(this)
 
-        class @::JsonDataSource extends @::DataSource
+        class @::JsonDataSource extends @::DataSource 
         
             constructor: (@url) ->
                 super("JSON")

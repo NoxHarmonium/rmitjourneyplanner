@@ -323,7 +323,7 @@ class window.RmitJourneyPlanner
         ****************************************************************
         ###
         "use strict"
-        class UI
+        class @::UI
     
             # Fields
             dateTimeDivShown: false;
