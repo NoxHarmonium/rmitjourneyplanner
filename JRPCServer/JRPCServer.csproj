@@ -195,6 +195,12 @@
     <Content Include="html\assets\js\ui.controls\map.min.js">
       <DependentUpon>map.coffee</DependentUpon>
     </Content>
+    <Content Include="html\assets\js\ui.controls\togglebutton.js">
+      <DependentUpon>togglebutton.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\togglebutton.min.js">
+      <DependentUpon>togglebutton.coffee</DependentUpon>
+    </Content>
     <Content Include="html\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="html\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="html\bootstrap\css\bootstrap.css" />
@@ -316,6 +322,7 @@
     <None Include="html\assets\js\ui.controls\control.coffee" />
     <None Include="html\assets\js\ui.controls\hideable.coffee" />
     <None Include="html\assets\js\ui.controls\map.coffee" />
+    <None Include="html\assets\js\ui.controls\togglebutton.coffee" />
     <None Include="simplejsonws.ashx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

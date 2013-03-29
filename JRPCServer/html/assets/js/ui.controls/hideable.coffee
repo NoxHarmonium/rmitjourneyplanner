@@ -13,9 +13,12 @@ class RmitJourneyPlanner::UI::Controls::Hideable extends RmitJourneyPlanner::UI:
 
             effectTypes: [ "", "none", "fade", "slide" ]
             defaultEffectType: ""
+            visible: false
+            toggleElement: null
 
             constructor: (@client, @element, supportedElements = ["*"]) ->
                 super(@client,@element,supportedElements)
+                @visible = @element.is(":visible")
                 
             
             setEffectType: (effectType) ->
@@ -30,9 +33,7 @@ class RmitJourneyPlanner::UI::Controls::Hideable extends RmitJourneyPlanner::UI:
                         when "slide"
                             @element.slideDown()
                         else
-                             @element.show()
-                    
-               
+                             @element.show()               
 
             hide: (effectType = @defaultEffectType) ->
                   if (effectType in @effectTypes)
@@ -44,3 +45,18 @@ class RmitJourneyPlanner::UI::Controls::Hideable extends RmitJourneyPlanner::UI:
                             @element.slideUp()
                         else
                              @element.hide()
+
+
+            toggle: ->
+                if @visible
+                    @hide()
+                else
+                    @show() 
+                @visible = !@visible
+                
+            setToggleElement: (element) ->
+                if (@toggleElement?)
+                    @toggleElement.off("click.hideable")
+
+                @toggleElement = element
+                @toggleElement.on("click.hideable", => do @toggle)
