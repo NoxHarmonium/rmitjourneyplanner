@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>RMIT Journey Planner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,15 +10,16 @@
     <!-- Le styles -->
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
     <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
+        body
+        {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="assets/css/bootstrap-override.css" rel="stylesheet">
-	<link href="assets/css/custom-divs.css" rel="stylesheet">
-	<link href="assets/css/google-maps.css" rel="stylesheet">
-	<link href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <link href="assets/css/bootstrap-override.css" rel="stylesheet">
+    <link href="assets/css/custom-divs.css" rel="stylesheet">
+    <link href="assets/css/google-maps.css" rel="stylesheet">
+    <link href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet" />
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -28,233 +29,243 @@
     <!-- Fav and touch icons -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
-                    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
-                                   <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
-  </head>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
+</head>
 
-  <body>
-	
+<body>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          
-          <div class="nav-collapse collapse">
-			
-		   <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-		
-          </div><!--/.nav-collapse -->
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
+                <div class="nav-collapse collapse">
+
+                    <ul class="nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+
         </div>
-		
-      </div>
-	<div class="subnav">
-		<div class="container">
-		
-			<div id="divWhere" class="subnav-inner row">
-			
-				
-					<label class="control-label span2" for="lblSearchLegend"><img src="assets/img/logo.png"></label> 
-					
-					<div class="span8">
-						<label id="lblSearchLegend" class="control-label span1" for="txtFrom">Where? </label> 
-						<input class="propertyField locationInput " id="txtFrom" type="text" placeholder="From..." propName="Origin" value="Coburg" nodeid="19965">
-						<input class="propertyField locationInput" id="txtTo" type="text" placeholder="To..." propName="Destination" value="Ascot Vale" nodeid="20039">
-						<button  id="btnMore" type="button" class="btn btn-primary">
-						    <i class="icon-chevron-down icon-white"></i>
-                            <i class="icon-chevron-up icon-white"></i>
-						</button>
-						<button  id="btnSearch" type="button" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
-                        <button  id="btnAdvanced" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><i class="icon-cog icon-white"></i></button>
-					
-						
-					</div>
-					
-					
-					
-					
-				 
-			</div>
-			
-			<div id="divWhen" class="subnav-inner row" style="display:none">
-			
-				
-					<!--label class="control-label" for="lblSearchLegend"><img src="assets/img/logo.png"></img></label--> 
-					<div class="span2"></div>
-					
-					<div class="span3">
-						<label id="lblTimeSearchLegend" class="control-label span1" for="txtDate">When? </label> 						
-						<input class="input-medium propertyField" id="txtWhen" type="text" placeholder="At..." propName="DepartureTime">	
-					</div>
-					
-					
-					
-					<div class="span4">
-						<label id="lblModeLegend" class="control-label span1" for="chkTrain" >How? </label> 
-						<label id="chkTrain" class="checkbox inline">
-						  <input type="checkbox" id="inlineCheckbox1" value="option1"
-						  checked="checked">
-						  <img class="miniIcon" src="assets/img/transportIcons/Train.png" /> 
-						  
-						  
-						  
-						</label>
-						<label class="checkbox inline">
-						  <input type="checkbox" id="inlineCheckbox2" value="option2"
-						  checked="checked"> 
-						  <img class="miniIcon" src="assets/img/transportIcons/Tram.png" /> 
-						  
-						</label>
-						<label class="checkbox inline">
-						  <input type="checkbox" id="inlineCheckbox3" value="option3" checked="checked"> 
-						  <img class="miniIcon" src="assets/img/transportIcons/Bus.png" /> 
-						  
-						</label>
-						
-						
-						
-						<button id="btnCloseDivHow" type="button" class="close">&times;</button>
-					
-						
-					</div>
-					
-					
-				
-				
-				
-			
-			</div>
-			         
-			
-		
-		
-		
-		
-		</div>
-		
-		
-	</div>
-	<div id="divError">
-	</div>
-	 
+        <div class="subnav">
+            <div class="container">
+                <div id="searchPanel">
+                    <div id="divWhere" class="subnav-inner row">
+
+
+                        <label class="control-label span2" for="lblSearchLegend">
+                            <img src="assets/img/logo.png"></label>
+
+                        <div class="span8">
+                            <label id="lblSearchLegend" class="control-label span1" for="txtFrom">Where? </label>
+                            <input class="propertyField locationInput " id="txtFrom" type="text" placeholder="From..." propname="Origin" value="Coburg" nodeid="19965">
+                            <input class="propertyField locationInput" id="txtTo" type="text" placeholder="To..." propname="Destination" value="Ascot Vale" nodeid="20039">
+                            <button id="btnMore" type="button" class="btn btn-primary">
+                                <i class="icon-chevron-down icon-white"></i>
+                                <i class="icon-chevron-up icon-white"></i>
+                            </button>
+                            <button id="btnSearch" type="button" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
+                            <button id="btnAdvanced" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><i class="icon-cog icon-white"></i></button>
+
+
+                        </div>
+
+
+
+
+
+                    </div>
+
+                    <div id="divWhen" class="subnav-inner row" style="display: none">
+
+
+                        <!--label class="control-label" for="lblSearchLegend"><img src="assets/img/logo.png"></img></label-->
+                        <div class="span2"></div>
+
+                        <div class="span3">
+                            <label id="lblTimeSearchLegend" class="control-label span1" for="txtDate">When? </label>
+                            <input class="input-medium propertyField" id="txtWhen" type="text" placeholder="At..." propname="DepartureTime">
+                        </div>
+
+
+
+                        <div class="span4">
+                            <label id="lblModeLegend" class="control-label span1" for="chkTrain">How? </label>
+                            <label id="chkTrain" class="checkbox inline">
+                                <input type="checkbox" id="inlineCheckbox1" value="option1"
+                                    checked="checked">
+                                <img class="miniIcon" src="assets/img/transportIcons/Train.png" />
+
+
+
+                            </label>
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="inlineCheckbox2" value="option2"
+                                    checked="checked">
+                                <img class="miniIcon" src="assets/img/transportIcons/Tram.png" />
+
+                            </label>
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="inlineCheckbox3" value="option3" checked="checked">
+                                <img class="miniIcon" src="assets/img/transportIcons/Bus.png" />
+
+                            </label>
+
+
+
+                            <button id="btnCloseDivHow" type="button" class="close">&times;</button>
+
+
+                        </div>
+
+
+
+
+
+
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+
+        </div>
+        <div id="divError">
+        </div>
+
     </div>
 
-       <div class="main-container container-fluid fill">
+    <div class="main-container container-fluid fill">
 
-           <div id="myModal" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-               aria-hidden="true">
-               <div class="modal-header">
-                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                       ×</button>
-                   <h3 id="myModalLabel">
-                       Property Editor...</h3>
-               </div>
-               <div class="modal-body">
-               
-               </div>
-               <div class="modal-footer">
-                   <button id="btnSaveProperties" class="btn" aria-hidden="true">
-                       Save</button>
-                   <button class="btn" data-dismiss="modal" aria-hidden="true">
-                       Cancel</button>
-               </div>
-           </div>
+        <div id="myModal" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×</button>
+                <h3 id="myModalLabel">Property Editor...</h3>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveProperties" class="btn" aria-hidden="true">
+                    Save</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    Cancel</button>
+            </div>
+        </div>
 
         <div>
             <div class="leftPanel">
-				<div id="divHelp" class="well well-large sideDiv ">
+                <div id="divHelp" class="well well-large sideDiv ">
                     <h1>Welcome! </h1>
-                    
-                    
-                    <p>The RMIT journey planner is an experimental public transport journey planner with a difference. 
-                    Using genetic algorithms this journey planner is designed with diversity in mind, not optimality.  </p>
 
-                    <a class="btn btn-primary btn-large" onclick="alert('not implimented!')">
-                      Learn more
+
+                    <p>
+                        The RMIT journey planner is an experimental public transport journey planner with a difference. 
+                    Using genetic algorithms this journey planner is designed with diversity in mind, not optimality. 
+                    </p>
+
+                    <a class="btn btn-primary btn-large" onclick="alert('not implimented!')">Learn more
                     </a>
-                
+
                 </div>
 
-                <div id="divLoading" class="well well-large sideDiv" style="display: none;" >
+                <div id="divLoading" class="well well-large sideDiv" style="display: none;">
                     <h2 class="title">Optimising...</h2>
-                    <p class="progressHelp">The journey planning engine is currently calculating possible journeys. Please wait....</p>    
+                    <p class="progressHelp">The journey planning engine is currently calculating possible journeys. Please wait....</p>
                     <div id="mainProgressBar" class="progress progress-striped active">
-                      <div class="bar" style="width: 20%;"></div>
+                        <div class="bar" style="width: 20%;"></div>
                     </div>
                     <p class="progressInfo">Iteration <strong class="progressNumerator">20</strong> out of <strong class="progressDenominator">100</strong></p>
-                
-                </div>            
+
+                </div>
 
                 <div id="divJourneyList" style="display: none;">
                     <div class="infoTop">
-					    <table class="table table-bordered">
-						    
-					    </table>					
-				    </div>                
+                        <table class="table table-bordered">
+                        </table>
+                    </div>
                 </div>
 
                 <div id="divTemplate" style="display: none;">
-                
-				<!--<div class="infoArrow">
+
+                    <!--<div class="infoArrow">
 					<img src="assets/img/arrow.png" />
 				</div>				-->
-				<div class="infoPanel" > 
-					<div class="startEnd">
-						<div><img src="assets/img/transportIcons/Start.png" /></div>
-						<div><address class="start">
-						  <strong>Coburg Railway Station</strong><br>
-						  118 Bell St<br>
-						  Coburg				  
-						</address></div>			
-					</div>		
-					
-					
-					<div class="dirEntry">
-						<div><img src="assets/img/transportIcons/Train.png" /></div>
-						<div>1. Board the train at Coburg Station</div>			
-					</div>		
-					
-					<div class="dirDivider">
-						<img src="assets/img/hr.png"/> <span>20 min</span>
-					</div>				
-					
-					<div class="dirEntry">
-						<div><img src="assets/img/transportIcons/Train.png" /></div>
-						<div>2. Change to the Craigieburn Line</div>			
-					</div>	
-					
-					<div class="dirDivider">
-						<img src="assets/img/hr.png"/> <span>4 hr</span>
-					</div>	
-					
+                    <div class="infoPanel">
+                        <div class="startEnd">
+                            <div>
+                                <img src="assets/img/transportIcons/Start.png" /></div>
+                            <div>
+                                <address class="start">
+                                    <strong>Coburg Railway Station</strong><br>
+                                    118 Bell St<br>
+                                    Coburg				  
+                                </address>
+                            </div>
+                        </div>
 
-					<div class="startEnd">
-						<div><img src="assets/img/transportIcons/Finish.png" /></div>
-						<div><address class="end">
-						  <strong>Ascot Vale Railway Station</strong><br>
-						  31 The Crescent<br>
-						  Ascot Vale					  
-						</address></div>
-					
-					
-					</div>		
-                    <div>
-                        <a href="#myModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
+
+                        <div class="dirEntry">
+                            <div>
+                                <img src="assets/img/transportIcons/Train.png" /></div>
+                            <div>1. Board the train at Coburg Station</div>
+                        </div>
+
+                        <div class="dirDivider">
+                            <img src="assets/img/hr.png" />
+                            <span>20 min</span>
+                        </div>
+
+                        <div class="dirEntry">
+                            <div>
+                                <img src="assets/img/transportIcons/Train.png" /></div>
+                            <div>2. Change to the Craigieburn Line</div>
+                        </div>
+
+                        <div class="dirDivider">
+                            <img src="assets/img/hr.png" />
+                            <span>4 hr</span>
+                        </div>
+
+
+                        <div class="startEnd">
+                            <div>
+                                <img src="assets/img/transportIcons/Finish.png" /></div>
+                            <div>
+                                <address class="end">
+                                    <strong>Ascot Vale Railway Station</strong><br>
+                                    31 The Crescent<br>
+                                    Ascot Vale					  
+                                </address>
+                            </div>
+
+
+                        </div>
+                        <div>
+                            <a href="#myModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
+                        </div>
                     </div>
-				</div>
-				</div>
-			</div>
+                </div>
+            </div>
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="rightPanel">
-               <div id="map_canvas"> </div>
+                <div id="map_canvas"></div>
             </div>
         </div>
         <!-- // End Content -->
@@ -264,9 +275,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!--<script src="bootstrap/js/jquery.js"></script>-->
-	<script src="http://code.jquery.com/jquery-1.8.3.js"> </script>	
-	<script src="assets/js/jQuery/jquery.json-2.4.min.js"></script>
-	<script src="bootstrap/js/bootstrap.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.3.js"> </script>
+    <script src="assets/js/jQuery/jquery.json-2.4.min.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
     <!--
 	<script src="bootstrap/js/bootstrap-transition.js"></script>
     <script src="bootstrap/js/bootstrap-alert.js"></script>
@@ -280,9 +291,9 @@
     <script src="bootstrap/js/bootstrap-collapse.js"></script>
     <script src="bootstrap/js/bootstrap-carousel.js"></script>
     <script src="bootstrap/js/bootstrap-typeahead.js"></script>-->
-	 
-					
-    <script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>	 
+
+
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false&amp;location=-37.809784,144.972839&amp;radius=25000"> </script>
     <script type="text/javascript" src="assets/js/jQuery/jquery.json-2.4.min.js"></script>
     <script type="text/javascript" src="assets/js/jQuery/jquery.sortElements.js"></script>
@@ -299,14 +310,14 @@
 
     <script type="text/javascript" src="assets/js/application.js"></script>
 
-      
 
-      <!-- Custom javascript
+
+    <!-- Custom javascript
 	<script src="assets/js/global.js"></script>
 	<script src="assets/js/maps.js"></script>
 	<script src="assets/js/ui.js"></script>
 	<script src="assets/js/search.js"></script>
 	<script src="assets/js/autoexec.js"></script> -->
 
-  </body>
+</body>
 </html>
