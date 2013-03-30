@@ -83,7 +83,7 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                     }
                     propVals.push(propVal)
 
-                    _this.dataSource.Set $.proxy(_this.ValidateData,_this) , propVals
+                _this.dataSource.Set $.proxy(_this.ValidateData,_this) , propVals
                  #{ "journeyUuid": selectedJourneyUuid, "propVals": propVals }, function(data) {
                     
 
