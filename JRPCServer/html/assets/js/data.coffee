@@ -90,7 +90,18 @@ class RmitJourneyPlanner::Data
                     callback(data)
            
 
-        
+        class @::JRPCBiDirDataSource extends @::JsonDataSource
+            constructor: (@get, @set) ->
+                if !(@get instanceof RmitJourneyPlanner::Data::DataSources::JRPCDataSource) || !(@set instanceof RmitJourneyPlanner::Data::DataSources::JRPCDataSource)
+                    throw new Exceptions::InvalidElementException(this, "JRPCDataSource")
+
+                Get: (data={}, callback=->) ->
+                    @get.RequestData(data,callback)
+
+                Set: (data={}, callback=->) ->
+                    @set.RequestData(data,callback)
+
+
         #--------------------------------------------#
         # JRPC Data Sources                          #
         #--------------------------------------------#    
@@ -107,4 +118,46 @@ class RmitJourneyPlanner::Data
 
             Query: (stopName, callback) ->
                 @RequestData({ "query": String(stopName) }, callback);
+
+
+        class @::GetPropertyDataSource extends @::JRPCDataSource
+            constructor: (@uuid) ->
+                super(
+                    RmitJourneyPlanner::Client::Properties.JRPCUrl,
+                    "GetProperties"
+                    )
+
+            RequestData: (data={}, callback=->) ->
+                super data, callback
+
+            Query: (callback) ->
+                @RequestData({ "journeyUuid": @uuid, action: "Query" }, callback);
             
+
+
+        class @::SetPropertyDataSource extends @::JRPCDataSource
+            constructor: (@uuid) ->
+                super(
+                    RmitJourneyPlanner::Client::Properties.JRPCUrl,
+                    "SetProperties"
+                    )
+
+            RequestData: (data={}, callback=->) ->
+                super data, callback
+
+            Query: (callback, propVals) ->
+                @RequestData({ "journeyUuid": @uuid, propVals: propVals }, callback);
+            
+            
+        class @::JourneyPropertyDataSource extends @::JRPCBiDirDataSource
+            constructor: (@uuid) ->
+                super(
+                    new DataSources::GetPropertyDataSource(@uuid),
+                    new DataSources::SetPropertyDataSource(@uuid)
+                    )
+
+            Get: (callback) ->
+                @get.Query(callback)
+
+            Set: (callback, propVals) ->
+                @set.Query(callback,propVals)

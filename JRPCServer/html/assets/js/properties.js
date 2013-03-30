@@ -1,1 +1,6 @@
-﻿
+﻿window.GlobalProperties =
+{
+    userKey: "abcdef"
+
+
+}

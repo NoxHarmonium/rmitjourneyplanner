@@ -34,6 +34,15 @@ class Application
 
         btnSearch = $("#btnSearch");
         btnSearch.click(=> do @search)
+        #btnSaveProperties
+
+
+        propertyDataSource = new RmitJourneyPlanner::Data::DataSources::JourneyPropertyDataSource(GlobalProperties.userKey)
+        propertyEditor = new RmitJourneyPlanner::UI::Controls::PropertyEditor(@client, $("div#myModal > div.modal-body"), propertyDataSource, 2)
+
+        btnSaveProperties = $("div#myModal button#btnSaveProperties");
+        btnSaveProperties.click =>
+            propertyEditor.SaveForm()
 
     search: () ->
         alert("search")

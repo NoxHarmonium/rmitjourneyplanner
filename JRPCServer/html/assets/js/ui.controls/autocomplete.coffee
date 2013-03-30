@@ -14,10 +14,8 @@ class RmitJourneyPlanner::UI::Controls::Autocomplete extends RmitJourneyPlanner:
             selectedItem:  null
 
             constructor: (@client, @element, @dataSource) ->
-                super(@client,@element,["input"])            
+                super(@client,@element,["input"])          
                            
-               
-
                 if (!@element.autocomplete?)
                     throw new Exceptions::MissingDependency(this,"jQuery UI Autocomplete")
 

@@ -73,6 +73,7 @@
                             <i class="icon-chevron-up icon-white"></i>
 						</button>
 						<button  id="btnSearch" type="button" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
+                        <button  id="btnAdvanced" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><i class="icon-cog icon-white"></i></button>
 					
 						
 					</div>
@@ -154,18 +155,16 @@
                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                        ×</button>
                    <h3 id="myModalLabel">
-                       Optimising Journey Plans...</h3>
+                       Property Editor...</h3>
                </div>
                <div class="modal-body">
-               <div style="float:left; padding-right: 25px;"><img src="assets/img/loading.gif" style="vertical-align: central;" alt="Loading indicator"/></div>
-                   <div style="width: 70%;"><p>
-                       The server is currently trying to find the journeys that best fit your criteria. </p></div>
-                       
+               
                </div>
                <div class="modal-footer">
+                   <button id="btnSaveProperties" class="btn" aria-hidden="true">
+                       Save</button>
                    <button class="btn" data-dismiss="modal" aria-hidden="true">
                        Cancel</button>
-                  
                </div>
            </div>
 
@@ -296,6 +295,7 @@
     <script type="text/javascript" src="assets/js/ui.controls/autocomplete.js"></script>
     <script type="text/javascript" src="assets/js/ui.controls/alertbox.js"></script>
     <script type="text/javascript" src="assets/js/ui.controls/map.js"></script>
+    <script type="text/javascript" src="assets/js/ui.controls/propertyeditor.js"></script>
 
     <script type="text/javascript" src="assets/js/application.js"></script>
 

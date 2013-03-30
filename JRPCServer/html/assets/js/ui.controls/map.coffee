@@ -9,6 +9,9 @@
 ###
 "use strict"
 class RmitJourneyPlanner::UI::Controls::MapControl extends RmitJourneyPlanner::UI::Controls::Control
+            #Aliases
+            Exceptions = RmitJourneyPlanner::Client::Exceptions;
+
 
              # Fields
             defaultBounds : new google.maps.LatLngBounds (

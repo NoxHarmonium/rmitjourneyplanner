@@ -349,6 +349,50 @@ namespace JRPCServer
         }
 
         /// <summary>
+        /// The set properties.
+        /// </summary>
+        /// <param name="journeyUuid">
+        /// The journey uuid.
+        /// </param>
+        /// <param name="propVals">
+        /// The prop vals.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        [JsonRpcMethod("SetProperties", Idempotent = true)]
+        [JsonRpcHelp(
+            "Accepts an array of property names and values and attempts to modify the property object. Returns an array of validation errors."
+            )]
+        public ValidationError[] SetProperties(string journeyUuid, PropertyValue[] propVals)
+        {
+            /*
+			 FORMAT:
+			 { "propVals" : [{ "propVal" : {"name":"CrossoverRate","value":"0.7"} }] }
+			 */
+            var journeyManager = ObjectCache.GetObject<JourneyManager>();
+            var journey = journeyManager.GetJourney(journeyUuid);
+
+            if (propVals == null)
+            {
+                throw new Exception(
+                    "Property value collection is null. Cannot proceed with validation. Please check your JSON syntax.");
+
+            }
+            List<ValidationError> valErrors = new List<ValidationError>();
+            foreach (var propVal in propVals)
+            {
+                var valError = this.SetProperty(journey, propVal);
+                if (valError != null)
+                {
+                    valErrors.Add(valError);
+                }
+            }
+            
+            return valErrors.ToArray();
+        }
+
+
+        /// <summary>
         /// The stop journey optimiser.
         /// </summary>
         [JsonRpcMethod("StopJourneyOptimiser", Idempotent = true)]
@@ -620,6 +664,138 @@ namespace JRPCServer
             }
 
             return new ValidationError { Target = propVal.Name, Message = Strings.VALIDATION_SUCCESS };
+        }
+
+        /// <summary>
+        /// The get properties.
+        /// </summary>
+        /// <param name="journeyUuid">
+        /// The journey uuid.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        /// <exception cref="JsonException">
+        /// </exception>
+        [JsonRpcMethod("GetProperties", Idempotent = true)]
+        [JsonRpcHelp("Gets all the properties accessable for the journey planner run.")]
+        public ObjectProperty[] GetProperties(string journeyUuid)
+        {
+            PropertyInfo[] propertyInfos =
+                typeof(EvolutionaryProperties).GetProperties().OrderBy(p => p.PropertyType.Name).ToArray();
+            var objectProperties = new ObjectProperty[propertyInfos.Length];
+
+            // EvolutionaryProperties properties = ObjectCache.GetObjects<EvolutionaryProperties>().First();
+            var jp = ObjectCache.GetObject<JourneyManager>();
+            EvolutionaryProperties properties;
+            try
+            {
+                properties = journeyUuid == null ? new EvolutionaryProperties() : jp.GetJourney(journeyUuid).Properties;
+            }
+            catch (Exception)
+            {
+                throw new JsonException("The supplied journey Uuid was incorrect.");
+            }
+
+            string delimeter = ", ";
+            for (int i = 0; i < propertyInfos.Length; i++)
+            {
+                bool editable = true;
+                object value = null;
+                bool isArray = false;
+
+                Type pType = propertyInfos[i].PropertyType;
+
+                // TODO: Really fix this!
+            restart:
+                if (!pType.IsValueType)
+                {
+                    if (pType.IsGenericType)
+                    {
+                        if (pType.Name.Contains("List"))
+                        {
+                            pType = pType.GetGenericArguments()[0];
+                        }
+                    }
+
+                    if (pType.IsArray)
+                    {
+                        pType = pType.GetElementType();
+                        isArray = true;
+                        goto restart;
+                    }
+
+                    if (pType.Name == "INetworkNode")
+                    {
+                        value = string.Empty;
+                        PtvNode node = (PtvNode)propertyInfos[i].GetValue(properties, null) ?? null;
+                        if (node != null)
+                        {
+                            value = node.StopSpecName + delimeter + node.Id;
+                        }
+                    }
+                    else
+                    {
+                        editable = false;
+                        var types = Assembly.GetAssembly(pType).GetTypes();
+                        var candidates =
+                            types.Where(t => (t == pType && !t.IsInterface) || t.GetInterfaces().Contains(pType));
+                        var val = propertyInfos[i].GetValue(properties, null);
+                        string valstring = " ";
+                        if (val != null)
+                        {
+                            var type = val.GetType();
+                            if (type.IsArray)
+                            {
+                                valstring = type.GetElementType().Name;
+                            }
+                            else
+                            {
+                                valstring = type.Name;
+                            }
+                        }
+
+                        // string valstring = (val != null ? val.GetType().Name : " ");
+                        value = string.Join(delimeter, candidates.Select(c => c.Name)) + "@" + valstring;
+                    }
+                }
+                else
+                {
+                    if (pType.IsEnum)
+                    {
+                        var val = propertyInfos[i].GetValue(properties, null);
+                        string valstring;
+                        string seperator = "@";
+
+                        if (isArray)
+                        {
+                            // TODO: Make this generic
+                            valstring = string.Join(",", (FitnessParameter[])val);
+                            seperator = "|";
+                        }
+                        else
+                        {
+                            valstring = val != null ? val.ToString() : " ";
+                        }
+
+                        value = string.Join(delimeter, Enum.GetNames(pType)) + seperator + valstring;
+                        editable = false;
+                    }
+                    else
+                    {
+                        value = propertyInfos[i].GetValue(properties, null) ?? "null";
+                    }
+                }
+
+                objectProperties[i] = new ObjectProperty
+                {
+                    Name = propertyInfos[i].Name,
+                    Type = propertyInfos[i].PropertyType.Name,
+                    Value = value.ToString(),
+                    Editable = editable
+                };
+            }
+
+            return objectProperties;
         }
 
         #endregion
