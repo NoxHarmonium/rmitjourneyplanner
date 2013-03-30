@@ -42,9 +42,11 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                     if (value.message == validation_success) 
                         helpSpan.text('')
                         controlGroup.removeClass('error')
+                        return false
                     else
                         helpSpan.text(value.message)
                         controlGroup.addClass('error')
+                        return true
 
             ValidateData: (data) ->        
                 if ($.isArray(data.result)) 
@@ -53,7 +55,10 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                 else 
                     @DisplayValidationError(data.result)
 
-            SaveForm: () ->          
+
+           
+
+            SaveForm: (resultCallback = ->) ->    
                 propVals = new Array()
                 _this = @;
                 @element.find('.propertyField').each (index) ->
@@ -83,9 +88,19 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                     }
                     propVals.push(propVal)
 
-                _this.dataSource.Set $.proxy(_this.ValidateData,_this) , propVals
-                 #{ "journeyUuid": selectedJourneyUuid, "propVals": propVals }, function(data) {
-                    
+                results = null               
+
+                _validateFunction = (data) -> 
+                    results = $.proxy(_this.ValidateData, _this)(data)
+                    if $.isArray(results)
+                        for result in results
+                            return resultCallback(true) if result is true
+                        return resultCallback(false)
+                    return resultCallback(results)
+
+                _this.dataSource.Set(_validateFunction, propVals)
+
+              
 
             BuildForm: (data = null) ->
                 if !data?

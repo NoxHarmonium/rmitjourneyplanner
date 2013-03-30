@@ -41,8 +41,11 @@ class Application
         propertyEditor = new RmitJourneyPlanner::UI::Controls::PropertyEditor(@client, $("div#myModal > div.modal-body"), propertyDataSource, 2)
 
         btnSaveProperties = $("div#myModal button#btnSaveProperties");
-        btnSaveProperties.click =>
-            propertyEditor.SaveForm()
+        btnSaveProperties.click (event) =>
+            propertyEditor.SaveForm (result) ->
+                if !result
+                    $('div#myModal').modal('hide')
+
 
     search: () ->
         alert("search")
