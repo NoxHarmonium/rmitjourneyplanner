@@ -269,14 +269,19 @@ namespace JRPCServer
             Journey journey;
             try
             {
-                journey = (Journey)journeyManager.GetJourney("default").Clone();
-                journey.Uuid = userKey;
-                if (journeyManager.Contains(journey))
+                if (journeyManager.Contains(userKey))
                 {
-                    journeyManager.DeleteJourney(userKey);
+                    journey = journeyManager.GetJourney(userKey);
                 }
-                journeyManager.Add(journey);
-                journeyManager.Save();
+                else
+                {
+                    journey = (Journey)journeyManager.GetJourney("default").Clone();
+                    journey.Uuid = userKey;
+                    journeyManager.Add(journey);
+                    journeyManager.Save();
+                }
+                
+                
             }
             catch (KeyNotFoundException)
             {

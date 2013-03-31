@@ -13,6 +13,16 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
 
             #Constants
             validation_success = "Success";
+            tooltipOptions = {
+                animation: true,
+                html : false,
+                placement: 'bottom',
+                selector: false,
+                title: 'Validation Error',
+                trigger: 'focus hover',
+                delay: 0,
+                container: false
+                }
 
             #Fields
             data: null
@@ -21,7 +31,7 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                 super(@client,@element,["*"])
                 if !(@dataSource instanceof RmitJourneyPlanner::Data::DataSources::JourneyPropertyDataSource)
                     throw new Exceptions::InvalidElementException(this, "JourneyPropertyDataSource")
-                do @BuildForm
+                #do @BuildForm
 
 
             DisplayValidationError: (value) ->
@@ -32,19 +42,38 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                     
                     controls = input.parent()
                     helpSpan = controls.find('.help-inline')
-                    controlGroup = input.parent().parent()
-                    if (helpSpan.length == 0) 
-                        helpSpan = controls.parent().find('.help-inline')
-                        controlGroup = input.parent().parent().parent()
+                    controlGroup = input.parent().parent(".control-group")
+
+                    if (controlGroup.length == 0)
+                        controlGroup = input
+                      
+
+                    #if (helpSpan.length == 0) #Go deeper
+                    #    helpSpan = controls.parent().find('.help-inline')
+                    #    controlGroup = input.parent().parent().parent()
                     
+
+
                     controlGroup.addClass('error')
                     
                     if (value.message == validation_success) 
-                        helpSpan.text('')
+                        if controlGroup == input && input.data("tooltipEnabled")
+                            controlGroup.tooltip('destroy')
+                            input.data("tooltipEnabled",false)
+
+                        else
+                            helpSpan.text('')
                         controlGroup.removeClass('error')
+                        
                         return false
                     else
-                        helpSpan.text(value.message)
+                        if controlGroup == input 
+                            tooltipOptions.title = value.message
+                            controlGroup.tooltip(tooltipOptions)
+                            #controlGroup.tooltip('show')
+                            input.data("tooltipEnabled",true)
+                        else 
+                            helpSpan.text(value.message)
                         controlGroup.addClass('error')
                         return true
 
@@ -62,7 +91,6 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                 propVals = new Array()
                 _this = @;
                 @element.find('.propertyField').each (index) ->
-
                     value = null
                     if !$(this).is("select")
                         value = null

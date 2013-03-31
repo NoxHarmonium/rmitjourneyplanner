@@ -12,7 +12,8 @@ class Application
     constructor: () ->
      
     client:  new RmitJourneyPlanner::Client()
-        
+    propertyEditor: null
+    searchPanel: null
     start: () -> 
         datasource = new RmitJourneyPlanner::Data::DataSources::StopNameDataSource()
         $("input.locationInput").each ->
@@ -37,18 +38,26 @@ class Application
         #btnSaveProperties
 
 
-        propertyDataSource = new RmitJourneyPlanner::Data::DataSources::JourneyPropertyDataSource(GlobalProperties.userKey)
-        propertyEditor = new RmitJourneyPlanner::UI::Controls::PropertyEditor(@client, $("div#myModal > div.modal-body"), propertyDataSource, 2)
+        @propertyDataSource = new RmitJourneyPlanner::Data::DataSources::JourneyPropertyDataSource(GlobalProperties.userKey)
+        @propertyEditor = new RmitJourneyPlanner::UI::Controls::PropertyEditor(@client, $("div#myModal > div.modal-body"), @propertyDataSource, 2)
+        @propertyEditor.BuildForm();
+
+        @searchPanel =  new RmitJourneyPlanner::UI::Controls::PropertyEditor(@client, $("div#searchPanel"), @propertyDataSource, null)
 
         btnSaveProperties = $("div#myModal button#btnSaveProperties");
         btnSaveProperties.click (event) =>
-            propertyEditor.SaveForm (result) ->
+            @propertyEditor.SaveForm (result) ->
                 if !result
                     $('div#myModal').modal('hide')
 
 
     search: () ->
-        alert("search")
+        searchDatasource = new RmitJourneyPlanner::Data::DataSources::SearchDataSource(GlobalProperties.userKey)
+        @searchPanel.SaveForm (result) ->
+                if !result
+                    searchDatasource.Query (validationErrors) ->
+                        for validationError in validationErrors
+                            console.log(validationError)
 
 
 $(window).ready ->

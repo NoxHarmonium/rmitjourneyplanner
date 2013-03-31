@@ -65,6 +65,17 @@ namespace JRPCServer
             return this.journeyMap.ContainsKey(journey.Uuid);
         }
 
+        /// <summary>
+        /// Returns if this journey manager contains a journey with 
+        /// a matching UUID.
+        /// </summary>
+        /// <param name="Uuid">The UUID which is used for comparison.</param>
+        /// <returns>True if the UUIDs match, otherwise false.</returns>
+        public bool Contains(string uuid)
+        {
+            return this.journeyMap.ContainsKey(uuid);
+        }
+
 
         /// <summary>
         /// Add the specified journey to the manager.

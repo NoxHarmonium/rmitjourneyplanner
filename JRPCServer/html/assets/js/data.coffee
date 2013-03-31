@@ -131,7 +131,7 @@ class RmitJourneyPlanner::Data
                 super data, callback
 
             Query: (callback) ->
-                @RequestData({ "journeyUuid": @uuid, action: "Query" }, callback);
+                @RequestData({ "journeyUuid": @uuid, "action": "Query" }, callback);
             
 
 
@@ -146,7 +146,7 @@ class RmitJourneyPlanner::Data
                 super data, callback
 
             Query: (callback, propVals) ->
-                @RequestData({ "journeyUuid": @uuid, propVals: propVals }, callback);
+                @RequestData({ "journeyUuid": @uuid, "propVals": propVals }, callback);
             
             
         class @::JourneyPropertyDataSource extends @::JRPCBiDirDataSource
@@ -161,3 +161,16 @@ class RmitJourneyPlanner::Data
 
             Set: (callback, propVals) ->
                 @set.Query(callback,propVals)
+
+        class @::SearchDataSource extends @::JRPCDataSource
+            constructor: (@uuid) ->
+                super(
+                    RmitJourneyPlanner::Client::Properties.JRPCUrl,
+                    "Search"
+                    )
+
+            RequestData: (data={}, callback=->) ->
+                super data, callback
+
+            Query: (callback, propVals = []) ->
+                @RequestData({ "userKey": @uuid, "propVals": propVals }, callback);
