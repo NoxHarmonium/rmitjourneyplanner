@@ -2,6 +2,16 @@
 "use strict"
 class window.RmitJourneyPlanner
     class @::Client
+        #Aliases
+        Exceptions = @::Exceptions
+
+        constructor: () ->
+            @global = new @Global(this)
+            @ui = new @UI(this)
+            @search = new @Search(this)
+            @map = new RmitJourneyPlanner::UI::Controls::MapControl(@client, $("#map_canvas"))
+
+
         class @::Properties
             this.JRPCUrl="http://localhost:8000/simplejsonws.ashx"
 
@@ -36,15 +46,15 @@ class window.RmitJourneyPlanner
                 jQuery.fn.enable = () -> return $(this) removeAttr 'disabled'
         
                 # Catch javascript errors and display a custom error message
-                if catchJsErrors
+                if @catchJsErrors
                     window.onerror = (message, url, lineNumber) ->   
                         if !!url      
                             url = 'Unknown'              
-                        showError "<strong>Javascript Error</strong> " + message + "\nLine Number: " + lineNumber + " Url: " + url 
+                        @showError "<strong>Javascript Error</strong> " + message + "\nLine Number: " + lineNumber + " Url: " + url 
         
                 # Check if google is loaded
                 if !window.google
-                    showWarning("<strong>Warning:</strong> Unable to load Google Maps scripts. Google Maps functionality will be disabled.");
+                    @showWarning("<strong>Warning:</strong> Unable to load Google Maps scripts. Google Maps functionality will be disabled.");
                     @googleEnabled = false;
                 else
                     @googleEnabled = true;        
@@ -181,86 +191,43 @@ class window.RmitJourneyPlanner
         "use strict"
         class @::Search   
             #Fields
-            @userKey:               "abcdef";
-            @validation_success:    "Success";
-            @progress_callback_id:  null;
-            @poll_interval:         500; #ms
+            userKey:               "abcdef";
+            validation_success:    "Success";
+            progress_callback_id:  null;
+            poll_interval:         500; #ms
 
 
-            constructor: (@client)
-        
-
-            checkValidation: (data) ->
-                # Show errors
-                if ($.isArray(data.result)) 
-                    for r in data.result
-                        displayValidationError(r);
-                        if (r.message != validation_success)                
-                            showDateTimeDiv();
-                            endSearch();
-                            return false;         
-                else 
-                    displayValidationError(data.result);
+            constructor: (@client) ->
+                @statusDataSource = new RmitJourneyPlanner::Data::DataSources::StatusDataSource(GlobalProperties.userKey)
+                @resultDataSource = new RmitJourneyPlanner::Data::DataSources::ResultDataSource(GlobalProperties.userKey)
+                @searchDatasource = new RmitJourneyPlanner::Data::DataSources::SearchDataSource(GlobalProperties.userKey)
+         
+            Begin : () ->                       
+                @searchDatasource.Query (validationErrors) =>
+                    if (validationErrors? && validationErrors.length > 0)
+                        throw new Exceptions.DataAccessException(this,"The search method does not send and property values so there should not be any validation errors.")
+                        
+                    if @progress_callback_id != null
+                        clearInterval(@progress_callback_id)
                     
-                    if (data.result.message != validation_success) 
-                        @client.ui.showDateTimeDiv()
-                        @endSearch()
-                        return false
-        
-                return true;
-        
-            submitSearch : () ->
-                propVals = new Array();
-                $('.propertyField').each (index) ->    
-            
-                    if !$(this).is("select") 
-                        if $(this).hasClass('locationInput') 
-                            value = $(this).attr('nodeid')
-                        else 
-                            value = $(this).val()            
-           
-                    else 
-                        selected = $(this).find('option').filter(":selected")
-                        if (selected.length > 1) 
-                            value = ""
-                            for item in selected
-                                value += item.val() + ",";
-                
-                            value = value.substring(0, value.length - 1)
-                        else 
-                            value = selected.val()
-        
-                    propVal = {
-                        name: $(this).attr('propName'),
-                        value: value
-                        }
-                    propVals.push(propVal);
-        
-                RPCCall 'Search', { "userKey": userKey, "propVals": propVals },  (data) ->
-                    if (CheckForError(data))
-                        return        
-            
-                    if checkValidation(data)       
-                        if progress_callback_id != null
-                            clearInterval(progress_callback_id)
-            
-                        @progress_callback_id = setInterval(progressCallback, @poll_interval)
-                        progressCallback()
+                    if (!@poll_interval?)  
+                         throw new Exceptions.ClientException(this,"Poll interval is undefined or null, this causes strange behavior.")
+
+                    @progress_callback_id = setInterval( (=> do @progressCallback), @poll_interval)
+                    @progressCallback()
+
+                  
+                      
         
 
 
             getResults : () ->
-                RPCCall 'GetResult', { "userKey": userKey }, (data) ->
-                    if (CheckForError(data)) 
-                        return;
-        
+                @resultDataSource.Query (data) =>
                     @client.ui.showResults(data);
 
             progressCallback : () ->
-                RPCCall 'GetStatus', { "userKey": userKey }, (data) ->
-                    if CheckForError(data)
-                        return
-        
+              @statusDataSource.Query (data) =>
+                            
                     d = data.result;
           
                     if d.status.toLowerCase() == "unknown"
@@ -344,27 +311,10 @@ class window.RmitJourneyPlanner
                 strTransportImageExt: ".png"
                 }
 
+            constructor: (@client) ->
+                
+
             # Functions    
-            displayValidationError: (value) ->
-                if (value != null) 
-                    input = $('input[propName="' + value.target + '"]')
-                    if (input.length == 0) 
-                        input = $('select[propName="' + value.target + '"]')
-            
-                    if (value.message == @client.search.validation_success) 
-                        input.removeClass('error')
-                        $(input).popover('destroy')
-
-                    else
-                        input.addClass('error')
-                        input.popover({
-                        "animation" : "True",
-                        "placement" : "bottom",
-                        "trigger"	: "hover",
-                        "title"		: "Validation Error",
-                        "content"	: value.message})
-
-
             enableSearch: () ->
                 $('.subnav-inner input').enable()
                 $('.subnav-inner button').enable()
@@ -388,69 +338,62 @@ class window.RmitJourneyPlanner
                 $('#divLoading .progressHelp').show()
                 switch mode.toLowerCase()
                     when "queued" 
-                        $('#divLoading .title').text(@strings.strQueuedTitle);
-                        $('#divLoading .progressHelp').text(@strings.strQueuedMessage);
+                        $('#divLoading .title').text(UI.strings.strQueuedTitle);
+                        $('#divLoading .progressHelp').text(UI.strings.strQueuedMessage);
                         $('#divLoading .progressInfo').hide();
 
                     when "optimising" 
-                        $('#divLoading .title').text(@strings.strOptimisingTitle);
-                        $('#divLoading .progressHelp').text(@strings.strOptimisingMessage);
+                        $('#divLoading .title').text(UI.strings.strOptimisingTitle);
+                        $('#divLoading .progressHelp').text(UI.strings.strOptimisingMessage);
                         $('#divLoading .progressInfo').show(); 
 
                     when "finished" 
-                        $('#divLoading .title').text(@strings.strFinishedTitle);
-                        $('#divLoading .progressHelp').text(@strings.strFinishedMessage);
+                        $('#divLoading .title').text(UI.strings.strFinishedTitle);
+                        $('#divLoading .progressHelp').text(UI.strings.strFinishedMessage);
                         $('#divLoading .progressInfo').hide();
                         $('#divLoading div.progress').hide();  
 
                     else 
-                        $('#divLoading .title').text(@strings.strUnknownTitle);
+                        $('#divLoading .title').text(UI.strings.strUnknownTitle);
                         $('#divLoading .progressHelp').hide();
                         $('#divLoading .progressInfo').hide();
 
 
             showLoadingDiv: () ->
-                if (!loadingDivShown) 
+                if (!@loadingDivShown) 
                     $('#divLoading').show()
                     @loadingDivShown = true
-      
-
-
 
 
             hideLoadingDiv: () -> 
-                if (loadingDivShown)
+                if (@loadingDivShown)
                     $('#divLoading').hide()
                     @loadingDivShown = false
 
 
             showHelpDiv: () -> 
-                if (!helpDivShown) 
+                if (!@helpDivShown) 
                     $('#divHelp').show()
-                    helpDivShown = true
+                    @helpDivShown = true
 
             hideHelpDiv: () ->
-                if (helpDivShown) 
+                if (@helpDivShown) 
                     $('#divHelp').hide()
-                    helpDivShown = false
-
-
+                    @helpDivShown = false
 
             toggleDateTimeDiv: () ->    
-                if (dateTimeDivShown)        
-                    hideDateTimeDiv()    
+                if (@dateTimeDivShown)        
+                    @hideDateTimeDiv()    
                 else        
-                    showDateTimeDiv()
+                    @showDateTimeDiv()
                     
-                dateTimeDivShown  = !dateTimeDivShown
-    
+                @dateTimeDivShown  = !@dateTimeDivShown
 
             showDateTimeDiv: () ->    
                 $('#btnMore i').removeClass('icon-chevron-down');
                 $('#btnMore i').addClass('icon-chevron-up');     
                 $('#divWhen'  ).slideDown 'slow', () ->
-                    dateTimeDivShown = true;
-
+                    @dateTimeDivShown = true;
 
             hideDateTimeDiv: () ->
                 if (dateTimeDivShown)
@@ -458,59 +401,47 @@ class window.RmitJourneyPlanner
                     $('#btnMore i').removeClass('icon-chevron-up')
 
                     $('#divWhen').slideUp 'slow', () ->
-                        dateTimeDivShown = false;
-                
+                        @dateTimeDivShown = false;
 
             hideResultsDiv: () ->
                 $('#divJourneyList').hide()
-    
 
             showResultsDiv: () ->
                 $('#divJourneyList').show()
-    
+
+           
 
             selectJourney: (e) ->
                 sender = $(e.target).parents('tr')
                 $('.selectedJourney').removeClass('selectedJourney')
                 sender.addClass('selectedJourney')
     
-
-                ###
-                var legs = sender.prop('jLegs');
-                mapManager.clearMarkers();
-                mapManager.clearLines();
+                legs = sender.data('jLegs');
+                @client.map.clearMarkers();
+                @client.map.clearLines();
 
                 $('div.infoPanel').show();
 
-                for (i in legs)
-                {        
-                    var leg = legs[i];
+                for i in [0..legs.length]
+                    leg = legs[i];
 
-                    if (i == 0 || !(leg.Mode == "Walking" && legs[parseInt(i) - 1].Mode == "Walking")) {
-                        mapManager.addMarker(new google.maps.Marker({
+                    if (i == 0 || !(leg.Mode == "Walking" && legs[parseInt(i) - 1].Mode == "Walking")) 
+                        @client.map.addMarker(new google.maps.Marker({
                             position: new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
-                            icon: strTransportImagePath + leg.Mode + strTransportImageExt
+                            icon: UI.strings.strTransportImagePath + leg.Mode + UI.strings.strTransportImageExt
                         }));
-                    }
+                    
 
-                    var lineColour;
+                    lineColour = null
 
-                    switch (leg.Mode) {
-                        case "Train":
-                            lineColour = "#0000FF";
-                            break;
-                        case "Bus":
-                            lineColour = "#B25800";
-                            break;
-                        case "Tram":
-                            lineColor = "#00FF00";
-                            break;
-                        default:
-                            lineColour = "#333333";
-                            break;      
-                    }
+                    switch leg.Mode
+                        when "Train" then lineColour = "#0000FF";
+                        when "Bus" then lineColour = "#B25800";
+                        when "Tram" then lineColor = "#00FF00";
+                        else lineColour = "#333333";
+                    
 
-                    mapManager.addLine(new google.maps.Polyline({
+                    @client.map.addLine(new google.maps.Polyline({
                         path: [new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
                                 new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long)],
                         strokeColor: lineColour,
@@ -518,24 +449,24 @@ class window.RmitJourneyPlanner
                         strokeWeight: 2
                     }));
         
-                    if (parseInt(i) == legs.length - 1) {
-                        //Draw finish marker
-                        mapManager.addMarker(new google.maps.Marker({
+                    if (parseInt(i) == legs.length - 1)
+                        #Draw finish marker
+                        @client.map.addMarker(new google.maps.Marker({
                             position: new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long),
-                            icon: strTransportImagePath + "Finish" + strTransportImageExt
+                            icon: UI.strings.strTransportImagePath + "Finish" + UI.strings.strTransportImageExt
                         }));
-                    }       
-                }
-                ###
+                
     
 
             showResults: (data) ->
                 results = data.result
                 tableSummary = $('#divJourneyList table')
+                i = 0
                 for journey in results
+                    journey = journey.Critter
                     trSummary = $('<tr></tr>')
                     tdTitle = $('<td></td>')
-                    tdTitle.text('Journey ' + i)
+                    tdTitle.text('Journey ' + i++)
                     tdTime = $('<td></td>')
                     d = new Date(journey.Fitness.TotalJourneyMinutes * 60 * 1000)
                     tdTime.text(d.getUTCHours() + 'h ' + d.getUTCMinutes() + 'm')
@@ -544,19 +475,19 @@ class window.RmitJourneyPlanner
                     for leg in journey.Legs               
                         if (j == 0 || !(leg.Mode == "Walking" && journey.Legs[parseInt(j) - 1].Mode == "Walking"))                    
                             imgLeg = $('<img class="miniIcon"/>')
-                            imgLeg.attr('src', strTransportImagePath + leg.Mode + strTransportImageExt)
+                            imgLeg.attr('src', UI.strings.strTransportImagePath + leg.Mode + UI.strings.strTransportImageExt)
                             tdLegs.append(imgLeg)
                         j++
             
-                    trSummary.prop('jLegs', journey.Legs)
-                    trSummary.click(selectJourney)
+                    trSummary.data('jLegs', journey.Legs)
+                    trSummary.click((e)=> @selectJourney(e))
             
                     trSummary.append(tdTitle)
                     trSummary.append(tdTime)
                     trSummary.append(tdLegs)
                     tableSummary.append(trSummary)
             
-                showResultsDiv()
+                @showResultsDiv()
 
         ###
         ****************************************************************

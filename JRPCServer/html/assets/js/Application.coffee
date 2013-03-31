@@ -21,7 +21,7 @@ class Application
 
         btnMore = new RmitJourneyPlanner::UI::Controls::Togglebutton(@client,$("#btnMore"))
 
-        map = new RmitJourneyPlanner::UI::Controls::MapControl(@client, $("#map_canvas"))
+        
         divWhen = new RmitJourneyPlanner::UI::Controls::Hideable(@client, $("#divWhen"))
         divWhen.setToggleElement($("#btnMore"))
         divWhen.setEffectType("slide")
@@ -31,7 +31,7 @@ class Application
         errorBox.setSuccess()
         errorBox.setTitle("Success!")
         errorBox.setMessage("The error box component works!")
-        errorBox.show("slide")
+        #errorBox.show("slide")
 
         btnSearch = $("#btnSearch");
         btnSearch.click(=> do @search)
@@ -51,13 +51,10 @@ class Application
                     $('div#myModal').modal('hide')
 
 
-    search: () ->
-        searchDatasource = new RmitJourneyPlanner::Data::DataSources::SearchDataSource(GlobalProperties.userKey)
-        @searchPanel.SaveForm (result) ->
+    search: () ->        
+        @searchPanel.SaveForm (result) =>
                 if !result
-                    searchDatasource.Query (validationErrors) ->
-                        for validationError in validationErrors
-                            console.log(validationError)
+                    @client.search.Begin()
 
 
 $(window).ready ->

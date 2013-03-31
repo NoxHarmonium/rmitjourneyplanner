@@ -17,7 +17,9 @@ class RmitJourneyPlanner::UI::Controls::MapControl extends RmitJourneyPlanner::U
             defaultBounds : new google.maps.LatLngBounds (
                 (new google.maps.LatLng -36.536123, 143.074951)
                 (new google.maps.LatLng -39.019184, 147.304688))  
-    
+            lines: []
+            markers:[]
+            map: null
     
             mapOptions : {
                 bounds: @defaultBounds,
@@ -45,9 +47,28 @@ class RmitJourneyPlanner::UI::Controls::MapControl extends RmitJourneyPlanner::U
             # (Needed on window resize due to some bugs)
             # 
             refreshMap: () ->
-                map = new google.maps.Map(@element[0],
+                @map = new google.maps.Map(@element[0],
                     @mapOptions)
                 h = $(window).height()
                 offsetTop = 60 # Calculate the top offset
                 @element.css('height', (h - offsetTop))
                            
+
+                
+            addMarker: (marker) ->
+                marker.setMap(@map)
+                @markers.push(marker)
+
+            clearMarkers: () ->
+                for marker in @markers
+                    market.setMap(null)
+                @markers = []
+
+            clearLines: () ->
+                 for line in @lines
+                    line.setMap(null)
+                @lines = []
+
+            addLine: (line) ->
+                line.setMap(@map)
+                @lines.push(line)

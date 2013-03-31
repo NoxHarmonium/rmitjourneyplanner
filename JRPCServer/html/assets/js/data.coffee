@@ -162,6 +162,32 @@ class RmitJourneyPlanner::Data
             Set: (callback, propVals) ->
                 @set.Query(callback,propVals)
 
+        class @::StatusDataSource extends @::JRPCDataSource
+            constructor: (@uuid) ->
+                super(
+                    RmitJourneyPlanner::Client::Properties.JRPCUrl,
+                    "GetStatus"
+                    )
+
+            RequestData: (data={}, callback=->) ->
+                super data, callback
+
+            Query: (callback, propVals = []) ->
+                @RequestData({ "userKey": @uuid }, callback);
+
+        class @::ResultDataSource extends @::JRPCDataSource
+            constructor: (@uuid) ->
+                super(
+                    RmitJourneyPlanner::Client::Properties.JRPCUrl,
+                    "GetResult"
+                    )
+
+            RequestData: (data={}, callback=->) ->
+                super data, callback
+
+            Query: (callback, propVals = []) ->
+                @RequestData({ "userKey": @uuid }, callback);
+
         class @::SearchDataSource extends @::JRPCDataSource
             constructor: (@uuid) ->
                 super(
