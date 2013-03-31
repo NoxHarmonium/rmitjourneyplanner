@@ -31,3 +31,7 @@ $tf*/
 Log.txt
 results.csv
 Iteration*.json
+*.js
+*.json
+*.vspx
+*.psess
