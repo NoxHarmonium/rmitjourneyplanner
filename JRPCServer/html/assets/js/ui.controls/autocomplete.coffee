@@ -37,6 +37,7 @@ class RmitJourneyPlanner::UI::Controls::Autocomplete extends RmitJourneyPlanner:
                     
                         select: (event, ui) =>
                             @selectedItem = ui.item
+                            @element.attr('data-value',ui.item.value)
                             return false
                         }
                 ).data("autocomplete")._renderItem = (ul, item) ->

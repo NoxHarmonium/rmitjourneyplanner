@@ -200,7 +200,7 @@ class window.RmitJourneyPlanner
             constructor: (@client) ->
                 @statusDataSource = new RmitJourneyPlanner::Data::DataSources::StatusDataSource(GlobalProperties.userKey)
                 @resultDataSource = new RmitJourneyPlanner::Data::DataSources::ResultDataSource(GlobalProperties.userKey)
-                @searchDatasource = new RmitJourneyPlanner::Data::DataSources::SearchDataSource(GlobalProperties.userKey)
+                @searchDatasource = new RmitJourneyPlanner::Data::DataSources::SearchDataSource(GlobalProperties.userKey)               
          
             Begin : () ->                       
                 @searchDatasource.Query (validationErrors) =>
@@ -312,6 +312,7 @@ class window.RmitJourneyPlanner
                 }
 
             constructor: (@client) ->
+                 @detailsDatasource = new RmitJourneyPlanner::Data::DataSources::DetailsDataSource(GlobalProperties.userKey)
                 
 
             # Functions    
@@ -415,48 +416,48 @@ class window.RmitJourneyPlanner
                 sender = $(e.target).parents('tr')
                 $('.selectedJourney').removeClass('selectedJourney')
                 sender.addClass('selectedJourney')
-    
-                legs = sender.data('jLegs');
-                @client.map.clearMarkers();
-                @client.map.clearLines();
+                @detailsDatasource.Query sender.index(), (data) =>
+                    legs = data.result.Critter.Legs;
+                    @client.map.ClearMarkers();
+                    @client.map.ClearLines();
 
-                $('div.infoPanel').show();
+                    $('div.infoPanel').show();
 
-                for i in [0..legs.length]
-                    leg = legs[i];
+                    for i in [0..legs.length-1]
+                        leg = legs[i];
 
-                    if (i == 0 || !(leg.Mode == "Walking" && legs[parseInt(i) - 1].Mode == "Walking")) 
-                        @client.map.addMarker(new google.maps.Marker({
-                            position: new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
-                            icon: UI.strings.strTransportImagePath + leg.Mode + UI.strings.strTransportImageExt
+                        if (i == 0 || !(leg.Mode == "Walking" && legs[parseInt(i) - 1].Mode == "Walking")) 
+                            @client.map.AddMarker(new google.maps.Marker({
+                                position: new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
+                                icon: UI.strings.strTransportImagePath + leg.Mode + UI.strings.strTransportImageExt
+                            }));
+                    
+
+                        lineColour = null
+
+                        switch leg.Mode
+                            when "Train" then lineColour = "#0000FF";
+                            when "Bus" then lineColour = "#B25800";
+                            when "Tram" then lineColor = "#00FF00";
+                            else lineColour = "#333333";
+                    
+
+                        @client.map.AddLine(new google.maps.Polyline({
+                            path: [new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
+                                    new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long)],
+                            strokeColor: lineColour,
+                            strokeOpacity: 1.0,
+                            strokeWeight: 2
                         }));
-                    
-
-                    lineColour = null
-
-                    switch leg.Mode
-                        when "Train" then lineColour = "#0000FF";
-                        when "Bus" then lineColour = "#B25800";
-                        when "Tram" then lineColor = "#00FF00";
-                        else lineColour = "#333333";
-                    
-
-                    @client.map.addLine(new google.maps.Polyline({
-                        path: [new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
-                                new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long)],
-                        strokeColor: lineColour,
-                        strokeOpacity: 1.0,
-                        strokeWeight: 2
-                    }));
         
-                    if (parseInt(i) == legs.length - 1)
-                        #Draw finish marker
-                        @client.map.addMarker(new google.maps.Marker({
-                            position: new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long),
-                            icon: UI.strings.strTransportImagePath + "Finish" + UI.strings.strTransportImageExt
-                        }));
-                
-    
+                        if (parseInt(i) == legs.length - 1)
+                            #Draw finish marker
+                            @client.map.AddMarker(new google.maps.Marker({
+                                position: new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long),
+                                icon: UI.strings.strTransportImagePath + "Finish" + UI.strings.strTransportImageExt
+                            }));
+                    
+                    
 
             showResults: (data) ->
                 results = data.result

@@ -55,20 +55,20 @@ class RmitJourneyPlanner::UI::Controls::MapControl extends RmitJourneyPlanner::U
                            
 
                 
-            addMarker: (marker) ->
+            AddMarker: (marker) ->
                 marker.setMap(@map)
                 @markers.push(marker)
-
-            clearMarkers: () ->
+                
+            ClearMarkers: () ->
                 for marker in @markers
-                    market.setMap(null)
+                    marker.setMap(null)
                 @markers = []
-
-            clearLines: () ->
-                 for line in @lines
+                
+            ClearLines: () ->
+                for line in @lines
                     line.setMap(null)
                 @lines = []
-
-            addLine: (line) ->
+                                
+            AddLine: (line) ->
                 line.setMap(@map)
                 @lines.push(line)

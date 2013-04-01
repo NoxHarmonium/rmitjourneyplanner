@@ -499,7 +499,33 @@ namespace JRPCServer
                                             /*results[i].Population.CalculateHyperVolume(
                                                 journey.Properties.Objectives,
                                                 new double[journey.Properties.Objectives.Length]);*/
-                                            detailedExportContext.Export(results[i], new JsonTextWriter(writer));
+                                            var grouped = from p in results[i].Population
+                                                          group p by p.Route
+                                                              into g
+                                                              select g;
+
+
+                                            var candidates = new List<Critter>();
+                                            foreach (var g in grouped)
+                                            {
+                                                TimeSpan minTime = TimeSpan.MaxValue;
+                                                Critter minCrit = null;
+
+                                                foreach (var critter in g)
+                                                {
+                                                    if (critter.Fitness.TotalJourneyTime < minTime)
+                                                    {
+                                                        minTime = critter.Fitness.TotalJourneyTime;
+                                                        minCrit = critter;
+                                                    }
+                                                }
+
+                                                candidates.Add(minCrit);
+                                            }
+                                            var groupedResult = (Result)results[i].Clone(true);
+                                            groupedResult.Population = new Population(candidates.OrderBy(c => c.Fitness.TotalJourneyTime));
+
+                                            detailedExportContext.Export(groupedResult, new JsonTextWriter(writer));
                                             resultWriter.Write(
                                                 "{0}, {1}, {2}, ", i, results[i].Hypervolume, results[i].Cardinality);
                                             foreach (var p in Enum.GetValues(typeof(FitnessParameter)))
@@ -513,39 +539,39 @@ namespace JRPCServer
                                         }
 
                                         // For the last result entry, Save simplified file.
-                                        if (i == results.Count - 1)
+                                        if (i != results.Count - 1)
                                         {
-                                            
-                                           using (var writer = new StreamWriter(dir + run.Uuid + "/simple.json"))
-                                           {
-                                               using (var jsonWriter = new JsonTextWriter(writer))
-                                               {
-                                                   var grouped = from p in results[i].Population
-                                                                 group p by p.Route
-                                                                     into g
-                                                                     select g;
+                                            continue;
+                                        }
 
-                                                   var candidates = new List<Critter>();
-                                                   foreach (var g in grouped)
-                                                   {
-                                                       TimeSpan minTime = TimeSpan.MaxValue;
-                                                       Critter minCrit = null;
+                                        using (var writer = new StreamWriter(dir + run.Uuid + "/simple.json"))
+                                        {
+                                            using (var jsonWriter = new JsonTextWriter(writer))
+                                            {
+                                                var grouped = from p in results[i].Population
+                                                              group p by p.Route
+                                                              into g
+                                                              select g;
 
-                                                       foreach (var critter in g)
-                                                       {
-                                                           if (critter.Fitness.TotalJourneyTime < minTime)
-                                                           {
-                                                               minTime = critter.Fitness.TotalJourneyTime;
-                                                               minCrit = critter;
-                                                           }
-                                                       }
+                                                var candidates = new List<Critter>();
+                                                foreach (var g in grouped)
+                                                {
+                                                    TimeSpan minTime = TimeSpan.MaxValue;
+                                                    Critter minCrit = null;
 
-                                                       candidates.Add(minCrit);
-                                                   }
-                                                   summaryExportContext.Export(candidates.OrderBy(c => c.Fitness.TotalJourneyTime), jsonWriter);
-                                               }
+                                                    foreach (var critter in g)
+                                                    {
+                                                        if (critter.Fitness.TotalJourneyTime < minTime)
+                                                        {
+                                                            minTime = critter.Fitness.TotalJourneyTime;
+                                                            minCrit = critter;
+                                                        }
+                                                    }
+
+                                                    candidates.Add(minCrit);
+                                                }
+                                                summaryExportContext.Export(candidates.OrderBy(c => c.Fitness.TotalJourneyTime), jsonWriter);
                                             }
-
                                         }
                                     }
 
@@ -662,7 +688,8 @@ namespace JRPCServer
             {
                 using (var jsonReader = new JsonTextReader(reader))
                 {
-                    return JsonConvert.Import<JsonArray>(jsonReader);
+                    var iterationObject = JsonConvert.Import<JsonObject>(jsonReader);
+                    return (JsonArray) iterationObject["population"];
                 }
             }
         }

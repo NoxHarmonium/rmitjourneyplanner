@@ -24,7 +24,7 @@ namespace JRPCServer
         /// <summary>
         /// The er r_ invali d_ cast.
         /// </summary>
-        public const string ERR_INVALID_CAST = "The property value you supplied cannot be cast to the property type.";
+        public const string ERR_INVALID_CAST = "The property value you supplied cannot be cast to the property type";
 
         /// <summary>
         /// The er r_ invali d_ runid.

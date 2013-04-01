@@ -95,7 +95,7 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                     if !$(this).is("select")
                         value = null
                         if $(this).hasClass('locationInput')
-                            value = $(this).attr('nodeid')
+                            value = $(this).attr('data-value')
                         else 
                             value = $(this).val()
                     else
@@ -138,7 +138,7 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
                     return
                 
                 columns = []
-                for i in [0..@numColumns]
+                for i in [0..@numColumns-1]
                     columns.push(jQuery(document.createElement('div')))
                 i = 0
                 for propertyInfo in data.result

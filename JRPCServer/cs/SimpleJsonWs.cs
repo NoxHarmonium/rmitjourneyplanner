@@ -243,7 +243,7 @@ namespace JRPCServer
             {
                 var optimiser = ObjectCache.GetObject<JourneyOptimiser>();
                 int iterations = optimiser.GetIterationCount(userKey);
-                return (JsonObject)optimiser.GetDetailedResult(userKey,iterations-1)[journeyIndex];
+                return (JsonObject)(optimiser.GetDetailedResult(userKey,iterations-1)[journeyIndex]);
             }
             return null;
         }

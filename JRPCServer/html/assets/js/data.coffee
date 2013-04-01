@@ -188,6 +188,19 @@ class RmitJourneyPlanner::Data
             Query: (callback, propVals = []) ->
                 @RequestData({ "userKey": @uuid }, callback);
 
+        class @::DetailsDataSource extends @::JRPCDataSource
+            constructor: (@uuid) ->
+                super(
+                    RmitJourneyPlanner::Client::Properties.JRPCUrl,
+                    "GetDetails"
+                    )
+
+            RequestData: (data={}, callback=->) ->
+                super data, callback
+
+            Query: (journeyIndex, callback) ->
+                @RequestData({ "userKey": @uuid, "journeyIndex": journeyIndex  }, callback);
+
         class @::SearchDataSource extends @::JRPCDataSource
             constructor: (@uuid) ->
                 super(

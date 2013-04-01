@@ -88,6 +88,31 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 };
         }
 
+        /// <summary>
+        /// Returns a new result that is a clone this instance.
+        /// </summary>
+        /// <param name="shallowCopy">Set to trur to clone only the basic parameters and not the population.</param>
+        /// <returns>
+        /// The clone.
+        /// </returns>
+        public object Clone(bool shallowCopy)
+        {
+            if (shallowCopy)
+            {
+                return new Result
+                    {
+                        Totaltime = this.Totaltime,
+                        Population = null,
+                        Cardinality = this.Cardinality,
+                        Hypervolume = this.Hypervolume
+                    };
+            }
+            else
+            {
+                return this.Clone();
+            }
+        }
+
         #endregion
     }
 }
