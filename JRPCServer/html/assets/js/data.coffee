@@ -213,3 +213,18 @@ class RmitJourneyPlanner::Data
 
             Query: (callback, propVals = []) ->
                 @RequestData({ "userKey": @uuid, "propVals": propVals }, callback);
+    
+        class @::DateFormatDataSource extends @::JRPCDataSource
+            constructor: () ->
+                super(
+                    RmitJourneyPlanner::Client::Properties.JRPCUrl,
+                    "GetServerDatetimeFormat"
+                    )
+
+            RequestData: (data={}, callback=->) ->
+                super data, callback
+
+            Query: (callback, propVals = []) ->
+                @RequestData({ }, callback);
+
+                

@@ -88,6 +88,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cs\Extension.cs" />
     <Compile Include="cs\JSONObjects\ObjectProperty.cs" />
     <Compile Include="cs\JSONObjects\PropertyValue.cs" />
     <Compile Include="cs\JSONObjects\PropertyValues.cs" />
@@ -182,6 +183,12 @@
     </Content>
     <Content Include="html\assets\js\ui.controls\control.min.js">
       <DependentUpon>control.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\datetimepicker.js">
+      <DependentUpon>datetimepicker.coffee</DependentUpon>
+    </Content>
+    <Content Include="html\assets\js\ui.controls\datetimepicker.min.js">
+      <DependentUpon>datetimepicker.coffee</DependentUpon>
     </Content>
     <Content Include="html\assets\js\ui.controls\hideable.js">
       <DependentUpon>hideable.coffee</DependentUpon>
@@ -326,6 +333,7 @@
     <None Include="html\assets\js\ui.controls\alertbox.coffee" />
     <None Include="html\assets\js\ui.controls\autocomplete.coffee" />
     <None Include="html\assets\js\ui.controls\control.coffee" />
+    <None Include="html\assets\js\ui.controls\datetimepicker.coffee" />
     <None Include="html\assets\js\ui.controls\hideable.coffee" />
     <None Include="html\assets\js\ui.controls\map.coffee" />
     <None Include="html\assets\js\ui.controls\propertyeditor.coffee" />

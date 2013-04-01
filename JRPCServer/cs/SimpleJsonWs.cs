@@ -14,8 +14,10 @@ namespace JRPCServer
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using System.Web.SessionState;
 
     using JRPCServer.cs;
@@ -54,6 +56,10 @@ namespace JRPCServer
         /// </summary>
         private static bool LogEventCreated;
 
+        private static bool isInit = false;
+
+        private static object lockObject = new object();
+
         private const int MaxObjectNameLength = 20;
 
         #endregion
@@ -82,42 +88,56 @@ namespace JRPCServer
         [JsonRpcHelp("Initialises the data providers.")]
         public void LoadProviders()
         {
-            ObjectCache.DeregisterObjects(typeof(IPointDataProvider));
 
-            // this.DeregisterObjects(typeof(INetworkDataProvider));
-            IPointDataProvider provider = new WalkingDataProvider();
-            ObjectCache.RegisterObject(provider);
-
-            if (!ObjectCache.GetObjects<State>().Any())
+            lock (lockObject)
             {
-                var state = new State();
-                Logger.LogEvent += new LogEventHandler(Logger_LogEvent);
-                state.LogEventHooked = true;
+                if (isInit)
+                {
+                    return;
+                }
+                isInit = true;
 
-                ObjectCache.RegisterObject(state);
 
+
+                ObjectCache.DeregisterObjects(typeof(IPointDataProvider));
+
+                // this.DeregisterObjects(typeof(INetworkDataProvider));
+                IPointDataProvider provider = new WalkingDataProvider();
+                ObjectCache.RegisterObject(provider);
+
+                if (!ObjectCache.GetObjects<State>().Any())
+                {
+                    var state = new State();
+                    Logger.LogEvent += new LogEventHandler(Logger_LogEvent);
+                    state.LogEventHooked = true;
+
+                    ObjectCache.RegisterObject(state);
+
+
+                }
+
+                if (!ObjectCache.GetObjects<PtvDataProvider>().Any())
+                {
+                    ObjectCache.RegisterObject(new PtvDataProvider());
+                }
+
+                if (!ObjectCache.GetObjects<EvolutionaryProperties>().Any())
+                {
+                    ObjectCache.RegisterObject(new EvolutionaryProperties());
+                }
+
+                if (!ObjectCache.GetObjects<JourneyManager>().Any())
+                {
+                    ObjectCache.RegisterObject(new JourneyManager());
+                }
+
+                if (!ObjectCache.GetObjects<JourneyOptimiser>().Any())
+                {
+                    ObjectCache.RegisterObject(new JourneyOptimiser());
+                }
 
             }
 
-            if (!ObjectCache.GetObjects<PtvDataProvider>().Any())
-            {
-                ObjectCache.RegisterObject(new PtvDataProvider());
-            }
-
-            if (!ObjectCache.GetObjects<EvolutionaryProperties>().Any())
-            {
-                ObjectCache.RegisterObject(new EvolutionaryProperties());
-            }
-
-            if (!ObjectCache.GetObjects<JourneyManager>().Any())
-            {
-                ObjectCache.RegisterObject(new JourneyManager());
-            }
-
-            if (!ObjectCache.GetObjects<JourneyOptimiser>().Any())
-            {
-                ObjectCache.RegisterObject(new JourneyOptimiser());
-            }
         }
 
         /// <summary>
@@ -803,6 +823,14 @@ namespace JRPCServer
             return objectProperties;
         }
 
+        [JsonRpcMethod("GetServerDatetimeFormat", Idempotent = true)]
+        [JsonRpcHelp("Gets the Datetime format used on the server so the client can format dates properly.")]
+        public string GetServerDatetimeFormat()
+        {
+            var dtf = CultureInfo.CurrentCulture.DateTimeFormat;
+            return CultureInfo.CurrentCulture.GetJQueryDateFormat() + "|" + dtf.ShortTimePattern;
+        }
+
         #endregion
 
         void Logger_LogEvent(object sender, string message)
@@ -814,6 +842,9 @@ namespace JRPCServer
                 senderName = senderName.Substring(0, MaxObjectNameLength);
             }
             Console.WriteLine(String.Format("[{0} ({1})]:{2}", senderName, DateTime.Now.ToShortTimeString(), message));
+        
         }
+
+
     }
 }

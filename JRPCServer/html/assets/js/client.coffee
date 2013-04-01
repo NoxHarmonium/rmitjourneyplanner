@@ -10,7 +10,14 @@ class window.RmitJourneyPlanner
             @ui = new @UI(this)
             @search = new @Search(this)
             @map = new RmitJourneyPlanner::UI::Controls::MapControl(@client, $("#map_canvas"))
-
+            @dateFormatDataSource = new RmitJourneyPlanner::Data::DataSources::DateFormatDataSource()
+            @datetimeFormatLoad = new $.Deferred();
+            @dateFormatDataSource.Query (data) => 
+                @dateTimeFormatString = data.result
+                dtf = data.result.split("|")
+                @dateFormatString = dtf[0]
+                @timeFormatString = dtf[1]
+                @datetimeFormatLoad.resolve(dtf[0],dtf[1])
 
         class @::Properties
             this.JRPCUrl="http://localhost:8000/simplejsonws.ashx"
@@ -42,8 +49,8 @@ class window.RmitJourneyPlanner
             constructor: (@client) ->
                 String.prototype.bool = () -> return (/^True$/i).test this;
                 jQuery.fn.exists = () -> return this.length > 0
-                jQuery.fn.disable = () -> return $(this) attr 'disabled', 'disabled'
-                jQuery.fn.enable = () -> return $(this) removeAttr 'disabled'
+                jQuery.fn.disable = () -> return $(this).attr 'disabled', 'disabled'
+                jQuery.fn.enable = () -> return $(this).removeAttr 'disabled'
         
                 # Catch javascript errors and display a custom error message
                 if @catchJsErrors

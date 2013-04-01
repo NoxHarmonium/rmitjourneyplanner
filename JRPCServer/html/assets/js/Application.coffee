@@ -26,6 +26,9 @@ class Application
         divWhen.setToggleElement($("#btnMore"))
         divWhen.setEffectType("slide")
         
+        txtWhen = new RmitJourneyPlanner::UI::Controls::Datetimepicker(@client, $("#txtWhen"))
+      
+        
 
         errorBox = new RmitJourneyPlanner::UI::Controls::AlertBox(@client, $("#divError")) 
         errorBox.setSuccess()
