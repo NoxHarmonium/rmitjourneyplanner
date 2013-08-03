@@ -49,13 +49,15 @@ class Application
 
         btnSaveProperties = $("div#myModal button#btnSaveProperties");
         btnSaveProperties.click (event) =>
+            do @client.ui.reset
             @propertyEditor.SaveForm (result) ->
                 if !result
                     $('div#myModal').modal('hide')
 
 
-    search: () ->        
-        @searchPanel.SaveForm (result) =>
+    search: () =>      
+        do @client.ui.reset
+        @searchPanel.SaveForm (result) =>                
                 if !result
                     @client.search.Begin()
 

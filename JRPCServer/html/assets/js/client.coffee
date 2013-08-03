@@ -209,8 +209,10 @@ class window.RmitJourneyPlanner
                 @resultDataSource = new RmitJourneyPlanner::Data::DataSources::ResultDataSource(GlobalProperties.userKey)
                 @searchDatasource = new RmitJourneyPlanner::Data::DataSources::SearchDataSource(GlobalProperties.userKey)               
          
-            Begin : () ->                       
+            Begin : () -> 
+                do @startSearch                    
                 @searchDatasource.Query (validationErrors) =>
+
                     if (validationErrors? && validationErrors.length > 0)
                         throw new Exceptions.DataAccessException(this,"The search method does not send and property values so there should not be any validation errors.")
                         
@@ -248,24 +250,19 @@ class window.RmitJourneyPlanner
                     @client.ui.setLoadingDivMode(d.status)
 
                     if d.status.toLowerCase() == "finished" 
+                        do @endSearch                        
                         window.clearInterval(@progress_callback_id)
                         @progress_callback_id = null
                         do @getResults
 
 
             startSearch : () -> 
-                @client.ui.hideDateTimeDiv()
                 @client.ui.disableSearch()
 
 
             endSearch : () ->
                 @client.ui.enableSearch()
-                @client.ui.showHelpDiv()
 
-             # The main function
-            search : () ->
-                startSearch();
-                submitSearch();
 
         ###
         ****************************************************************
@@ -324,15 +321,15 @@ class window.RmitJourneyPlanner
 
             # Functions    
             enableSearch: () ->
-                $('.subnav-inner input').enable()
-                $('.subnav-inner button').enable()
-                $('.subnav-inner checkbox').enable()
+                $('div.subnav input').enable()
+                $('div.subnav button').enable()
+                $('div.subnav checkbox').enable()
 
 
             disableSearch: () ->
-	            $('.subnav-inner input').disable()
-	            $('.subnav-inner button').disable()
-	            $('.subnav-inner checkbox').disable()
+	            $('div.subnav input').disable()
+	            $('div.subnav button').disable()
+	            $('div.subnav checkbox').disable()
 
 
             setLoadingDivProgress: (progress, iteration, totalIterations) ->
@@ -340,7 +337,8 @@ class window.RmitJourneyPlanner
                 $('#divLoading .progressDenominator').text(totalIterations)
                 $('#mainProgressBar .bar').width(String(progress * 100.0) + "%")
     
-    
+            reset: () =>
+                do @hideResultsDiv
 
             setLoadingDivMode: (mode) ->
                 $('#divLoading .progressHelp').show()
@@ -354,6 +352,7 @@ class window.RmitJourneyPlanner
                         $('#divLoading .title').text(UI.strings.strOptimisingTitle);
                         $('#divLoading .progressHelp').text(UI.strings.strOptimisingMessage);
                         $('#divLoading .progressInfo').show(); 
+                        $('#divLoading div.progress').show();  
 
                     when "finished" 
                         $('#divLoading .title').text(UI.strings.strFinishedTitle);
