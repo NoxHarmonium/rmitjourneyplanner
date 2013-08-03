@@ -468,6 +468,7 @@ class window.RmitJourneyPlanner
             showResults: (data) ->
                 results = data.result
                 tableSummary = $('#divJourneyList table')
+                do tableSummary.empty
                 i = 0
                 for journey in results
                     journey = journey.Critter
