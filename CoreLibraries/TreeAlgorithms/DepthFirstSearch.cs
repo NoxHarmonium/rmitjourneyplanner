@@ -399,8 +399,9 @@ restart:
                     {
                         if (stack[i].Count == 0)
                         {
-                            Logger.Log(this, "Warning: depth first search stack empty, restarting.");
-                            goto restart; // TODO: Fix this without using a goto
+                            Logger.Log(this, "Warning: depth first search stack empty, returning direct path from origin->destination");
+                            // TODO: Work out why this happens sometimes
+                            return new T[2] { this.origin, this.destination };
                         }
                         
                         this.Current[i] = stack[i].Pop();
@@ -468,6 +469,13 @@ restart:
 
                 path.Reverse();
                 path.AddRange(path2);
+            }
+
+            if (path.Count == 0)
+            {
+               Logger.Log(this, "Warning:  Path is only one node long which will break optimiser,  returning direct path from origin->destination");
+               // TODO: Work out why this happens sometimes
+               return new T[2] { this.origin, this.destination };
             }
 
             return path.ToArray();
