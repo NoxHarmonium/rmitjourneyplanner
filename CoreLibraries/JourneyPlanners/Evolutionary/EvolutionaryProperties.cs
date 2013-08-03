@@ -43,11 +43,6 @@ namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets a value indicating whether route generation should be bi-directional or not.
-        /// </summary>
-        public bool Bidirectional { get; set; }
-
-        /// <summary>
         ///   Gets or sets the breeder object used when crossing over routes.
         /// </summary>
         public IBreeder Breeder { get; set; }
@@ -78,24 +73,9 @@ namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary
         public IFitnessFunction FitnessFunction { get; set; }
 
         /// <summary>
-        ///   Gets or sets the infection rate.
-        /// </summary>
-        public double InfectionRate { get; set; }
-
-        /// <summary>
-        ///   Gets or sets MaxDistance.
-        /// </summary>
-        public double MaxDistance { get; set; }
-
-        /// <summary>
         ///   Gets or sets the maximum number of iterations that the journey optimisation can run for.
         /// </summary>
         public int MaxIterations { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the maximum distance that can be walked.
-        /// </summary>
-        public double MaximumWalkDistance { get; set; }
 
         /// <summary>
         ///   Gets or sets the percentage of critters that are mutated on every iteration.
@@ -111,11 +91,6 @@ namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary
         ///   Gets or sets a list of network data providers used to solve the route.
         /// </summary>
         public INetworkDataProvider[] NetworkDataProviders { get; set; }
-
-        /// <summary>
-        ///   Gets or sets number of the population to keep and use in the breeding process.
-        /// </summary>
-        public int NumberToKeep { get; set; }
 
         /// <summary>
         ///   Gets or sets the objectives used in the optimisation.
@@ -141,16 +116,6 @@ namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary
         ///   Gets or sets the population size of the route planner.
         /// </summary>
         public int PopulationSize { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the probability that a node that is closest to the goal will be chosen when initializing routes.
-        /// </summary>
-        public double ProbMinDistance { get; set; }
-
-        /// <summary>
-        ///   Gets or sets probability that a node of a different route will be chosen when initializing routes.
-        /// </summary>
-        public double ProbMinTransfers { get; set; }
 
         /// <summary>
         ///   Gets or sets the object used to build routes between 2 nodes.
@@ -179,30 +144,23 @@ namespace RmitJourneyPlanner.CoreLibraries.JourneyPlanners.Evolutionary
         {
             return new EvolutionaryProperties
                 {
-                    Bidirectional = this.Bidirectional, 
                     Breeder = this.Breeder, 
                     CrossoverRate = this.CrossoverRate, 
                     Database = this.Database, 
                     DepartureTime = this.DepartureTime, 
                     Destination = this.Destination, 
                     FitnessFunction = this.FitnessFunction, 
-                    MaxDistance = this.MaxDistance, 
-                    MaximumWalkDistance = this.MaximumWalkDistance, 
                     MutationRate = this.MutationRate, 
                     Mutator = this.Mutator, 
                     NetworkDataProviders = this.NetworkDataProviders, 
-                    NumberToKeep = this.NumberToKeep, 
                     Objectives = this.Objectives, 
                     Origin = this.Origin, 
                     Planner = this.Planner, 
                     PointDataProviders = this.PointDataProviders, 
                     PopulationSize = this.PopulationSize, 
-                    ProbMinDistance = this.ProbMinDistance, 
-                    ProbMinTransfers = this.ProbMinTransfers, 
                     RouteGenerator = this.RouteGenerator, 
                     SearchType = this.SearchType, 
                     MaxIterations = this.MaxIterations, 
-                    InfectionRate = this.InfectionRate
                 };
         }
 

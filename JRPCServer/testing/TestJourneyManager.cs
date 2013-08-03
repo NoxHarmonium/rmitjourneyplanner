@@ -49,13 +49,8 @@ namespace JRPCServer
             ObjectCache.RegisterObject(provider);
             properties.NetworkDataProviders = new[] { provider };
             properties.PointDataProviders = new[] { new WalkingDataProvider() };
-            properties.ProbMinDistance = 0.7;
-            properties.ProbMinTransfers = 0.2;
-            properties.MaximumWalkDistance = 1.5;
             properties.PopulationSize = 100;
-            properties.MaxDistance = 0.5;
             properties.DepartureTime = DateTime.Now;
-            properties.NumberToKeep = 25;
             properties.MutationRate = 0.1;
             properties.CrossoverRate = 0.7;
 

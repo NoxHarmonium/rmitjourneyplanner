@@ -134,17 +134,10 @@ namespace TestConsole
 
                                 var properties = new EvolutionaryProperties();
                                 properties.NetworkDataProviders = new[] {provider};
-                                properties.Bidirectional = false;
                                 properties.PointDataProviders = new[] {new WalkingDataProvider()};
-                                properties.ProbMinDistance = 0.7;
-                                properties.ProbMinTransfers = 0.2;
-                                properties.MaximumWalkDistance = 1.5;
                                 properties.PopulationSize = 100;
-                                properties.MaxDistance = 0.5;
-                                properties.InfectionRate = 0.2;
                                 properties.DepartureTime = DateTime.Parse("2012/11/10 9:30 AM");
                                     //DateTime.Parse(date + " "+ time);
-                                properties.NumberToKeep = 25;
                                 properties.MutationRate = 0.25;
                                 properties.CrossoverRate = 0.7;
                                 //properties.RouteGenerator = new AlRouteGenerator(properties);
