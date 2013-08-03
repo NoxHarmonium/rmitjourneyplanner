@@ -157,8 +157,9 @@
     <Content Include="html\assets\js\data.min.js">
       <DependentUpon>data.coffee</DependentUpon>
     </Content>
-    <Content Include="html\assets\js\jQuery\jquery.json-2.4.min.js" />
-    <Content Include="html\assets\js\jQuery\jquery.sortElements.js" />
+    <Content Include="html\assets\js\lib\jQuery\jquery.json-2.4.min.js" />
+    <Content Include="html\assets\js\lib\jQuery\jquery.sortElements.js" />
+    <Content Include="html\assets\js\lib\date.js" />
     <Content Include="html\assets\js\properties.js" />
     <Content Include="html\assets\js\test.js">
       <DependentUpon>test.coffee</DependentUpon>
