@@ -338,7 +338,7 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
             {
                 return new[] { this.origin };
             }
-
+restart:
             this.map.Clear();
             this.iterations = 0;
             this.startTime = DateTime.Now;
@@ -399,8 +399,8 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                     {
                         if (stack[i].Count == 0)
                         {
-                            Logger.Log(this, "Warning: depth first search stack empty, skipping to goal node.");
-                            this.Current[i] = new NodeWrapper<T>(goal[i]);
+                            Logger.Log(this, "Warning: depth first search stack empty, restarting.");
+                            goto restart; // TODO: Fix this without using a goto
                         }
                         
                         this.Current[i] = stack[i].Pop();
