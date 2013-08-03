@@ -132,6 +132,7 @@ class RmitJourneyPlanner::UI::Controls::PropertyEditor extends RmitJourneyPlanne
 
             BuildForm: (data = null) ->
                 if !data?
+                    @element.append($("<p class='formLoading'>Loading...</p>"))
                     @dataSource.Get (data) => 
                         @data = data
                         @BuildForm(data)
