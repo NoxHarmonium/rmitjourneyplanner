@@ -151,7 +151,6 @@ namespace JRPCServer
                     writer.WriteNumber(leg.Destination.Id);
                     writer.WriteMember("Route");
                     writer.WriteString(leg.RouteId1);
-
                 }
 
                 if (exportType > ExportType.Simple)
@@ -162,11 +161,9 @@ namespace JRPCServer
                     writer.WriteNumber(leg.Origin.Latitude);
                     writer.WriteMember("Long");
                     writer.WriteNumber(leg.Origin.Longitude);
-                    writer.WriteEndObject();                    
-                }
 
-                if (exportType > ExportType.Simple)
-                {
+                    writer.WriteEndObject();                    
+               
                     writer.WriteMember("EndLocation");
                     writer.WriteStartObject();
                     writer.WriteMember("Lat");
@@ -181,7 +178,9 @@ namespace JRPCServer
                 writer.WriteMember("TotalTime");
                 context.Export(leg.TotalTime, writer);
                 writer.WriteMember("DepartTime");
-                context.Export(leg.DepartureTime, writer); 
+                context.Export(leg.DepartureTime, writer);
+                writer.WriteMember("OriginName");
+                writer.WriteString(leg.Origin.StopSpecName);
 
                 writer.WriteEndObject();
             }

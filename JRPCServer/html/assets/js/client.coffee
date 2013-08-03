@@ -431,11 +431,14 @@ class window.RmitJourneyPlanner
 
                     for i in [0..legs.length-1]
                         leg = legs[i];
+                        departureTime = new Date(leg.DepartTime).toString("h:mm tt")
+
 
                         if (i == 0 || !(leg.Mode == "Walking" && legs[parseInt(i) - 1].Mode == "Walking")) 
                             @client.map.AddMarker(new google.maps.Marker({
                                 position: new google.maps.LatLng(leg.StartLocation.Lat, leg.StartLocation.Long),
-                                icon: UI.strings.strTransportImagePath + leg.Mode + UI.strings.strTransportImageExt
+                                icon: UI.strings.strTransportImagePath + leg.Mode + UI.strings.strTransportImageExt,
+                                title: leg.OriginName + " (" + departureTime + ")"
                             }));
                     
 
@@ -460,7 +463,8 @@ class window.RmitJourneyPlanner
                             #Draw finish marker
                             @client.map.AddMarker(new google.maps.Marker({
                                 position: new google.maps.LatLng(leg.EndLocation.Lat, leg.EndLocation.Long),
-                                icon: UI.strings.strTransportImagePath + "Finish" + UI.strings.strTransportImageExt
+                                icon: UI.strings.strTransportImagePath + "Finish" + UI.strings.strTransportImageExt,
+                                title: leg.OriginName + " (" + departureTime + ")"
                             }));
                     
                     
@@ -480,13 +484,15 @@ class window.RmitJourneyPlanner
                     tdTime.text(d.getUTCHours() + 'h ' + d.getUTCMinutes() + 'm')
                     tdLegs = $('<td class="journeyModes"></td>')
                     j = 0
-                    for leg in journey.Legs               
-                        if (j == 0 || !(leg.Mode == "Walking" && journey.Legs[parseInt(j) - 1].Mode == "Walking"))                    
+                    for leg in journey.Legs
+                        if (j == 0 || !(leg.Mode == "Walking" && journey.Legs[parseInt(j) - 1].Mode == "Walking"))
+                            departureTime = new Date(leg.DepartTime).toString("h:mm tt")
                             imgLeg = $('<img class="miniIcon"/>')
                             imgLeg.attr('src', UI.strings.strTransportImagePath + leg.Mode + UI.strings.strTransportImageExt)
+                            imgLeg.attr('title', leg.OriginName + " (" + departureTime + ")")
                             tdLegs.append(imgLeg)
                         j++
-            
+                    
                     trSummary.data('jLegs', journey.Legs)
                     trSummary.click((e)=> @selectJourney(e))
             
