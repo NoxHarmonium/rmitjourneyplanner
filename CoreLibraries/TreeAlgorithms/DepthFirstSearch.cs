@@ -397,6 +397,12 @@ namespace RmitJourneyPlanner.CoreLibraries.TreeAlgorithms
                     // Update currents
                     do
                     {
+                        if (stack[i].Count == 0)
+                        {
+                            Logger.Log(this, "Warning: depth first search stack empty, skipping to goal node.");
+                            this.Current[i] = new NodeWrapper<T>(goal[i]);
+                        }
+                        
                         this.Current[i] = stack[i].Pop();
                     }
                     while (this.Visited[i].Contains(this.Current[i].Node));
