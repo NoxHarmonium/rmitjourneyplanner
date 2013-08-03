@@ -218,6 +218,7 @@
     <Content Include="html\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="html\bootstrap\css\bootstrap.css" />
     <Content Include="html\bootstrap\css\bootstrap.min.css" />
+    <Content Include="html\assets\css\jquery-ui.css" />
     <Content Include="html\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="html\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="html\bootstrap\js\bootstrap.js" />
