@@ -339,7 +339,7 @@ namespace RmitJourneyPlanner.CoreLibraries.Types
                 // foreach (var entry in entries)
                 if ((index % 5000) == 0)
                 {
-                    Logger.Log(this, "Optimising {0} of {1}", index, this.entries.Count);
+                    Logger.Log(this, "Building timetable index {0} of {1}", index, this.entries.Count);
                 }
 
                 var entry = this.entries[index];
